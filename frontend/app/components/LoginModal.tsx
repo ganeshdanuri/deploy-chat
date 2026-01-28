@@ -4,6 +4,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../context/AuthContext";
 import { theme } from "../theme";
+import { HiX, HiUser, HiLockClosed, HiLogin } from "react-icons/hi";
+import { MdEmail } from "react-icons/md";
 
 interface LoginModalProps {
   isOpen: boolean;
@@ -43,7 +45,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4"
-      style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
+      style={{ backgroundColor: theme.colors.overlay.dark }}
       onClick={handleClose}
     >
       <div
@@ -54,14 +56,22 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
         {/* Close Button */}
         <button
           onClick={handleClose}
-          className="absolute top-4 right-4 text-2xl transition-colors hover:text-gray-600"
+          className="absolute top-4 right-4 p-1 transition-colors hover:bg-gray-100 rounded-full"
           style={{ color: theme.colors.neutral[400] }}
         >
-          ×
+          <HiX className="text-2xl" />
         </button>
 
         {/* Header */}
         <div className="mb-8 text-center">
+          <div className="flex justify-center mb-4">
+            <div 
+              className="w-16 h-16 rounded-full flex items-center justify-center"
+              style={{ backgroundColor: theme.colors.primary.lightest }}
+            >
+              <HiLogin className="text-3xl" style={{ color: theme.colors.primary.main }} />
+            </div>
+          </div>
           <h1 
             className="text-2xl font-semibold"
             style={{ color: theme.colors.neutral[900] }}
@@ -91,9 +101,9 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
           <div 
             className="mb-4 p-3 border rounded-lg text-sm"
             style={{ 
-              backgroundColor: "#fee2e2",
-              borderColor: "#fca5a5",
-              color: "#991b1b"
+              backgroundColor: theme.colors.semantic.errorLight,
+              borderColor: theme.colors.semantic.errorBorder,
+              color: theme.colors.semantic.errorDark
             }}
           >
             {error}
@@ -109,18 +119,23 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
             >
               Username
             </label>
-            <input
-              type="text"
-              required
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              className="w-full rounded-lg border px-4 py-2 text-sm focus:outline-none transition-all focus:ring-2 focus:ring-indigo-200"
-              style={{ 
-                borderColor: theme.colors.neutral[300],
-                color: theme.colors.neutral[900]
-              }}
-              placeholder="admin"
-            />
+            <div className="relative">
+              <div className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: theme.colors.neutral[400] }}>
+                <HiUser className="text-lg" />
+              </div>
+              <input
+                type="text"
+                required
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                className="w-full rounded-lg border pl-10 pr-4 py-2 text-sm focus:outline-none transition-all focus:ring-2 focus:ring-indigo-200"
+                style={{ 
+                  borderColor: theme.colors.neutral[300],
+                  color: theme.colors.neutral[900]
+                }}
+                placeholder="admin"
+              />
+            </div>
           </div>
 
           <div>
@@ -130,28 +145,34 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
             >
               Password
             </label>
-            <input
-              type="password"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full rounded-lg border px-4 py-2 text-sm focus:outline-none transition-all focus:ring-2 focus:ring-indigo-200"
-              style={{ 
-                borderColor: theme.colors.neutral[300],
-                color: theme.colors.neutral[900]
-              }}
-              placeholder="••••••••"
-            />
+            <div className="relative">
+              <div className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: theme.colors.neutral[400] }}>
+                <HiLockClosed className="text-lg" />
+              </div>
+              <input
+                type="password"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full rounded-lg border pl-10 pr-4 py-2 text-sm focus:outline-none transition-all focus:ring-2 focus:ring-indigo-200"
+                style={{ 
+                  borderColor: theme.colors.neutral[300],
+                  color: theme.colors.neutral[900]
+                }}
+                placeholder="••••••••"
+              />
+            </div>
           </div>
 
           <button
             type="submit"
-            className="w-full rounded-lg px-4 py-2.5 text-sm font-medium text-white transition-all hover:-translate-y-0.5 hover:shadow-md"
+            className="w-full rounded-lg px-4 py-2.5 text-sm font-medium text-white transition-all hover:-translate-y-0.5 hover:shadow-md flex items-center justify-center gap-2"
             style={{ 
               background: theme.gradients.primaryButton,
               boxShadow: theme.shadows.sm
             }}
           >
+            <HiLogin className="text-xl" />
             Sign in
           </button>
         </form>

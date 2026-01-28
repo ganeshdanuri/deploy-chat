@@ -1,68 +1,65 @@
 "use client";
 
 import { theme } from "../theme";
+import { HiLightningBolt, HiGlobe, HiChartBar, HiUserGroup } from "react-icons/hi";
+import { FaBrain, FaRobot } from "react-icons/fa";
+import { MdIntegrationInstructions, MdSupportAgent } from "react-icons/md";
 
 const features = [
   {
     id: 1,
     title: "Easy Integration",
     description: "Add AI chatbots to your website with just a few lines of code. No complex setup required.",
-    icon: "⚡",
-    color: "#10b981",
-    bgColor: "#d1fae5",
+    icon: MdIntegrationInstructions,
+    color: theme.colors.primary.main,
   },
   {
     id: 2,
     title: "Custom Training",
     description: "Train your chatbot on your own content, documentation, and knowledge base for accurate responses.",
-    icon: "🎯",
-    color: "#6366f1",
-    bgColor: "#e0e7ff",
+    icon: FaBrain,
+    color: theme.colors.accent.purple,
   },
   {
     id: 3,
     title: "24/7 Support",
     description: "Your AI chatbot works around the clock to provide instant answers to your customers' questions.",
-    icon: "🌐",
-    color: "#fbbf24",
-    bgColor: "#fef3c7",
+    icon: HiGlobe,
+    color: theme.colors.accent.green,
   },
   {
     id: 4,
     title: "Analytics Dashboard",
     description: "Track conversations, user satisfaction, and chatbot performance with detailed analytics.",
-    icon: "📊",
-    color: "#8b5cf6",
-    bgColor: "#ede9fe",
+    icon: HiChartBar,
+    color: theme.colors.accent.blue,
   },
   {
     id: 5,
     title: "Multi-language",
     description: "Support customers in multiple languages with AI-powered translation and understanding.",
-    icon: "🗣️",
-    color: "#10b981",
-    bgColor: "#d1fae5",
+    icon: HiUserGroup,
+    color: theme.colors.accent.yellow,
   },
   {
     id: 6,
     title: "Seamless Handoff",
     description: "Smoothly transfer complex queries to human agents when needed with context preservation.",
-    icon: "🤝",
-    color: "#6366f1",
-    bgColor: "#e0e7ff",
+    icon: MdSupportAgent,
+    color: theme.colors.accent.teal,
   },
 ];
 
 export default function FeaturesSection() {
   return (
-    <section className="mx-auto max-w-7xl px-6 py-24">
+    <section id="features" className="mx-auto max-w-7xl px-6 py-24">
       {/* Section Header */}
       <div className="mb-16 text-center">
         <h2 
           className="mb-4 text-5xl font-bold"
           style={{ color: theme.colors.neutral[900] }}
         >
-          Powerful Features~
+          Powerful Features
         </h2>
         <p 
           className="mx-auto max-w-2xl text-lg font-medium"
@@ -77,21 +74,20 @@ export default function FeaturesSection() {
         {features.map((feature) => (
           <div
             key={feature.id}
-            className="group relative overflow-hidden rounded-2xl p-8 transition-all duration-300 hover:scale-105 hover:shadow-xl"
+            className="group relative overflow-hidden rounded-2xl p-10 transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl border-2"
             style={{ 
-              backgroundColor: 'white',
-              boxShadow: theme.shadows.md 
+              border: `1px solid ${theme.colors.neutral[400]}`,
             }}
           >
             {/* Icon Badge */}
             <div 
-              className="mb-6 flex h-16 w-16 items-center justify-center rounded-xl text-3xl transition-transform duration-300 group-hover:scale-110"
+              className="mb-6 flex h-16 w-16 items-center justify-center rounded-xl transition-all duration-500 group-hover:scale-110 group-hover:rotate-3"
               style={{ 
-                backgroundColor: feature.bgColor,
-                boxShadow: theme.shadows.sm 
+                backgroundColor: theme.colors.neutral[50],
+                color: feature.color
               }}
             >
-              {feature.icon}
+              <feature.icon className="h-8 w-8" />
             </div>
 
             {/* Feature Content */}
@@ -108,25 +104,7 @@ export default function FeaturesSection() {
               >
                 {feature.description}
               </p>
-              
-              {/* Learn More Link */}
-              <button
-                className="flex items-center gap-2 text-sm font-semibold transition-all hover:gap-3"
-                style={{ color: feature.color }}
-              >
-                Learn more
-                <span>→</span>
-              </button>
             </div>
-
-            {/* Accent Border on Hover */}
-            <div 
-              className="absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-              style={{ 
-                border: `3px solid ${feature.color}`,
-                pointerEvents: 'none'
-              }}
-            />
           </div>
         ))}
       </div>

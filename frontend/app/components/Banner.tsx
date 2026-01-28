@@ -1,5 +1,7 @@
 "use client";
 
+import { theme } from "../theme";
+
 interface Stat {
   id: number;
   value: string;
@@ -17,7 +19,7 @@ export default function Banner({ stats, onStartNow }: BannerProps) {
   return (
     <div
       className="w-full p-6"
-      style={{ backgroundColor: stats[0].color }}
+      style={{ backgroundColor: theme.colors.primary.main }}
     >
       <div className="mx-auto max-w-7xl">
         <div className="flex flex-wrap items-center justify-between gap-4 text-sm font-semibold text-white">

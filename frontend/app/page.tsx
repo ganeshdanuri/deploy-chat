@@ -6,7 +6,6 @@ import LoginModal from "./components/LoginModal";
 import FeaturesSection from "./components/FeaturesSection";
 import HeroSection from "./components/HeroSection";
 import Banner from "./components/Banner";
-import CompaniesSection from "./components/CompaniesSection";
 import { theme } from "./theme";
 
 const stats = [
@@ -14,22 +13,22 @@ const stats = [
     id: 1,
     value: "98%",
     label: "Accuracy Rate",
-    color: "#10b981",
-    bgColor: "#d1fae5",
+    color: theme.colors.accent.green,
+    bgColor: theme.colors.accent.greenLight,
   },
   {
     id: 2,
     value: "24/7",
     label: "Always Available",
-    color: "#fbbf24",
-    bgColor: "#fef3c7",
+    color: theme.colors.accent.yellow,
+    bgColor: theme.colors.accent.yellowLight,
   },
   {
     id: 3,
     value: "10K+",
     label: "Active Users",
-    color: "#8b5cf6",
-    bgColor: "#ede9fe",
+    color: theme.colors.accent.purple,
+    bgColor: theme.colors.accent.purpleLight,
   },
 ];
 
@@ -48,43 +47,36 @@ const features = [
   },
 ];
 
-const companies = [
-  { name: "Company A", logo: "BRAND A" },
-  { name: "Company B", logo: "BRAND B" },
-  { name: "Company C", logo: "BRAND C" },
-  { name: "Company D", logo: "BRAND D" },
-  { name: "Company E", logo: "BRAND E" },
-];
-
 export default function LandingPage() {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   
   return (
     <main 
       className="min-h-screen"
-      style={{ background: theme.gradients.page }}
+      style={{ background: "white" }}
     >
-      <Navbar />
+      {/* First Screen - 100vh */}
+      <div className="h-screen flex flex-col">
+        <Navbar />
 
-      {/* Hero Section */}
-      <HeroSection 
-        features={features} 
-        stats={stats} 
-        onGetStarted={() => setIsLoginModalOpen(true)} 
-      />
+        {/* Hero Section and Companies Section - flex grow to fill space */}
+        <div className="flex-1 flex flex-col overflow-hidden">
+          {/* Hero Section */}
+          <HeroSection 
+            features={features} 
+            stats={stats} 
+            onGetStarted={() => setIsLoginModalOpen(true)} 
+          />
+        </div>
 
-      {/* Companies Section */}
-      <div className="mx-auto max-w-7xl px-6">
-        <CompaniesSection companies={companies} />
+        {/* Banner - at the bottom of 100vh */}
+         <Banner 
+          stats={stats} 
+          onStartNow={() => setIsLoginModalOpen(true)} 
+        />
       </div>
 
-      {/* Banner */}
-      <Banner 
-        stats={stats} 
-        onStartNow={() => setIsLoginModalOpen(true)} 
-      />
-
-      {/* Features Section */}
+      {/* Features Section - appears after scrolling */}
       <FeaturesSection />
 
       <LoginModal 
