@@ -19,9 +19,9 @@ export default function Navbar() {
 
   const navLinks = [
     { label: "Features", href: "#features" },
-    { label: "Meetings", href: "#meetings" },
-    { label: "Conferences", href: "#conferences" },
     { label: "Integration", href: "#integration" },
+    { label: "Testimonials", href: "#testimonials" },
+    { label: "Pricing", href: "#pricing" },
   ];
 
   const handleMainButtonClick = () => {

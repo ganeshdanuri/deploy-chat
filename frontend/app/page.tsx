@@ -6,6 +6,12 @@ import LoginModal from "./components/LoginModal";
 import FeaturesSection from "./components/FeaturesSection";
 import HeroSection from "./components/HeroSection";
 import Banner from "./components/Banner";
+import IntegrationSection from "./components/IntegrationSection";
+import PricingSection from "./components/PricingSection";
+import TestimonialsSection from "./components/TestimonialsSection";
+import FAQSection from "./components/FAQSection";
+import CTASection from "./components/CTASection";
+import Footer from "./components/Footer";
 import { theme } from "./theme";
 
 const stats = [
@@ -49,39 +55,58 @@ const features = [
 
 export default function LandingPage() {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-  
+
   return (
-    <main 
+    <main
       className="min-h-screen"
       style={{ background: "white" }}
     >
-      {/* First Screen - 100vh */}
-      <div className="h-screen flex flex-col">
+      {/* First Screen */}
+      <div className="min-h-screen flex flex-col">
         <Navbar />
 
-        {/* Hero Section and Companies Section - flex grow to fill space */}
-        <div className="flex-1 flex flex-col overflow-hidden">
-          {/* Hero Section */}
-          <HeroSection 
-            features={features} 
-            stats={stats} 
-            onGetStarted={() => setIsLoginModalOpen(true)} 
+        {/* Hero Section */}
+        <div className="flex-1 flex flex-col pt-20">
+          <HeroSection
+            features={features}
+            stats={stats}
+            onGetStarted={() => setIsLoginModalOpen(true)}
           />
         </div>
 
-        {/* Banner - at the bottom of 100vh */}
-         <Banner 
-          stats={stats} 
-          onStartNow={() => setIsLoginModalOpen(true)} 
-        />
+        {/* Banner Section */}
+        <div className="pb-10">
+          <Banner
+            stats={stats}
+            onStartNow={() => setIsLoginModalOpen(true)}
+          />
+        </div>
       </div>
 
-      {/* Features Section - appears after scrolling */}
+      {/* Features Section */}
       <FeaturesSection />
 
-      <LoginModal 
-        isOpen={isLoginModalOpen} 
-        onClose={() => setIsLoginModalOpen(false)} 
+      {/* Integration Section */}
+      <IntegrationSection />
+
+      {/* Social Proof */}
+      <TestimonialsSection />
+
+      {/* Pricing Section */}
+      <PricingSection />
+
+      {/* FAQ Section */}
+      <FAQSection />
+
+      {/* Call to Action */}
+      <CTASection onGetStarted={() => setIsLoginModalOpen(true)} />
+
+      {/* Footer */}
+      <Footer />
+
+      <LoginModal
+        isOpen={isLoginModalOpen}
+        onClose={() => setIsLoginModalOpen(false)}
       />
     </main>
   );

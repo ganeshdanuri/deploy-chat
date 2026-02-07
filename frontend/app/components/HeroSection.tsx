@@ -62,7 +62,7 @@ export default function HeroSection({ features, stats, onGetStarted }: HeroSecti
             {/* Headline */}
             <div className="space-y-4">
               <h1
-                className="text-5xl lg:text-7xl font-bold tracking-tight leading-[1.1]"
+                className="text-4xl lg:text-6xl font-bold tracking-tight leading-[1.1]"
                 style={{ color: theme.colors.neutral[900] }}
               >
                 Build Intelligent <br />
@@ -200,7 +200,7 @@ export default function HeroSection({ features, stats, onGetStarted }: HeroSecti
                 <FaBolt className="text-xl" style={{ color: stats[0].color }} />
               </div>
               <div>
-                <div className="text-2xl font-bold text-slate-900">{stats[0].value}</div>
+                <div className="text-2xl font-bold font-mono text-slate-900">{stats[0].value}</div>
                 <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider">{stats[0].label}</div>
               </div>
             </div>
@@ -215,7 +215,7 @@ export default function HeroSection({ features, stats, onGetStarted }: HeroSecti
                     <div key={i} className="w-8 h-8 rounded-full border-2 border-white bg-slate-200" />
                   ))}
                 </div>
-                <div className="text-sm font-bold text-slate-900">+10K</div>
+                <div className="text-sm font-bold font-mono text-slate-900">+10K</div>
               </div>
               <div className="text-xs font-medium text-slate-500">Active Developers</div>
             </div>
