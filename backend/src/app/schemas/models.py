@@ -46,3 +46,28 @@ class DocumentRead(DocumentBase):
     id: UUID
     created_at: datetime
     updated_at: datetime
+
+# Datasets
+class DatasetDocuments(SQLModel, table=True):
+    __tablename__ = "dataset_documents"
+    dataset_id: UUID = Field(foreign_key="datasets.id", primary_key=True)
+    document_id: UUID = Field(foreign_key="documents.id", primary_key=True)
+
+class DatasetBase(SQLModel):
+    name: str = Field(index=True)
+    user_id: UUID = Field(foreign_key="users.id")
+
+class Dataset(DatasetBase, table=True):
+    __tablename__ = "datasets"
+    id: UUID = Field(default_factory=uuid4, primary_key=True)
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
+
+class DatasetCreate(SQLModel):
+    name: str
+    document_ids: list[UUID]
+
+class DatasetRead(DatasetBase):
+    id: UUID
+    created_at: datetime
+    updated_at: datetime
