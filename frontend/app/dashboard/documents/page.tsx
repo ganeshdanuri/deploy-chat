@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { HiDocumentText, HiPlus, HiSearch, HiExternalLink, HiTrash, HiUpload } from "react-icons/hi";
+import { HiDocumentText, HiPlus, HiSearch, HiExternalLink, HiTrash, HiUpload, HiRefresh } from "react-icons/hi";
 import UploadModal from "@/app/components/UploadModal";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "@/lib/store/store";
@@ -18,6 +18,7 @@ export default function DocumentsPage() {
         dispatch(fetchDocuments());
     }, [dispatch]);
 
+
     return (
         <div className="space-y-6 animate-fade-in-up">
             {/* Header */}
@@ -27,6 +28,13 @@ export default function DocumentsPage() {
                     <p className="text-sm text-slate-500 mt-1">View and manage chunked documents for RAG.</p>
                 </div>
                 <div className="flex gap-2">
+                    <button
+                        onClick={() => dispatch(fetchDocuments())}
+                        className="px-3 py-2 bg-white border border-slate-200 text-slate-700 text-sm font-semibold rounded-lg shadow-sm hover:bg-slate-50 transition-all flex items-center gap-2"
+                    >
+                        <HiRefresh className="w-4 h-4 text-slate-400" />
+                        Refresh
+                    </button>
                     <button
                         onClick={() => setIsUploadModalOpen(true)}
                         className="px-4 py-2 bg-indigo-600 text-white text-sm font-semibold rounded-lg shadow-sm shadow-indigo-200 hover:bg-indigo-700 hover:shadow-md transition-all flex items-center gap-2"

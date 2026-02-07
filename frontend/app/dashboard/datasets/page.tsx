@@ -6,9 +6,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "@/lib/store/store";
 import { fetchDatasets, deleteDataset } from "@/lib/store/slices/datasetsSlice";
 import CreateDatasetModal from "@/app/components/CreateDatasetModal";
+import UploadModal from "@/app/components/UploadModal"; // Added UploadModal import
+import { fetchDocuments } from "@/lib/store/slices/documentsSlice"; // Added fetchDocuments import
 
 export default function DatasetsPage() {
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isUploadModalOpen, setIsUploadModalOpen] = useState(false); // Added state for UploadDrawer
     const dispatch = useDispatch<AppDispatch>();
     const { items: datasets, status, error } = useSelector((state: RootState) => state.datasets);
     const isLoading = status === 'loading';
@@ -16,6 +19,7 @@ export default function DatasetsPage() {
     useEffect(() => {
         dispatch(fetchDatasets());
     }, [dispatch]);
+
 
     const handleDelete = async (id: string, e: React.MouseEvent) => {
         e.stopPropagation();
@@ -131,6 +135,11 @@ export default function DatasetsPage() {
             <CreateDatasetModal
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
+            />
+            <UploadModal
+                isOpen={isUploadModalOpen}
+                onClose={() => setIsUploadModalOpen(false)}
+                onUploadSuccess={() => dispatch(fetchDocuments())}
             />
         </div>
     );

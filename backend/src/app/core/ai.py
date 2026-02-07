@@ -40,7 +40,7 @@ class GoogleAIWrapper:
         self.provider = GoogleGLAProvider(api_key=api_key)
         self.model = GeminiModel(self.model_name, provider=self.provider)
 
-    async def run(self, system_prompt: str, user_message: str, temperature: float = 0.7) -> str:
+    async def run(self, system_prompt: str, user_message: str, temperature: float = 0.7) -> tuple[str, int]:
         """Runs the agent with the given system prompt and user message."""
         # Setup model settings (e.g., temperature)
         from pydantic_ai.models import ModelSettings
@@ -48,14 +48,47 @@ class GoogleAIWrapper:
         
         agent = Agent(self.model, system_prompt=system_prompt, model_settings=settings)
         result = await agent.run(user_message)
-        return result.output
+        
+        # Calculate tokens if available, otherwise estimate
+        # Note: PydanticAI might not expose exact token counts for all models/providers easily yet
+        # For now, we'll try to get it if available, or just default to 0
+        token_count = 0
+        try:
+             if hasattr(result, 'usage'):
+                 # Attempt to sum prompt + completion tokens
+                 usage = result.usage()
+                 token_count = usage.total_tokens if usage else 0
+        except Exception:
+             # Usage tracking is optional, don't fail the request if it breaks
+             pass
+
+        # Extract response content
+        # Note: AgentRunResult attributes vary by version. 
+        # Check 'data' (standard), then 'output' (annotation hint), then 'response' (introspection hint).
+        if hasattr(result, 'data'):
+             return result.data, token_count
+             
+        if hasattr(result, 'output'):
+             # output might be the direct result
+             return str(result.output), token_count
+             
+        if hasattr(result, 'response'):
+             # response usually holds the provider's response object
+             resp = result.response
+             # If it's an object with .text (like Google's), use that
+             if hasattr(resp, 'text'):
+                  return resp.text, token_count
+             return str(resp), token_count
+             
+        # Fallback
+        return str(result), token_count
 
 async def get_ai_response(
     session: Session, 
     chatbot: Chatbot, 
     user_message: str,
     temperature: float = 0.7
-) -> str:
+) -> tuple[str, int]:
     """Calls AI via wrapper with document context."""
     
     # 1. Get Platform API Key for Gemini
@@ -66,7 +99,7 @@ async def get_ai_response(
     api_key = session.exec(key_stmt).first()
     
     if not api_key:
-        return "Error: AI Service configuration missing (Platform API Key not found)."
+        return "Error: AI Service configuration missing (Platform API Key not found).", 0
 
     # 2. Build Context
     context = get_chatbot_context(session, chatbot.id)

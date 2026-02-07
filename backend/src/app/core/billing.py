@@ -34,8 +34,9 @@ def verify_plan_limits(user: User, session: Session):
     
     return usage
 
-def increment_usage(usage: UsageTracking, session: Session):
+def increment_usage(usage: UsageTracking, session: Session, token_count: int = 0):
     usage.message_count += 1
+    usage.token_count += token_count
     usage.updated_at = datetime.utcnow()
     session.add(usage)
     session.commit()

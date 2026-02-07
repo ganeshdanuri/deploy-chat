@@ -77,7 +77,7 @@ async def chatbot_chat(
     
     # 3. Get Real AI Response
     try:
-        response = await get_ai_response(session, chatbot, message, temperature=chatbot.temperature)
+        response, token_count = await get_ai_response(session, chatbot, message, temperature=chatbot.temperature)
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -85,9 +85,9 @@ async def chatbot_chat(
         )
     
     # 4. Increment usage
-    increment_usage(usage, session)
+    increment_usage(usage, session, token_count=token_count)
     
-    return {"response": response, "usage_count": usage.message_count}
+    return {"response": response, "usage_count": usage.message_count, "token_usage": token_count}
 
 @router.delete("/{chatbot_id}")
 def delete_chatbot(

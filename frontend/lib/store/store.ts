@@ -1,5 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import documentsReducer from './slices/documentsSlice';
+import usageReducer from './slices/usageSlice';
 import datasetsReducer from './slices/datasetsSlice';
 import chatbotsReducer from './slices/chatbotsSlice';
 
@@ -8,6 +9,7 @@ export const store = configureStore({
         documents: documentsReducer,
         datasets: datasetsReducer,
         chatbots: chatbotsReducer,
+        usage: usageReducer,
     },
     devTools: process.env.NODE_ENV !== 'production',
 });

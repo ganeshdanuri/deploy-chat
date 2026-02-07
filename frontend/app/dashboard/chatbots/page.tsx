@@ -17,6 +17,7 @@ export default function ChatbotsPage() {
         dispatch(fetchChatbots());
     }, [dispatch]);
 
+
     const handleDelete = async (id: string, e: React.MouseEvent) => {
         e.stopPropagation();
         if (confirm("Are you sure you want to delete this chatbot?")) {
