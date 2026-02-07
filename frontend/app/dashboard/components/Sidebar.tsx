@@ -23,9 +23,9 @@ import { useState } from "react";
 
 const mainNavItems = [
     { id: "home", label: "Overview", path: "/dashboard", icon: HiHome },
-    { id: "chatbots", label: "Chatbots", path: "/dashboard/chatbots", icon: HiChatAlt2 },
-    { id: "datasets", label: "Datasets", path: "/dashboard/datasets", icon: HiDatabase },
     { id: "documents", label: "Documents", path: "/dashboard/documents", icon: HiDocumentText },
+    { id: "datasets", label: "Datasets", path: "/dashboard/datasets", icon: HiDatabase },
+    { id: "chatbots", label: "Chatbots", path: "/dashboard/chatbots", icon: HiChatAlt2 },
     { id: "playground", label: "Playground", path: "/dashboard/playground", icon: HiSparkles },
     { id: "analytics", label: "Analytics", path: "/dashboard/analytics", icon: HiChartBar },
 ];

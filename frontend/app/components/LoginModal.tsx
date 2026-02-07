@@ -13,30 +13,56 @@ interface LoginModalProps {
 }
 
 export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
+  const [isRegister, setIsRegister] = useState(false);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
-  const { login } = useAuth();
+  const [isLoading, setIsLoading] = useState(false);
+  const { login, register } = useAuth();
   const router = useRouter();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    setIsLoading(true);
 
-    const success = login(username, password);
-
-    if (success) {
-      onClose();
-      router.push("/dashboard");
-    } else {
-      setError("Invalid username or password");
+    try {
+      if (isRegister) {
+        if (password !== confirmPassword) {
+          setError("Passwords do not match");
+          setIsLoading(false);
+          return;
+        }
+        const success = await register(username, password);
+        if (success) {
+          onClose();
+          router.push("/dashboard");
+        } else {
+          setError("Registration failed. Data might be invalid or username taken.");
+        }
+      } else {
+        const success = await login(username, password);
+        if (success) {
+          onClose();
+          router.push("/dashboard");
+        } else {
+          setError("Invalid username or password");
+        }
+      }
+    } catch (err) {
+      setError("An unexpected error occurred");
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleClose = () => {
     setUsername("");
     setPassword("");
+    setConfirmPassword("");
     setError("");
+    setIsRegister(false);
     onClose();
   };
 
@@ -49,7 +75,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
       onClick={handleClose}
     >
       <div
-        className="w-full max-w-md rounded-2xl bg-white p-8 relative"
+        className="w-full max-w-md rounded-2xl bg-white p-8 relative overflow-hidden"
         style={{ boxShadow: theme.shadows.xl }}
         onClick={(e) => e.stopPropagation()}
       >
@@ -76,23 +102,13 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
             className="text-2xl font-semibold"
             style={{ color: theme.colors.neutral[900] }}
           >
-            Sign in to your account
+            {isRegister ? "Create an account" : "Sign in to your account"}
           </h1>
           <p
             className="mt-2 text-sm"
             style={{ color: theme.colors.neutral[600] }}
           >
-            Manage your chatbots and integrations
-          </p>
-          <p
-            className="mt-4 text-xs p-3 rounded-lg border"
-            style={{
-              color: theme.colors.neutral[500],
-              backgroundColor: theme.colors.neutral[100],
-              borderColor: theme.colors.neutral[200]
-            }}
-          >
-            Demo credentials: <span className="font-mono font-semibold">admin</span> / <span className="font-mono font-semibold">1234</span>
+            {isRegister ? "Join us to manage your chatbots" : "Manage your chatbots and integrations"}
           </p>
         </div>
 
@@ -111,7 +127,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
         )}
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="space-y-5">
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label
               className="mb-1 block text-sm font-medium"
@@ -133,7 +149,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
                   borderColor: theme.colors.neutral[300],
                   color: theme.colors.neutral[900]
                 }}
-                placeholder="admin"
+                placeholder="Enter username"
               />
             </div>
           </div>
@@ -164,18 +180,69 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
             </div>
           </div>
 
+          {isRegister && (
+            <div>
+              <label
+                className="mb-1 block text-sm font-medium"
+                style={{ color: theme.colors.neutral[700] }}
+              >
+                Confirm Password
+              </label>
+              <div className="relative">
+                <div className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: theme.colors.neutral[400] }}>
+                  <HiLockClosed className="text-lg" />
+                </div>
+                <input
+                  type="password"
+                  required
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  className="w-full rounded-lg border pl-10 pr-4 py-2 text-sm focus:outline-none transition-all focus:ring-2 focus:ring-indigo-200"
+                  style={{
+                    borderColor: theme.colors.neutral[300],
+                    color: theme.colors.neutral[900]
+                  }}
+                  placeholder="••••••••"
+                />
+              </div>
+            </div>
+          )}
+
           <button
             type="submit"
-            className="w-full rounded-lg px-4 py-2.5 text-sm font-medium text-white transition-all hover:-translate-y-0.5 hover:shadow-md flex items-center justify-center gap-2"
+            disabled={isLoading}
+            className="w-full rounded-lg px-4 py-2.5 text-sm font-medium text-white transition-all hover:-translate-y-0.5 hover:shadow-md flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
             style={{
               background: theme.gradients.primaryButton,
               boxShadow: theme.shadows.sm
             }}
           >
-            <HiLogin className="text-xl" />
-            Sign in
+            {isLoading ? (
+              <span className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+            ) : (
+              <>
+                <HiLogin className="text-xl" />
+                {isRegister ? "Create Account" : "Sign in"}
+              </>
+            )}
           </button>
         </form>
+
+        <div className="mt-6 text-center">
+          <p className="text-sm" style={{ color: theme.colors.neutral[600] }}>
+            {isRegister ? "Already have an account?" : "Don't have an account?"}{" "}
+            <button
+              onClick={() => {
+                setIsRegister(!isRegister);
+                setError("");
+              }}
+              className="font-semibold transition-colors"
+              style={{ color: theme.colors.primary.main }}
+            >
+              {isRegister ? "Sign In" : "Get Started"}
+            </button>
+          </p>
+        </div>
       </div>
     </div>
   );
