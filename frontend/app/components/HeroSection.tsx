@@ -1,8 +1,8 @@
 "use client";
 
 import { theme } from "../theme";
-import { HiTrendingUp, HiArrowRight } from "react-icons/hi";
-import { FaRobot } from "react-icons/fa";
+import { HiArrowRight, HiPlay, HiCheck, HiShieldCheck } from "react-icons/hi";
+import { FaRobot, FaCode, FaBolt } from "react-icons/fa";
 
 interface Feature {
   id: number;
@@ -27,207 +27,207 @@ interface HeroSectionProps {
 
 export default function HeroSection({ features, stats, onGetStarted }: HeroSectionProps) {
   return (
-    <section className="mx-auto max-w-7xl px-6 py-8 lg:py-12">
-      <div className="grid gap-12 lg:grid-cols-2 lg:gap-16 items-center">
-        {/* Left Side - Content */}
-        <div className="flex flex-col justify-center space-y-6">
-          {/* Growth Badge */}
-          <div className="flex items-center gap-3">
+    <section className="relative overflow-hidden bg-white pt-10">
+      {/* Background Decor - Subtle Gradients for Enterprise Feel */}
+      <div
+        className="absolute top-0 right-0 -z-10 h-[600px] w-[600px] opacity-20 blur-3xl rounded-full"
+        style={{ background: `radial-gradient(circle, ${theme.colors.primary.light} 0%, transparent 70%)` }}
+      />
+      <div
+        className="absolute bottom-0 left-0 -z-10 h-[400px] w-[400px] opacity-10 blur-3xl rounded-full"
+        style={{ background: `radial-gradient(circle, ${theme.colors.accent.purple} 0%, transparent 70%)` }}
+      />
+
+      <div className="mx-auto max-w-7xl px-6 py-12 lg:py-20">
+        <div className="grid gap-16 lg:grid-cols-2 lg:items-center">
+
+          {/* Left Content - Value Proposition */}
+          <div className="max-w-2xl space-y-8">
+            {/* Trust Badge */}
             <div
-              className="flex h-12 w-12 items-center justify-center rounded-xl border-2 shrink-0"
-              style={{ borderColor: theme.colors.primary.main, color: theme.colors.primary.main }}
+              className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-sm font-medium border"
+              style={{
+                borderColor: theme.colors.neutral[200],
+                backgroundColor: theme.colors.neutral[50],
+                color: theme.colors.neutral[700]
+              }}
             >
-              <HiTrendingUp className="h-7 w-7" />
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 bg-green-400"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+              </span>
+              Trusted by 500+ Engineering Teams
             </div>
-            <div>
-              <h3
-                className="text-lg lg:text-xl font-semibold"
+
+            {/* Headline */}
+            <div className="space-y-4">
+              <h1
+                className="text-5xl lg:text-7xl font-bold tracking-tight leading-[1.1]"
                 style={{ color: theme.colors.neutral[900] }}
               >
-                AI Powered
-              </h3>
-              <p className="text-sm lg:text-base" style={{ color: theme.colors.neutral[600] }}>
-                <span className="font-semibold">Next-Gen</span> Chatbot Platform
+                Build Intelligent <br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">
+                  Conversational AI
+                </span>
+              </h1>
+              <p
+                className="text-lg lg:text-xl leading-relaxed max-w-lg"
+                style={{ color: theme.colors.neutral[600] }}
+              >
+                Deploy enterprise-grade chatbots in minutes, not months.
+                Train on your data, integrate seamlessly, and automate support
+                with 98% accuracy.
               </p>
             </div>
-          </div>
 
-          {/* Main Heading */}
-          <h1
-            className="text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight"
-            style={{ color: theme.colors.neutral[900] }}
-          >
-            AI Chatbots
-          </h1>
-
-          {/* Features Grid */}
-          <div className="grid gap-6 sm:grid-cols-2 pt-2">
-            {features.map((feature) => (
-              <div key={feature.id} className="space-y-2">
-                <h3
-                  className="text-lg lg:text-xl font-semibold"
-                  style={{ color: theme.colors.neutral[900] }}
-                >
-                  {feature.title}
-                </h3>
-                <p
-                  className="text-sm leading-relaxed"
-                  style={{ color: theme.colors.neutral[600] }}
-                >
-                  {feature.description}
-                </p>
-              </div>
-            ))}
-            <button
-                  onClick={onGetStarted}
-                  className="flex items-center gap-2 text-sm font-medium transition-all hover:gap-3 pt-1"
-                  style={{ color: theme.colors.neutral[900] }}
-                >
-                  Get Started
-                  <HiArrowRight className="text-lg" />
-                </button>
-          </div>
-        </div>
-
-        {/* Right Side - Stats & Visual */}
-        <div className="relative flex items-center justify-center min-h-[400px] lg:min-h-[500px]">
-          <div className="relative w-full h-full max-w-lg aspect-square">
-            {/* Green Circle - 98% */}
-            <div
-              className="absolute left-0 top-0 flex h-40 w-40 sm:h-48 sm:w-48 lg:h-56 lg:w-56 flex-col items-center justify-center rounded-full shadow-lg"
-              style={{ backgroundColor: stats[0].bgColor }}
-            >
-              <div
-                className="text-4xl sm:text-5xl lg:text-6xl font-bold"
-                style={{ color: stats[0].color }}
+            {/* CTA Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4">
+              <button
+                onClick={onGetStarted}
+                className="flex items-center justify-center gap-2 px-8 py-4 rounded-xl text-base font-semibold text-white shadow-lg shadow-blue-500/20 transition-all hover:-translate-y-1 hover:shadow-xl"
+                style={{ background: theme.gradients.primaryButton }}
               >
-                {stats[0].value}
-              </div>
-              <div
-                className="mt-2 text-center text-xs sm:text-sm font-medium"
-                style={{ color: theme.colors.neutral[900] }}
+                Start Building Free
+                <HiArrowRight className="text-lg" />
+              </button>
+
+              <button
+                className="flex items-center justify-center gap-2 px-8 py-4 rounded-xl text-base font-semibold border transition-all hover:bg-slate-50"
+                style={{
+                  color: theme.colors.neutral[700],
+                  borderColor: theme.colors.neutral[300]
+                }}
               >
-                {stats[0].label.split(" ")[0]}
-                <br />
-                {stats[0].label.split(" ")[1]}
-              </div>
+                <HiPlay className="text-lg" />
+                View Demo
+              </button>
             </div>
 
-            {/* Yellow Circle - Phone Mockup */}
+            {/* Feature Checkmarks (Mini) */}
+            <div className="pt-4 flex flex-wrap gap-x-8 gap-y-3">
+              {[
+                "No credit card required",
+                "GDPR Compliant",
+                "14-day free trial"
+              ].map((item, idx) => (
+                <div key={idx} className="flex items-center gap-2 text-sm text-slate-500 font-medium">
+                  <HiCheck className="text-green-500 text-lg" />
+                  {item}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Right Content - Visual 'App Interface' */}
+          <div className="relative mx-auto w-full max-w-[500px] lg:max-w-none">
+            {/* Main 'Dashboard' Card */}
             <div
-              className="absolute bottom-0 left-8 sm:left-12 flex h-52 w-52 sm:h-60 sm:w-60 lg:h-64 lg:w-64 items-center justify-center rounded-full shadow-lg"
-              style={{ backgroundColor: stats[1].bgColor }}
+              className="relative z-10 overflow-hidden rounded-2xl border shadow-2xl bg-white"
+              style={{ borderColor: theme.colors.neutral[200] }}
             >
-              <div
-                className="relative h-40 w-24 sm:h-44 sm:w-26 lg:h-48 lg:w-28 overflow-hidden rounded-3xl bg-white"
-                style={{ boxShadow: theme.shadows.xl }}
-              >
-                <div className="p-2 sm:p-3">
-                  {/* Phone Header */}
-                  <div className="mb-2 flex items-center gap-2">
-                    <div
-                      className="h-6 w-6 sm:h-7 sm:w-7 lg:h-8 lg:w-8 rounded-full shrink-0"
-                      style={{ backgroundColor: theme.colors.primary.main }}
-                    />
-                    <div
-                      className="h-4 w-10 sm:h-5 sm:w-12 rounded-full"
-                      style={{ backgroundColor: stats[0].color }}
-                    />
-                  </div>
+              {/* Fake Window Header */}
+              <div className="border-b bg-slate-50 px-4 py-3 flex items-center gap-2">
+                <div className="flex gap-1.5">
+                  <div className="w-3 h-3 rounded-full bg-red-400/80" />
+                  <div className="w-3 h-3 rounded-full bg-amber-400/80" />
+                  <div className="w-3 h-3 rounded-full bg-green-400/80" />
+                </div>
+                <div className="ml-4 h-2 w-32 rounded-full bg-slate-200" />
+              </div>
 
-                  {/* Phone Content */}
-                  <div className="mb-2">
-                    <div
-                      className="mb-1 text-xs font-semibold"
-                      style={{ color: theme.colors.neutral[900] }}
-                    >
-                      Today
-                    </div>
-                    <div
-                      className="text-xs font-medium"
-                      style={{ color: theme.colors.neutral[900] }}
-                    >
-                      Active Chats (12)
-                    </div>
+              {/* Window Content */}
+              <div className="p-6 space-y-6">
+                {/* Header Area */}
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="h-2 w-24 bg-slate-200 rounded mb-2" />
+                    <div className="h-4 w-40 bg-slate-800 rounded opacity-10" />
                   </div>
-
                   <div
-                    className="mb-1 text-xs font-medium"
-                    style={{ color: theme.colors.neutral[600] }}
+                    className="h-8 w-8 rounded-lg flex items-center justify-center"
+                    style={{ backgroundColor: theme.colors.primary.lightest }}
                   >
-                    Recent —
+                    <FaRobot style={{ color: theme.colors.primary.main }} />
                   </div>
+                </div>
 
-                  <div
-                    className="rounded-lg p-2"
-                    style={{ backgroundColor: theme.colors.neutral[100] }}
-                  >
-                    <div
-                      className="text-xs font-medium"
-                      style={{ color: theme.colors.neutral[900] }}
-                    >
-                      Customer Support
-                    </div>
-                    <div
-                      className="text-xs"
-                      style={{ color: theme.colors.neutral[500] }}
-                    >
-                      Live now - 24/7
-                    </div>
-                    <div className="mt-2 flex gap-1">
-                      {[1, 2, 3].map((i) => (
-                        <div
-                          key={i}
-                          className="h-3 w-3 sm:h-4 sm:w-4 rounded-full"
-                          style={{
-                            backgroundColor:
-                              i === 1
-                                ? stats[0].color
-                                : i === 2
-                                ? theme.colors.primary.main
-                                : stats[2].color,
-                          }}
-                        />
-                      ))}
-                    </div>
+                {/* Graph Area */}
+                <div className="space-y-2">
+                  <div className="flex items-end gap-2 h-32 pb-2 border-b border-slate-100">
+                    {[40, 65, 45, 80, 55, 90, 70].map((h, i) => (
+                      <div
+                        key={i}
+                        className="flex-1 rounded-t-sm opacity-80"
+                        style={{
+                          height: `${h}%`,
+                          backgroundColor: i === 5 ? theme.colors.primary.main : theme.colors.primary.lightest
+                        }}
+                      />
+                    ))}
                   </div>
+                  <div className="flex justify-between text-xs text-slate-400">
+                    <span>Mon</span>
+                    <span>Sun</span>
+                  </div>
+                </div>
+
+                {/* List Items */}
+                <div className="space-y-3">
+                  {[1, 2, 3].map((_, i) => (
+                    <div key={i} className="flex items-center gap-3 p-3 rounded-lg bg-slate-50 border border-slate-100">
+                      <div className="h-8 w-8 rounded bg-white border border-slate-200 flex items-center justify-center">
+                        <div className="h-3 w-3 rounded-full bg-slate-200" />
+                      </div>
+                      <div className="space-y-1.5 flex-1">
+                        <div className="h-2 w-full max-w-[120px] bg-slate-300 rounded" />
+                        <div className="h-2 w-3/4 max-w-[80px] bg-slate-200 rounded" />
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
 
-            {/* Purple Circle - Profile */}
+            {/* Floating Card 1: Accuracy */}
             <div
-              className="absolute right-0 top-4 sm:top-6 lg:top-8 flex h-56 w-56 sm:h-64 sm:w-64 lg:h-72 lg:w-72 items-center justify-center overflow-hidden rounded-full shadow-lg"
+              className="absolute -right-8 -top-8 z-20 hidden lg:flex items-center gap-4 rounded-xl bg-white p-4 shadow-xl border border-slate-100 animate-bounce-slow"
+              style={{ animationDuration: '3s' }}
             >
-              <img
-                src="/chat.jpg"
-                alt="Profile"
-                className="h-48 w-48 sm:h-56 sm:w-56 lg:h-64 lg:w-64 rounded-full object-cover"
-              />
+              <div
+                className="flex h-12 w-12 items-center justify-center rounded-lg"
+                style={{ backgroundColor: stats[0].bgColor }}
+              >
+                <FaBolt className="text-xl" style={{ color: stats[0].color }} />
+              </div>
+              <div>
+                <div className="text-2xl font-bold text-slate-900">{stats[0].value}</div>
+                <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider">{stats[0].label}</div>
+              </div>
             </div>
 
-            {/* White Circle - 10K+ */}
+            {/* Floating Card 2: Active Users */}
             <div
-              className="absolute bottom-2 right-4 sm:bottom-4 sm:right-6 lg:right-0 flex h-32 w-32 sm:h-36 sm:w-36 lg:h-40 lg:w-40 flex-col items-center justify-center rounded-full bg-white shadow-xl"
+              className="absolute -left-12 bottom-12 z-20 hidden lg:flex flex-col gap-2 rounded-xl bg-white p-5 shadow-xl border border-slate-100"
             >
-              <div
-                className="text-3xl sm:text-4xl lg:text-5xl font-bold"
-                style={{ color: theme.colors.neutral[900] }}
-              >
-                {stats[2].value}
+              <div className="flex items-center gap-3">
+                <div className="flex -space-x-2">
+                  {[1, 2, 3].map(i => (
+                    <div key={i} className="w-8 h-8 rounded-full border-2 border-white bg-slate-200" />
+                  ))}
+                </div>
+                <div className="text-sm font-bold text-slate-900">+10K</div>
               </div>
-              <div
-                className="mt-1 text-center text-xs sm:text-sm font-medium"
-                style={{ color: theme.colors.neutral[900] }}
-              >
-                {stats[2].label.split(" ")[0]}
-                <br />
-                {stats[2].label.split(" ")[1]}
-              </div>
+              <div className="text-xs font-medium text-slate-500">Active Developers</div>
             </div>
+
+            {/* Decorative Elements */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 -z-10 w-[140%] h-[140%] border border-slate-100/50 rounded-full opacity-50" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 -z-10 w-[120%] h-[120%] border border-slate-100/50 rounded-full opacity-50" />
+
           </div>
         </div>
       </div>
     </section>
   );
 }
+

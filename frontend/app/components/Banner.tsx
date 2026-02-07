@@ -1,6 +1,9 @@
 "use client";
 
+import { useLayoutEffect, useRef } from "react";
+import gsap from "gsap";
 import { theme } from "../theme";
+import { FaGoogle, FaAmazon, FaMicrosoft, FaSpotify, FaSlack, FaUber, FaAirbnb } from "react-icons/fa";
 
 interface Stat {
   id: number;
@@ -16,35 +19,80 @@ interface BannerProps {
 }
 
 export default function Banner({ stats, onStartNow }: BannerProps) {
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const marqueeRef = useRef<HTMLDivElement>(null);
+
+  useLayoutEffect(() => {
+    const ctx = gsap.context(() => {
+      const marquee = marqueeRef.current;
+      if (!marquee) return;
+
+      const totalWidth = marquee.scrollWidth;
+      const visibleWidth = marquee.parentElement?.offsetWidth || 0;
+
+      // Clone content to ensure seamless loop if needed, 
+      // but for simplicity with GSAP, we can just animate xPercent
+      // A simple infinite loop:
+
+      gsap.to(marquee, {
+        x: "-50%", // Move half the width (since we double the content)
+        ease: "none",
+        duration: 60, // Adjust speed here
+        repeat: -1,
+      });
+    }, wrapperRef);
+
+    return () => ctx.revert();
+  }, []);
+
+  const keywords = [
+    "Open Source",
+    "RAG Ready",
+    "Type-Safe",
+    "Self-Hosted",
+    "Privacy First",
+    "Custom Models",
+    "React Components",
+    "Python Backend",
+    "Vector Database"
+  ];
+
+  // Quadruple the keywords for seamless loop
+  const seamlessKeywords = [...keywords, ...keywords, ...keywords, ...keywords];
+
   return (
     <div
-      className="w-full p-6"
-      style={{ backgroundColor: theme.colors.primary.main }}
+      ref={wrapperRef}
+      className="w-full border-y py-8 overflow-hidden bg-white"
+      style={{ borderColor: theme.colors.neutral[200] }}
     >
-      <div className="mx-auto max-w-7xl">
-        <div className="flex flex-wrap items-center justify-between gap-4 text-sm font-semibold text-white">
-          <div className="flex items-center gap-2">
-            <span>Unlimited Conversations</span>
-            <span>✱</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span>30 Days Free Trial</span>
-            <span>→</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span>24/7 AI Support</span>
-            <span>✱</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span>Easy Website Integration</span>
-            <span>→</span>
-          </div>
-          <button 
-            onClick={onStartNow}
-            className="rounded-lg bg-white px-6 py-2 font-semibold text-black transition-all hover:shadow-lg"
-          >
-            Start Now
-          </button>
+      <div className="relative w-full overflow-hidden">
+        <div
+          // Add gradient masks for fade effect on edges
+          className="absolute inset-0 z-10 pointer-events-none"
+          style={{
+            background: `linear-gradient(90deg, #ffffff 0%, transparent 15%, transparent 85%, #ffffff 100%)`
+          }}
+        />
+
+        <div
+          ref={marqueeRef}
+          className="flex items-center w-max gap-16 px-4"
+        >
+          {seamlessKeywords.map((word, idx) => (
+            <div
+              key={idx}
+              className="flex items-center gap-3"
+            >
+              <div
+                className="w-2 h-2 rounded-full"
+                style={{ backgroundColor: theme.colors.primary.main }}
+              />
+              <span className="text-gray-500 text-lg font-bold uppercase tracking-wider whitespace-nowrap">
+                {word}
+              </span>
+            </div>
+          ))}
         </div>
       </div>
     </div>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { 
+import {
   HiHome,
   HiDatabase,
   HiChatAlt2,
@@ -27,26 +27,18 @@ import { MdCircle } from "react-icons/md";
 import { theme } from "../theme";
 
 // Sidebar Component
-function Sidebar({ activeView, setActiveView }) {
-  const [projectsExpanded, setProjectsExpanded] = useState(true);
-
+function Sidebar({ activeView, setActiveView }: { activeView: string; setActiveView: (view: string) => void }) {
   const menuItems = [
     { id: "home", label: "Home", icon: HiHome },
     { id: "chatbots", label: "Chatbots", icon: HiChatAlt2 },
     { id: "datasets", label: "Datasets", icon: HiDatabase },
     { id: "documents", label: "Documents", icon: HiDocumentText },
-    { id: "calendar", label: "Calendar", icon: HiCalendar },
+    { id: "test-chatbots", label: "Test Chatbots", icon: HiSparkles },
     { id: "analytics", label: "Reports & Analytics", icon: HiChartBar },
   ];
 
-  const projects = [
-    { id: "1", name: "Product launch", color: theme.colors.accent.purple },
-    { id: "2", name: "Team brainstorm", color: theme.colors.accent.blue },
-    { id: "3", name: "Branding launch", color: theme.colors.accent.teal },
-  ];
-
   return (
-    <div 
+    <div
       className="w-72 h-screen border-r border-slate-200 flex flex-col"
       style={{ background: theme.gradients.page }}
     >
@@ -54,25 +46,25 @@ function Sidebar({ activeView, setActiveView }) {
       <div className="p-5 border-b border-slate-200">
         <div className="flex items-center gap-3 p-3 rounded-xl bg-white shadow-sm hover:shadow-md transition-all cursor-pointer group">
           <div className="relative">
-            <div 
+            <div
               className="w-11 h-11 rounded-full flex items-center justify-center font-semibold text-sm text-white"
               style={{ backgroundColor: theme.colors.primary.light }}
             >
               CH
             </div>
-            <div 
+            <div
               className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 rounded-full border-2 border-white"
               style={{ backgroundColor: theme.colors.accent.green }}
             ></div>
           </div>
           <div className="flex-1">
             <h3 className="text-sm font-semibold text-slate-900">Courtney Henry</h3>
-            <p 
+            <p
               className="text-xs font-medium"
               style={{ color: theme.colors.accent.green }}
             >Online</p>
           </div>
-          <HiChevronDown className="w-4 h-4 text-slate-400 group-hover:text-slate-600 transition-colors"  />
+          <HiChevronDown className="w-4 h-4 text-slate-400 group-hover:text-slate-600 transition-colors" />
         </div>
       </div>
 
@@ -82,21 +74,21 @@ function Sidebar({ activeView, setActiveView }) {
           {menuItems.map((item) => {
             const Icon = item.icon;
             const isActive = activeView === item.id;
-            
+
             return (
               <button
                 key={item.id}
                 onClick={() => setActiveView(item.id)}
                 className={`
-                  w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all
-                  ${isActive 
-                    ? "text-white shadow-lg" 
+                  w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all cursor-pointer
+                  ${isActive
+                    ? "text-white shadow-lg"
                     : "text-slate-700 hover:bg-white hover:shadow-sm"
                   }
                 `}
                 style={isActive ? { backgroundColor: theme.colors.primary.main } : {}}
               >
-                <Icon className="w-5 h-5"  />
+                <Icon className="w-5 h-5" />
                 <span>{item.label}</span>
               </button>
             );
@@ -104,66 +96,36 @@ function Sidebar({ activeView, setActiveView }) {
         </nav>
 
         {/* Projects Section */}
-        <div className="mt-8">
-          <div className="flex items-center justify-between px-4 mb-3">
-            <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider">
-              My Projects
-            </h3>
-            <button 
-              className="text-xs font-semibold flex items-center gap-1 hover:opacity-70"
-              style={{ color: theme.colors.primary.main }}
-            >
-              <HiPlus className="w-3.5 h-3.5"  />
-              Add
-            </button>
-          </div>
-          
-          <div className="space-y-1.5">
-            {projects.map((project) => (
-              <button
-                key={project.id}
-                className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium text-slate-700 hover:bg-white hover:shadow-sm transition-all group"
-              >
-                <MdCircle 
-                  className="w-3 h-3 group-hover:scale-110 transition-transform" 
-                  fill={project.color} 
-                  color={project.color}
-                  
-                />
-                <span>{project.name}</span>
-              </button>
-            ))}
-          </div>
-        </div>
+
       </div>
 
       {/* Bottom Section */}
       <div className="p-4 space-y-3 border-t border-slate-200">
-        <button 
+        <button
           onClick={() => setActiveView("settings")}
           className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium text-slate-700 hover:bg-white hover:shadow-sm transition-all"
         >
-          <HiCog className="w-5 h-5"  />
+          <HiCog className="w-5 h-5" />
           <span>Settings</span>
         </button>
 
         {/* Invite Card */}
-        <div 
+        <div
           className="rounded-2xl p-5 shadow-lg text-white"
           style={{ backgroundColor: theme.colors.primary.light }}
         >
           <div className="flex items-center gap-2 mb-3">
-            <HiChatAlt2 className="w-5 h-5"  />
+            <HiChatAlt2 className="w-5 h-5" />
             <span className="font-bold text-sm">OpenChat</span>
           </div>
           <p className="text-white/90 text-xs leading-relaxed mb-4">
             New members will gain access to public Spaces, Docs and Dashboards
           </p>
-          <button 
+          <button
             className="w-full bg-white font-semibold text-sm py-2.5 rounded-xl hover:opacity-90 transition-all flex items-center justify-center gap-2"
             style={{ color: theme.colors.primary.main }}
           >
-            <HiPlus className="w-4 h-4"  />
+            <HiPlus className="w-4 h-4" />
             Invite people
           </button>
         </div>
@@ -174,151 +136,81 @@ function Sidebar({ activeView, setActiveView }) {
 
 // Home View
 function HomeView() {
-  const quickActions = [
-    { label: "Ask AI", icon: HiSparkles, isPrimary: true },
-    { label: "Get tasks updates", icon: HiCheckCircle, isPrimary: false },
-    { label: "Create workspace", icon: HiPlus, isPrimary: false },
-    { label: "Connect apps", icon: HiGlobeAlt, isPrimary: false },
-  ];
-
   return (
-    <div className="space-y-8">
-      {/* Welcome Section */}
-      <div>
-        <div className="text-sm text-slate-600 mb-2">Mon, July 7</div>
-        <h1 className="text-4xl font-bold text-slate-900 mb-2">Hello, Courtney</h1>
-        <p className="text-2xl font-medium text-slate-600">
-          How can I help you today?
-        </p>
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-slate-800">Dashboard Overview</h1>
+          <p className="text-sm text-slate-500 mt-1">Platform performance and activity summary</p>
+        </div>
       </div>
 
-      {/* Quick Actions */}
-      <div className="flex flex-wrap gap-3">
-        {quickActions.map((action, idx) => {
-          const Icon = action.icon;
-          return (
-            <button
-              key={idx}
-              className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-medium text-sm transition-all hover:scale-105 shadow-md hover:shadow-lg ${
-                action.isPrimary 
-                  ? "text-white" 
-                  : "bg-white text-slate-700 border border-slate-200"
-              }`}
-              style={action.isPrimary ? { backgroundColor: theme.colors.primary.light } : {}}
-            >
-              <Icon className="w-4 h-4"  />
-              {action.label}
-            </button>
-          );
-        })}
-      </div>
-
-      {/* Main Content Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* My Tasks Widget */}
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
-          <div className="flex items-center justify-between mb-5">
-            <div className="flex items-center gap-2">
-              <HiDocumentText className="w-5 h-5 text-slate-700"  />
-              <h2 className="text-lg font-bold text-slate-900">My Tasks</h2>
+      {/* Key Metrics */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {/* Metric 1 */}
+        <div className="p-5 bg-white rounded-xl border border-slate-200 shadow-sm">
+          <div className="flex items-center gap-3 mb-2">
+            <div className="p-2 bg-indigo-50 text-indigo-600 rounded-lg">
+              <HiChatAlt2 className="w-5 h-5" />
             </div>
-            <div className="flex items-center gap-2">
-              <button className="p-2 hover:bg-slate-100 rounded-lg transition-colors">
-                <HiPlus className="w-4 h-4 text-slate-600"  />
-              </button>
-              <button className="p-2 hover:bg-slate-100 rounded-lg transition-colors">
-                <HiDotsVertical className="w-4 h-4 text-slate-600"  />
-              </button>
-            </div>
+            <span className="text-sm font-medium text-slate-600">Total Conversations</span>
           </div>
-
-          <div className="space-y-4">
-            {/* Task Group */}
-            <div>
-              <div className="flex items-center gap-2 mb-3">
-                <div className="px-3 py-1 bg-cyan-100 text-cyan-700 text-xs font-bold rounded-lg">
-                  IN PROGRESS
-                </div>
-                <span className="text-xs text-slate-500">2 tasks</span>
-              </div>
-              
-              <div className="space-y-2">
-                <div className="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-50 transition-colors">
-                  <div className="w-4 h-4 rounded border-2 border-slate-300"></div>
-                  <div className="flex-1">
-                    <div className="text-sm font-medium text-slate-900">One-on-One Meeting</div>
-                  </div>
-                  <span className="px-2 py-1 bg-red-100 text-red-700 text-xs font-semibold rounded">High</span>
-                  <span className="text-xs text-red-600 font-medium">Today</span>
-                </div>
-                
-                <div className="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-50 transition-colors">
-                  <div className="w-4 h-4 rounded border-2 border-slate-300"></div>
-                  <div className="flex-1">
-                    <div className="text-sm font-medium text-slate-900">Send a summary email to stakeholders</div>
-                  </div>
-                  <span className="px-2 py-1 bg-slate-100 text-slate-700 text-xs font-semibold rounded">Low</span>
-                  <span className="text-xs text-slate-600 font-medium">3 days left</span>
-                </div>
-              </div>
+          <div className="text-2xl font-bold text-slate-900">1,248</div>
+          <div className="flex items-center gap-1 mt-1 text-xs text-green-600 font-medium">
+            <HiTrendingUp className="w-3 h-3" />
+            <span>+12.5% this week</span>
+          </div>
+        </div>
+        {/* Metric 2 */}
+        <div className="p-5 bg-white rounded-xl border border-slate-200 shadow-sm">
+          <div className="flex items-center gap-3 mb-2">
+            <div className="p-2 bg-emerald-50 text-emerald-600 rounded-lg">
+              <HiDatabase className="w-5 h-5" />
             </div>
+            <span className="text-sm font-medium text-slate-600">Active Datasets</span>
+          </div>
+          <div className="text-2xl font-bold text-slate-900">12</div>
+          <div className="flex items-center gap-1 mt-1 text-xs text-slate-500 font-medium">
+            <span>Across 4 workspaces</span>
+          </div>
+        </div>
+        {/* Metric 3 */}
+        <div className="p-5 bg-white rounded-xl border border-slate-200 shadow-sm">
+          <div className="flex items-center gap-3 mb-2">
+            <div className="p-2 bg-blue-50 text-blue-600 rounded-lg">
+              <HiSparkles className="w-5 h-5" />
+            </div>
+            <span className="text-sm font-medium text-slate-600">AI Tokens Used</span>
+          </div>
+          <div className="text-2xl font-bold text-slate-900">842K</div>
+          <div className="flex items-center gap-1 mt-1 text-xs text-slate-500 font-medium">
+            <span>Reset in 14 days</span>
+          </div>
+        </div>
+      </div>
 
-            <button 
-              className="text-sm font-semibold hover:opacity-70 flex items-center gap-1"
-              style={{ color: theme.colors.primary.main }}
-            >
-              + Add task
+      {/* System Status or Recent Activity */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Quick Shortcuts */}
+        <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
+          <h3 className="text-base font-bold text-slate-800 mb-4">Quick Actions</h3>
+          <div className="grid grid-cols-2 gap-3">
+            <button className="flex flex-col items-center justify-center p-4 rounded-xl border border-dashed border-slate-200 hover:border-indigo-300 hover:bg-indigo-50 transition-all group">
+              <HiChatAlt2 className="w-6 h-6 text-slate-400 group-hover:text-indigo-600 mb-2 transition-colors" />
+              <span className="text-sm font-semibold text-slate-600 group-hover:text-indigo-700">New Chatbot</span>
+            </button>
+            <button className="flex flex-col items-center justify-center p-4 rounded-xl border border-dashed border-slate-200 hover:border-emerald-300 hover:bg-emerald-50 transition-all group">
+              <HiDatabase className="w-6 h-6 text-slate-400 group-hover:text-emerald-600 mb-2 transition-colors" />
+              <span className="text-sm font-semibold text-slate-600 group-hover:text-emerald-700">Add Dataset</span>
             </button>
           </div>
         </div>
 
-        {/* Projects Widget */}
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
-          <div className="flex items-center justify-between mb-5">
-            <div className="flex items-center gap-2">
-              <div className="w-5 h-5 text-slate-700">📊</div>
-              <h2 className="text-lg font-bold text-slate-900">Projects</h2>
-            </div>
-            <button className="text-sm text-slate-600 hover:text-slate-900 font-medium">
-              Recents ▾
-            </button>
-          </div>
-
-          <div className="space-y-3">
-            <button className="w-full flex items-center gap-3 p-4 rounded-xl border-2 border-dashed border-slate-200 hover:border-slate-300 hover:bg-slate-50 transition-all group">
-              <HiPlus className="w-5 h-5 text-slate-400"  />
-              <span className="text-sm font-semibold text-slate-600">Create new project</span>
-            </button>
-
-            <div className="flex items-center gap-3 p-4 rounded-xl bg-white border border-slate-200 hover:shadow-md transition-all cursor-pointer">
-              <div className="w-10 h-10 bg-slate-100 rounded-lg flex items-center justify-center">
-                <span className="text-slate-700 font-bold text-sm">🚀</span>
-              </div>
-              <div className="flex-1">
-                <div className="font-semibold text-slate-900 text-sm">Product launch</div>
-                <div className="text-xs text-slate-600">6 tasks • 12 teammates</div>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-3 p-4 rounded-xl bg-white border border-slate-200 hover:shadow-md transition-all cursor-pointer">
-              <div className="w-10 h-10 bg-slate-100 rounded-lg flex items-center justify-center">
-                <span className="text-slate-700 font-bold text-sm">💡</span>
-              </div>
-              <div className="flex-1">
-                <div className="font-semibold text-slate-900 text-sm">Team brainstorm</div>
-                <div className="text-xs text-slate-600">2 tasks • 42 teammates</div>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-3 p-4 rounded-xl bg-white border border-slate-200 hover:shadow-md transition-all cursor-pointer">
-              <div className="w-10 h-10 bg-slate-100 rounded-lg flex items-center justify-center">
-                <span className="text-slate-700 font-bold text-sm">🎨</span>
-              </div>
-              <div className="flex-1">
-                <div className="font-semibold text-slate-900 text-sm">Branding launch</div>
-                <div className="text-xs text-slate-600">4 tasks • 9 teammates</div>
-              </div>
-            </div>
+        {/* Usage Chart Placeholder */}
+        <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6 flex flex-col justify-between">
+          <h3 className="text-base font-bold text-slate-800 mb-2">System Usage</h3>
+          <div className="flex-1 flex items-center justify-center bg-slate-50 rounded-lg border border-slate-100">
+            <span className="text-xs text-slate-400 font-medium">Analytics Chart Module</span>
           </div>
         </div>
       </div>
@@ -327,146 +219,122 @@ function HomeView() {
 }
 
 // Chatbots View
-function ChatbotsView({ chatbots, onDelete }) {
+function ChatbotsView({ chatbots, onDelete }: { chatbots: any[], onDelete: (id: string) => void }) {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900">Your Chatbots</h1>
-          <p className="text-slate-600 mt-1">Manage and monitor your embedded AI assistants</p>
+          <h1 className="text-2xl font-bold text-slate-800">Your Chatbots</h1>
+          <p className="text-xs text-slate-500 mt-1">Manage and monitor your embedded AI assistants</p>
         </div>
-        <button 
-          className="px-5 py-2.5 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl hover:scale-105 transition-all flex items-center gap-2"
+        <button
+          className="px-4 py-2 text-white text-sm font-semibold rounded-lg shadow-sm hover:shadow hover:opacity-90 transition-all flex items-center gap-2"
           style={{ backgroundColor: theme.colors.primary.main }}
         >
-          <HiPlus className="w-4 h-4"  />
+          <HiPlus className="w-4 h-4" />
           Create Chatbot
         </button>
       </div>
 
-      {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="bg-white rounded-xl p-5 border border-slate-200">
-          <div className="flex items-center gap-3 mb-3">
-            <div 
-              className="w-10 h-10 rounded-lg flex items-center justify-center"
-              style={{ backgroundColor: theme.colors.primary.light }}
-            >
-              <HiChatAlt2 className="w-5 h-5 text-white"  />
-            </div>
-            <div className="text-sm font-semibold text-slate-600">Active Bots</div>
+        {/* Stats cards similar to HomeView but for chatbots */}
+        <div className="p-4 bg-white rounded-xl border border-slate-200 shadow-sm">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-xs font-semibold text-slate-500 uppercase">Active Bots</span>
+            <HiChatAlt2 className="w-4 h-4 text-indigo-500" />
           </div>
-          <div className="text-3xl font-bold text-slate-900">{chatbots.filter(c => c.status === "active").length}</div>
+          <div className="text-xl font-bold text-slate-900">{chatbots.filter(c => c.status === "active").length}</div>
         </div>
-
-        <div className="bg-white rounded-xl p-5 border border-slate-200">
-          <div className="flex items-center gap-3 mb-3">
-            <div className="w-10 h-10 bg-slate-100 rounded-lg flex items-center justify-center">
-              <HiTrendingUp className="w-5 h-5 text-slate-600"  />
-            </div>
-            <div className="text-sm font-semibold text-slate-600">Total Conversations</div>
+        <div className="p-4 bg-white rounded-xl border border-slate-200 shadow-sm">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-xs font-semibold text-slate-500 uppercase">Total Convs</span>
+            <HiTrendingUp className="w-4 h-4 text-emerald-500" />
           </div>
-          <div className="text-3xl font-bold text-slate-900">
-            {chatbots.reduce((sum, c) => sum + c.conversations, 0)}
-          </div>
+          <div className="text-xl font-bold text-slate-900">{chatbots.reduce((sum: number, c: any) => sum + c.conversations, 0)}</div>
         </div>
-
-        <div className="bg-white rounded-xl p-5 border border-slate-200">
-          <div className="flex items-center gap-3 mb-3">
-            <div 
-              className="w-10 h-10 rounded-lg flex items-center justify-center"
-              style={{ backgroundColor: theme.colors.accent.green }}
-            >
-              <HiGlobeAlt className="w-5 h-5 text-white"  />
-            </div>
-            <div className="text-sm font-semibold text-slate-600">Embedded Sites</div>
+        <div className="p-4 bg-white rounded-xl border border-slate-200 shadow-sm">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-xs font-semibold text-slate-500 uppercase">Embeds</span>
+            <HiGlobeAlt className="w-4 h-4 text-blue-500" />
           </div>
-          <div className="text-3xl font-bold text-slate-900">{chatbots.length * 2}</div>
+          <div className="text-xl font-bold text-slate-900">{chatbots.length * 2}</div>
         </div>
-
-        <div className="bg-white rounded-xl p-5 border border-slate-200">
-          <div className="flex items-center gap-3 mb-3">
-            <div 
-              className="w-10 h-10 rounded-lg flex items-center justify-center"
-              style={{ backgroundColor: theme.colors.accent.purple }}
-            >
-              <HiSparkles className="w-5 h-5 text-white"  />
-            </div>
-            <div className="text-sm font-semibold text-slate-600">Avg. Response Time</div>
+        <div className="p-4 bg-white rounded-xl border border-slate-200 shadow-sm">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-xs font-semibold text-slate-500 uppercase">Avg Response</span>
+            <HiClock className="w-4 h-4 text-amber-500" />
           </div>
-          <div className="text-3xl font-bold text-slate-900">1.2s</div>
+          <div className="text-xl font-bold text-slate-900">1.2s</div>
         </div>
       </div>
 
-      {/* Chatbots List */}
-      <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
-        <div className="p-6 border-b border-slate-200">
-          <div className="flex items-center justify-between">
-            <h2 className="text-lg font-bold text-slate-900">All Chatbots ({chatbots.length})</h2>
-            <div className="flex items-center gap-3">
-              <div className="relative">
-                <HiSearch className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"  />
-                <input
-                  type="text"
-                  placeholder="Search chatbots..."
-                  className="pl-10 pr-4 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                />
-              </div>
-            </div>
+      {/* Table-like List */}
+      <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+        <div className="px-6 py-4 border-b border-slate-200 flex justify-between items-center bg-slate-50/50">
+          <h3 className="text-sm font-semibold text-slate-800">All Chatbots</h3>
+          <div className="relative">
+            <HiSearch className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+            <input
+              type="text"
+              placeholder="Search..."
+              className="pl-9 pr-4 py-1.5 border border-slate-200 rounded-lg text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500 bg-white"
+            />
           </div>
         </div>
-
-        <div className="divide-y divide-slate-200">
-          {chatbots.map((bot) => (
-            <div key={bot.id} className="p-6 hover:bg-slate-50 transition-colors">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-slate-100 rounded-xl flex items-center justify-center shadow-md">
-                    <HiChatAlt2 className="w-6 h-6 text-slate-600"  />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-slate-900 mb-1">{bot.name}</h3>
-                    <div className="flex items-center gap-3 text-xs text-slate-600">
-                      <span className="flex items-center gap-1">
-                        <HiDatabase className="w-3 h-3"  />
-                        {bot.dataset}
-                      </span>
-                      <span>•</span>
-                      <span className="flex items-center gap-1">
-                        <HiChatAlt2 className="w-3 h-3"  />
-                        {bot.conversations} conversations
-                      </span>
-                      <span>•</span>
-                      <span className="flex items-center gap-1">
-                        <HiGlobeAlt className="w-3 h-3"  />
-                        {bot.embeds || 2} embeds
-                      </span>
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-sm text-slate-600">
+            <thead className="bg-slate-50 border-b border-slate-200">
+              <tr>
+                <th className="px-6 py-3 font-semibold text-xs text-slate-500 uppercase tracking-wider">Name</th>
+                <th className="px-6 py-3 font-semibold text-xs text-slate-500 uppercase tracking-wider">Status</th>
+                <th className="px-6 py-3 font-semibold text-xs text-slate-500 uppercase tracking-wider">Knowledge Base</th>
+                <th className="px-6 py-3 font-semibold text-xs text-slate-500 uppercase tracking-wider">Usage</th>
+                <th className="px-6 py-3 text-right font-semibold text-xs text-slate-500 uppercase tracking-wider">Actions</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-200">
+              {chatbots.map(bot => (
+                <tr key={bot.id} className="hover:bg-slate-50 transition-colors cursor-pointer">
+                  <td className="px-6 py-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-lg bg-indigo-100 flex items-center justify-center text-indigo-600">
+                        <HiChatAlt2 className="w-4 h-4" />
+                      </div>
+                      <span className="font-semibold text-slate-900">{bot.name}</span>
                     </div>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-3">
-                  <button 
-                    className="px-4 py-2 text-sm font-semibold hover:opacity-80 rounded-lg transition-colors text-white"
-                    style={{ backgroundColor: theme.colors.primary.light }}
-                  >
-                    View Details
-                  </button>
-                  <button 
-                    className="p-2 hover:bg-slate-100 rounded-lg"
-                  >
-                    <HiDotsVertical className="w-4 h-4 text-slate-600"  />
-                  </button>
-                  <button
-                    onClick={() => onDelete(bot.id)}
-                    className="px-4 py-2 text-sm font-semibold text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                  >
-                    Delete
-                  </button>
-                </div>
-              </div>
-            </div>
-          ))}
+                  </td>
+                  <td className="px-6 py-4">
+                    <span className={`px-2.5 py-0.5 rounded-full text-xs font-bold ${bot.status === 'active' ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-600'
+                      }`}>
+                      {bot.status}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="flex items-center gap-1.5">
+                      <HiDatabase className="w-3.5 h-3.5 text-slate-400" />
+                      <span>{bot.dataset}</span>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="text-xs">
+                      <div className="font-semibold">{bot.conversations} convs</div>
+                      <div className="text-slate-400">{bot.embeds} embeds</div>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 text-right">
+                    <div className="flex items-center justify-end gap-2">
+                      <button className="p-1.5 hover:bg-slate-100 rounded text-slate-500 hover:text-indigo-600">
+                        <HiExternalLink className="w-4 h-4" />
+                      </button>
+                      <button className="p-1.5 hover:bg-slate-100 rounded text-slate-500 hover:text-red-600" onClick={() => onDelete(bot.id)}>
+                        <div className="w-4 h-4 text-lg leading-none">×</div>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
@@ -474,146 +342,122 @@ function ChatbotsView({ chatbots, onDelete }) {
 }
 
 // Datasets View
-function DatasetsView({ datasets, onDelete }) {
+function DatasetsView({ datasets, onDelete }: { datasets: any[], onDelete: (id: string) => void }) {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900">Your Datasets</h1>
-          <p className="text-slate-600 mt-1">Knowledge sources for your AI chatbots</p>
+          <h1 className="text-2xl font-bold text-slate-800">Your Datasets</h1>
+          <p className="text-xs text-slate-500 mt-1">Knowledge sources for your AI chatbots</p>
         </div>
-        <button 
-          className="px-5 py-2.5 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl hover:scale-105 transition-all flex items-center gap-2"
+        <button
+          className="px-4 py-2 text-white text-sm font-semibold rounded-lg shadow-sm hover:shadow hover:opacity-90 transition-all flex items-center gap-2"
           style={{ backgroundColor: theme.colors.primary.main }}
         >
-          <HiPlus className="w-4 h-4"  />
+          <HiPlus className="w-4 h-4" />
           Create Dataset
         </button>
       </div>
 
-      {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="bg-white rounded-xl p-5 border border-slate-200">
-          <div className="flex items-center gap-3 mb-3">
-            <div 
-              className="w-10 h-10 rounded-lg flex items-center justify-center"
-              style={{ backgroundColor: theme.colors.accent.purple }}
-            >
-              <HiDatabase className="w-5 h-5 text-white"  />
-            </div>
-            <div className="text-sm font-semibold text-slate-600">Total Datasets</div>
+        {/* Stats cards */}
+        <div className="p-4 bg-white rounded-xl border border-slate-200 shadow-sm">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-xs font-semibold text-slate-500 uppercase">Total Datasets</span>
+            <HiDatabase className="w-4 h-4 text-purple-500" />
           </div>
-          <div className="text-3xl font-bold text-slate-900">{datasets.length}</div>
+          <div className="text-xl font-bold text-slate-900">{datasets.length}</div>
         </div>
-
-        <div className="bg-white rounded-xl p-5 border border-slate-200">
-          <div className="flex items-center gap-3 mb-3">
-            <div 
-              className="w-10 h-10 rounded-lg flex items-center justify-center"
-              style={{ backgroundColor: theme.colors.primary.light }}
-            >
-              <HiDocumentText className="w-5 h-5 text-white"  />
-            </div>
-            <div className="text-sm font-semibold text-slate-600">Total Documents</div>
+        <div className="p-4 bg-white rounded-xl border border-slate-200 shadow-sm">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-xs font-semibold text-slate-500 uppercase">Total Docs</span>
+            <HiDocumentText className="w-4 h-4 text-blue-500" />
           </div>
-          <div className="text-3xl font-bold text-slate-900">
-            {datasets.reduce((sum, d) => sum + d.items, 0)}
-          </div>
+          <div className="text-xl font-bold text-slate-900">{datasets.reduce((sum: number, d: any) => sum + d.items, 0)}</div>
         </div>
-
-        <div className="bg-white rounded-xl p-5 border border-slate-200">
-          <div className="flex items-center gap-3 mb-3">
-            <div 
-              className="w-10 h-10 rounded-lg flex items-center justify-center"
-              style={{ backgroundColor: theme.colors.accent.green }}
-            >
-              <HiGlobeAlt className="w-5 h-5 text-white"  />
-            </div>
-            <div className="text-sm font-semibold text-slate-600">URLs Crawled</div>
+        <div className="p-4 bg-white rounded-xl border border-slate-200 shadow-sm">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-xs font-semibold text-slate-500 uppercase">URLs Crawled</span>
+            <HiGlobeAlt className="w-4 h-4 text-emerald-500" />
           </div>
-          <div className="text-3xl font-bold text-slate-900">48</div>
+          <div className="text-xl font-bold text-slate-900">48</div>
         </div>
-
-        <div className="bg-white rounded-xl p-5 border border-slate-200">
-          <div className="flex items-center gap-3 mb-3">
-            <div 
-              className="w-10 h-10 rounded-lg flex items-center justify-center"
-              style={{ backgroundColor: theme.colors.accent.yellow }}
-            >
-              <HiTrendingUp className="w-5 h-5 text-white"  />
-            </div>
-            <div className="text-sm font-semibold text-slate-600">Storage Used</div>
+        <div className="p-4 bg-white rounded-xl border border-slate-200 shadow-sm">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-xs font-semibold text-slate-500 uppercase">Storage Used</span>
+            <HiTrendingUp className="w-4 h-4 text-amber-500" />
           </div>
-          <div className="text-3xl font-bold text-slate-900">2.4GB</div>
+          <div className="text-xl font-bold text-slate-900">2.4GB</div>
         </div>
       </div>
 
-      {/* Datasets List */}
-      <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
-        <div className="p-6 border-b border-slate-200">
-          <div className="flex items-center justify-between">
-            <h2 className="text-lg font-bold text-slate-900">All Datasets ({datasets.length})</h2>
-            <div className="flex items-center gap-3">
-              <div className="relative">
-                <HiSearch className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"  />
-                <input
-                  type="text"
-                  placeholder="Search datasets..."
-                  className="pl-10 pr-4 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                />
-              </div>
-            </div>
+      {/* Table-like List */}
+      <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+        <div className="px-6 py-4 border-b border-slate-200 flex justify-between items-center bg-slate-50/50">
+          <h3 className="text-sm font-semibold text-slate-800">All Datasets</h3>
+          <div className="relative">
+            <HiSearch className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+            <input
+              type="text"
+              placeholder="Search..."
+              className="pl-9 pr-4 py-1.5 border border-slate-200 rounded-lg text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500 bg-white"
+            />
           </div>
         </div>
-
-        <div className="divide-y divide-slate-200">
-          {datasets.map((dataset) => (
-            <div key={dataset.id} className="p-6 hover:bg-slate-50 transition-colors">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-slate-100 rounded-xl flex items-center justify-center shadow-md">
-                    <HiDatabase className="w-6 h-6 text-slate-600"  />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-slate-900 mb-1">{dataset.name}</h3>
-                    <div className="flex items-center gap-3 text-xs text-slate-600">
-                      <span className="flex items-center gap-1">
-                        <HiDocumentText className="w-3 h-3"  />
-                        {dataset.items} documents
-                      </span>
-                      <span>•</span>
-                      <span className="flex items-center gap-1">
-                        <HiClock className="w-3 h-3"  />
-                        Created {dataset.created}
-                      </span>
-                      <span>•</span>
-                      <span className="flex items-center gap-1">
-                        <HiCheckCircle className="w-3 h-3"  />
-                        {dataset.chunks || Math.floor(dataset.items * 12)} chunks
-                      </span>
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-sm text-slate-600">
+            <thead className="bg-slate-50 border-b border-slate-200">
+              <tr>
+                <th className="px-6 py-3 font-semibold text-xs text-slate-500 uppercase tracking-wider">Name</th>
+                <th className="px-6 py-3 font-semibold text-xs text-slate-500 uppercase tracking-wider">Stats</th>
+                <th className="px-6 py-3 font-semibold text-xs text-slate-500 uppercase tracking-wider">Created</th>
+                <th className="px-6 py-3 font-semibold text-xs text-slate-500 uppercase tracking-wider">Chunks</th>
+                <th className="px-6 py-3 text-right font-semibold text-xs text-slate-500 uppercase tracking-wider">Actions</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-200">
+              {datasets.map(dataset => (
+                <tr key={dataset.id} className="hover:bg-slate-50 transition-colors cursor-pointer">
+                  <td className="px-6 py-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center text-slate-600">
+                        <HiDatabase className="w-4 h-4" />
+                      </div>
+                      <span className="font-semibold text-slate-900">{dataset.name}</span>
                     </div>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-3">
-                  <button 
-                    className="px-4 py-2 text-sm font-semibold hover:opacity-80 rounded-lg transition-colors text-slate-900 bg-slate-100"
-                  >
-                    View Details
-                  </button>
-                  <button className="p-2 hover:bg-slate-100 rounded-lg">
-                    <HiDotsVertical className="w-4 h-4 text-slate-600"  />
-                  </button>
-                  <button
-                    onClick={() => onDelete(dataset.id)}
-                    className="px-4 py-2 text-sm font-semibold text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                  >
-                    Delete
-                  </button>
-                </div>
-              </div>
-            </div>
-          ))}
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="flex items-center gap-1.5">
+                      <HiDocumentText className="w-3.5 h-3.5 text-slate-400" />
+                      <span>{dataset.items} docs</span>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="flex items-center gap-1.5 text-slate-500">
+                      <HiClock className="w-3.5 h-3.5" />
+                      <span>{dataset.created}</span>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="flex items-center gap-1.5 text-slate-500">
+                      <HiCheckCircle className="w-3.5 h-3.5 text-emerald-500" />
+                      <span>{dataset.chunks || Math.floor(dataset.items * 12)} chunks</span>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 text-right">
+                    <div className="flex items-center justify-end gap-2">
+                      <button className="p-1.5 hover:bg-slate-100 rounded text-slate-500 hover:text-indigo-600">
+                        <HiExternalLink className="w-4 h-4" />
+                      </button>
+                      <button className="p-1.5 hover:bg-slate-100 rounded text-slate-500 hover:text-red-600" onClick={() => onDelete(dataset.id)}>
+                        <div className="w-4 h-4 text-lg leading-none">×</div>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
@@ -633,134 +477,194 @@ function DocumentsView() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900">Chunked Documents</h1>
-          <p className="text-slate-600 mt-1">View and manage document chunks for RAG</p>
+          <h1 className="text-2xl font-bold text-slate-800">Chunked Documents</h1>
+          <p className="text-xs text-slate-500 mt-1">View and manage document chunks for RAG</p>
         </div>
-        <button 
-          className="px-5 py-2.5 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl hover:scale-105 transition-all flex items-center gap-2 bg-slate-900"
+        <button
+          className="px-4 py-2 text-white text-sm font-semibold rounded-lg shadow-sm hover:shadow hover:opacity-90 transition-all flex items-center gap-2"
+          style={{ backgroundColor: theme.colors.primary.main }}
         >
-          <HiPlus className="w-4 h-4"  />
+          <HiPlus className="w-4 h-4" />
           Upload Document
         </button>
       </div>
 
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="bg-white rounded-xl p-5 border border-slate-200">
-          <div className="flex items-center gap-3 mb-3">
-            <div 
-              className="w-10 h-10 rounded-lg flex items-center justify-center"
-              style={{ backgroundColor: theme.colors.neutral[900] }}
-            >
-              <HiDocumentText className="w-5 h-5 text-white"  />
-            </div>
-            <div className="text-sm font-semibold text-slate-600">Total Documents</div>
+        <div className="p-4 bg-white rounded-xl border border-slate-200 shadow-sm">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-xs font-semibold text-slate-500 uppercase">Total Docs</span>
+            <HiDocumentText className="w-4 h-4 text-slate-700" />
           </div>
-          <div className="text-3xl font-bold text-slate-900">{documents.length}</div>
+          <div className="text-xl font-bold text-slate-900">{documents.length}</div>
         </div>
-
-        <div className="bg-white rounded-xl p-5 border border-slate-200">
-          <div className="flex items-center gap-3 mb-3">
-            <div 
-              className="w-10 h-10 rounded-lg flex items-center justify-center"
-              style={{ backgroundColor: theme.colors.accent.green }}
-            >
-              <HiCheckCircle className="w-5 h-5 text-white"  />
-            </div>
-            <div className="text-sm font-semibold text-slate-600">Total Chunks</div>
+        <div className="p-4 bg-white rounded-xl border border-slate-200 shadow-sm">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-xs font-semibold text-slate-500 uppercase">Total Chunks</span>
+            <HiCheckCircle className="w-4 h-4 text-emerald-500" />
           </div>
-          <div className="text-3xl font-bold text-slate-900">
-            {documents.reduce((sum, d) => sum + d.chunks, 0)}
-          </div>
+          <div className="text-xl font-bold text-slate-900">{documents.reduce((sum, d) => sum + d.chunks, 0)}</div>
         </div>
-
-        <div className="bg-white rounded-xl p-5 border border-slate-200">
-          <div className="flex items-center gap-3 mb-3">
-            <div 
-              className="w-10 h-10 rounded-lg flex items-center justify-center"
-              style={{ backgroundColor: theme.colors.accent.yellow }}
-            >
-              <HiTrendingUp className="w-5 h-5 text-white"  />
-            </div>
-            <div className="text-sm font-semibold text-slate-600">Avg. Chunk Size</div>
+        <div className="p-4 bg-white rounded-xl border border-slate-200 shadow-sm">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-xs font-semibold text-slate-500 uppercase">Avg Chunk Size</span>
+            <HiTrendingUp className="w-4 h-4 text-amber-500" />
           </div>
-          <div className="text-3xl font-bold text-slate-900">512</div>
-          <div className="text-xs text-slate-500 mt-1">tokens</div>
+          <div className="text-xl font-bold text-slate-900">512 <span className="text-xs text-slate-400 font-normal">tokens</span></div>
         </div>
-
-        <div className="bg-white rounded-xl p-5 border border-slate-200">
-          <div className="flex items-center gap-3 mb-3">
-            <div 
-              className="w-10 h-10 rounded-lg flex items-center justify-center"
-              style={{ backgroundColor: theme.colors.accent.purple }}
-            >
-              <HiDatabase className="w-5 h-5 text-white"  />
-            </div>
-            <div className="text-sm font-semibold text-slate-600">Vector DB Size</div>
+        <div className="p-4 bg-white rounded-xl border border-slate-200 shadow-sm">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-xs font-semibold text-slate-500 uppercase">Vector DB Size</span>
+            <HiDatabase className="w-4 h-4 text-purple-500" />
           </div>
-          <div className="text-3xl font-bold text-slate-900">1.8GB</div>
+          <div className="text-xl font-bold text-slate-900">1.8GB</div>
         </div>
       </div>
 
       {/* Documents List */}
-      <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
-        <div className="p-6 border-b border-slate-200">
-          <div className="flex items-center justify-between">
-            <h2 className="text-lg font-bold text-slate-900">All Documents ({documents.length})</h2>
-            <div className="flex items-center gap-3">
-              <div className="relative">
-                <HiSearch className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"  />
-                <input
-                  type="text"
-                  placeholder="Search documents..."
-                  className="pl-10 pr-4 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                />
-              </div>
-            </div>
+      <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+        <div className="px-6 py-4 border-b border-slate-200 flex justify-between items-center bg-slate-50/50">
+          <h3 className="text-sm font-semibold text-slate-800">All Documents</h3>
+          <div className="relative">
+            <HiSearch className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+            <input
+              type="text"
+              placeholder="Search documents..."
+              className="pl-9 pr-4 py-1.5 border border-slate-200 rounded-lg text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500 bg-white"
+            />
           </div>
         </div>
-
-        <div className="divide-y divide-slate-200">
-          {documents.map((doc) => (
-            <div key={doc.id} className="p-6 hover:bg-slate-50 transition-colors">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-slate-100 rounded-xl flex items-center justify-center shadow-md">
-                    <HiDocumentText className="w-6 h-6 text-slate-600"  />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-slate-900 mb-1">{doc.name}</h3>
-                    <div className="flex items-center gap-3 text-xs text-slate-600">
-                      <span className="px-2 py-1 bg-slate-100 rounded font-semibold">{doc.type}</span>
-                      <span>{doc.size}</span>
-                      <span>•</span>
-                      <span className="flex items-center gap-1">
-                        <HiCheckCircle className="w-3 h-3"  />
-                        {doc.chunks} chunks
-                      </span>
-                      <span>•</span>
-                      <span className="flex items-center gap-1">
-                        <HiDatabase className="w-3 h-3"  />
-                        {doc.dataset}
-                      </span>
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-sm text-slate-600">
+            <thead className="bg-slate-50 border-b border-slate-200">
+              <tr>
+                <th className="px-6 py-3 font-semibold text-xs text-slate-500 uppercase tracking-wider">Name</th>
+                <th className="px-6 py-3 font-semibold text-xs text-slate-500 uppercase tracking-wider">Type & Size</th>
+                <th className="px-6 py-3 font-semibold text-xs text-slate-500 uppercase tracking-wider">Dataset</th>
+                <th className="px-6 py-3 font-semibold text-xs text-slate-500 uppercase tracking-wider">Chunks</th>
+                <th className="px-6 py-3 text-right font-semibold text-xs text-slate-500 uppercase tracking-wider">Actions</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-200">
+              {documents.map((doc) => (
+                <tr key={doc.id} className="hover:bg-slate-50 transition-colors cursor-pointer">
+                  <td className="px-6 py-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center text-slate-600">
+                        <HiDocumentText className="w-4 h-4" />
+                      </div>
+                      <span className="font-semibold text-slate-900">{doc.name}</span>
                     </div>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-3">
-                  <button 
-                    className="px-4 py-2 text-sm font-semibold hover:opacity-80 rounded-lg transition-colors text-slate-900 bg-slate-100"
-                  >
-                    View Chunks
-                  </button>
-                  <button className="p-2 hover:bg-slate-100 rounded-lg">
-                    <HiDotsVertical className="w-4 h-4 text-slate-600"  />
-                  </button>
-                </div>
-              </div>
-            </div>
-          ))}
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="flex items-center gap-2">
+                      <span className="px-2 py-0.5 bg-slate-100 rounded text-xs font-semibold text-slate-600 border border-slate-200">{doc.type}</span>
+                      <span className="text-xs text-slate-500">{doc.size}</span>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="flex items-center gap-1.5 text-slate-600">
+                      <HiDatabase className="w-3.5 h-3.5 text-slate-400" />
+                      <span>{doc.dataset}</span>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="flex items-center gap-1.5 text-emerald-600">
+                      <HiCheckCircle className="w-3.5 h-3.5" />
+                      <span className="font-medium">{doc.chunks} chunks</span>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 text-right">
+                    <div className="flex items-center justify-end gap-2">
+                      <button className="p-1.5 hover:bg-slate-100 rounded text-slate-500 hover:text-indigo-600">
+                        <HiExternalLink className="w-4 h-4" />
+                      </button>
+                      <button className="p-1.5 hover:bg-slate-100 rounded text-slate-500 hover:text-red-600">
+                        <div className="w-4 h-4 text-lg leading-none">×</div>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
+      </div>
+    </div>
+  );
+}
+
+
+// Test Chatbots View
+function TestChatbotsView() {
+  const [messages, setMessages] = useState([
+    { id: 1, text: "Hello! I'm your AI assistant. How can I help you today?", isBot: true },
+    { id: 2, text: "Hi, I need help with my dataset.", isBot: false },
+  ]);
+  const [input, setInput] = useState("");
+
+  const handleSend = () => {
+    if (!input.trim()) return;
+    setMessages([...messages, { id: Date.now(), text: input, isBot: false }]);
+    setInput("");
+    // Simulate reponse
+    setTimeout(() => {
+      setMessages(prev => [...prev, { id: Date.now() + 1, text: "I can help with that. What specific question do you have?", isBot: true }]);
+    }, 1000);
+  };
+
+  return (
+    <div className="h-[calc(100vh-8rem)] flex flex-col bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+      <div className="p-4 border-b border-slate-200 flex justify-between items-center bg-slate-50">
+        <h2 className="text-sm font-semibold text-slate-800">Test Your Chatbot</h2>
+        <select className="text-xs border-slate-200 rounded-lg p-1.5 bg-white focus:outline-none focus:ring-1 focus:ring-indigo-500">
+          <option>Select Chatbot...</option>
+          <option>Customer Support Bot</option>
+          <option>Sales Assistant</option>
+        </select>
+      </div>
+      <div className="flex-1 p-4 bg-slate-50/50 space-y-4 overflow-y-auto">
+        {messages.map((msg) => (
+          <div key={msg.id} className={`flex gap-3 ${!msg.isBot ? "flex-row-reverse" : ""}`}>
+            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold shrink-0 ${msg.isBot ? "bg-indigo-100 text-indigo-600" : "bg-slate-200 text-slate-600"}`}>
+              {msg.isBot ? "AI" : "You"}
+            </div>
+            <div className={`p-3 rounded-2xl shadow-sm max-w-[80%] ${msg.isBot ? "bg-white rounded-tl-none border border-slate-100 text-slate-600" : "bg-indigo-600 rounded-tr-none text-white"}`}>
+              <p className="text-sm">{msg.text}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+      <div className="p-4 border-t border-slate-200 bg-white">
+        <div className="flex gap-2">
+          <input
+            type="text"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleSend()}
+            placeholder="Type a message..."
+            className="flex-1 text-sm border-slate-200 rounded-xl focus:ring-indigo-500 focus:border-indigo-500 px-4 py-2 bg-slate-50"
+          />
+          <button
+            onClick={handleSend}
+            className="bg-indigo-600 text-white px-4 py-2 rounded-xl text-sm font-medium hover:bg-indigo-700 transition-colors"
+          >
+            Send
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Analytics View
+function AnalyticsView() {
+  return (
+    <div className="flex items-center justify-center h-[60vh] text-slate-500">
+      <div className="text-center">
+        <HiChartBar className="w-12 h-12 mx-auto mb-3 text-slate-300" />
+        <h3 className="text-lg font-medium text-slate-900">Analytics</h3>
+        <p>Detailed reports coming soon</p>
       </div>
     </div>
   );
@@ -778,11 +682,11 @@ function SettingsView() {
       {/* API Keys Section */}
       <div className="bg-white rounded-2xl p-6 border border-slate-200">
         <div className="flex items-center gap-3 mb-6">
-          <div 
+          <div
             className="w-10 h-10 rounded-lg flex items-center justify-center"
             style={{ backgroundColor: theme.colors.neutral[900] }}
           >
-            <HiKey className="w-5 h-5 text-white"  />
+            <HiKey className="w-5 h-5 text-white" />
           </div>
           <div>
             <h2 className="text-lg font-bold text-slate-900">AI Model API Keys</h2>
@@ -794,13 +698,13 @@ function SettingsView() {
           <div className="p-4 border border-slate-200 rounded-xl">
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-3">
-                <div 
+                <div
                   className="w-8 h-8 rounded-lg flex items-center justify-center"
                   style={{ backgroundColor: `${theme.colors.accent.green}20` }}
                 >
-                  <HiCheckCircle 
-                    className="w-4 h-4" 
-                    
+                  <HiCheckCircle
+                    className="w-4 h-4"
+
                     style={{ color: theme.colors.accent.green }}
                   />
                 </div>
@@ -809,7 +713,7 @@ function SettingsView() {
                   <div className="text-xs text-slate-500">GPT-4, GPT-3.5 Turbo</div>
                 </div>
               </div>
-              <span 
+              <span
                 className="px-3 py-1 text-xs font-bold rounded-lg"
                 style={{ backgroundColor: `${theme.colors.accent.green}20`, color: theme.colors.accent.green }}
               >Connected</span>
@@ -821,7 +725,7 @@ function SettingsView() {
                 disabled
                 className="flex-1 px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm"
               />
-              <button 
+              <button
                 className="px-4 py-2 text-sm font-semibold hover:opacity-80 rounded-lg transition-colors text-slate-900 bg-slate-100"
               >
                 Update
@@ -833,7 +737,7 @@ function SettingsView() {
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 bg-slate-100 rounded-lg flex items-center justify-center">
-                  <HiExclamationCircle className="w-4 h-4 text-slate-400"  />
+                  <HiExclamationCircle className="w-4 h-4 text-slate-400" />
                 </div>
                 <div>
                   <div className="font-semibold text-slate-900">Anthropic Claude</div>
@@ -848,7 +752,7 @@ function SettingsView() {
                 placeholder="Enter your Anthropic API key"
                 className="flex-1 px-4 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2"
               />
-              <button 
+              <button
                 className="px-4 py-2 text-white text-sm font-semibold rounded-lg hover:shadow-lg transition-all"
                 style={{ backgroundColor: theme.colors.primary.main }}
               >
@@ -858,7 +762,7 @@ function SettingsView() {
           </div>
 
           <button className="w-full p-4 border-2 border-dashed border-slate-200 rounded-xl text-slate-600 hover:border-slate-300 hover:bg-slate-50 transition-all flex items-center justify-center gap-2 font-semibold">
-            <HiPlus className="w-5 h-5"  />
+            <HiPlus className="w-5 h-5" />
             Add Another Provider
           </button>
         </div>
@@ -867,11 +771,11 @@ function SettingsView() {
       {/* Embed Settings */}
       <div className="bg-white rounded-2xl p-6 border border-slate-200">
         <div className="flex items-center gap-3 mb-6">
-          <div 
+          <div
             className="w-10 h-10 rounded-lg flex items-center justify-center"
             style={{ backgroundColor: theme.colors.accent.green }}
           >
-            <HiGlobeAlt className="w-5 h-5 text-white"  />
+            <HiGlobeAlt className="w-5 h-5 text-white" />
           </div>
           <div>
             <h2 className="text-lg font-bold text-slate-900">Embed Settings</h2>
@@ -893,10 +797,10 @@ function SettingsView() {
           <div>
             <label className="text-sm font-semibold text-slate-900 mb-2 block">Primary Color</label>
             <div className="flex items-center gap-3">
-              <input 
-                type="color" 
-                value={theme.colors.neutral[900]} 
-                className="w-12 h-12 rounded-lg border border-slate-200" 
+              <input
+                type="color"
+                value={theme.colors.neutral[900]}
+                className="w-12 h-12 rounded-lg border border-slate-200"
               />
               <input
                 type="text"
@@ -909,10 +813,10 @@ function SettingsView() {
           <div>
             <label className="flex items-center gap-3 cursor-pointer">
               <input type="checkbox" className="w-5 h-5 rounded border-slate-300 focus:ring-0"
-                style={{ 
-                  accentColor: theme.colors.neutral[900] 
+                style={{
+                  accentColor: theme.colors.neutral[900]
                 }}
-                defaultChecked 
+                defaultChecked
               />
               <div>
                 <div className="text-sm font-semibold text-slate-900">Show "Powered by OpenChat"</div>
@@ -929,7 +833,7 @@ function SettingsView() {
 // Main Dashboard Component
 export default function DashboardPage() {
   const [activeView, setActiveView] = useState("home");
-  
+
   const [datasets, setDatasets] = useState([
     { id: "1", name: "Website Documentation", items: 120, created: "2024-01-15" },
     { id: "2", name: "Product FAQs", items: 34, created: "2024-01-18" },
@@ -942,16 +846,16 @@ export default function DashboardPage() {
     { id: "3", name: "Technical Helper", dataset: "Knowledge Base", status: "inactive", conversations: 89, embeds: 1 },
   ]);
 
-  const handleDeleteDataset = (id) => {
+  const handleDeleteDataset = (id: string) => {
     setDatasets(datasets.filter(ds => ds.id !== id));
   };
 
-  const handleDeleteChatbot = (id) => {
+  const handleDeleteChatbot = (id: string) => {
     setChatbots(chatbots.filter(bot => bot.id !== id));
   };
 
   return (
-    <div 
+    <div
       className="flex min-h-screen"
       style={{ background: theme.gradients.page }}
     >
@@ -965,6 +869,8 @@ export default function DashboardPage() {
           {activeView === "chatbots" && <ChatbotsView chatbots={chatbots} onDelete={handleDeleteChatbot} />}
           {activeView === "datasets" && <DatasetsView datasets={datasets} onDelete={handleDeleteDataset} />}
           {activeView === "documents" && <DocumentsView />}
+          {activeView === "test-chatbots" && <TestChatbotsView />}
+          {activeView === "analytics" && <AnalyticsView />}
           {activeView === "settings" && <SettingsView />}
         </div>
       </div>

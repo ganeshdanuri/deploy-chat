@@ -24,7 +24,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
     setError("");
 
     const success = login(username, password);
-    
+
     if (success) {
       onClose();
       router.push("/dashboard");
@@ -44,8 +44,8 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4"
-      style={{ backgroundColor: theme.colors.overlay.dark }}
+      className="fixed inset-0 z-[100] h-screen w-screen flex items-center justify-center p-4 backdrop-blur-md"
+      style={{ backgroundColor: "rgba(15, 23, 42, 0.6)" }}
       onClick={handleClose}
     >
       <div
@@ -65,28 +65,28 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
         {/* Header */}
         <div className="mb-8 text-center">
           <div className="flex justify-center mb-4">
-            <div 
+            <div
               className="w-16 h-16 rounded-full flex items-center justify-center"
               style={{ backgroundColor: theme.colors.primary.lightest }}
             >
               <HiLogin className="text-3xl" style={{ color: theme.colors.primary.main }} />
             </div>
           </div>
-          <h1 
+          <h1
             className="text-2xl font-semibold"
             style={{ color: theme.colors.neutral[900] }}
           >
             Sign in to your account
           </h1>
-          <p 
+          <p
             className="mt-2 text-sm"
             style={{ color: theme.colors.neutral[600] }}
           >
             Manage your chatbots and integrations
           </p>
-          <p 
+          <p
             className="mt-4 text-xs p-3 rounded-lg border"
-            style={{ 
+            style={{
               color: theme.colors.neutral[500],
               backgroundColor: theme.colors.neutral[100],
               borderColor: theme.colors.neutral[200]
@@ -98,9 +98,9 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
 
         {/* Error Message */}
         {error && (
-          <div 
+          <div
             className="mb-4 p-3 border rounded-lg text-sm"
-            style={{ 
+            style={{
               backgroundColor: theme.colors.semantic.errorLight,
               borderColor: theme.colors.semantic.errorBorder,
               color: theme.colors.semantic.errorDark
@@ -113,7 +113,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <label 
+            <label
               className="mb-1 block text-sm font-medium"
               style={{ color: theme.colors.neutral[700] }}
             >
@@ -129,7 +129,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 className="w-full rounded-lg border pl-10 pr-4 py-2 text-sm focus:outline-none transition-all focus:ring-2 focus:ring-indigo-200"
-                style={{ 
+                style={{
                   borderColor: theme.colors.neutral[300],
                   color: theme.colors.neutral[900]
                 }}
@@ -139,7 +139,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
           </div>
 
           <div>
-            <label 
+            <label
               className="mb-1 block text-sm font-medium"
               style={{ color: theme.colors.neutral[700] }}
             >
@@ -155,7 +155,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full rounded-lg border pl-10 pr-4 py-2 text-sm focus:outline-none transition-all focus:ring-2 focus:ring-indigo-200"
-                style={{ 
+                style={{
                   borderColor: theme.colors.neutral[300],
                   color: theme.colors.neutral[900]
                 }}
@@ -167,7 +167,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
           <button
             type="submit"
             className="w-full rounded-lg px-4 py-2.5 text-sm font-medium text-white transition-all hover:-translate-y-0.5 hover:shadow-md flex items-center justify-center gap-2"
-            style={{ 
+            style={{
               background: theme.gradients.primaryButton,
               boxShadow: theme.shadows.sm
             }}

@@ -34,7 +34,7 @@ The project is **self-hostable**, **extensible**, and designed for developers fi
 
 ### Requirements
 
-- Node.js 18+
+- Python 3.12
 - PostgreSQL
 - Vector database (Pg Vector)
 - OpenAI API key (or local LLM)

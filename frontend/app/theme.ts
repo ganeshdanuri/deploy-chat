@@ -10,7 +10,7 @@ export const theme = {
       lighter: "#b8c7ff",
       lightest: "#e0e7ff",
     },
-    
+
     // Accent colors for variety and visual interest
     accent: {
       green: "#10b981",
@@ -22,7 +22,7 @@ export const theme = {
       blue: "#3b82f6",
       teal: "#14b8a6",
     },
-    
+
     // Semantic colors
     semantic: {
       error: "#ef4444",
@@ -30,7 +30,7 @@ export const theme = {
       errorBorder: "#fca5a5",
       errorDark: "#991b1b",
     },
-    
+
     // Neutral: Used for text, borders, backgrounds
     neutral: {
       900: "#0f172a",
@@ -44,18 +44,19 @@ export const theme = {
       100: "#f8fafc",
       50: "#ffffff",
     },
-    
+
     // Overlay colors
     overlay: {
       dark: "rgba(0, 0, 0, 0.5)",
     },
   },
-  
+
   // Gradient backgrounds - professional and subtle
   gradients: {
     primaryButton: "#4667ff",
+    page: "linear-gradient(to bottom right, #f8fafc, #f1f5f9)",
   },
-  
+
   // Shadows for depth hierarchy
   shadows: {
     sm: "0 1px 2px 0 rgb(0 0 0 / 0.05)",
@@ -63,11 +64,11 @@ export const theme = {
     lg: "0 10px 15px -3px rgb(0 0 0 / 0.1)",
     xl: "0 20px 25px -5px rgb(0 0 0 / 0.1)",
   },
-  
+
   // Typography - Google Fonts
   typography: {
     fontFamily: {
-      sans: "var(--font-inter), -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif",
+      sans: "var(--font-sora), -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif",
     },
   }
 } as const;
