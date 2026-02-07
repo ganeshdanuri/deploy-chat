@@ -19,8 +19,8 @@ CREATE TABLE chatbots (
     updated_at TIMESTAMP DEFAULT NOW()
 );
 
--- Document Sets
-CREATE TABLE document_sets (
+-- Datasets
+CREATE TABLE datasets (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     name VARCHAR NOT NULL,
     user_id UUID NOT NULL REFERENCES users(id),
@@ -28,11 +28,11 @@ CREATE TABLE document_sets (
     updated_at TIMESTAMP DEFAULT NOW()
 );
 
--- Chatbot <-> Document Sets (Many-to-Many)
-CREATE TABLE chatbot_document_sets (
+-- Chatbot <-> Datasets (Many-to-Many)
+CREATE TABLE chatbot_datasets (
     chatbot_id UUID NOT NULL REFERENCES chatbots(id),
-    document_set_id UUID NOT NULL REFERENCES document_sets(id),
-    PRIMARY KEY(chatbot_id, document_set_id)
+    dataset_id UUID NOT NULL REFERENCES datasets(id),
+    PRIMARY KEY(chatbot_id, dataset_id)
 );
 
 -- Documents
@@ -45,11 +45,11 @@ CREATE TABLE documents (
     updated_at TIMESTAMP DEFAULT NOW()
 );
 
--- Document Set <-> Documents (Many-to-Many)
-CREATE TABLE document_set_documents (
-    document_set_id UUID NOT NULL REFERENCES document_sets(id),
+-- Dataset <-> Documents (Many-to-Many)
+CREATE TABLE dataset_documents (
+    dataset_id UUID NOT NULL REFERENCES datasets(id),
     document_id UUID NOT NULL REFERENCES documents(id),
-    PRIMARY KEY(document_set_id, document_id)
+    PRIMARY KEY(dataset_id, document_id)
 );
 
 CREATE TABLE IF NOT EXISTS document_contents (
@@ -72,7 +72,7 @@ CREATE TABLE document_chunks (
 
 -- Indexes for fast queries
 CREATE INDEX idx_documents_user_id ON documents(user_id);
-CREATE INDEX idx_document_sets_user_id ON document_sets(user_id);
+CREATE INDEX idx_datasets_user_id ON datasets(user_id);
 CREATE INDEX idx_chatbots_user_id ON chatbots(user_id);
 CREATE INDEX idx_document_chunks_document_id ON document_chunks(document_id);
 
