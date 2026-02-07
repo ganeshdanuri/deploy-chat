@@ -6,7 +6,10 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState, AppDispatch } from "@/lib/store/store";
 import { fetchChatbots } from "@/lib/store/slices/chatbotsSlice";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import api from "@/lib/api";
+
 
 interface Message {
     id: number;
@@ -107,21 +110,22 @@ export default function PlaygroundPage() {
                         </div>
                     </div>
 
-                    {/* Persona (Read-only) */}
-                    <div className="space-y-3">
-                        <div className="flex items-center justify-between">
-                            <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Persona / Prompt</label>
-                            <span className="text-[10px] bg-slate-100 text-slate-500 px-2 py-0.5 rounded-full font-bold">Locked</span>
+                    {/* Model Stats */}
+                    {chatbot && (
+                        <div className="space-y-4 pt-0 border-t-0">
+                            <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Model Stats</label>
+                            <div className="p-4 bg-slate-50/50 rounded-xl border border-slate-100 space-y-2.5">
+                                <div className="flex justify-between">
+                                    <span className="text-[10px] font-bold text-slate-400 uppercase">Provider</span>
+                                    <span className="text-[10px] font-bold text-slate-700 bg-white px-2 py-0.5 rounded border uppercase tracking-wider">Gemini 2.5 Flash</span>
+                                </div>
+                                <div className="flex justify-between">
+                                    <span className="text-[10px] font-bold text-slate-400 uppercase">Knowledge</span>
+                                    <span className="text-[10px] font-bold text-indigo-600">Document Context</span>
+                                </div>
+                            </div>
                         </div>
-                        <textarea
-                            readOnly
-                            className="w-full text-sm border-slate-200 rounded-xl bg-slate-50/70 h-32 p-4 text-slate-600 italic resize-none focus:ring-0 leading-relaxed border-dashed"
-                            value={chatbot?.system_prompt || (chatbot ? `You are ${chatbot.name}, a helpful AI assistant. Be polite, concise, and professional.` : "You are a helpful AI assistant.")}
-                        />
-                        <p className="text-[10px] text-slate-400 leading-relaxed italic">
-                            * Persona is locked in playground. Edit in Chatbot Settings to change behavior.
-                        </p>
-                    </div>
+                    )}
 
                     {/* Temperature Slider */}
                     <div className="space-y-5 pt-8 border-t border-slate-100">
@@ -146,23 +150,6 @@ export default function PlaygroundPage() {
                             </div>
                         </div>
                     </div>
-
-                    {/* Meta Info */}
-                    {chatbot && (
-                        <div className="space-y-4 pt-8 border-t border-slate-100">
-                            <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Model Stats</label>
-                            <div className="p-4 bg-slate-50/50 rounded-xl border border-slate-100 space-y-2.5">
-                                <div className="flex justify-between">
-                                    <span className="text-[10px] font-bold text-slate-400 uppercase">Provider</span>
-                                    <span className="text-[10px] font-bold text-slate-700 bg-white px-2 py-0.5 rounded border">GEMINI-1.5-FLASH</span>
-                                </div>
-                                <div className="flex justify-between">
-                                    <span className="text-[10px] font-bold text-slate-400 uppercase">Knowledge</span>
-                                    <span className="text-[10px] font-bold text-indigo-600">Document Context</span>
-                                </div>
-                            </div>
-                        </div>
-                    )}
                 </div>
             </div>
 
@@ -218,7 +205,41 @@ export default function PlaygroundPage() {
                                             <div className="w-2 h-2 bg-indigo-400 rounded-full animate-bounce [animation-delay:-.5s]"></div>
                                         </div>
                                     ) : (
-                                        msg.text
+                                        <div className={`prose prose-sm max-w-none ${msg.isBot ? "prose-slate" : "prose-invert"}`}>
+                                            <ReactMarkdown
+                                                remarkPlugins={[remarkGfm]}
+                                                components={{
+                                                    p: ({ children }) => <p className="mb-2 last:mb-0">{children}</p>,
+                                                    ul: ({ children }) => <ul className="list-disc ml-4 mb-2">{children}</ul>,
+                                                    ol: ({ children }) => <ol className="list-decimal ml-4 mb-2">{children}</ol>,
+                                                    li: ({ children }) => <li className="mb-1">{children}</li>,
+                                                    code: ({ className, children, ...props }: any) => {
+                                                        const match = /language-(\w+)/.exec(className || "");
+                                                        return !match ? (
+                                                            <code className="bg-slate-100 dark:bg-slate-800 px-1 rounded text-pink-600 font-mono text-[13px]" {...props}>
+                                                                {children}
+                                                            </code>
+                                                        ) : (
+                                                            <pre className="bg-slate-900 text-slate-100 p-4 rounded-xl overflow-x-auto my-4 font-mono text-[13px]">
+                                                                <code className={className} {...props}>
+                                                                    {children}
+                                                                </code>
+                                                            </pre>
+                                                        );
+                                                    },
+                                                    a: ({ href, children }) => (
+                                                        <a href={href} target="_blank" rel="noopener noreferrer" className="text-indigo-400 hover:underline">
+                                                            {children}
+                                                        </a>
+                                                    ),
+                                                    h1: ({ children }) => <h1 className="text-xl font-bold mb-2">{children}</h1>,
+                                                    h2: ({ children }) => <h2 className="text-lg font-bold mb-2">{children}</h2>,
+                                                    h3: ({ children }) => <h3 className="text-base font-bold mb-2">{children}</h3>,
+                                                }}
+                                            >
+                                                {msg.text}
+                                            </ReactMarkdown>
+                                        </div>
                                     )}
                                 </div>
                                 {!msg.isThinking && (
@@ -232,10 +253,10 @@ export default function PlaygroundPage() {
                 </div>
 
                 {/* Input Area */}
-                <div className="p-6 bg-white border-t border-slate-100 backdrop-blur-sm">
-                    <div className="relative flex items-end gap-3 max-w-5xl mx-auto border-2 border-slate-100 rounded-[24px] px-6 py-4 bg-slate-50/50 hover:bg-white hover:border-indigo-100 focus-within:bg-white focus-within:border-indigo-600/30 focus-within:ring-4 focus-within:ring-indigo-600/5 transition-all">
+                <div className="p-4 bg-white border-t border-slate-100 backdrop-blur-sm">
+                    <div className="relative flex items-end gap-3 max-w-5xl mx-auto border-2 border-slate-200 rounded-[20px] px-4 py-2.5 bg-slate-50/50 hover:bg-white hover:border-indigo-100 focus-within:bg-white focus-within:border-indigo-500 focus-within:ring-4 focus-within:ring-indigo-600/5 transition-all">
                         <textarea
-                            className="w-full max-h-40 bg-transparent border-none focus:ring-0 p-1 text-[15px] font-medium text-slate-700 placeholder:text-slate-400 resize-none leading-relaxed"
+                            className="w-full max-h-40 bg-transparent border-none focus:ring-0 p-1 text-[14px] font-medium text-slate-700 placeholder:text-slate-400 resize-none leading-relaxed"
                             placeholder={chatbot ? `Ask ${chatbot.name} anything...` : "Select a chatbot from the sidebar to start chatting..."}
                             rows={1}
                             disabled={!chatbotId}
@@ -256,9 +277,9 @@ export default function PlaygroundPage() {
                             <HiPaperAirplane className="w-6 h-6 transform rotate-90" />
                         </button>
                     </div>
-                    <div className="text-center mt-3">
-                        <p className="text-[11px] font-bold text-slate-400 uppercase tracking-tighter">
-                            Powered by Gemini 1.5 Flash • Context: Documents
+                    <div className="text-center mt-2.5">
+                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">
+                            Powered by Gemini 2.5 Flash • Context: Documents
                         </p>
                     </div>
                 </div>

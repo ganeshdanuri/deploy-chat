@@ -4,6 +4,7 @@ from uuid import UUID
 from sqlmodel import Session, select
 from pydantic_ai import Agent
 from pydantic_ai.models.gemini import GeminiModel
+from pydantic_ai.providers.google_gla import GoogleGLAProvider
 from app.schemas.models import Chatbot, Dataset, DatasetDocuments, DocumentContent, PlatformAPIKey
 
 def get_chatbot_context(session: Session, chatbot_id: UUID) -> str:
@@ -30,6 +31,24 @@ def get_chatbot_context(session: Session, chatbot_id: UUID) -> str:
     contents = session.exec(content_stmt).all()
     
     return "\n\n".join(contents)
+    
+class GoogleAIWrapper:
+    """Wrapper for Google Gemini models via Pydantic AI."""
+    def __init__(self, api_key: str, model_name: str = "gemini-2.0-flash"):
+        self.api_key = api_key
+        self.model_name = model_name
+        self.provider = GoogleGLAProvider(api_key=api_key)
+        self.model = GeminiModel(self.model_name, provider=self.provider)
+
+    async def run(self, system_prompt: str, user_message: str, temperature: float = 0.7) -> str:
+        """Runs the agent with the given system prompt and user message."""
+        # Setup model settings (e.g., temperature)
+        from pydantic_ai.models import ModelSettings
+        settings = ModelSettings(temperature=temperature)
+        
+        agent = Agent(self.model, system_prompt=system_prompt, model_settings=settings)
+        result = await agent.run(user_message)
+        return result.output
 
 async def get_ai_response(
     session: Session, 
@@ -37,7 +56,7 @@ async def get_ai_response(
     user_message: str,
     temperature: float = 0.7
 ) -> str:
-    """Calls Gemini via Pydantic AI with document context."""
+    """Calls AI via wrapper with document context."""
     
     # 1. Get Platform API Key for Gemini
     key_stmt = select(PlatformAPIKey.api_key).where(
@@ -52,24 +71,13 @@ async def get_ai_response(
     # 2. Build Context
     context = get_chatbot_context(session, chatbot.id)
     
-    # 3. Initialize Agent
-    model = GeminiModel('gemini-1.5-flash', api_key=api_key)
-    
+    # 3. Setup Prompt
     system_prompt = chatbot.system_prompt
     if context:
         system_prompt += f"\n\nContext based on uploaded documents:\n{context}"
     else:
         system_prompt += "\n\nNote: No specific document context was found for this chatbot."
 
-    agent = Agent(
-        model,
-        system_prompt=system_prompt,
-    )
-
-    # 4. Run Agent
-    # Pydantic AI handles the call and returns a result
-    # We pass temperature via the model if supported, or just use defaults for now
-    # Note: gemini-1.5-flash is used here.
-    result = await agent.run(user_message)
-    
-    return result.data
+    # 4. Use Wrapper
+    ai_wrapper = GoogleAIWrapper(api_key=api_key, model_name="gemini-2.5-flash")
+    return await ai_wrapper.run(system_prompt, user_message, temperature=temperature)
