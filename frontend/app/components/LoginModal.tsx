@@ -10,10 +10,13 @@ import { MdEmail } from "react-icons/md";
 interface LoginModalProps {
   isOpen: boolean;
   onClose: () => void;
+  initialMode?: 'login' | 'register';
+  initialPlan?: string;
 }
 
-export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
-  const [isRegister, setIsRegister] = useState(false);
+export default function LoginModal({ isOpen, onClose, initialMode = 'login', initialPlan = 'free' }: LoginModalProps) {
+  const [isRegister, setIsRegister] = useState(initialMode === 'register');
+  const [selectedPlan, setSelectedPlan] = useState(initialPlan);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -34,7 +37,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
           setIsLoading(false);
           return;
         }
-        const success = await register(username, password);
+        const success = await register(username, password, selectedPlan);
         if (success) {
           onClose();
           router.push("/dashboard");
@@ -108,7 +111,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
             className="mt-2 text-sm"
             style={{ color: theme.colors.neutral[600] }}
           >
-            {isRegister ? "Join us to manage your chatbots" : "Manage your chatbots and integrations"}
+            {isRegister ? `Join us with ${selectedPlan === 'trial' ? 'a Free Trial' : `the ${selectedPlan} plan`}` : "Manage your chatbots and integrations"}
           </p>
         </div>
 

@@ -8,9 +8,9 @@ import api from "@/lib/api";
 interface AuthContextType {
   isAuthenticated: boolean;
   isLoading: boolean;
-  user: { username: string } | null;
+  user: { username: string; plan: string } | null;
   login: (username: string, password: string) => Promise<boolean>;
-  register: (username: string, password: string) => Promise<boolean>;
+  register: (username: string, password: string, plan?: string) => Promise<boolean>;
   logout: () => void;
 }
 
@@ -19,7 +19,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [user, setUser] = useState<{ username: string } | null>(null);
+  const [user, setUser] = useState<{ username: string; plan: string } | null>(null);
   const router = useRouter();
 
   // Check if user is already logged in on mount
@@ -37,7 +37,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       const response = await api.post("/api/auth/login", { username, password });
       if (response.data.access_token) {
-        const userData = { username: response.data.username };
+        const userData = {
+          username: response.data.username,
+          plan: response.data.current_plan || 'free'
+        };
         setUser(userData);
         setIsAuthenticated(true);
         localStorage.setItem("user", JSON.stringify(userData));
@@ -51,11 +54,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const register = async (username: string, password: string): Promise<boolean> => {
+  const register = async (username: string, password: string, plan: string = "free"): Promise<boolean> => {
     try {
-      const response = await api.post("/api/auth/register", { username, password });
+      const response = await api.post("/api/auth/register", { username, password, plan });
       if (response.data.access_token) {
-        const userData = { username: response.data.username };
+        const userData = {
+          username: response.data.username,
+          plan: plan
+        };
         setUser(userData);
         setIsAuthenticated(true);
         localStorage.setItem("user", JSON.stringify(userData));
