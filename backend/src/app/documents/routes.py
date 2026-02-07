@@ -1,39 +1,38 @@
-from fastapi import APIRouter, UploadFile, File, Depends, HTTPException
+from fastapi import APIRouter, UploadFile, File, Depends, HTTPException, status
 from sqlmodel import Session, select
-from uuid import UUID
+from typing import List
 from app.core.db import get_session
-from app.schemas.models import Document, DocumentContent, User
+from app.api.deps import get_current_user
+from app.schemas.models import Document, DocumentContent, User, DocumentRead
 from app.services.converter import convert_to_markdown
 
 router = APIRouter(prefix="/documents")
 
-@router.get("/")
-def get_documents(session: Session = Depends(get_session)):
-    statement = select(Document)
+@router.get("/", response_model=List[DocumentRead])
+def get_documents(
+    session: Session = Depends(get_session),
+    current_user: User = Depends(get_current_user)
+):
+    statement = select(Document).where(Document.user_id == current_user.id)
     results = session.exec(statement).all()
     return results
 
 @router.post("/")
 async def upload_document(
     file: UploadFile = File(...),
-    session: Session = Depends(get_session)
+    session: Session = Depends(get_session),
+    current_user: User = Depends(get_current_user)
 ):
-    # For now, we take the first user from DB as the owner since auth is simple
-    statement = select(User)
-    user = session.exec(statement).first()
-    if not user:
-        raise HTTPException(status_code=404, detail="No user found to assign document to")
-    
     try:
         content_bytes = await file.read()
         
         # 1. Convert to markdown
         markdown_text = convert_to_markdown(content_bytes, file.filename)
         
-        # 2. Save Document record
+        # 2. Save Document record (linked to current_user)
         new_doc = Document(
             name=file.filename,
-            user_id=user.id
+            user_id=current_user.id
         )
         session.add(new_doc)
         session.commit()
@@ -54,4 +53,7 @@ async def upload_document(
         }
     except Exception as e:
         session.rollback()
-        raise HTTPException(status_code=500, detail=f"Failed to process document: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, 
+            detail=f"Failed to process document: {str(e)}"
+        )

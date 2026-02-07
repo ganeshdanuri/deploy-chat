@@ -317,6 +317,7 @@ dependencies = [
     { name = "markitdown", extra = ["all"] },
     { name = "psycopg2" },
     { name = "pydantic-ai" },
+    { name = "pyjwt" },
     { name = "sqlmodel" },
     { name = "uvicorn" },
 ]
@@ -327,6 +328,7 @@ requires-dist = [
     { name = "markitdown", extras = ["all"], specifier = ">=0.1.4" },
     { name = "psycopg2", specifier = ">=2.9.11" },
     { name = "pydantic-ai", specifier = ">=1.56.0" },
+    { name = "pyjwt", specifier = ">=2.11.0" },
     { name = "sqlmodel", specifier = ">=0.0.32" },
     { name = "uvicorn", specifier = ">=0.40.0" },
 ]

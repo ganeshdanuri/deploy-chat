@@ -9,6 +9,7 @@ dependencies = [
     "markitdown[all]>=0.1.4",
     "psycopg2>=2.9.11",
     "pydantic-ai>=1.56.0",
+    "pyjwt>=2.11.0",
     "sqlmodel>=0.0.32",
     "uvicorn>=0.40.0",
 ]

@@ -25,7 +25,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // Check if user is already logged in on mount
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
-    if (storedUser) {
+    const token = localStorage.getItem("access_token");
+    if (storedUser && token) {
       setUser(JSON.parse(storedUser));
       setIsAuthenticated(true);
     }
@@ -35,11 +36,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const login = async (username: string, password: string): Promise<boolean> => {
     try {
       const response = await api.post("/api/auth/login", { username, password });
-      if (response.data.success) {
+      if (response.data.access_token) {
         const userData = { username: response.data.username };
         setUser(userData);
         setIsAuthenticated(true);
         localStorage.setItem("user", JSON.stringify(userData));
+        localStorage.setItem("access_token", response.data.access_token);
         return true;
       }
       return false;
@@ -52,11 +54,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const register = async (username: string, password: string): Promise<boolean> => {
     try {
       const response = await api.post("/api/auth/register", { username, password });
-      if (response.data) {
+      if (response.data.access_token) {
         const userData = { username: response.data.username };
         setUser(userData);
         setIsAuthenticated(true);
         localStorage.setItem("user", JSON.stringify(userData));
+        localStorage.setItem("access_token", response.data.access_token);
         return true;
       }
       return false;
@@ -70,6 +73,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setUser(null);
     setIsAuthenticated(false);
     localStorage.removeItem("user");
+    localStorage.removeItem("access_token");
     router.push("/");
   };
 
