@@ -1,6 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 import Navbar from "./components/Navbar";
 import LoginModal from "./components/LoginModal";
 import FeaturesSection from "./components/FeaturesSection";
@@ -55,6 +57,19 @@ const features = [
 
 export default function LandingPage() {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [modalMode, setModalMode] = useState<'login' | 'register'>('login');
+  const [modalPlan, setModalPlan] = useState('free');
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    const isRegister = searchParams.get('register') === 'true';
+    const plan = searchParams.get('plan');
+    if (isRegister) {
+      setModalMode('register');
+      if (plan) setModalPlan(plan);
+      setIsLoginModalOpen(true);
+    }
+  }, [searchParams]);
 
   return (
     <main
@@ -104,10 +119,14 @@ export default function LandingPage() {
       {/* Footer */}
       <Footer />
 
-      <LoginModal
-        isOpen={isLoginModalOpen}
-        onClose={() => setIsLoginModalOpen(false)}
-      />
+      <Suspense fallback={null}>
+        <LoginModal
+          isOpen={isLoginModalOpen}
+          initialMode={modalMode}
+          initialPlan={modalPlan}
+          onClose={() => setIsLoginModalOpen(false)}
+        />
+      </Suspense>
     </main>
   );
 }

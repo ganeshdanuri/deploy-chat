@@ -6,6 +6,7 @@ import { useSearchParams } from "next/navigation";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState, AppDispatch } from "@/lib/store/store";
 import { fetchChatbots } from "@/lib/store/slices/chatbotsSlice";
+import api from "@/lib/api";
 
 interface Message {
     id: number;
@@ -33,23 +34,33 @@ export default function PlaygroundPage() {
         }
     }, [status, dispatch]);
 
-    const handleSend = () => {
-        if (!input.trim()) return;
-        setMessages([...messages, { id: Date.now(), text: input, isBot: false }]);
+    const handleSend = async () => {
+        if (!input.trim() || !chatbotId) return;
+        const userMessage = input;
+        setMessages(prev => [...prev, { id: Date.now(), text: userMessage, isBot: false }]);
         setInput("");
 
         // Simulate thinking state
-        setTimeout(() => {
-            setMessages(prev => [...prev, { id: Date.now() + 1, text: "Thinking...", isBot: true, isThinking: true }]);
+        setMessages(prev => [...prev, { id: Date.now() + 1, text: "Thinking...", isBot: true, isThinking: true }]);
 
-            // Simulate response
-            setTimeout(() => {
-                setMessages(prev => {
-                    const newMsgs = prev.filter(m => !m.isThinking);
-                    return [...newMsgs, { id: Date.now() + 2, text: chatbot ? `I'm analyzing your request as ${chatbot.name}. This is a simulated response based on the knowledge provided in your datasets.` : "I can certainly help with that. Could you specify which dataset you are referring to?", isBot: true }];
-                });
-            }, 1000);
-        }, 500);
+        try {
+            const response = await api.post(`/api/chatbots/${chatbotId}/chat`, null, {
+                params: { message: userMessage }
+            });
+
+            setMessages(prev => {
+                const newMsgs = prev.filter(m => !m.isThinking);
+                return [...newMsgs, { id: Date.now() + 2, text: response.data.response, isBot: true }];
+            });
+        } catch (error: any) {
+            setMessages(prev => {
+                const newMsgs = prev.filter(m => !m.isThinking);
+                const errorMessage = error.response?.status === 403
+                    ? error.response.data.detail
+                    : "Something went wrong. Please try again later.";
+                return [...newMsgs, { id: Date.now() + 2, text: errorMessage, isBot: true }];
+            });
+        }
     };
 
     return (

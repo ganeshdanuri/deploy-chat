@@ -20,17 +20,19 @@ def register(user_data: UserCreate, session: Session = Depends(get_session)):
     new_user = User(
         username=user_data.username,
         password_hash=user_data.password, 
-        role=user_data.role
+        role=user_data.role,
+        current_plan=user_data.plan or "free"
     )
     session.add(new_user)
     session.commit()
     session.refresh(new_user)
     
-    access_token = create_access_token(subject=new_user.id)
+    access_token = create_access_token(subject=new_user.id, plan=new_user.current_plan)
     return {
         "access_token": access_token,
         "token_type": "bearer",
-        "username": new_user.username
+        "username": new_user.username,
+        "current_plan": new_user.current_plan
     }
 
 @router.post("/login")
@@ -44,9 +46,10 @@ def login(login_data: UserLogin, session: Session = Depends(get_session)):
             detail="Invalid username or password"
         )
     
-    access_token = create_access_token(subject=user.id)
+    access_token = create_access_token(subject=user.id, plan=user.current_plan)
     return {
         "access_token": access_token,
         "token_type": "bearer",
-        "username": user.username
+        "username": user.username,
+        "current_plan": user.current_plan
     }
