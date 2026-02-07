@@ -1,30 +1,22 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { HiDocumentText, HiPlus, HiSearch, HiCheck, HiExternalLink, HiTrash, HiUpload } from "react-icons/hi";
+import { useEffect } from "react";
+import { HiDocumentText, HiPlus, HiSearch, HiExternalLink, HiTrash, HiUpload } from "react-icons/hi";
 import UploadModal from "@/app/components/UploadModal";
-import api from "@/lib/api";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState, AppDispatch } from "@/lib/store/store";
+import { fetchDocuments } from "@/lib/store/slices/documentsSlice";
+import { useState } from "react";
 
 export default function DocumentsPage() {
     const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
-    const [documents, setDocuments] = useState<any[]>([]);
-    const [isLoading, setIsLoading] = useState(true);
-
-    const fetchDocuments = async () => {
-        try {
-            setIsLoading(true);
-            const response = await api.get("/api/documents/");
-            setDocuments(response.data);
-        } catch (error) {
-            console.error("Failed to fetch documents:", error);
-        } finally {
-            setIsLoading(false);
-        }
-    };
+    const dispatch = useDispatch<AppDispatch>();
+    const { items: documents, status, error } = useSelector((state: RootState) => state.documents);
+    const isLoading = status === 'loading';
 
     useEffect(() => {
-        fetchDocuments();
-    }, []);
+        dispatch(fetchDocuments());
+    }, [dispatch]);
 
     return (
         <div className="space-y-6 animate-fade-in-up">
@@ -130,7 +122,7 @@ export default function DocumentsPage() {
             <UploadModal
                 isOpen={isUploadModalOpen}
                 onClose={() => setIsUploadModalOpen(false)}
-                onUploadSuccess={fetchDocuments}
+                onUploadSuccess={() => dispatch(fetchDocuments())}
             />
         </div>
     );
