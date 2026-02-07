@@ -1,7 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { HiSparkles, HiPaperAirplane, HiRefresh, HiCog, HiUser, HiChatAlt2, HiLightningBolt } from "react-icons/hi";
+import { useSearchParams } from "next/navigation";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState, AppDispatch } from "@/lib/store/store";
+import { fetchChatbots } from "@/lib/store/slices/chatbotsSlice";
 
 interface Message {
     id: number;
@@ -11,12 +15,23 @@ interface Message {
 }
 
 export default function PlaygroundPage() {
+    const searchParams = useSearchParams();
+    const chatbotId = searchParams.get("chatbotId");
+    const dispatch = useDispatch<AppDispatch>();
+
+    const { items: chatbots, status } = useSelector((state: RootState) => state.chatbots);
+    const chatbot = chatbots.find(b => b.id === chatbotId);
+
     const [messages, setMessages] = useState<Message[]>([
         { id: 1, text: "Hello! I'm your AI assistant. How can I help you today?", isBot: true },
-        { id: 2, text: "Hi, I need help understanding the dataset I just uploaded.", isBot: false },
-        { id: 3, text: "I can certainly help with that. Could you specify which dataset you are referring to?", isBot: true },
     ]);
     const [input, setInput] = useState("");
+
+    useEffect(() => {
+        if (status === 'idle') {
+            dispatch(fetchChatbots());
+        }
+    }, [status, dispatch]);
 
     const handleSend = () => {
         if (!input.trim()) return;
@@ -31,9 +46,9 @@ export default function PlaygroundPage() {
             setTimeout(() => {
                 setMessages(prev => {
                     const newMsgs = prev.filter(m => !m.isThinking);
-                    return [...newMsgs, { id: Date.now() + 2, text: "Based on the 'Q3 Sales Reports' dataset, revenue increased by 15% compared to Q2. The top performing region was North America.", isBot: true }];
+                    return [...newMsgs, { id: Date.now() + 2, text: chatbot ? `I'm analyzing your request as ${chatbot.name}. This is a simulated response based on the knowledge provided in your datasets.` : "I can certainly help with that. Could you specify which dataset you are referring to?", isBot: true }];
                 });
-            }, 1500);
+            }, 1000);
         }, 500);
     };
 
@@ -48,15 +63,20 @@ export default function PlaygroundPage() {
                             <HiSparkles className="w-5 h-5" />
                         </div>
                         <div>
-                            <h2 className="text-sm font-bold text-slate-900">Playground</h2>
+                            <h2 className="text-sm font-bold text-slate-900">{chatbot ? chatbot.name : "Playground"}</h2>
                             <div className="flex items-center gap-1.5">
                                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                                <span className="text-xs text-slate-500 font-medium">Customer Support Bot (GPT-4)</span>
+                                <span className="text-xs text-slate-500 font-medium">
+                                    {chatbot ? "Active and Ready" : "Select a chatbot to start"}
+                                </span>
                             </div>
                         </div>
                     </div>
                     <div className="flex items-center gap-2">
-                        <button className="p-2 text-slate-400 hover:text-indigo-600 hover:bg-slate-50 rounded-lg transition-all" title="Reset Chat">
+                        <button
+                            onClick={() => setMessages([{ id: 1, text: "Messages cleared. How can I help you today?", isBot: true }])}
+                            className="p-2 text-slate-400 hover:text-indigo-600 hover:bg-slate-50 rounded-lg transition-all" title="Reset Chat"
+                        >
                             <HiRefresh className="w-5 h-5" />
                         </button>
                         <button className="p-2 text-slate-400 hover:text-indigo-600 hover:bg-slate-50 rounded-lg transition-all" title="Settings">
@@ -91,7 +111,9 @@ export default function PlaygroundPage() {
                                     )}
                                 </div>
                                 {!msg.isThinking && (
-                                    <span className="text-[10px] text-slate-400 font-mono font-medium px-1">10:45 AM</span>
+                                    <span className="text-[10px] text-slate-400 font-mono font-medium px-1">
+                                        {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                    </span>
                                 )}
                             </div>
                         </div>
@@ -106,7 +128,7 @@ export default function PlaygroundPage() {
                         </button>
                         <textarea
                             className="w-full max-h-32 bg-transparent border-none focus:ring-0 p-2 text-sm text-slate-700 placeholder:text-slate-400 resize-none leading-normal"
-                            placeholder="Type your message here... (Enter to send)"
+                            placeholder={chatbot ? `Message ${chatbot.name}...` : "Type your message here... (Enter to send)"}
                             rows={1}
                             value={input}
                             onChange={(e) => setInput(e.target.value)}
@@ -164,19 +186,15 @@ export default function PlaygroundPage() {
                         <input type="range" min="0" max="1" step="0.1" defaultValue="0.7" className="w-full accent-indigo-600 h-1.5 bg-slate-100 rounded-lg appearance-none cursor-pointer" />
                     </div>
 
-                    <div className="space-y-4 pt-4 border-t border-slate-200">
-                        <label className="text-xs font-semibold text-slate-700">Knowledge Base</label>
-                        <div className="space-y-2">
-                            <label className="flex items-center gap-2 text-sm text-slate-600">
-                                <input type="checkbox" className="rounded text-indigo-600 focus:ring-indigo-500 border-slate-300" defaultChecked />
-                                <span>Website Documentation</span>
-                            </label>
-                            <label className="flex items-center gap-2 text-sm text-slate-600">
-                                <input type="checkbox" className="rounded text-indigo-600 focus:ring-indigo-500 border-slate-300" defaultChecked />
-                                <span>Product FAQs</span>
-                            </label>
+                    {chatbot && (
+                        <div className="space-y-4 pt-4 border-t border-slate-200">
+                            <label className="text-xs font-semibold text-slate-700">Information</label>
+                            <div className="text-xs text-slate-500 space-y-2">
+                                <p><span className="font-bold">ID:</span> {chatbot.id}</p>
+                                <p><span className="font-bold">Created:</span> {new Date(chatbot.created_at).toLocaleDateString()}</p>
+                            </div>
                         </div>
-                    </div>
+                    )}
                 </div>
 
                 <div className="mt-auto pt-6">
