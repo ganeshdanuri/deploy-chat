@@ -5,49 +5,47 @@ import { HiCheck, HiOutlineInformationCircle } from "react-icons/hi";
 
 const plans = [
     {
-        name: "Starter",
+        name: "Trial",
         price: "0",
-        description: "Perfect for personal projects and small blogs.",
+        description: "Test the power of Docking with no configuration required.",
         features: [
             "1 AI Chatbot",
-            "50 Messages / month",
-            "10 Documents or 50k words",
-            "Standard AI model",
+            "50 Messages (Platform Key)",
+            "3 Documents Included",
+            "No API Key needed",
             "Community support",
         ],
-        cta: "Start for Free",
+        cta: "Start Free Trial",
         popular: false,
         color: theme.colors.neutral[600],
     },
     {
         name: "Professional",
-        price: "29",
-        description: "Ideal for growing businesses and startups.",
+        price: "19",
+        description: "Perfect for scaling startups with heavy usage needs.",
         features: [
-            "5 AI Chatbots",
-            "2,000 Messages / month",
-            "Unlimited Documents",
-            "GPT-4o Advanced model",
-            "Custom branding",
-            "Priority email support",
+            "10 AI Chatbots",
+            "5,000 Managed Messages",
+            "OR Bring Your Own Key (Unlimited)",
+            "Advanced RAG pipeline",
+            "Priority support",
         ],
-        cta: "Start Free Trial",
+        cta: "Get Started",
         popular: true,
         color: theme.colors.primary.main,
     },
     {
         name: "Enterprise",
-        price: "99",
-        description: "For high-volume sites and complex teams.",
+        price: "Custom",
+        description: "Full control and white-labeled infrastructure.",
         features: [
             "Unlimited Chatbots",
-            "10,000 Messages / month",
-            "API Access",
-            "White-label options",
-            "Custom integrations",
-            "Dedicated account manager",
+            "Unlimited RAG processing",
+            "Dedicated Infrastructure",
+            "SLA Support",
+            "Custom Security Audits",
         ],
-        cta: "Contact Sales",
+        cta: "Talk to Sales",
         popular: false,
         color: theme.colors.accent.purple,
     },
@@ -123,6 +121,14 @@ export default function PricingSection() {
                             </ul>
 
                             <button
+                                onClick={() => {
+                                    if (plan.name === 'Trial') {
+                                        window.location.href = `/?register=true&plan=trial`;
+                                    } else {
+                                        // Handle other plans or just default to register
+                                        window.location.href = `/?register=true&plan=${plan.name.toLowerCase()}`;
+                                    }
+                                }}
                                 className={`w-full py-4 rounded-xl font-bold transition-all ${plan.popular ? 'text-white' : 'border'
                                     }`}
                                 style={{

@@ -4,7 +4,8 @@ from typing import List
 from uuid import UUID
 from app.core.db import get_session
 from app.api.deps import get_current_user
-from app.schemas.models import Chatbot, ChatbotCreate, ChatbotRead, ChatbotDatasets, User, Dataset
+from app.schemas.models import Chatbot, ChatbotCreate, ChatbotRead, ChatbotDatasets, User, Dataset, UsageTracking
+from app.core.billing import verify_plan_limits, increment_usage
 
 router = APIRouter(prefix="/chatbots")
 
@@ -75,3 +76,27 @@ def delete_chatbot(
     session.delete(chatbot)
     session.commit()
     return {"message": "Chatbot deleted successfully"}
+
+@router.post("/{chatbot_id}/chat")
+def chatbot_chat(
+    chatbot_id: UUID,
+    message: str,
+    session: Session = Depends(get_session),
+    current_user: User = Depends(get_current_user)
+):
+    # 1. Verify access
+    chatbot = session.get(Chatbot, chatbot_id)
+    if not chatbot or chatbot.user_id != current_user.id:
+        raise HTTPException(status_code=404, detail="Chatbot not found")
+        
+    # 2. Verify usage limits
+    usage = verify_plan_limits(current_user, session)
+    
+    # 3. Simulate AI logic (or real call later)
+    # This is where RAG would happen
+    response = f"Simulated response from {chatbot.name}. (Usage: {usage.message_count + 1}/{current_user.current_plan})"
+    
+    # 4. Increment usage
+    increment_usage(usage, session)
+    
+    return {"response": response, "usage_count": usage.message_count}
