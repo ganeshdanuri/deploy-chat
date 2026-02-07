@@ -71,3 +71,28 @@ class DatasetRead(DatasetBase):
     id: UUID
     created_at: datetime
     updated_at: datetime
+
+# Chatbots
+class ChatbotDatasets(SQLModel, table=True):
+    __tablename__ = "chatbot_datasets"
+    chatbot_id: UUID = Field(foreign_key="chatbots.id", primary_key=True)
+    dataset_id: UUID = Field(foreign_key="datasets.id", primary_key=True)
+
+class ChatbotBase(SQLModel):
+    name: str = Field(index=True)
+    user_id: UUID = Field(foreign_key="users.id")
+
+class Chatbot(ChatbotBase, table=True):
+    __tablename__ = "chatbots"
+    id: UUID = Field(default_factory=uuid4, primary_key=True)
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
+
+class ChatbotCreate(SQLModel):
+    name: str
+    dataset_ids: list[UUID]
+
+class ChatbotRead(ChatbotBase):
+    id: UUID
+    created_at: datetime
+    updated_at: datetime
