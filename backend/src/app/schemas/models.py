@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 from uuid import UUID, uuid4
 from sqlmodel import Field, SQLModel
 from datetime import datetime
@@ -11,10 +11,12 @@ class User(UserBase, table=True):
     __tablename__ = "users"
     id: UUID = Field(default_factory=uuid4, primary_key=True)
     password_hash: str
+    current_plan: str = Field(default="free")
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
 class UserCreate(UserBase):
     password: str
+    plan: Optional[str] = Field(default="free")
 
 class UserLogin(SQLModel):
     username: str
@@ -22,6 +24,7 @@ class UserLogin(SQLModel):
 
 class UserRead(UserBase):
     id: UUID
+    current_plan: str
     created_at: datetime
 
 class DocumentBase(SQLModel):
@@ -65,7 +68,7 @@ class Dataset(DatasetBase, table=True):
 
 class DatasetCreate(SQLModel):
     name: str
-    document_ids: list[UUID]
+    document_ids: List[UUID]
 
 class DatasetRead(DatasetBase):
     id: UUID
@@ -81,6 +84,8 @@ class ChatbotDatasets(SQLModel, table=True):
 class ChatbotBase(SQLModel):
     name: str = Field(index=True)
     user_id: UUID = Field(foreign_key="users.id")
+    system_prompt: str = Field(default="You are a helpful AI assistant.")
+    temperature: float = Field(default=0.7)
 
 class Chatbot(ChatbotBase, table=True):
     __tablename__ = "chatbots"
@@ -90,9 +95,66 @@ class Chatbot(ChatbotBase, table=True):
 
 class ChatbotCreate(SQLModel):
     name: str
-    dataset_ids: list[UUID]
+    dataset_ids: List[UUID]
+    system_prompt: Optional[str] = None
+    temperature: Optional[float] = 0.7
 
 class ChatbotRead(ChatbotBase):
     id: UUID
     created_at: datetime
     updated_at: datetime
+
+# API Configs
+class PlatformAPIKey(SQLModel, table=True):
+    __tablename__ = "platform_api_keys"
+    id: UUID = Field(default_factory=uuid4, primary_key=True)
+    provider: str
+    api_key: str
+    is_active: bool = Field(default=True)
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
+
+class UserAPIKeyBase(SQLModel):
+    provider: str
+    is_active: bool = Field(default=True)
+
+class UserAPIKey(UserAPIKeyBase, table=True):
+    __tablename__ = "user_api_keys"
+    id: UUID = Field(default_factory=uuid4, primary_key=True)
+    user_id: UUID = Field(foreign_key="users.id")
+    api_key: str
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
+
+class UserAPIKeyCreate(SQLModel):
+    provider: str
+    api_key: str
+
+class UserAPIKeyRead(UserAPIKeyBase):
+    id: UUID
+    user_id: UUID
+    created_at: datetime
+
+# Usage Tracking
+class UsageTracking(SQLModel, table=True):
+    __tablename__ = "usage_tracking"
+    id: UUID = Field(default_factory=uuid4, primary_key=True)
+    user_id: UUID = Field(foreign_key="users.id")
+    chatbot_id: Optional[UUID] = Field(default=None, foreign_key="chatbots.id")
+    message_count: int = Field(default=0)
+    token_count: int = Field(default=0)
+    reset_date: datetime = Field(default_factory=datetime.utcnow)
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
+
+# Pricing Plans
+class UserPricingPlan(SQLModel, table=True):
+    __tablename__ = "user_pricing_plans"
+    id: UUID = Field(default_factory=uuid4, primary_key=True)
+    user_id: UUID = Field(foreign_key="users.id")
+    plan_name: str = Field(default="free")
+    status: str = Field(default="active")
+    started_at: datetime = Field(default_factory=datetime.utcnow)
+    expires_at: Optional[datetime] = Field(default=None)
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_at: datetime = Field(default_factory=datetime.utcnow)

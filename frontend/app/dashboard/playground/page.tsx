@@ -1,11 +1,12 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { HiSparkles, HiPaperAirplane, HiRefresh, HiCog, HiUser, HiChatAlt2, HiLightningBolt } from "react-icons/hi";
-import { useSearchParams } from "next/navigation";
+import { HiSparkles, HiPaperAirplane, HiRefresh, HiCog, HiUser, HiChatAlt2, HiLightningBolt, HiChevronDown } from "react-icons/hi";
+import { useSearchParams, useRouter } from "next/navigation";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState, AppDispatch } from "@/lib/store/store";
 import { fetchChatbots } from "@/lib/store/slices/chatbotsSlice";
+import api from "@/lib/api";
 
 interface Message {
     id: number;
@@ -16,6 +17,7 @@ interface Message {
 
 export default function PlaygroundPage() {
     const searchParams = useSearchParams();
+    const router = useRouter();
     const chatbotId = searchParams.get("chatbotId");
     const dispatch = useDispatch<AppDispatch>();
 
@@ -26,6 +28,7 @@ export default function PlaygroundPage() {
         { id: 1, text: "Hello! I'm your AI assistant. How can I help you today?", isBot: true },
     ]);
     const [input, setInput] = useState("");
+    const [temperature, setTemperature] = useState(0.7);
 
     useEffect(() => {
         if (status === 'idle') {
@@ -33,85 +36,193 @@ export default function PlaygroundPage() {
         }
     }, [status, dispatch]);
 
-    const handleSend = () => {
-        if (!input.trim()) return;
-        setMessages([...messages, { id: Date.now(), text: input, isBot: false }]);
+    useEffect(() => {
+        if (chatbot) {
+            setTemperature(chatbot.temperature || 0.7);
+        }
+    }, [chatbot]);
+
+    const handleSend = async () => {
+        if (!input.trim() || !chatbotId) return;
+        const userMessage = input;
+        setMessages(prev => [...prev, { id: Date.now(), text: userMessage, isBot: false }]);
         setInput("");
 
-        // Simulate thinking state
-        setTimeout(() => {
-            setMessages(prev => [...prev, { id: Date.now() + 1, text: "Thinking...", isBot: true, isThinking: true }]);
+        // Thinking state
+        setMessages(prev => [...prev, { id: Date.now() + 1, text: "Thinking...", isBot: true, isThinking: true }]);
 
-            // Simulate response
-            setTimeout(() => {
-                setMessages(prev => {
-                    const newMsgs = prev.filter(m => !m.isThinking);
-                    return [...newMsgs, { id: Date.now() + 2, text: chatbot ? `I'm analyzing your request as ${chatbot.name}. This is a simulated response based on the knowledge provided in your datasets.` : "I can certainly help with that. Could you specify which dataset you are referring to?", isBot: true }];
-                });
-            }, 1000);
-        }, 500);
+        try {
+            const response = await api.post(`/api/chatbots/${chatbotId}/chat`, null, {
+                params: { message: userMessage }
+            });
+
+            setMessages(prev => {
+                const newMsgs = prev.filter(m => !m.isThinking);
+                return [...newMsgs, { id: Date.now() + 2, text: response.data.response, isBot: true }];
+            });
+        } catch (error: any) {
+            setMessages(prev => {
+                const newMsgs = prev.filter(m => !m.isThinking);
+                const errorMessage = error.response?.status === 403
+                    ? error.response.data.detail
+                    : "Something went wrong. Please try again later.";
+                return [...newMsgs, { id: Date.now() + 2, text: errorMessage, isBot: true }];
+            });
+        }
+    };
+
+    const handleChatbotChange = (id: string) => {
+        router.push(`/dashboard/playground?chatbotId=${id}`);
     };
 
     return (
         <div className="h-[calc(100vh-8rem)] flex gap-6 animate-fade-in-up">
-            {/* Main Chat Area */}
+            {/* Settings Sidebar (Left Side Now) */}
+            <div className="w-80 bg-white rounded-2xl border border-slate-200 shadow-sm p-6 flex flex-col h-full overflow-y-auto">
+                <div className="flex items-center gap-2 mb-8">
+                    <div className="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center text-indigo-600">
+                        <HiCog className="w-5 h-5" />
+                    </div>
+                    <h3 className="text-lg font-bold text-slate-900">Configuration</h3>
+                </div>
+
+                <div className="space-y-8 flex-1">
+                    {/* Chatbot Selection */}
+                    <div className="space-y-3">
+                        <label className="text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center gap-2">
+                            Select Chatbot
+                        </label>
+                        <div className="relative group">
+                            <select
+                                value={chatbotId || ""}
+                                onChange={(e) => handleChatbotChange(e.target.value)}
+                                className="w-full pl-4 pr-10 py-3 text-sm font-semibold bg-slate-50/50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 appearance-none transition-all cursor-pointer group-hover:bg-white"
+                            >
+                                <option value="" disabled>Select a chatbot...</option>
+                                {chatbots.map(bot => (
+                                    <option key={bot.id} value={bot.id}>{bot.name}</option>
+                                ))}
+                            </select>
+                            <HiChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none group-hover:text-indigo-500 transition-colors" />
+                        </div>
+                    </div>
+
+                    {/* Persona (Read-only) */}
+                    <div className="space-y-3">
+                        <div className="flex items-center justify-between">
+                            <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Persona / Prompt</label>
+                            <span className="text-[10px] bg-slate-100 text-slate-500 px-2 py-0.5 rounded-full font-bold">Locked</span>
+                        </div>
+                        <textarea
+                            readOnly
+                            className="w-full text-sm border-slate-200 rounded-xl bg-slate-50/70 h-32 p-4 text-slate-600 italic resize-none focus:ring-0 leading-relaxed border-dashed"
+                            value={chatbot?.system_prompt || (chatbot ? `You are ${chatbot.name}, a helpful AI assistant. Be polite, concise, and professional.` : "You are a helpful AI assistant.")}
+                        />
+                        <p className="text-[10px] text-slate-400 leading-relaxed italic">
+                            * Persona is locked in playground. Edit in Chatbot Settings to change behavior.
+                        </p>
+                    </div>
+
+                    {/* Temperature Slider */}
+                    <div className="space-y-5 pt-8 border-t border-slate-100">
+                        <div className="flex items-center justify-between">
+                            <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Creativity (Temp)</label>
+                            <span className="text-sm font-mono font-bold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-lg border border-indigo-100">{temperature}</span>
+                        </div>
+                        <div className="relative pt-1">
+                            <input
+                                type="range"
+                                min="0"
+                                max="1"
+                                step="0.1"
+                                value={temperature}
+                                onChange={(e) => setTemperature(parseFloat(e.target.value))}
+                                className="w-full accent-indigo-600 h-1.5 bg-slate-100 rounded-lg appearance-none cursor-pointer hover:bg-slate-200 transition-colors"
+                            />
+                            <div className="flex justify-between text-[10px] font-bold text-slate-400 mt-2 uppercase tracking-tighter">
+                                <span>Precise</span>
+                                <span>Balanced</span>
+                                <span>Creative</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Meta Info */}
+                    {chatbot && (
+                        <div className="space-y-4 pt-8 border-t border-slate-100">
+                            <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Model Stats</label>
+                            <div className="p-4 bg-slate-50/50 rounded-xl border border-slate-100 space-y-2.5">
+                                <div className="flex justify-between">
+                                    <span className="text-[10px] font-bold text-slate-400 uppercase">Provider</span>
+                                    <span className="text-[10px] font-bold text-slate-700 bg-white px-2 py-0.5 rounded border">GEMINI-1.5-FLASH</span>
+                                </div>
+                                <div className="flex justify-between">
+                                    <span className="text-[10px] font-bold text-slate-400 uppercase">Knowledge</span>
+                                    <span className="text-[10px] font-bold text-indigo-600">Document Context</span>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            </div>
+
+            {/* Main Chat Area (Right Side Now) */}
             <div className="flex-1 flex flex-col bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden relative">
                 {/* Chat Header */}
-                <div className="p-4 border-b border-slate-200 flex justify-between items-center bg-white z-10 sticky top-0">
-                    <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 border border-indigo-200 shadow-sm">
-                            <HiSparkles className="w-5 h-5" />
+                <div className="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-white/80 backdrop-blur-md z-10 sticky top-0">
+                    <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-500 to-violet-600 p-[1px] shadow-lg shadow-indigo-100">
+                            <div className="w-full h-full bg-white rounded-[15px] flex items-center justify-center text-indigo-600">
+                                <HiSparkles className="w-6 h-6" />
+                            </div>
                         </div>
                         <div>
-                            <h2 className="text-sm font-bold text-slate-900">{chatbot ? chatbot.name : "Playground"}</h2>
+                            <h2 className="text-lg font-bold text-slate-900 tracking-tight">{chatbot ? chatbot.name : "Select a Chatbot"}</h2>
                             <div className="flex items-center gap-1.5">
-                                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                                <span className="text-xs text-slate-500 font-medium">
-                                    {chatbot ? "Active and Ready" : "Select a chatbot to start"}
+                                <span className={`w-2 h-2 rounded-full ${chatbot ? 'bg-emerald-500 animate-pulse' : 'bg-slate-300'}`}></span>
+                                <span className="text-[11px] text-slate-500 font-bold uppercase tracking-wider">
+                                    {chatbot ? "Online • Intelligent Mode" : "Select from left to start"}
                                 </span>
                             </div>
                         </div>
                     </div>
                     <div className="flex items-center gap-2">
                         <button
-                            onClick={() => setMessages([{ id: 1, text: "Messages cleared. How can I help you today?", isBot: true }])}
-                            className="p-2 text-slate-400 hover:text-indigo-600 hover:bg-slate-50 rounded-lg transition-all" title="Reset Chat"
+                            onClick={() => setMessages([{ id: Date.now(), text: "Chat history cleared. How can I help you?", isBot: true }])}
+                            className="p-2.5 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-all" title="Reset Chat"
                         >
                             <HiRefresh className="w-5 h-5" />
-                        </button>
-                        <button className="p-2 text-slate-400 hover:text-indigo-600 hover:bg-slate-50 rounded-lg transition-all" title="Settings">
-                            <HiCog className="w-5 h-5" />
                         </button>
                     </div>
                 </div>
 
                 {/* Messages Area */}
-                <div className="flex-1 p-6 bg-slate-50/50 space-y-6 overflow-y-auto scroll-smooth">
-                    {messages.map((msg: any) => (
+                <div className="flex-1 p-8 bg-slate-50/30 space-y-8 overflow-y-auto scroll-smooth">
+                    {messages.map((msg) => (
                         <div key={msg.id} className={`flex gap-4 ${!msg.isBot ? "flex-row-reverse" : ""}`}>
                             {/* Avatar */}
-                            <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 border shadow-sm ${msg.isBot ? "bg-white border-slate-200 text-indigo-600" : "bg-indigo-600 border-indigo-700 text-white"}`}>
-                                {msg.isBot ? <HiChatAlt2 className="w-4 h-4" /> : <HiUser className="w-4 h-4" />}
+                            <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 border shadow-sm transition-transform hover:scale-105 ${msg.isBot ? "bg-white border-slate-200 text-indigo-600" : "bg-indigo-600 border-indigo-700 text-white"}`}>
+                                {msg.isBot ? <HiChatAlt2 className="w-5 h-5" /> : <HiUser className="w-5 h-5" />}
                             </div>
 
                             {/* Message Bubble */}
-                            <div className={`max-w-[75%] space-y-1 ${!msg.isBot ? "items-end flex flex-col" : ""}`}>
-                                <div className={`px-5 py-3.5 rounded-2xl text-sm leading-relaxed shadow-sm ${msg.isBot
-                                    ? "bg-white border border-slate-200 text-slate-700 rounded-tl-none"
-                                    : "bg-indigo-600 text-white rounded-tr-none"
+                            <div className={`max-w-[75%] space-y-2 ${!msg.isBot ? "items-end flex flex-col" : ""}`}>
+                                <div className={`px-6 py-4 rounded-3xl text-[14px] leading-relaxed shadow-sm transition-all ${msg.isBot
+                                    ? "bg-white border border-slate-200 text-slate-700 rounded-tl-none font-medium"
+                                    : "bg-indigo-600 text-white rounded-tr-none font-semibold"
                                     }`}>
                                     {msg.isThinking ? (
-                                        <div className="flex gap-1.5 py-1">
-                                            <div className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce delay-0"></div>
-                                            <div className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce delay-100"></div>
-                                            <div className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce delay-200"></div>
+                                        <div className="flex gap-2 py-2">
+                                            <div className="w-2 h-2 bg-indigo-200 rounded-full animate-bounce"></div>
+                                            <div className="w-2 h-2 bg-indigo-300 rounded-full animate-bounce [animation-delay:-.3s]"></div>
+                                            <div className="w-2 h-2 bg-indigo-400 rounded-full animate-bounce [animation-delay:-.5s]"></div>
                                         </div>
                                     ) : (
                                         msg.text
                                     )}
                                 </div>
                                 {!msg.isThinking && (
-                                    <span className="text-[10px] text-slate-400 font-mono font-medium px-1">
+                                    <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest px-1">
                                         {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                     </span>
                                 )}
@@ -121,15 +232,13 @@ export default function PlaygroundPage() {
                 </div>
 
                 {/* Input Area */}
-                <div className="p-4 bg-white border-t border-slate-200">
-                    <div className="relative flex items-end gap-2 max-w-4xl mx-auto border border-slate-300 rounded-xl px-4 py-3 bg-white shadow-sm focus-within:ring-2 focus-within:ring-indigo-500/20 focus-within:border-indigo-500 transition-all">
-                        <button className="p-2 -ml-2 text-slate-400 hover:text-indigo-600 rounded-lg transition-colors">
-                            <HiLightningBolt className="w-5 h-5" />
-                        </button>
+                <div className="p-6 bg-white border-t border-slate-100 backdrop-blur-sm">
+                    <div className="relative flex items-end gap-3 max-w-5xl mx-auto border-2 border-slate-100 rounded-[24px] px-6 py-4 bg-slate-50/50 hover:bg-white hover:border-indigo-100 focus-within:bg-white focus-within:border-indigo-600/30 focus-within:ring-4 focus-within:ring-indigo-600/5 transition-all">
                         <textarea
-                            className="w-full max-h-32 bg-transparent border-none focus:ring-0 p-2 text-sm text-slate-700 placeholder:text-slate-400 resize-none leading-normal"
-                            placeholder={chatbot ? `Message ${chatbot.name}...` : "Type your message here... (Enter to send)"}
+                            className="w-full max-h-40 bg-transparent border-none focus:ring-0 p-1 text-[15px] font-medium text-slate-700 placeholder:text-slate-400 resize-none leading-relaxed"
+                            placeholder={chatbot ? `Ask ${chatbot.name} anything...` : "Select a chatbot from the sidebar to start chatting..."}
                             rows={1}
+                            disabled={!chatbotId}
                             value={input}
                             onChange={(e) => setInput(e.target.value)}
                             onKeyDown={(e) => {
@@ -141,66 +250,17 @@ export default function PlaygroundPage() {
                         />
                         <button
                             onClick={handleSend}
-                            disabled={!input.trim()}
-                            className="p-2 -mr-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                            disabled={!input.trim() || !chatbotId}
+                            className="bg-indigo-600 text-white p-3 rounded-2xl hover:bg-indigo-700 shadow-lg shadow-indigo-200 disabled:opacity-30 disabled:grayscale transition-all hover:scale-105 active:scale-95"
                         >
-                            <HiPaperAirplane className="w-4 h-4 transform rotate-90" />
+                            <HiPaperAirplane className="w-6 h-6 transform rotate-90" />
                         </button>
                     </div>
-                    <div className="text-center mt-2">
-                        <p className="text-[10px] text-slate-400">AI can make mistakes. Verify important information.</p>
+                    <div className="text-center mt-3">
+                        <p className="text-[11px] font-bold text-slate-400 uppercase tracking-tighter">
+                            Powered by Gemini 1.5 Flash • Context: Documents
+                        </p>
                     </div>
-                </div>
-            </div>
-
-            {/* Settings Sidebar (Configuration) */}
-            <div className="w-80 bg-white rounded-2xl border border-slate-200 shadow-sm p-5 hidden xl:flex flex-col h-full overflow-y-auto">
-                <h3 className="text-sm font-bold text-slate-900 mb-6 flex items-center gap-2">
-                    <HiCog className="w-4 h-4 text-slate-500" />
-                    Configuration
-                </h3>
-
-                <div className="space-y-6">
-                    <div className="space-y-2">
-                        <label className="text-xs font-semibold text-slate-700">Model</label>
-                        <select className="w-full text-sm border-slate-200 rounded-lg focus:ring-indigo-500 bg-slate-50">
-                            <option>GPT-4 Turbo</option>
-                            <option>GPT-3.5 Turbo</option>
-                            <option>Claude 3 Sonnet</option>
-                        </select>
-                    </div>
-
-                    <div className="space-y-2">
-                        <label className="text-xs font-semibold text-slate-700">Persona / System Prompt</label>
-                        <textarea
-                            className="w-full text-sm border-slate-200 rounded-lg focus:ring-indigo-500 bg-slate-50 h-32 p-3"
-                            defaultValue="You are a helpful customer support agent for Docking AI. Be polite, concise, and professional."
-                        />
-                    </div>
-
-                    <div className="space-y-4 pt-4 border-t border-slate-200">
-                        <div className="flex items-center justify-between">
-                            <label className="text-xs font-semibold text-slate-700">Temperature</label>
-                            <span className="text-xs font-mono bg-slate-100 px-1.5 py-0.5 rounded text-slate-600">0.7</span>
-                        </div>
-                        <input type="range" min="0" max="1" step="0.1" defaultValue="0.7" className="w-full accent-indigo-600 h-1.5 bg-slate-100 rounded-lg appearance-none cursor-pointer" />
-                    </div>
-
-                    {chatbot && (
-                        <div className="space-y-4 pt-4 border-t border-slate-200">
-                            <label className="text-xs font-semibold text-slate-700">Information</label>
-                            <div className="text-xs text-slate-500 space-y-2">
-                                <p><span className="font-bold">ID:</span> {chatbot.id}</p>
-                                <p><span className="font-bold">Created:</span> {new Date(chatbot.created_at).toLocaleDateString()}</p>
-                            </div>
-                        </div>
-                    )}
-                </div>
-
-                <div className="mt-auto pt-6">
-                    <button className="w-full py-2 bg-slate-900 text-white text-xs font-bold uppercase tracking-wider rounded-lg shadow-md hover:bg-slate-800 transition-all">
-                        Save Configuration
-                    </button>
                 </div>
             </div>
         </div>

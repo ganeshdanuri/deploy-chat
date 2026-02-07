@@ -4,7 +4,9 @@ from typing import List
 from uuid import UUID
 from app.core.db import get_session
 from app.api.deps import get_current_user
-from app.schemas.models import Chatbot, ChatbotCreate, ChatbotRead, ChatbotDatasets, User, Dataset
+from app.schemas.models import Chatbot, ChatbotCreate, ChatbotRead, ChatbotDatasets, User, Dataset, UsageTracking
+from app.core.billing import verify_plan_limits, increment_usage
+from app.core.ai import get_ai_response
 
 router = APIRouter(prefix="/chatbots")
 
@@ -27,7 +29,9 @@ def create_chatbot(
         # 1. Create Chatbot record
         new_chatbot = Chatbot(
             name=chatbot_in.name,
-            user_id=current_user.id
+            user_id=current_user.id,
+            system_prompt=chatbot_in.system_prompt or f"You are {chatbot_in.name}, a helpful AI assistant. Be polite, concise, and professional.",
+            temperature=chatbot_in.temperature or 0.7
         )
         session.add(new_chatbot)
         session.commit()
@@ -55,6 +59,35 @@ def create_chatbot(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to create chatbot: {str(e)}"
         )
+
+@router.post("/{chatbot_id}/chat")
+async def chatbot_chat(
+    chatbot_id: UUID,
+    message: str,
+    session: Session = Depends(get_session),
+    current_user: User = Depends(get_current_user)
+):
+    # 1. Verify access
+    chatbot = session.get(Chatbot, chatbot_id)
+    if not chatbot or chatbot.user_id != current_user.id:
+        raise HTTPException(status_code=404, detail="Chatbot not found")
+        
+    # 2. Verify usage limits
+    usage = verify_plan_limits(current_user, session)
+    
+    # 3. Get Real AI Response
+    try:
+        response = await get_ai_response(session, chatbot, message, temperature=chatbot.temperature)
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"AI Agent failed: {str(e)}"
+        )
+    
+    # 4. Increment usage
+    increment_usage(usage, session)
+    
+    return {"response": response, "usage_count": usage.message_count}
 
 @router.delete("/{chatbot_id}")
 def delete_chatbot(
