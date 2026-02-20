@@ -8,6 +8,7 @@ import { fetchDatasets, deleteDataset } from "@/lib/store/slices/datasetsSlice";
 import CreateDatasetModal from "@/app/components/CreateDatasetModal";
 import UploadModal from "@/app/components/UploadModal"; // Added UploadModal import
 import { fetchDocuments } from "@/lib/store/slices/documentsSlice"; // Added fetchDocuments import
+import showToast from "@/lib/toast";
 
 export default function DatasetsPage() {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -21,10 +22,15 @@ export default function DatasetsPage() {
     }, [dispatch]);
 
 
-    const handleDelete = async (id: string, e: React.MouseEvent) => {
+    const handleDelete = async (id: string, name: string, e: React.MouseEvent) => {
         e.stopPropagation();
         if (confirm("Are you sure you want to delete this dataset?")) {
-            await dispatch(deleteDataset(id));
+            try {
+                await dispatch(deleteDataset(id)).unwrap();
+                showToast.success(`Dataset "${name}" deleted successfully`);
+            } catch (error: any) {
+                showToast.error(error?.message || "Failed to delete dataset");
+            }
         }
     };
 
@@ -81,9 +87,9 @@ export default function DatasetsPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {datasets.map((ds) => (
                         <div key={ds.id} className="group bg-white rounded-xl border border-slate-200 p-5 hover:border-emerald-500 hover:shadow-lg hover:shadow-emerald-500/10 transition-all cursor-pointer relative overflow-hidden">
-                            <div className="absolute top-0 right-0 p-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <div className="absolute top-0 right-0 p-2">
                                 <button
-                                    onClick={(e) => handleDelete(ds.id, e)}
+                                    onClick={(e) => handleDelete(ds.id, ds.name, e)}
                                     className="p-1.5 text-slate-400 hover:text-red-500 rounded bg-white shadow-sm ring-1 ring-slate-100"
                                 >
                                     <span className="sr-only">Delete</span>
@@ -111,7 +117,7 @@ export default function DatasetsPage() {
                                     </span>
                                 </div>
                             </div>
-                            <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between">
+                            <div className="mt-4 pt-3 border-t border-slate-100 hidden sm:flex items-center justify-between">
                                 <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Created At</span>
                                 <span className="text-xs font-medium text-slate-600 font-mono">{new Date(ds.created_at).toLocaleDateString()}</span>
                             </div>
@@ -121,13 +127,13 @@ export default function DatasetsPage() {
                     {/* Add New Card (Floating) */}
                     <button
                         onClick={() => setIsModalOpen(true)}
-                        className="group relative bg-slate-50 rounded-xl border-2 border-dashed border-slate-300 p-5 hover:border-emerald-500 hover:bg-emerald-50/10 transition-all flex flex-col items-center justify-center min-h-[160px] text-center"
+                        className="group relative bg-slate-50 rounded-xl border-2 border-dashed border-slate-300 p-5 hover:border-emerald-500 hover:bg-emerald-50/10 transition-all flex flex-col items-center justify-center min-h-[140px] sm:min-h-[160px] text-center"
                     >
-                        <div className="w-12 h-12 rounded-full bg-white border border-slate-200 flex items-center justify-center mb-3 group-hover:scale-110 group-hover:bg-emerald-500 group-hover:border-emerald-600 group-hover:text-white transition-all shadow-sm">
-                            <HiPlus className="w-6 h-6 text-slate-400 group-hover:text-white" />
+                        <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white border border-slate-200 flex items-center justify-center mb-2 sm:mb-3 group-hover:scale-110 group-hover:bg-emerald-500 group-hover:border-emerald-600 group-hover:text-white transition-all shadow-sm">
+                            <HiPlus className="w-5 h-5 sm:w-6 sm:h-6 text-slate-400 group-hover:text-white" />
                         </div>
-                        <h3 className="font-semibold text-slate-900 group-hover:text-emerald-700">Add New Dataset</h3>
-                        <p className="text-xs text-slate-500 mt-1 max-w-[200px]">Connect a new data source to expand your AI's knowledge.</p>
+                        <h3 className="text-sm sm:font-semibold text-slate-900 group-hover:text-emerald-700">Add New Dataset</h3>
+                        <p className="hidden xs:block text-[10px] sm:text-xs text-slate-500 mt-1 max-w-[200px]">Connect a new data source to expand your AI's knowledge.</p>
                     </button>
                 </div>
             )}

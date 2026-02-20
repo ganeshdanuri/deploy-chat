@@ -6,6 +6,7 @@ import { useAuth } from "../context/AuthContext";
 import { theme } from "../theme";
 import { HiX, HiUser, HiLockClosed, HiLogin } from "react-icons/hi";
 import { MdEmail } from "react-icons/md";
+import Logo from "./Logo";
 
 interface LoginModalProps {
   isOpen: boolean;
@@ -94,12 +95,7 @@ export default function LoginModal({ isOpen, onClose, initialMode = 'login', ini
         {/* Header */}
         <div className="mb-8 text-center">
           <div className="flex justify-center mb-4">
-            <div
-              className="w-16 h-16 rounded-full flex items-center justify-center"
-              style={{ backgroundColor: theme.colors.primary.lightest }}
-            >
-              <HiLogin className="text-3xl" style={{ color: theme.colors.primary.main }} />
-            </div>
+            <Logo className="h-12 w-auto" />
           </div>
           <h1
             className="text-2xl font-semibold"

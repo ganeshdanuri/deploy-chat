@@ -1,8 +1,8 @@
-# OpenChat Embed (working title)
+# Deploy Mind (OpenChat Embed)
 
 > Open-source platform to create and embed AI chatbots into websites.
 
-OpenChat Embed lets you create AI-powered chatbots from your own content and add them to any website using a simple JavaScript embed script.  
+Deploy Mind lets you create AI-powered chatbots from your own content and add them to any website using a simple JavaScript embed script.  
 The project is **self-hostable**, **extensible**, and designed for developers first.
 
 ---

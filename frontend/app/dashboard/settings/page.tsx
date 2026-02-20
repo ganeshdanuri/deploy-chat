@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { HiUser, HiKey, HiCreditCard, HiUsers, HiBell, HiShieldCheck } from "react-icons/hi";
+import showToast from "@/lib/toast";
 
 export default function SettingsPage() {
     const [activeTab, setActiveTab] = useState("general");
@@ -75,13 +76,16 @@ export default function SettingsPage() {
                                         <label className="text-sm font-medium text-slate-700">Email Address</label>
                                         <div className="relative">
                                             <HiUser className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4" />
-                                            <input type="email" className="w-full pl-9 border-slate-200 rounded-lg text-sm focus:ring-indigo-500" defaultValue="courtney.henry@docking.ai" />
+                                            <input type="email" className="w-full pl-9 border-slate-200 rounded-lg text-sm focus:ring-indigo-500" defaultValue="courtney.henry@deploymind.ai" />
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div className="px-6 py-4 bg-slate-50 border-t border-slate-200 flex justify-end">
-                                <button className="px-4 py-2 bg-slate-900 text-white text-sm font-medium rounded-lg shadow-sm hover:bg-slate-800 transition-colors">
+                                <button
+                                    onClick={() => showToast.success("Profile information updated successfully")}
+                                    className="px-4 py-2 bg-slate-900 text-white text-sm font-medium rounded-lg shadow-sm hover:bg-slate-800 transition-colors"
+                                >
                                     Save Changes
                                 </button>
                             </div>
@@ -95,7 +99,10 @@ export default function SettingsPage() {
                                     <h2 className="text-lg font-bold text-slate-900">API Keys</h2>
                                     <p className="text-sm text-slate-500 mt-1">Manage your API keys for external integrations.</p>
                                 </div>
-                                <button className="px-3 py-1.5 bg-indigo-600 text-white text-xs font-semibold rounded-lg shadow-sm hover:bg-indigo-700 transition-colors">
+                                <button
+                                    onClick={() => showToast.success("New API key generated successfully")}
+                                    className="px-3 py-1.5 bg-indigo-600 text-white text-xs font-semibold rounded-lg shadow-sm hover:bg-indigo-700 transition-colors"
+                                >
                                     Create New Key
                                 </button>
                             </div>

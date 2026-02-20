@@ -7,7 +7,7 @@ const testimonials = [
     {
         name: "Sarah Chen",
         role: "CTO at TechFlow",
-        content: "Docking transformed our customer support. We reduced response times by 80% in the first week. The RAG engine is incredibly accurate.",
+        content: "Deploy Mind transformed our customer support. We reduced response times by 80% in the first week. The RAG engine is incredibly accurate.",
         image: "https://i.pravatar.cc/150?u=sarah",
     },
     {
@@ -19,14 +19,14 @@ const testimonials = [
     {
         name: "Elena Rodriguez",
         role: "Founder of GrowthBox",
-        content: "Being able to train on our own Notion docs and PDFs without any coding knowledge is what sets Docking apart. Our customers love it.",
+        content: "Being able to train on our own Notion docs and PDFs without any coding knowledge is what sets Deploy Mind apart. Our customers love it.",
         image: "https://i.pravatar.cc/150?u=elena",
     },
 ];
 
 export default function TestimonialsSection() {
     return (
-        <section id="testimonials" className="py-24 bg-white">
+        <section id="testimonials" className="py-24 bg-transparent">
             <div className="max-w-7xl mx-auto px-6">
                 <div className="text-center max-w-3xl mx-auto mb-20">
                     <h2

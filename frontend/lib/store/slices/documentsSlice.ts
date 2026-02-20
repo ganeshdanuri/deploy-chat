@@ -35,6 +35,11 @@ export const uploadDocument = createAsyncThunk(
     }
 );
 
+export const deleteDocument = createAsyncThunk('documents/deleteDocument', async (id: string) => {
+    await api.delete(`/api/documents/${id}`);
+    return id;
+});
+
 const documentsSlice = createSlice({
     name: 'documents',
     initialState,
@@ -54,8 +59,9 @@ const documentsSlice = createSlice({
             })
             .addCase(uploadDocument.fulfilled, (state, action) => {
                 // Refresh items or append if the backend returns the full doc object
-                // For now, we'll let the component trigger a fetch after upload
-                // but we could also append here if efficient.
+            })
+            .addCase(deleteDocument.fulfilled, (state, action: PayloadAction<string>) => {
+                state.items = state.items.filter(doc => doc.id !== action.payload);
             });
     },
 });

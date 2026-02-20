@@ -7,6 +7,7 @@ import { RootState, AppDispatch } from "@/lib/store/store";
 import { fetchDocuments } from "@/lib/store/slices/documentsSlice";
 import { createDataset } from "@/lib/store/slices/datasetsSlice";
 import Modal from "./Modal";
+import showToast from "@/lib/toast";
 
 interface CreateDatasetModalProps {
     isOpen: boolean;
@@ -42,10 +43,12 @@ export default function CreateDatasetModal({ isOpen, onClose }: CreateDatasetMod
         setIsSubmitting(true);
         try {
             await dispatch(createDataset({ name, document_ids: selectedDocs })).unwrap();
+            showToast.success(`Dataset "${name}" created successfully!`);
             setName("");
             setSelectedDocs([]);
             onClose();
-        } catch (error) {
+        } catch (error: any) {
+            showToast.error(error?.message || "Failed to create dataset. Please try again.");
             console.error("Failed to create dataset:", error);
         } finally {
             setIsSubmitting(false);

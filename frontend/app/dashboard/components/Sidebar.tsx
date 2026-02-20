@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "../../context/AuthContext";
 import {
     HiHome,
@@ -16,10 +16,13 @@ import {
     HiSearch,
     HiLightningBolt,
     HiLogout,
-    HiQuestionMarkCircle
+    HiQuestionMarkCircle,
+    HiX,
+    HiMenu
 } from "react-icons/hi";
 import { theme } from "../../theme";
 import { useState } from "react";
+import Logo from "../../components/Logo";
 
 const mainNavItems = [
     { id: "home", label: "Overview", path: "/dashboard", icon: HiHome },
@@ -35,31 +38,61 @@ const secondaryNavItems = [
     { id: "help", label: "Help & Support", path: "/dashboard/help", icon: HiQuestionMarkCircle },
 ];
 
-export function Sidebar() {
+interface SidebarProps {
+    isOpen?: boolean;
+    onClose?: () => void;
+}
+
+export function Sidebar({ isOpen, onClose }: SidebarProps) {
     const pathname = usePathname();
+    const router = useRouter();
     const { logout } = useAuth();
     const [isCollapsed, setIsCollapsed] = useState(false);
 
     return (
         <aside
-            className={`h-screen border-r border-slate-200 bg-slate-50/50 flex flex-col transition-all duration-300 ${isCollapsed ? "w-20" : "w-64"}`}
+            className={`
+                fixed inset-y-0 left-0 z-50 bg-slate-50 border-r border-slate-200 flex flex-col transition-all duration-300 transform
+                lg:static lg:translate-x-0
+                ${isOpen ? "translate-x-0 shadow-2xl" : "-translate-x-full"}
+                ${isCollapsed ? "lg:w-20" : "lg:w-64"}
+                w-64
+            `}
         >
             {/* Workspace Selector / Brand */}
-            <div className="h-16 flex items-center px-4 border-b border-slate-200">
-                <div className="flex items-center gap-3 w-full p-2 hover:bg-slate-100 rounded-lg cursor-pointer transition-colors group">
-                    <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center shrink-0 shadow-sm shadow-indigo-200">
-                        <HiLightningBolt className="w-5 h-5 text-white" />
+            <div className="h-16 flex items-center px-4 border-b border-slate-200 justify-between">
+                <div
+                    className="flex items-center gap-3 p-2 hover:bg-slate-100 rounded-lg cursor-pointer transition-colors group flex-1 min-w-0"
+                    onClick={() => !isCollapsed && router.push("/dashboard")}
+                >
+                    <div className="shrink-0">
+                        <Logo className="h-8 w-auto" />
                     </div>
                     {!isCollapsed && (
                         <div className="flex-1 min-w-0">
-                            <h2 className="text-sm font-semibold text-slate-900 truncate">Docking AI</h2>
-                            <p className="text-xs text-slate-500 truncate">Enterprise Plan</p>
+                            <h2 className="text-sm font-black tracking-tight truncate text-slate-900">
+                                D<span style={{ color: "#4667ff" }}>E</span>PLOY M<span style={{ color: "#4667ff" }}>I</span>ND
+                            </h2>
+                            <p className="text-[10px] font-bold text-indigo-500 uppercase tracking-tighter">Enterprise</p>
                         </div>
                     )}
-                    {!isCollapsed && (
-                        <HiChevronDown className="w-4 h-4 text-slate-400 group-hover:text-slate-600" />
-                    )}
                 </div>
+
+                {/* Mobile Close Button */}
+                <button
+                    className="lg:hidden p-2 text-slate-500 hover:text-slate-700 hover:bg-slate-100 rounded-lg"
+                    onClick={onClose}
+                >
+                    <HiX className="w-5 h-5" />
+                </button>
+
+                {/* Desktop Collapse Toggle */}
+                <button
+                    className="hidden lg:flex p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-md transition-colors"
+                    onClick={() => setIsCollapsed(!isCollapsed)}
+                >
+                    <HiMenu className={`w-4 h-4 transition-transform ${isCollapsed ? "rotate-90" : ""}`} />
+                </button>
             </div>
 
             {/* Main Navigation */}
@@ -149,7 +182,7 @@ export function Sidebar() {
                         {!isCollapsed && (
                             <div className="flex-1 min-w-0">
                                 <div className="text-sm font-medium text-slate-900 truncate">Courtney Henry</div>
-                                <div className="text-xs text-slate-500 truncate">courtney@docking.ai</div>
+                                <div className="text-xs text-slate-500 truncate">courtney@deploymind.ai</div>
                             </div>
                         )}
                         {!isCollapsed && (

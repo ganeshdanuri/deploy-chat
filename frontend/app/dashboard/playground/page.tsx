@@ -9,6 +9,7 @@ import { fetchChatbots } from "@/lib/store/slices/chatbotsSlice";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import api from "@/lib/api";
+import showToast from "@/lib/toast";
 
 
 interface Message {
@@ -64,13 +65,21 @@ export default function PlaygroundPage() {
                 return [...newMsgs, { id: Date.now() + 2, text: response.data.response, isBot: true }];
             });
         } catch (error: any) {
+            const isUsageError = error.response?.status === 403;
+            const errorMessage = isUsageError
+                ? error.response.data.detail
+                : "Something went wrong. Please try again later.";
+
             setMessages(prev => {
                 const newMsgs = prev.filter(m => !m.isThinking);
-                const errorMessage = error.response?.status === 403
-                    ? error.response.data.detail
-                    : "Something went wrong. Please try again later.";
                 return [...newMsgs, { id: Date.now() + 2, text: errorMessage, isBot: true }];
             });
+
+            if (isUsageError) {
+                showToast.warning(errorMessage);
+            } else {
+                showToast.error("Failed to get AI response. Please try again.");
+            }
         }
     };
 
@@ -175,7 +184,10 @@ export default function PlaygroundPage() {
                     </div>
                     <div className="flex items-center gap-2">
                         <button
-                            onClick={() => setMessages([{ id: Date.now(), text: "Chat history cleared. How can I help you?", isBot: true }])}
+                            onClick={() => {
+                                setMessages([{ id: Date.now(), text: "Chat history cleared. How can I help you?", isBot: true }]);
+                                showToast.info("Chat history cleared");
+                            }}
                             className="p-2.5 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-all" title="Reset Chat"
                         >
                             <HiRefresh className="w-5 h-5" />
@@ -184,105 +196,121 @@ export default function PlaygroundPage() {
                 </div>
 
                 {/* Messages Area */}
-                <div className="flex-1 p-8 bg-slate-50/30 space-y-8 overflow-y-auto scroll-smooth">
-                    {messages.map((msg) => (
-                        <div key={msg.id} className={`flex gap-4 ${!msg.isBot ? "flex-row-reverse" : ""}`}>
-                            {/* Avatar */}
-                            <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 border shadow-sm transition-transform hover:scale-105 ${msg.isBot ? "bg-white border-slate-200 text-indigo-600" : "bg-indigo-600 border-indigo-700 text-white"}`}>
-                                {msg.isBot ? <HiChatAlt2 className="w-5 h-5" /> : <HiUser className="w-5 h-5" />}
-                            </div>
+                {chatbotId ? (
+                    <div className="flex-1 p-8 bg-slate-50/30 space-y-8 overflow-y-auto scroll-smooth">
+                        {messages.map((msg) => (
+                            <div key={msg.id} className={`flex gap-4 ${!msg.isBot ? "flex-row-reverse" : ""}`}>
+                                {/* Avatar */}
+                                <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 border shadow-sm transition-transform hover:scale-105 ${msg.isBot ? "bg-white border-slate-200 text-indigo-600" : "bg-indigo-600 border-indigo-700 text-white"}`}>
+                                    {msg.isBot ? <HiChatAlt2 className="w-5 h-5" /> : <HiUser className="w-5 h-5" />}
+                                </div>
 
-                            {/* Message Bubble */}
-                            <div className={`max-w-[75%] space-y-2 ${!msg.isBot ? "items-end flex flex-col" : ""}`}>
-                                <div className={`px-6 py-4 rounded-3xl text-[14px] leading-relaxed shadow-sm transition-all ${msg.isBot
-                                    ? "bg-white border border-slate-200 text-slate-700 rounded-tl-none font-medium"
-                                    : "bg-indigo-600 text-white rounded-tr-none font-semibold"
-                                    }`}>
-                                    {msg.isThinking ? (
-                                        <div className="flex gap-2 py-2">
-                                            <div className="w-2 h-2 bg-indigo-200 rounded-full animate-bounce"></div>
-                                            <div className="w-2 h-2 bg-indigo-300 rounded-full animate-bounce [animation-delay:-.3s]"></div>
-                                            <div className="w-2 h-2 bg-indigo-400 rounded-full animate-bounce [animation-delay:-.5s]"></div>
-                                        </div>
-                                    ) : (
-                                        <div className={`prose prose-sm max-w-none ${msg.isBot ? "prose-slate" : "prose-invert"}`}>
-                                            <ReactMarkdown
-                                                remarkPlugins={[remarkGfm]}
-                                                components={{
-                                                    p: ({ children }) => <p className="mb-2 last:mb-0">{children}</p>,
-                                                    ul: ({ children }) => <ul className="list-disc ml-4 mb-2">{children}</ul>,
-                                                    ol: ({ children }) => <ol className="list-decimal ml-4 mb-2">{children}</ol>,
-                                                    li: ({ children }) => <li className="mb-1">{children}</li>,
-                                                    code: ({ className, children, ...props }: any) => {
-                                                        const match = /language-(\w+)/.exec(className || "");
-                                                        return !match ? (
-                                                            <code className="bg-slate-100 dark:bg-slate-800 px-1 rounded text-pink-600 font-mono text-[13px]" {...props}>
-                                                                {children}
-                                                            </code>
-                                                        ) : (
-                                                            <pre className="bg-slate-900 text-slate-100 p-4 rounded-xl overflow-x-auto my-4 font-mono text-[13px]">
-                                                                <code className={className} {...props}>
+                                {/* Message Bubble */}
+                                <div className={`max-w-[75%] space-y-2 ${!msg.isBot ? "items-end flex flex-col" : ""}`}>
+                                    <div className={`px-6 py-4 rounded-3xl text-[14px] leading-relaxed shadow-sm transition-all ${msg.isBot
+                                        ? "bg-white border border-slate-200 text-slate-700 rounded-tl-none font-medium"
+                                        : "bg-indigo-600 text-white rounded-tr-none font-semibold"
+                                        }`}>
+                                        {msg.isThinking ? (
+                                            <div className="flex gap-2 py-2">
+                                                <div className="w-2 h-2 bg-indigo-200 rounded-full animate-bounce"></div>
+                                                <div className="w-2 h-2 bg-indigo-300 rounded-full animate-bounce [animation-delay:-.3s]"></div>
+                                                <div className="w-2 h-2 bg-indigo-400 rounded-full animate-bounce [animation-delay:-.5s]"></div>
+                                            </div>
+                                        ) : (
+                                            <div className={`prose prose-sm max-w-none ${msg.isBot ? "prose-slate" : "prose-invert"}`}>
+                                                <ReactMarkdown
+                                                    remarkPlugins={[remarkGfm]}
+                                                    components={{
+                                                        p: ({ children }) => <p className="mb-2 last:mb-0">{children}</p>,
+                                                        ul: ({ children }) => <ul className="list-disc ml-4 mb-2">{children}</ul>,
+                                                        ol: ({ children }) => <ol className="list-decimal ml-4 mb-2">{children}</ol>,
+                                                        li: ({ children }) => <li className="mb-1">{children}</li>,
+                                                        code: ({ className, children, ...props }: any) => {
+                                                            const match = /language-(\w+)/.exec(className || "");
+                                                            return !match ? (
+                                                                <code className="bg-slate-100 dark:bg-slate-800 px-1 rounded text-pink-600 font-mono text-[13px]" {...props}>
                                                                     {children}
                                                                 </code>
-                                                            </pre>
-                                                        );
-                                                    },
-                                                    a: ({ href, children }) => (
-                                                        <a href={href} target="_blank" rel="noopener noreferrer" className="text-indigo-400 hover:underline">
-                                                            {children}
-                                                        </a>
-                                                    ),
-                                                    h1: ({ children }) => <h1 className="text-xl font-bold mb-2">{children}</h1>,
-                                                    h2: ({ children }) => <h2 className="text-lg font-bold mb-2">{children}</h2>,
-                                                    h3: ({ children }) => <h3 className="text-base font-bold mb-2">{children}</h3>,
-                                                }}
-                                            >
-                                                {msg.text}
-                                            </ReactMarkdown>
-                                        </div>
+                                                            ) : (
+                                                                <pre className="bg-slate-900 text-slate-100 p-4 rounded-xl overflow-x-auto my-4 font-mono text-[13px]">
+                                                                    <code className={className} {...props}>
+                                                                        {children}
+                                                                    </code>
+                                                                </pre>
+                                                            );
+                                                        },
+                                                        a: ({ href, children }) => (
+                                                            <a href={href} target="_blank" rel="noopener noreferrer" className="text-indigo-400 hover:underline">
+                                                                {children}
+                                                            </a>
+                                                        ),
+                                                        h1: ({ children }) => <h1 className="text-xl font-bold mb-2">{children}</h1>,
+                                                        h2: ({ children }) => <h2 className="text-lg font-bold mb-2">{children}</h2>,
+                                                        h3: ({ children }) => <h3 className="text-base font-bold mb-2">{children}</h3>,
+                                                    }}
+                                                >
+                                                    {msg.text}
+                                                </ReactMarkdown>
+                                            </div>
+                                        )}
+                                    </div>
+                                    {!msg.isThinking && (
+                                        <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest px-1">
+                                            {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                        </span>
                                     )}
                                 </div>
-                                {!msg.isThinking && (
-                                    <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest px-1">
-                                        {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                                    </span>
-                                )}
                             </div>
+                        ))}
+                    </div>
+                ) : (
+                    /* Empty State - No Chatbot Selected */
+                    <div className="flex-1 flex items-center justify-center bg-slate-50/30">
+                        <div className="text-center max-w-md px-8">
+                            <div className="w-20 h-20 bg-indigo-50 rounded-3xl flex items-center justify-center mx-auto mb-6 border border-indigo-100">
+                                <HiChatAlt2 className="w-10 h-10 text-indigo-400" />
+                            </div>
+                            <h3 className="text-xl font-bold text-slate-800 mb-2">Select a Chatbot</h3>
+                            <p className="text-sm text-slate-500 leading-relaxed">
+                                Choose a chatbot from the configuration panel on the left to start testing your AI assistant.
+                            </p>
                         </div>
-                    ))}
-                </div>
+                    </div>
+                )}
 
-                {/* Input Area */}
-                <div className="p-4 bg-white border-t border-slate-100 backdrop-blur-sm">
-                    <div className="relative flex items-end gap-3 max-w-5xl mx-auto border-2 border-slate-200 rounded-[20px] px-4 py-2.5 bg-slate-50/50 hover:bg-white hover:border-indigo-100 focus-within:bg-white focus-within:border-indigo-500 focus-within:ring-4 focus-within:ring-indigo-600/5 transition-all">
-                        <textarea
-                            className="w-full max-h-40 bg-transparent border-none focus:ring-0 p-1 text-[14px] font-medium text-slate-700 placeholder:text-slate-400 resize-none leading-relaxed"
-                            placeholder={chatbot ? `Ask ${chatbot.name} anything...` : "Select a chatbot from the sidebar to start chatting..."}
-                            rows={1}
-                            disabled={!chatbotId}
-                            value={input}
-                            onChange={(e) => setInput(e.target.value)}
-                            onKeyDown={(e) => {
-                                if (e.key === 'Enter' && !e.shiftKey) {
-                                    e.preventDefault();
-                                    handleSend();
-                                }
-                            }}
-                        />
-                        <button
-                            onClick={handleSend}
-                            disabled={!input.trim() || !chatbotId}
-                            className="bg-indigo-600 text-white p-3 rounded-2xl hover:bg-indigo-700 shadow-lg shadow-indigo-200 disabled:opacity-30 disabled:grayscale transition-all hover:scale-105 active:scale-95"
-                        >
-                            <HiPaperAirplane className="w-6 h-6 transform rotate-90" />
-                        </button>
+                {/* Input Area - Only show when chatbot is selected */}
+                {chatbotId && (
+                    <div className="p-4 bg-white border-t border-slate-100 backdrop-blur-sm">
+                        <div className="relative flex items-center gap-3 max-w-5xl mx-auto border border-slate-200 rounded-2xl px-4 py-2 bg-slate-50/50 hover:bg-white hover:border-slate-300 transition-all">
+                            <textarea
+                                className="flex-1 max-h-40 bg-transparent border-none focus:outline-none focus:ring-0 p-2 text-[14px] font-medium text-slate-700 placeholder:text-slate-400 resize-none leading-relaxed"
+                                placeholder={`Ask ${chatbot?.name} anything...`}
+                                rows={1}
+                                value={input}
+                                onChange={(e) => setInput(e.target.value)}
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter' && !e.shiftKey) {
+                                        e.preventDefault();
+                                        handleSend();
+                                    }
+                                }}
+                            />
+                            <button
+                                onClick={handleSend}
+                                disabled={!input.trim()}
+                                className="bg-indigo-600 text-white p-2.5 rounded-xl hover:bg-indigo-700 shadow-md shadow-indigo-200 disabled:opacity-30 disabled:cursor-not-allowed transition-all hover:scale-105 active:scale-95 shrink-0"
+                            >
+                                <HiPaperAirplane className="w-5 h-5 transform rotate-90" />
+                            </button>
+                        </div>
+                        <div className="text-center mt-2.5">
+                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">
+                                Powered by Gemini 2.5 Flash • Context: Documents
+                            </p>
+                        </div>
                     </div>
-                    <div className="text-center mt-2.5">
-                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">
-                            Powered by Gemini 2.5 Flash • Context: Documents
-                        </p>
-                    </div>
-                </div>
+                )}
             </div>
         </div>
     );

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { HiCloudUpload, HiCheckCircle, HiExclamationCircle, HiLightningBolt } from "react-icons/hi";
 import api from "@/lib/api";
 import Modal from "./Modal";
+import showToast from "@/lib/toast";
 
 interface UploadModalProps {
     isOpen: boolean;
@@ -28,7 +29,7 @@ export default function UploadModal({ isOpen, onClose, onUploadSuccess }: Upload
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!file) {
-            setError("Please select a file first");
+            showToast.error("Please select a file first");
             return;
         }
 
@@ -46,14 +47,17 @@ export default function UploadModal({ isOpen, onClose, onUploadSuccess }: Upload
                 },
             });
             setUploadStatus('success');
+            showToast.success(`Document "${file.name}" uploaded successfully!`);
             setTimeout(() => {
                 onUploadSuccess();
                 handleClose();
-            }, 1500);
+            }, 1000);
         } catch (err: any) {
             console.error("Upload failed:", err);
-            setError(err.response?.data?.detail || "Failed to upload and convert document");
+            const errorMessage = err.response?.data?.detail || "Failed to upload and convert document";
+            setError(errorMessage);
             setUploadStatus('error');
+            showToast.error(errorMessage);
         } finally {
             setIsUploading(false);
         }

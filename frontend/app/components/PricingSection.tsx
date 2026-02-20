@@ -7,7 +7,7 @@ const plans = [
     {
         name: "Trial",
         price: "0",
-        description: "Test the power of Docking with no configuration required.",
+        description: "Test the power of Deploy Mind with no configuration required.",
         features: [
             "1 AI Chatbot",
             "50 Messages (Platform Key)",
@@ -53,7 +53,7 @@ const plans = [
 
 export default function PricingSection() {
     return (
-        <section id="pricing" className="py-24 bg-slate-50">
+        <section id="pricing" className="py-24 bg-transparent">
             <div className="max-w-7xl mx-auto px-6">
                 <div className="text-center max-w-3xl mx-auto mb-20">
                     <h2
@@ -123,10 +123,10 @@ export default function PricingSection() {
                             <button
                                 onClick={() => {
                                     if (plan.name === 'Trial') {
-                                        window.location.href = `/?register=true&plan=trial`;
+                                        window.open(`/login?register=true&plan=trial`, '_blank', 'noopener,noreferrer');
                                     } else {
                                         // Handle other plans or just default to register
-                                        window.location.href = `/?register=true&plan=${plan.name.toLowerCase()}`;
+                                        window.open(`/login?register=true&plan=${plan.name.toLowerCase()}`, '_blank', 'noopener,noreferrer');
                                     }
                                 }}
                                 className={`w-full py-4 rounded-xl font-bold transition-all ${plan.popular ? 'text-white' : 'border'

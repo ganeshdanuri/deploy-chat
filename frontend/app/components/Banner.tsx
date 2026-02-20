@@ -63,7 +63,7 @@ export default function Banner({ stats, onStartNow }: BannerProps) {
   return (
     <div
       ref={wrapperRef}
-      className="w-full border-y py-8 overflow-hidden bg-white"
+      className="w-full border-y py-8 overflow-hidden bg-transparent"
       style={{ borderColor: theme.colors.neutral[200] }}
     >
       <div className="relative w-full overflow-hidden">
@@ -71,7 +71,7 @@ export default function Banner({ stats, onStartNow }: BannerProps) {
           // Add gradient masks for fade effect on edges
           className="absolute inset-0 z-10 pointer-events-none"
           style={{
-            background: `linear-gradient(90deg, #ffffff 0%, transparent 15%, transparent 85%, #ffffff 100%)`
+            background: `linear-gradient(90deg, rgba(255,255,255,0) 0%, transparent 15%, transparent 85%, rgba(255,255,255,0) 100%)`
           }}
         />
 

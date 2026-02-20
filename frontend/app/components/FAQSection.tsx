@@ -27,7 +27,7 @@ export default function FAQSection() {
     const [openIndex, setOpenIndex] = useState<number | null>(0);
 
     return (
-        <section className="py-24 bg-white">
+        <section className="py-24 bg-transparent">
             <div className="max-w-4xl mx-auto px-6">
                 <div className="text-center mb-16">
                     <h2

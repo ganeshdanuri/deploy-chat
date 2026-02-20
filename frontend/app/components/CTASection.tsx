@@ -29,7 +29,7 @@ export default function CTASection({ onGetStarted }: { onGetStarted: () => void 
                     </h2>
                     <p className="text-xl text-slate-400 mb-12">
                         Join 500+ developers and businesses who are scaling their
-                        support with Docking. Start your 14-day free trial today.
+                        support with <span className="font-black tracking-tight text-white">D<span style={{ color: "#4667ff" }}>E</span>PLOY M<span style={{ color: "#4667ff" }}>I</span>ND</span>. Start your 14-day free trial today.
                     </p>
 
                     <div className="flex flex-col sm:flex-row items-center justify-center gap-6">

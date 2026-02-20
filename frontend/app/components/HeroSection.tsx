@@ -27,7 +27,7 @@ interface HeroSectionProps {
 
 export default function HeroSection({ features, stats, onGetStarted }: HeroSectionProps) {
   return (
-    <section className="relative overflow-hidden bg-white pt-10">
+    <section className="relative overflow-hidden bg-transparent pt-10">
       {/* Background Decor - Subtle Gradients for Enterprise Feel */}
       <div
         className="absolute top-0 right-0 -z-10 h-[600px] w-[600px] opacity-20 blur-3xl rounded-full"

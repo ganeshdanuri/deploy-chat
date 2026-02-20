@@ -3,6 +3,7 @@ import { Sora, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "./context/AuthContext";
 import ReduxProvider from "./components/ReduxProvider";
+import ToastProvider from "./components/ToastProvider";
 
 const sora = Sora({
   variable: "--font-sora",
@@ -17,7 +18,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Open Source Chatbot",
+  title: "Deploy Mind - Open Source Chatbot",
   description: "An open-source chatbot platform built for developers.",
 };
 
@@ -27,15 +28,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className={`${sora.variable} ${jetbrainsMono.variable}`}>
       <head>
       </head>
       <body
-        className={`${sora.variable} ${jetbrainsMono.variable} antialiased`}
+        className="antialiased font-sans"
       >
+        <div className="mesh-gradient" />
         <ReduxProvider>
           <AuthProvider>
-            {children}
+            <ToastProvider>
+              {children}
+            </ToastProvider>
           </AuthProvider>
         </ReduxProvider>
       </body>

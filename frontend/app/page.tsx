@@ -1,10 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 import Navbar from "./components/Navbar";
-import LoginModal from "./components/LoginModal";
 import FeaturesSection from "./components/FeaturesSection";
 import HeroSection from "./components/HeroSection";
 import Banner from "./components/Banner";
@@ -56,25 +53,11 @@ const features = [
 ];
 
 export default function LandingPage() {
-  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-  const [modalMode, setModalMode] = useState<'login' | 'register'>('login');
-  const [modalPlan, setModalPlan] = useState('free');
-  const searchParams = useSearchParams();
-
-  useEffect(() => {
-    const isRegister = searchParams.get('register') === 'true';
-    const plan = searchParams.get('plan');
-    if (isRegister) {
-      setModalMode('register');
-      if (plan) setModalPlan(plan);
-      setIsLoginModalOpen(true);
-    }
-  }, [searchParams]);
 
   return (
     <main
-      className="min-h-screen"
-      style={{ background: "white" }}
+      className="min-h-screen relative z-10"
+      style={{ background: "transparent" }}
     >
       {/* First Screen */}
       <div className="min-h-screen flex flex-col">
@@ -85,7 +68,7 @@ export default function LandingPage() {
           <HeroSection
             features={features}
             stats={stats}
-            onGetStarted={() => setIsLoginModalOpen(true)}
+            onGetStarted={() => window.open('/login?register=true', '_blank', 'noopener,noreferrer')}
           />
         </div>
 
@@ -93,7 +76,7 @@ export default function LandingPage() {
         <div className="pb-10">
           <Banner
             stats={stats}
-            onStartNow={() => setIsLoginModalOpen(true)}
+            onStartNow={() => window.open('/login?register=true', '_blank', 'noopener,noreferrer')}
           />
         </div>
       </div>
@@ -114,19 +97,12 @@ export default function LandingPage() {
       <FAQSection />
 
       {/* Call to Action */}
-      <CTASection onGetStarted={() => setIsLoginModalOpen(true)} />
+      <CTASection onGetStarted={() => window.open('/login?register=true', '_blank', 'noopener,noreferrer')} />
 
       {/* Footer */}
       <Footer />
 
-      <Suspense fallback={null}>
-        <LoginModal
-          isOpen={isLoginModalOpen}
-          initialMode={modalMode}
-          initialPlan={modalPlan}
-          onClose={() => setIsLoginModalOpen(false)}
-        />
-      </Suspense>
+
     </main>
   );
 }

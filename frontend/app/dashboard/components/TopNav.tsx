@@ -2,15 +2,22 @@
 
 import { HiSearch, HiBell, HiQuestionMarkCircle, HiMenuAlt2 } from "react-icons/hi";
 
-export function TopNav() {
+interface TopNavProps {
+    onMenuClick?: () => void;
+}
+
+export function TopNav({ onMenuClick }: TopNavProps) {
     return (
-        <header className="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-6 sticky top-0 z-30">
+        <header className="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-4 sm:px-6 sticky top-0 z-30">
             {/* Search / Command Palette Trigger */}
-            <div className="flex-1 max-w-2xl flex items-center gap-4">
-                <button className="md:hidden p-2 -ml-2 text-slate-500 hover:text-slate-700">
+            <div className="flex-1 max-w-2xl flex items-center gap-2 sm:gap-4">
+                <button
+                    className="lg:hidden p-2 -ml-2 text-slate-500 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition-colors"
+                    onClick={onMenuClick}
+                >
                     <HiMenuAlt2 className="w-6 h-6" />
                 </button>
-                <div className="relative w-full max-w-md group">
+                <div className="relative w-full max-w-md group hidden sm:block">
                     <HiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-indigo-500 transition-colors w-4 h-4" />
                     <input
                         type="text"
@@ -25,9 +32,9 @@ export function TopNav() {
             </div>
 
             {/* Right Actions */}
-            <div className="flex items-center gap-2">
-                <div className="flex items-center gap-1 border-r border-slate-200 pr-3 mr-3">
-                    <button className="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all relative">
+            <div className="flex items-center gap-1 sm:gap-2">
+                <div className="flex items-center gap-1 border-r border-slate-200 pr-2 sm:pr-3 mr-2 sm:mr-3">
+                    <button className="hidden sm:flex p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all relative">
                         <HiQuestionMarkCircle className="w-5 h-5" />
                     </button>
                     <button className="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all relative">
@@ -36,8 +43,9 @@ export function TopNav() {
                     </button>
                 </div>
 
-                <button className="hidden md:flex items-center gap-2 px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-lg shadow-sm shadow-indigo-200 transition-all">
-                    <span>Upgrade Plan</span>
+                <button className="flex items-center gap-2 px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs sm:text-sm font-semibold rounded-lg shadow-sm shadow-indigo-200 transition-all">
+                    <span className="hidden xs:inline">Upgrade</span>
+                    <span className="xs:hidden">Up</span>
                 </button>
             </div>
         </header>

@@ -7,6 +7,7 @@ import { RootState, AppDispatch } from "@/lib/store/store";
 import { fetchDatasets } from "@/lib/store/slices/datasetsSlice";
 import { createChatbot } from "@/lib/store/slices/chatbotsSlice";
 import Modal from "./Modal";
+import showToast from "@/lib/toast";
 
 interface CreateChatbotModalProps {
     isOpen: boolean;
@@ -42,10 +43,12 @@ export default function CreateChatbotModal({ isOpen, onClose }: CreateChatbotMod
         setIsSubmitting(true);
         try {
             await dispatch(createChatbot({ name, dataset_ids: selectedDatasets })).unwrap();
+            showToast.success(`Chatbot "${name}" created successfully!`);
             setName("");
             setSelectedDatasets([]);
             onClose();
-        } catch (error) {
+        } catch (error: any) {
+            showToast.error(error?.message || "Failed to create chatbot. Please try again.");
             console.error("Failed to create chatbot:", error);
         } finally {
             setIsSubmitting(false);

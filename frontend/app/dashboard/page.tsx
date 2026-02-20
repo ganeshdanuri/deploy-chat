@@ -22,6 +22,7 @@ import {
 } from "react-icons/hi";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
+import showToast from "@/lib/toast";
 
 export default function DashboardOverview() {
   const dispatch = useDispatch<AppDispatch>();
@@ -35,7 +36,7 @@ export default function DashboardOverview() {
   const [isRefreshing, setIsRefreshing] = useState(false);
 
   // 1. Centralized generic data fetching function
-  const loadData = useCallback(async () => {
+  const loadData = useCallback(async (showNotification = false) => {
     setIsRefreshing(true);
     try {
       // Dispatch all fetches in parallel
@@ -45,8 +46,14 @@ export default function DashboardOverview() {
         dispatch(fetchDocuments()),
         dispatch(fetchUsageStats())
       ]);
+      if (showNotification) {
+        showToast.success("Dashboard data refreshed");
+      }
     } catch (error) {
       console.error("Failed to refresh dashboard data", error);
+      if (showNotification) {
+        showToast.error("Failed to refresh dashboard data");
+      }
     } finally {
       // Ensure spinner shows for at least a brief moment for UX
       setTimeout(() => setIsRefreshing(false), 600);
@@ -143,7 +150,7 @@ export default function DashboardOverview() {
               <div className="flex items-center gap-3">
                 <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Dashboard Overview</h1>
                 <button
-                  onClick={loadData}
+                  onClick={() => loadData(true)}
                   disabled={isRefreshing}
                   className={`p-1.5 rounded-full hover:bg-slate-100 text-slate-400 hover:text-indigo-600 transition-all focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-1 ${isRefreshing ? 'animate-spin text-indigo-600' : ''}`}
                   title="Refresh Dashboard Data"
@@ -178,10 +185,10 @@ export default function DashboardOverview() {
                 </div>
                 <span className="text-sm font-semibold text-slate-600">Total Messages</span>
               </div>
-              <div className="text-3xl font-bold text-slate-900 mb-1 relative z-10">{message_count.toLocaleString()}</div>
+              <div className="text-3xl font-bold text-slate-900 mb-1 relative z-10 font-mono">{message_count.toLocaleString()}</div>
               <div className="flex items-center gap-1.5 text-xs text-emerald-600 font-bold bg-emerald-50 w-fit px-2 py-0.5 rounded-full relative z-10">
                 <HiTrendingUp className="w-3.5 h-3.5" />
-                <span>+12.5% this week</span>
+                <span className="font-mono">+12.5%</span> this week
               </div>
             </div>
 
@@ -196,7 +203,7 @@ export default function DashboardOverview() {
                 </div>
                 <span className="text-sm font-semibold text-slate-600">Active Datasets</span>
               </div>
-              <div className="text-3xl font-bold text-slate-900 mb-1 relative z-10">{datasets.length}</div>
+              <div className="text-3xl font-bold text-slate-900 mb-1 relative z-10 font-mono">{datasets.length}</div>
               <div className="flex items-center gap-1.5 text-xs text-slate-500 font-medium bg-slate-50 w-fit px-2 py-0.5 rounded-full relative z-10">
                 <span>Total Collections</span>
               </div>
@@ -213,7 +220,7 @@ export default function DashboardOverview() {
                 </div>
                 <span className="text-sm font-semibold text-slate-600">AI Tokens Used</span>
               </div>
-              <div className="text-3xl font-bold text-slate-900 mb-1 relative z-10">{token_count >= 1000 ? (token_count / 1000).toFixed(1) + 'K' : token_count}</div>
+              <div className="text-3xl font-bold text-slate-900 mb-1 relative z-10 font-mono">{token_count >= 1000 ? (token_count / 1000).toFixed(1) + 'K' : token_count}</div>
               <div className="flex items-center gap-1.5 text-xs text-slate-500 font-medium bg-slate-50 w-fit px-2 py-0.5 rounded-full relative z-10">
                 <span>Across all chatbots</span>
               </div>
@@ -221,7 +228,7 @@ export default function DashboardOverview() {
           </div>
 
           {/* Main Content Areas */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-8">
+          <div className="flex flex-col lg:grid lg:grid-cols-3 gap-6 mt-8">
 
             {/* Quick Actions Panel */}
             <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6 lg:col-span-1 h-full flex flex-col">
@@ -286,17 +293,17 @@ export default function DashboardOverview() {
                     </div>
                     <div className="absolute top-9 left-1/2 -translate-x-1/2 w-0.5 h-full bg-slate-200 -z-0"></div>
                   </div>
-                  <div className="flex-1">
-                    <div className="flex items-center justify-between">
-                      <p className="text-sm font-semibold text-slate-900">New document uploaded</p>
-                      <span className="text-xs text-slate-500 font-medium whitespace-nowrap">2 mins ago</span>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+                      <p className="text-sm font-semibold text-slate-900 truncate">New document uploaded</p>
+                      <span className="text-[10px] sm:text-xs text-slate-500 font-medium whitespace-nowrap font-mono italic">2 mins ago</span>
                     </div>
-                    <p className="text-sm text-slate-600 mt-0.5">
-                      <span className="font-medium text-slate-900">Courtney Henry</span> added <span className="font-medium text-indigo-600">Q3_Marketing_Plan.pdf</span> to Marketing Dataset.
+                    <p className="text-xs sm:text-sm text-slate-600 mt-0.5 leading-relaxed">
+                      <span className="font-medium text-slate-900">Courtney Henry</span> added <span className="font-medium text-indigo-600">Q3_Marketing_Plan.pdf</span>
                     </p>
                     <div className="mt-2 flex gap-2">
-                      <span className="text-[10px] uppercase font-bold text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200">PDF</span>
-                      <span className="text-[10px] uppercase font-bold text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200">12 MB</span>
+                      <span className="text-[10px] uppercase font-bold text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200 font-mono">PDF</span>
+                      <span className="text-[10px] uppercase font-bold text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200 font-mono">12 MB</span>
                     </div>
                   </div>
                 </div>
@@ -312,7 +319,7 @@ export default function DashboardOverview() {
                   <div className="flex-1">
                     <div className="flex items-center justify-between">
                       <p className="text-sm font-semibold text-slate-900">Chatbot deployed successfully</p>
-                      <span className="text-xs text-slate-500 font-medium whitespace-nowrap">2 hours ago</span>
+                      <span className="text-xs text-slate-500 font-medium whitespace-nowrap font-mono">2 hours ago</span>
                     </div>
                     <p className="text-sm text-slate-600 mt-0.5">
                       <span className="font-medium text-slate-900">Customer Support Bot</span> is now active on <span className="underline decoration-slate-300">production</span> environment.
@@ -330,10 +337,10 @@ export default function DashboardOverview() {
                   <div className="flex-1">
                     <div className="flex items-center justify-between">
                       <p className="text-sm font-semibold text-slate-900">Token usage alert</p>
-                      <span className="text-xs text-slate-500 font-medium whitespace-nowrap">Yesterday</span>
+                      <span className="text-xs text-slate-500 font-medium whitespace-nowrap font-mono">Yesterday</span>
                     </div>
                     <p className="text-sm text-slate-600 mt-0.5">
-                      You've used 80% of your montly token limit. Upgrade to <span className="font-semibold text-indigo-600 cursor-pointer hover:underline">Enterprise</span> for unlimited tokens.
+                      You've used <span className="font-mono font-semibold">80%</span> of your monthly token limit. Upgrade to <span className="font-semibold text-indigo-600 cursor-pointer hover:underline">Enterprise</span> for unlimited tokens.
                     </p>
                   </div>
                 </div>
@@ -381,7 +388,7 @@ export default function DashboardOverview() {
                   </div>
 
                   <div className="flex items-center gap-2 mb-2">
-                    <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">Step 0{step.id}</span>
+                    <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 font-mono">Step 0{step.id}</span>
                   </div>
 
                   <h3 className="text-lg font-bold text-slate-900 mb-2 group-hover:text-indigo-600 transition-colors">
@@ -407,7 +414,7 @@ export default function DashboardOverview() {
           {/* Simple CTA Help */}
           <div className="hero-content mt-16 text-center">
             <p className="text-[13px] text-slate-400">
-              New to Docking AI? <a href="#" className="font-bold text-indigo-500 hover:underline">Watch a 2-minute intro</a> or <a href="#" className="font-bold text-indigo-500 hover:underline">read documentation</a>
+              New to Deploy Mind? <a href="#" className="font-bold text-indigo-500 hover:underline">Watch a 2-minute intro</a> or <a href="#" className="font-bold text-indigo-500 hover:underline">read documentation</a>
             </p>
           </div>
         </div>

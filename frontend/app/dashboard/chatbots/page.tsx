@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "@/lib/store/store";
 import { fetchChatbots, deleteChatbot } from "@/lib/store/slices/chatbotsSlice";
 import CreateChatbotModal from "@/app/components/CreateChatbotModal";
+import showToast from "@/lib/toast";
 
 export default function ChatbotsPage() {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -18,10 +19,15 @@ export default function ChatbotsPage() {
     }, [dispatch]);
 
 
-    const handleDelete = async (id: string, e: React.MouseEvent) => {
+    const handleDelete = async (id: string, name: string, e: React.MouseEvent) => {
         e.stopPropagation();
         if (confirm("Are you sure you want to delete this chatbot?")) {
-            await dispatch(deleteChatbot(id));
+            try {
+                await dispatch(deleteChatbot(id)).unwrap();
+                showToast.success(`Chatbot "${name}" deleted successfully`);
+            } catch (error: any) {
+                showToast.error(error?.message || "Failed to delete chatbot");
+            }
         }
     };
 
@@ -82,7 +88,7 @@ export default function ChatbotsPage() {
                                 <tr className="bg-slate-50 border-b border-slate-200 text-xs uppercase text-slate-500 font-semibold tracking-wider">
                                     <th className="px-6 py-3">Name</th>
                                     <th className="px-6 py-3">Status</th>
-                                    <th className="px-6 py-3">Created At</th>
+                                    <th className="hidden sm:table-cell px-6 py-3">Created At</th>
                                     <th className="px-6 py-3 text-right">Actions</th>
                                 </tr>
                             </thead>
@@ -106,11 +112,11 @@ export default function ChatbotsPage() {
                                                 Active
                                             </span>
                                         </td>
-                                        <td className="px-6 py-4 font-mono text-xs text-slate-500">
+                                        <td className="hidden sm:table-cell px-6 py-4 font-mono text-xs text-slate-500">
                                             {new Date(bot.created_at).toLocaleDateString()}
                                         </td>
                                         <td className="px-6 py-4 text-right">
-                                            <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                            <div className="flex items-center justify-end gap-2">
                                                 <button
                                                     onClick={() => window.location.href = `/dashboard/playground?chatbotId=${bot.id}`}
                                                     className="px-3 py-1.5 bg-indigo-50 text-indigo-600 rounded-lg hover:bg-indigo-600 hover:text-white transition-all text-xs font-bold flex items-center gap-1.5 shadow-sm border border-indigo-100"
@@ -122,7 +128,7 @@ export default function ChatbotsPage() {
                                                     <HiCog className="w-4 h-4" />
                                                 </button>
                                                 <button
-                                                    onClick={(e) => handleDelete(bot.id, e)}
+                                                    onClick={(e) => handleDelete(bot.id, bot.name, e)}
                                                     className="p-2 text-slate-400 hover:text-red-500 hover:bg-white border border-transparent hover:border-slate-200 rounded-lg shadow-sm transition-all"
                                                     title="Delete"
                                                 >

@@ -4,6 +4,7 @@ import { createContext, useContext, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 import api from "@/lib/api";
+import showToast from "@/lib/toast";
 
 interface AuthContextType {
   isAuthenticated: boolean;
@@ -45,10 +46,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setIsAuthenticated(true);
         localStorage.setItem("user", JSON.stringify(userData));
         localStorage.setItem("access_token", response.data.access_token);
+        showToast.success(`Welcome back, ${userData.username}!`);
         return true;
       }
+      showToast.error("Login failed. Please check your credentials.");
       return false;
-    } catch (error) {
+    } catch (error: any) {
+      const errorMessage = error.response?.data?.detail || "Login failed. Please try again.";
+      showToast.error(errorMessage);
       console.error("Login failed:", error);
       return false;
     }
@@ -66,10 +71,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setIsAuthenticated(true);
         localStorage.setItem("user", JSON.stringify(userData));
         localStorage.setItem("access_token", response.data.access_token);
+        showToast.success(`Account created! Welcome, ${userData.username}!`);
         return true;
       }
+      showToast.error("Registration failed. Please try again.");
       return false;
-    } catch (error) {
+    } catch (error: any) {
+      const errorMessage = error.response?.data?.detail || "Registration failed. Please try again.";
+      showToast.error(errorMessage);
       console.error("Registration failed:", error);
       return false;
     }
@@ -80,6 +89,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setIsAuthenticated(false);
     localStorage.removeItem("user");
     localStorage.removeItem("access_token");
+    showToast.info("You have been logged out.");
     router.push("/");
   };
 

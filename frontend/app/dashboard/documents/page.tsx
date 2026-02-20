@@ -5,8 +5,9 @@ import { HiDocumentText, HiPlus, HiSearch, HiExternalLink, HiTrash, HiUpload, Hi
 import UploadModal from "@/app/components/UploadModal";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "@/lib/store/store";
-import { fetchDocuments } from "@/lib/store/slices/documentsSlice";
+import { fetchDocuments, deleteDocument } from "@/lib/store/slices/documentsSlice";
 import { useState } from "react";
+import showToast from "@/lib/toast";
 
 export default function DocumentsPage() {
     const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
@@ -17,6 +18,27 @@ export default function DocumentsPage() {
     useEffect(() => {
         dispatch(fetchDocuments());
     }, [dispatch]);
+
+    const handleRefresh = async () => {
+        try {
+            await dispatch(fetchDocuments()).unwrap();
+            showToast.success("Documents list refreshed");
+        } catch (error) {
+            showToast.error("Failed to refresh documents");
+        }
+    };
+
+    const handleDelete = async (id: string, name: string, e: React.MouseEvent) => {
+        e.stopPropagation();
+        if (confirm(`Are you sure you want to delete "${name}"?`)) {
+            try {
+                await dispatch(deleteDocument(id)).unwrap();
+                showToast.success(`Document "${name}" deleted successfully`);
+            } catch (error: any) {
+                showToast.error(error?.message || "Failed to delete document");
+            }
+        }
+    };
 
 
     return (
@@ -29,7 +51,7 @@ export default function DocumentsPage() {
                 </div>
                 <div className="flex gap-2">
                     <button
-                        onClick={() => dispatch(fetchDocuments())}
+                        onClick={handleRefresh}
                         className="px-3 py-2 bg-white border border-slate-200 text-slate-700 text-sm font-semibold rounded-lg shadow-sm hover:bg-slate-50 transition-all flex items-center gap-2"
                     >
                         <HiRefresh className="w-4 h-4 text-slate-400" />
@@ -87,7 +109,7 @@ export default function DocumentsPage() {
                             <thead className="bg-slate-50 border-b border-slate-200">
                                 <tr>
                                     <th className="px-6 py-3 font-semibold text-xs text-slate-500 uppercase tracking-wider">Name</th>
-                                    <th className="px-6 py-3 font-semibold text-xs text-slate-500 uppercase tracking-wider">Date</th>
+                                    <th className="hidden sm:table-cell px-6 py-3 font-semibold text-xs text-slate-500 uppercase tracking-wider">Date</th>
                                     <th className="px-6 py-3 text-right font-semibold text-xs text-slate-500 uppercase tracking-wider">Actions</th>
                                 </tr>
                             </thead>
@@ -102,15 +124,19 @@ export default function DocumentsPage() {
                                                 <span className="font-semibold text-slate-900 group-hover:text-indigo-600 transition-colors">{doc.name}</span>
                                             </div>
                                         </td>
-                                        <td className="px-6 py-4 text-xs text-slate-500">
+                                        <td className="hidden sm:table-cell px-6 py-4 text-xs text-slate-500">
                                             {new Date(doc.created_at).toLocaleDateString()}
                                         </td>
                                         <td className="px-6 py-4 text-right">
-                                            <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                            <div className="flex items-center justify-end gap-2">
                                                 <button className="p-1.5 hover:bg-white hover:shadow-sm rounded text-slate-400 hover:text-indigo-600 border border-transparent hover:border-slate-200 transition-all" title="View">
                                                     <HiExternalLink className="w-4 h-4" />
                                                 </button>
-                                                <button className="p-1.5 hover:bg-white hover:shadow-sm rounded text-slate-400 hover:text-red-600 border border-transparent hover:border-slate-200 transition-all" title="Delete">
+                                                <button
+                                                    onClick={(e) => handleDelete(doc.id, doc.name, e)}
+                                                    className="p-1.5 hover:bg-white hover:shadow-sm rounded text-slate-400 hover:text-red-600 border border-transparent hover:border-slate-200 transition-all"
+                                                    title="Delete"
+                                                >
                                                     <HiTrash className="w-4 h-4" />
                                                 </button>
                                             </div>
