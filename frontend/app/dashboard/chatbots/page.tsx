@@ -1,12 +1,25 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { HiChatAlt2, HiPlus, HiSearch, HiRefresh, HiSparkles, HiTrash, HiCog } from "react-icons/hi";
+import { HiChatAlt2, HiPlus, HiRefresh, HiSparkles, HiTrash, HiCog } from "react-icons/hi";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "@/lib/store/store";
 import { fetchChatbots, deleteChatbot } from "@/lib/store/slices/chatbotsSlice";
 import CreateChatbotModal from "@/app/components/CreateChatbotModal";
 import showToast from "@/lib/toast";
+import {
+    Table,
+    TableHeader,
+    TableColumn,
+    TableBody,
+    TableRow,
+    TableCell,
+    User,
+    Chip,
+    Tooltip,
+    Button,
+    Spinner
+} from "@heroui/react";
 
 export default function ChatbotsPage() {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -19,8 +32,7 @@ export default function ChatbotsPage() {
     }, [dispatch]);
 
 
-    const handleDelete = async (id: string, name: string, e: React.MouseEvent) => {
-        e.stopPropagation();
+    const handleDelete = async (id: string, name: string) => {
         if (confirm("Are you sure you want to delete this chatbot?")) {
             try {
                 await dispatch(deleteChatbot(id)).unwrap();
@@ -28,6 +40,82 @@ export default function ChatbotsPage() {
             } catch (error: any) {
                 showToast.error(error?.message || "Failed to delete chatbot");
             }
+        }
+    };
+
+    const renderCell = (bot: any, columnKey: React.Key) => {
+        switch (columnKey) {
+            case "name":
+                return (
+                    <User
+                        avatarProps={{
+                            radius: "lg",
+                            src: "",
+                            fallback: <HiChatAlt2 className="w-4 h-4 text-indigo-600" />,
+                            className: "bg-gradient-to-br from-indigo-50 to-slate-100 border border-slate-200",
+                            size: "sm"
+                        }}
+                        description="AI Assistant"
+                        name={bot.name}
+                        classNames={{
+                            name: "font-medium text-sm text-slate-800",
+                            description: "text-xs text-slate-400"
+                        }}
+                    >
+                        {bot.name}
+                    </User>
+                );
+            case "status":
+                return (
+                    <Chip
+                        className="capitalize border-none gap-1 text-emerald-700 bg-emerald-50"
+                        color="success"
+                        size="sm"
+                        variant="dot"
+                    >
+                        Active
+                    </Chip>
+                );
+            case "created_at":
+                return (
+                    <div className="flex flex-col">
+                        <p className="text-xs text-slate-600">{new Date(bot.created_at).toLocaleDateString()}</p>
+                        <p className="text-xs text-slate-400 font-mono">
+                            {new Date(bot.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        </p>
+                    </div>
+                );
+            case "actions":
+                return (
+                    <div className="relative flex items-center justify-end gap-2">
+                        <Button
+                            size="sm"
+                            onPress={() => window.location.href = `/dashboard/playground?chatbotId=${bot.id}`}
+                            className="bg-indigo-50 text-indigo-600 text-xs font-medium rounded-lg hover:bg-indigo-600 hover:text-white transition-all shadow-sm border border-indigo-100"
+                        >
+                            <HiSparkles className="w-3 h-3 mr-1" />
+                            Test
+                        </Button>
+                        <Tooltip content="Settings">
+                            <Button isIconOnly size="sm" variant="light" className="text-slate-400 hover:text-indigo-600">
+                                <HiCog className="w-4 h-4" />
+                            </Button>
+                        </Tooltip>
+                        <Tooltip color="danger" content="Delete">
+                            <Button
+                                isIconOnly
+                                size="sm"
+                                variant="light"
+                                onPress={() => handleDelete(bot.id, bot.name)}
+                                className="text-slate-400 hover:text-red-500"
+                            >
+                                <HiTrash className="w-4 h-4" />
+                            </Button>
+                        </Tooltip>
+                    </div>
+                );
+            default:
+                return (bot as any)[columnKey as any];
         }
     };
 
@@ -40,26 +128,28 @@ export default function ChatbotsPage() {
                     <p className="text-sm text-slate-500 mt-1">Manage, train and deploy your AI assistants.</p>
                 </div>
                 <div className="flex gap-2">
-                    <button
-                        onClick={() => dispatch(fetchChatbots())}
-                        className="px-3 py-2 bg-white border border-slate-200 text-slate-700 text-sm font-semibold rounded-lg shadow-sm hover:bg-slate-50 transition-all flex items-center gap-2"
+                    <Button
+                        onPress={() => dispatch(fetchChatbots())}
+                        variant="bordered"
+                        startContent={<HiRefresh className="w-4 h-4 text-slate-400" />}
+                        className="bg-white border-slate-200 text-slate-700 font-semibold rounded-lg"
                     >
-                        <HiRefresh className="w-4 h-4 text-slate-400" />
                         Refresh
-                    </button>
-                    <button
-                        onClick={() => setIsModalOpen(true)}
-                        className="px-4 py-2 bg-indigo-600 text-white text-sm font-semibold rounded-lg shadow-sm shadow-indigo-200 hover:bg-indigo-700 hover:shadow-md transition-all flex items-center gap-2"
+                    </Button>
+                    <Button
+                        onPress={() => setIsModalOpen(true)}
+                        color="primary"
+                        startContent={<HiPlus className="w-4 h-4" />}
+                        className="bg-indigo-600 text-white font-semibold rounded-lg shadow-indigo-200"
                     >
-                        <HiPlus className="w-4 h-4" />
                         New Chatbot
-                    </button>
+                    </Button>
                 </div>
             </div>
 
             {isLoading && chatbots.length === 0 ? (
                 <div className="flex items-center justify-center py-20">
-                    <div className="w-10 h-10 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
+                    <Spinner color="primary" size="lg" />
                 </div>
             ) : chatbots.length === 0 ? (
                 /* Empty State */
@@ -71,77 +161,39 @@ export default function ChatbotsPage() {
                     <p className="text-slate-500 max-w-sm text-center mb-8">
                         Once you've uploaded documents and created datasets, you can build your first AI chatbot.
                     </p>
-                    <button
-                        onClick={() => setIsModalOpen(true)}
-                        className="px-6 py-3 bg-indigo-600 text-white text-sm font-bold rounded-xl shadow-lg shadow-indigo-200 hover:bg-indigo-700 hover:-translate-y-0.5 transition-all flex items-center gap-2"
+                    <Button
+                        onPress={() => setIsModalOpen(true)}
+                        color="primary"
+                        startContent={<HiPlus className="w-5 h-5" />}
+                        className="bg-indigo-600 px-6 h-12 text-white font-bold rounded-xl shadow-lg shadow-indigo-200"
                     >
-                        <HiPlus className="w-5 h-5" />
                         Create your first chatbot
-                    </button>
+                    </Button>
                 </div>
             ) : (
-                /* Main Content Card */
-                <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden flex flex-col">
-                    <div className="overflow-x-auto">
-                        <table className="w-full text-left border-collapse">
-                            <thead>
-                                <tr className="bg-slate-50 border-b border-slate-200 text-xs uppercase text-slate-500 font-semibold tracking-wider">
-                                    <th className="px-6 py-3">Name</th>
-                                    <th className="px-6 py-3">Status</th>
-                                    <th className="hidden sm:table-cell px-6 py-3">Created At</th>
-                                    <th className="px-6 py-3 text-right">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y divide-slate-100 text-sm text-slate-600">
-                                {chatbots.map((bot) => (
-                                    <tr key={bot.id} className="group hover:bg-slate-50/80 transition-colors cursor-pointer">
-                                        <td className="px-6 py-4">
-                                            <div className="flex items-center gap-3">
-                                                <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-indigo-50 to-slate-100 border border-slate-200 flex items-center justify-center text-indigo-600 shadow-sm">
-                                                    <HiChatAlt2 className="w-5 h-5" />
-                                                </div>
-                                                <div>
-                                                    <div className="font-semibold text-slate-900 group-hover:text-indigo-600 transition-colors">{bot.name}</div>
-                                                    <div className="text-xs text-slate-500">AI Assistant</div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td className="px-6 py-4">
-                                            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-100">
-                                                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                                                Active
-                                            </span>
-                                        </td>
-                                        <td className="hidden sm:table-cell px-6 py-4 font-mono text-xs text-slate-500">
-                                            {new Date(bot.created_at).toLocaleDateString()}
-                                        </td>
-                                        <td className="px-6 py-4 text-right">
-                                            <div className="flex items-center justify-end gap-2">
-                                                <button
-                                                    onClick={() => window.location.href = `/dashboard/playground?chatbotId=${bot.id}`}
-                                                    className="px-3 py-1.5 bg-indigo-50 text-indigo-600 rounded-lg hover:bg-indigo-600 hover:text-white transition-all text-xs font-bold flex items-center gap-1.5 shadow-sm border border-indigo-100"
-                                                >
-                                                    <HiSparkles className="w-3.5 h-3.5" />
-                                                    Test
-                                                </button>
-                                                <button className="p-2 text-slate-400 hover:text-indigo-600 hover:bg-white border border-transparent hover:border-slate-200 rounded-lg shadow-sm transition-all" title="Settings">
-                                                    <HiCog className="w-4 h-4" />
-                                                </button>
-                                                <button
-                                                    onClick={(e) => handleDelete(bot.id, bot.name, e)}
-                                                    className="p-2 text-slate-400 hover:text-red-500 hover:bg-white border border-transparent hover:border-slate-200 rounded-lg shadow-sm transition-all"
-                                                    title="Delete"
-                                                >
-                                                    <HiTrash className="w-4 h-4" />
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                <Table
+                    aria-label="Chatbots list"
+                    classNames={{
+                        base: "bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden",
+                        thead: "bg-slate-50 border-b border-slate-200 text-slate-500 font-semibold",
+                        wrapper: "shadow-none p-0",
+                        th: "bg-slate-50/50 text-slate-500"
+                    }}
+                >
+                    <TableHeader>
+                        <TableColumn key="name">NAME</TableColumn>
+                        <TableColumn key="status">STATUS</TableColumn>
+                        <TableColumn key="created_at">CREATED AT</TableColumn>
+                        <TableColumn key="actions" align="end">ACTIONS</TableColumn>
+                    </TableHeader>
+                    <TableBody items={chatbots}>
+                        {(item) => (
+                            <TableRow key={item.id} className="cursor-pointer hover:bg-slate-50/80 transition-colors">
+                                {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
+                            </TableRow>
+                        )}
+                    </TableBody>
+                </Table>
             )}
 
             <CreateChatbotModal

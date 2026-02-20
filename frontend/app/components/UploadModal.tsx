@@ -5,6 +5,7 @@ import { HiCloudUpload, HiCheckCircle, HiExclamationCircle, HiLightningBolt } fr
 import api from "@/lib/api";
 import Modal from "./Modal";
 import showToast from "@/lib/toast";
+import { Button, Card, CardBody } from "@heroui/react";
 
 interface UploadModalProps {
     isOpen: boolean;
@@ -26,8 +27,8 @@ export default function UploadModal({ isOpen, onClose, onUploadSuccess }: Upload
         }
     };
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
+    const handleSubmit = async (e?: React.FormEvent) => {
+        e?.preventDefault();
         if (!file) {
             showToast.error("Please select a file first");
             return;
@@ -80,88 +81,87 @@ export default function UploadModal({ isOpen, onClose, onUploadSuccess }: Upload
             icon={HiCloudUpload}
             iconBgColor="bg-indigo-50"
             iconColor="text-indigo-600"
-            maxWidth="max-w-lg"
+            maxWidth="lg"
         >
-            <form onSubmit={handleSubmit} className="space-y-10">
-                <div className="space-y-10">
-                    <div
-                        className={`relative border-2 border-dashed rounded-[2.5rem] p-12 transition-all duration-500 text-center flex flex-col items-center justify-center 
-                            ${file
-                                ? 'border-indigo-400 bg-indigo-50/30'
-                                : 'border-slate-200 hover:border-indigo-300 hover:bg-slate-50/50 hover:scale-[1.01]'
-                            }`}
-                        onDragOver={(e) => e.preventDefault()}
-                        onDrop={(e) => {
-                            e.preventDefault();
-                            if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-                                setFile(e.dataTransfer.files[0]);
-                            }
-                        }}
-                    >
-                        <input
-                            type="file"
-                            onChange={handleFileChange}
-                            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                            accept=".pdf,.docx,.doc,.txt,.pptx,.ppt,.xlsx,.xls"
-                        />
-                        <div className="w-20 h-20 bg-white shadow-xl rounded-[2rem] flex items-center justify-center mb-6 group-hover:scale-110 transition-transform border border-slate-50">
-                            <HiCloudUpload className="text-3xl text-indigo-600" />
-                        </div>
-                        <div className="space-y-2">
-                            <p className="text-base font-bold text-slate-900">
-                                {file ? file.name : "Drop document here"}
-                            </p>
-                            <p className="text-[13px] text-slate-500 font-medium">
-                                or click to browse files
-                            </p>
-                        </div>
+            <div className="space-y-8">
+                <div
+                    className={`relative border-2 border-dashed rounded-[2.5rem] p-10 transition-all duration-500 text-center flex flex-col items-center justify-center 
+                        ${file
+                            ? 'border-indigo-400 bg-indigo-50/30'
+                            : 'border-slate-200 hover:border-indigo-300 hover:bg-slate-50/50 hover:scale-[1.01]'
+                        }`}
+                    onDragOver={(e) => e.preventDefault()}
+                    onDrop={(e) => {
+                        e.preventDefault();
+                        if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+                            setFile(e.dataTransfer.files[0]);
+                        }
+                    }}
+                >
+                    <input
+                        type="file"
+                        onChange={handleFileChange}
+                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                        accept=".pdf,.docx,.doc,.txt,.pptx,.ppt,.xlsx,.xls"
+                    />
+                    <div className="w-16 h-16 bg-white shadow-xl rounded-2xl flex items-center justify-center mb-6 border border-slate-50">
+                        <HiCloudUpload className="text-3xl text-indigo-600" />
                     </div>
+                    <div className="space-y-2">
+                        <p className="text-sm font-medium text-slate-800">
+                            {file ? file.name : "Drop document here"}
+                        </p>
+                        <p className="text-[13px] text-slate-500 font-medium">
+                            or click to browse files
+                        </p>
+                    </div>
+                </div>
 
-                    <div className="bg-slate-50 rounded-3xl p-6 border border-slate-100 flex items-start gap-4">
-                        <div className="w-10 h-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center shrink-0">
+                <Card className="bg-slate-50 rounded-3xl shadow-none border border-slate-100">
+                    <CardBody className="flex flex-row items-start gap-4 p-5">
+                        <div className="w-10 h-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center shrink-0 shadow-sm">
                             <HiLightningBolt className="w-5 h-5 text-amber-500" />
                         </div>
                         <div>
-                            <h4 className="text-sm font-bold text-slate-800">Auto-Markdown Conversion</h4>
-                            <p className="text-xs text-slate-500 mt-1 leading-relaxed font-medium">We'll automatically extract text and structure from your document to make it queryable.</p>
+                            <h4 className="text-sm font-medium text-slate-700">Auto-Markdown Conversion</h4>
+                            <p className="text-xs text-slate-500 mt-1 leading-relaxed">We'll automatically extract text and structure from your document to make it queryable.</p>
                         </div>
+                    </CardBody>
+                </Card>
+
+                {error && (
+                    <div className="flex items-center gap-3 p-4 rounded-2xl bg-red-50 text-red-600 text-xs font-medium border border-red-100 animate-fade-in">
+                        <HiExclamationCircle className="text-lg flex-shrink-0" />
+                        <span>{error}</span>
                     </div>
+                )}
 
-                    {error && (
-                        <div className="flex items-center gap-3 p-4 rounded-2xl bg-red-50 text-red-600 text-xs font-bold border border-red-100 animate-fade-in">
-                            <HiExclamationCircle className="text-lg flex-shrink-0" />
-                            <span>{error}</span>
-                        </div>
-                    )}
+                {uploadStatus === 'success' && (
+                    <div className="flex items-center gap-3 p-4 rounded-2xl bg-emerald-50 text-emerald-600 text-xs font-medium border border-emerald-100 animate-fade-in">
+                        <HiCheckCircle className="text-lg flex-shrink-0" />
+                        <span>Document ingested successfully!</span>
+                    </div>
+                )}
 
-                    {uploadStatus === 'success' && (
-                        <div className="flex items-center gap-3 p-4 rounded-2xl bg-emerald-50 text-emerald-600 text-xs font-bold border border-emerald-100 animate-fade-in">
-                            <HiCheckCircle className="text-lg flex-shrink-0" />
-                            <span>Document ingested successfully!</span>
-                        </div>
-                    )}
-                </div>
-
-                <div className="pt-8 border-t border-slate-100 flex gap-4">
-                    <button
-                        type="button"
-                        onClick={handleClose}
-                        className="flex-1 px-6 py-3.5 border border-slate-200 text-slate-700 font-bold rounded-2xl hover:bg-slate-50 transition-all text-sm active:scale-95"
+                <div className="pt-4 flex gap-4">
+                    <Button
+                        variant="bordered"
+                        onPress={handleClose}
+                        className="flex-1 font-medium rounded-2xl h-12"
                     >
                         Cancel
-                    </button>
-                    <button
-                        type="submit"
-                        disabled={!file || isUploading}
-                        className="flex-[1.5] px-6 py-3.5 bg-indigo-600 text-white font-bold rounded-2xl hover:bg-indigo-700 disabled:opacity-30 disabled:cursor-not-allowed shadow-xl shadow-indigo-200 hover:shadow-indigo-300 transition-all text-sm active:scale-95 flex items-center justify-center gap-2"
+                    </Button>
+                    <Button
+                        color="primary"
+                        onPress={() => handleSubmit()}
+                        isDisabled={!file || isUploading}
+                        isLoading={isUploading}
+                        className="flex-[1.5] bg-indigo-600 text-white font-semibold rounded-2xl h-12 shadow-xl shadow-indigo-200"
                     >
-                        {isUploading ? (
-                            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                        ) : null}
-                        <span>{isUploading ? "Converting..." : "Import Document"}</span>
-                    </button>
+                        {isUploading ? "Converting..." : "Import Document"}
+                    </Button>
                 </div>
-            </form>
+            </div>
         </Modal>
     );
 }

@@ -4,6 +4,7 @@ import "./globals.css";
 import { AuthProvider } from "./context/AuthContext";
 import ReduxProvider from "./components/ReduxProvider";
 import ToastProvider from "./components/ToastProvider";
+import HeroUIProviderWrapper from "./components/HeroUIProvider";
 
 const sora = Sora({
   variable: "--font-sora",
@@ -36,11 +37,13 @@ export default function RootLayout({
       >
         <div className="mesh-gradient" />
         <ReduxProvider>
-          <AuthProvider>
-            <ToastProvider>
-              {children}
-            </ToastProvider>
-          </AuthProvider>
+          <HeroUIProviderWrapper>
+            <AuthProvider>
+              <ToastProvider>
+                {children}
+              </ToastProvider>
+            </AuthProvider>
+          </HeroUIProviderWrapper>
         </ReduxProvider>
       </body>
     </html>

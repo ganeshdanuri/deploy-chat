@@ -1,18 +1,33 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { HiDatabase, HiPlus, HiRefresh, HiCheck, HiExclamation, HiCollection, HiTrash } from "react-icons/hi";
+import { HiDatabase, HiPlus, HiRefresh, HiCheck, HiCollection, HiTrash } from "react-icons/hi";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "@/lib/store/store";
 import { fetchDatasets, deleteDataset } from "@/lib/store/slices/datasetsSlice";
 import CreateDatasetModal from "@/app/components/CreateDatasetModal";
-import UploadModal from "@/app/components/UploadModal"; // Added UploadModal import
-import { fetchDocuments } from "@/lib/store/slices/documentsSlice"; // Added fetchDocuments import
+import UploadModal from "@/app/components/UploadModal";
+import { fetchDocuments } from "@/lib/store/slices/documentsSlice";
 import showToast from "@/lib/toast";
+import {
+    Table,
+    TableHeader,
+    TableColumn,
+    TableBody,
+    TableRow,
+    TableCell,
+    User,
+    Chip,
+    Tooltip,
+    Button,
+    Spinner,
+    Card,
+    CardBody
+} from "@heroui/react";
 
 export default function DatasetsPage() {
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [isUploadModalOpen, setIsUploadModalOpen] = useState(false); // Added state for UploadDrawer
+    const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
     const dispatch = useDispatch<AppDispatch>();
     const { items: datasets, status, error } = useSelector((state: RootState) => state.datasets);
     const isLoading = status === 'loading';
@@ -22,8 +37,7 @@ export default function DatasetsPage() {
     }, [dispatch]);
 
 
-    const handleDelete = async (id: string, name: string, e: React.MouseEvent) => {
-        e.stopPropagation();
+    const handleDelete = async (id: string, name: string) => {
         if (confirm("Are you sure you want to delete this dataset?")) {
             try {
                 await dispatch(deleteDataset(id)).unwrap();
@@ -31,6 +45,73 @@ export default function DatasetsPage() {
             } catch (error: any) {
                 showToast.error(error?.message || "Failed to delete dataset");
             }
+        }
+    };
+
+    const renderCell = (ds: any, columnKey: React.Key) => {
+        switch (columnKey) {
+            case "name":
+                return (
+                    <User
+                        avatarProps={{
+                            radius: "lg",
+                            fallback: <HiDatabase className="w-4 h-4 text-emerald-600" />,
+                            className: "bg-emerald-50 border border-emerald-100",
+                            size: "sm"
+                        }}
+                        description="Collection"
+                        name={ds.name}
+                        classNames={{
+                            name: "font-medium text-sm text-slate-800",
+                            description: "text-xs text-slate-400"
+                        }}
+                    >
+                        {ds.name}
+                    </User>
+                );
+            case "status":
+                return (
+                    <Chip
+                        className="capitalize border-none gap-1 text-emerald-700 bg-emerald-50"
+                        color="success"
+                        size="sm"
+                        variant="dot"
+                    >
+                        Active
+                    </Chip>
+                );
+            case "created_at":
+                return (
+                    <div className="flex flex-col">
+                        <p className="text-xs text-slate-600">{new Date(ds.created_at).toLocaleDateString()}</p>
+                        <p className="text-xs text-slate-400 font-mono">
+                            {new Date(ds.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        </p>
+                    </div>
+                );
+            case "actions":
+                return (
+                    <div className="relative flex items-center justify-end gap-2">
+                        <Tooltip content="Edit Knowledge">
+                            <Button isIconOnly size="sm" variant="light" className="text-slate-400 hover:text-emerald-600">
+                                <HiCollection className="w-3.5 h-3.5" />
+                            </Button>
+                        </Tooltip>
+                        <Tooltip color="danger" content="Delete">
+                            <Button
+                                isIconOnly
+                                size="sm"
+                                variant="light"
+                                onPress={() => handleDelete(ds.id, ds.name)}
+                                className="text-slate-400 hover:text-red-500"
+                            >
+                                <HiTrash className="w-3.5 h-3.5" />
+                            </Button>
+                        </Tooltip>
+                    </div>
+                );
+            default:
+                return (ds as any)[columnKey as any];
         }
     };
 
@@ -43,26 +124,28 @@ export default function DatasetsPage() {
                     <p className="text-sm text-slate-500 mt-1">Manage your knowledge sources and integrations.</p>
                 </div>
                 <div className="flex gap-2">
-                    <button
-                        onClick={() => dispatch(fetchDatasets())}
-                        className="px-3 py-2 bg-white border border-slate-200 text-slate-700 text-sm font-semibold rounded-lg shadow-sm hover:bg-slate-50 transition-all flex items-center gap-2"
+                    <Button
+                        onPress={() => dispatch(fetchDatasets())}
+                        variant="bordered"
+                        startContent={<HiRefresh className="w-4 h-4 text-slate-400" />}
+                        className="bg-white border-slate-200 text-slate-700 font-semibold rounded-lg"
                     >
-                        <HiRefresh className="w-4 h-4 text-slate-400" />
                         Refresh
-                    </button>
-                    <button
-                        onClick={() => setIsModalOpen(true)}
-                        className="px-4 py-2 bg-emerald-600 text-white text-sm font-semibold rounded-lg shadow-sm shadow-emerald-200 hover:bg-emerald-700 hover:shadow-md transition-all flex items-center gap-2"
+                    </Button>
+                    <Button
+                        onPress={() => setIsModalOpen(true)}
+                        color="success"
+                        startContent={<HiPlus className="w-4 h-4" />}
+                        className="bg-emerald-600 text-white font-semibold rounded-lg shadow-emerald-200"
                     >
-                        <HiPlus className="w-4 h-4" />
                         New Dataset
-                    </button>
+                    </Button>
                 </div>
             </div>
 
             {isLoading && datasets.length === 0 ? (
                 <div className="flex items-center justify-center py-20">
-                    <div className="w-10 h-10 border-4 border-emerald-600 border-t-transparent rounded-full animate-spin"></div>
+                    <Spinner color="success" size="lg" />
                 </div>
             ) : datasets.length === 0 ? (
                 /* Empty State */
@@ -74,67 +157,55 @@ export default function DatasetsPage() {
                     <p className="text-slate-500 max-w-sm text-center mb-8">
                         Datasets group your documents together so you can easily assign them to different chatbots.
                     </p>
-                    <button
-                        onClick={() => setIsModalOpen(true)}
-                        className="px-6 py-3 bg-emerald-600 text-white text-sm font-bold rounded-xl shadow-lg shadow-emerald-200 hover:bg-emerald-700 hover:-translate-y-0.5 transition-all flex items-center gap-2"
+                    <Button
+                        onPress={() => setIsModalOpen(true)}
+                        color="success"
+                        startContent={<HiPlus className="w-5 h-5" />}
+                        className="bg-emerald-600 px-6 h-12 text-white font-bold rounded-xl shadow-lg shadow-emerald-200"
                     >
-                        <HiPlus className="w-5 h-5" />
                         Create your first dataset
-                    </button>
+                    </Button>
                 </div>
             ) : (
-                /* Grid View */
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {datasets.map((ds) => (
-                        <div key={ds.id} className="group bg-white rounded-xl border border-slate-200 p-5 hover:border-emerald-500 hover:shadow-lg hover:shadow-emerald-500/10 transition-all cursor-pointer relative overflow-hidden">
-                            <div className="absolute top-0 right-0 p-2">
-                                <button
-                                    onClick={(e) => handleDelete(ds.id, ds.name, e)}
-                                    className="p-1.5 text-slate-400 hover:text-red-500 rounded bg-white shadow-sm ring-1 ring-slate-100"
-                                >
-                                    <span className="sr-only">Delete</span>
-                                    <HiTrash className="w-4 h-4" />
-                                </button>
-                            </div>
-
-                            <div className="flex items-start justify-between mb-4">
-                                <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 rounded-lg flex items-center justify-center shadow-sm bg-emerald-50 text-emerald-600">
-                                        <HiDatabase className="w-5 h-5" />
-                                    </div>
-                                    <div>
-                                        <h3 className="font-semibold text-slate-900 leading-tight">{ds.name}</h3>
-                                        <p className="text-xs text-slate-500 mt-0.5">Collection</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="space-y-3">
-                                <div className="flex items-center justify-between text-xs font-medium">
-                                    <span className="text-slate-500">Status</span>
-                                    <span className="flex items-center gap-1.5 text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-100">
-                                        <HiCheck className="w-3.5 h-3.5" /> Active
-                                    </span>
-                                </div>
-                            </div>
-                            <div className="mt-4 pt-3 border-t border-slate-100 hidden sm:flex items-center justify-between">
-                                <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Created At</span>
-                                <span className="text-xs font-medium text-slate-600 font-mono">{new Date(ds.created_at).toLocaleDateString()}</span>
-                            </div>
-                        </div>
-                    ))}
-
-                    {/* Add New Card (Floating) */}
-                    <button
-                        onClick={() => setIsModalOpen(true)}
-                        className="group relative bg-slate-50 rounded-xl border-2 border-dashed border-slate-300 p-5 hover:border-emerald-500 hover:bg-emerald-50/10 transition-all flex flex-col items-center justify-center min-h-[140px] sm:min-h-[160px] text-center"
+                <div className="space-y-6">
+                    <Table
+                        aria-label="Datasets list"
+                        classNames={{
+                            base: "bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden",
+                            thead: "bg-slate-50 border-b border-slate-200 text-slate-500 font-semibold",
+                            wrapper: "shadow-none p-0",
+                            th: "bg-slate-50/50 text-slate-500"
+                        }}
                     >
-                        <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white border border-slate-200 flex items-center justify-center mb-2 sm:mb-3 group-hover:scale-110 group-hover:bg-emerald-500 group-hover:border-emerald-600 group-hover:text-white transition-all shadow-sm">
-                            <HiPlus className="w-5 h-5 sm:w-6 sm:h-6 text-slate-400 group-hover:text-white" />
-                        </div>
-                        <h3 className="text-sm sm:font-semibold text-slate-900 group-hover:text-emerald-700">Add New Dataset</h3>
-                        <p className="hidden xs:block text-[10px] sm:text-xs text-slate-500 mt-1 max-w-[200px]">Connect a new data source to expand your AI's knowledge.</p>
-                    </button>
+                        <TableHeader>
+                            <TableColumn key="name">NAME</TableColumn>
+                            <TableColumn key="status">STATUS</TableColumn>
+                            <TableColumn key="created_at">CREATED AT</TableColumn>
+                            <TableColumn key="actions" align="end">ACTIONS</TableColumn>
+                        </TableHeader>
+                        <TableBody items={datasets}>
+                            {(item) => (
+                                <TableRow key={item.id} className="cursor-pointer hover:bg-slate-50/80 transition-colors">
+                                    {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
+                                </TableRow>
+                            )}
+                        </TableBody>
+                    </Table>
+
+                    {/* Quick Add Card */}
+                    <Card
+                        isPressable
+                        onPress={() => setIsModalOpen(true)}
+                        className="w-full bg-slate-50 border-2 border-dashed border-slate-200 shadow-none hover:border-emerald-500 hover:bg-emerald-50/10 transition-all rounded-xl"
+                    >
+                        <CardBody className="py-8 flex flex-col items-center justify-center">
+                            <div className="w-12 h-12 rounded-full bg-white border border-slate-200 flex items-center justify-center mb-3 shadow-sm">
+                                <HiPlus className="w-6 h-6 text-slate-400" />
+                            </div>
+                            <h3 className="text-sm font-semibold text-slate-900">Add New Dataset</h3>
+                            <p className="text-xs text-slate-500 mt-1">Connect more data sources</p>
+                        </CardBody>
+                    </Card>
                 </div>
             )}
 

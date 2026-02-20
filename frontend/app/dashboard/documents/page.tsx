@@ -1,18 +1,31 @@
 "use client";
 
-import { useEffect } from "react";
-import { HiDocumentText, HiPlus, HiSearch, HiExternalLink, HiTrash, HiUpload, HiRefresh } from "react-icons/hi";
+import { useEffect, useState } from "react";
+import { HiDocumentText, HiPlus, HiExternalLink, HiTrash, HiUpload, HiRefresh, HiSearch } from "react-icons/hi";
 import UploadModal from "@/app/components/UploadModal";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "@/lib/store/store";
 import { fetchDocuments, deleteDocument } from "@/lib/store/slices/documentsSlice";
-import { useState } from "react";
 import showToast from "@/lib/toast";
+import {
+    Table,
+    TableHeader,
+    TableColumn,
+    TableBody,
+    TableRow,
+    TableCell,
+    User,
+    Tooltip,
+    Button,
+    Spinner,
+    Input
+} from "@heroui/react";
 
 export default function DocumentsPage() {
     const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
+    const [filterValue, setFilterValue] = useState("");
     const dispatch = useDispatch<AppDispatch>();
-    const { items: documents, status, error } = useSelector((state: RootState) => state.documents);
+    const { items: documents, status } = useSelector((state: RootState) => state.documents);
     const isLoading = status === 'loading';
 
     useEffect(() => {
@@ -28,8 +41,7 @@ export default function DocumentsPage() {
         }
     };
 
-    const handleDelete = async (id: string, name: string, e: React.MouseEvent) => {
-        e.stopPropagation();
+    const handleDelete = async (id: string, name: string) => {
         if (confirm(`Are you sure you want to delete "${name}"?`)) {
             try {
                 await dispatch(deleteDocument(id)).unwrap();
@@ -40,6 +52,65 @@ export default function DocumentsPage() {
         }
     };
 
+    const filteredItems = documents.filter((doc) =>
+        doc.name.toLowerCase().includes(filterValue.toLowerCase())
+    );
+
+    const renderCell = (doc: any, columnKey: React.Key) => {
+        switch (columnKey) {
+            case "name":
+                return (
+                    <User
+                        avatarProps={{
+                            radius: "lg",
+                            fallback: <HiDocumentText className="w-4 h-4 text-indigo-600" />,
+                            className: "bg-indigo-50 border border-indigo-100",
+                            size: "sm"
+                        }}
+                        description={`ID: ${doc.id.slice(0, 8)}`}
+                        name={doc.name}
+                        classNames={{
+                            name: "font-medium text-sm text-slate-800",
+                            description: "text-xs text-slate-400 font-mono"
+                        }}
+                    >
+                        {doc.name}
+                    </User>
+                );
+            case "created_at":
+                return (
+                    <div className="flex flex-col">
+                        <p className="text-xs text-slate-600">{new Date(doc.created_at).toLocaleDateString()}</p>
+                        <p className="text-xs text-slate-400 font-mono">
+                            {new Date(doc.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        </p>
+                    </div>
+                );
+            case "actions":
+                return (
+                    <div className="relative flex items-center justify-end gap-2">
+                        <Tooltip content="View Content">
+                            <Button isIconOnly size="sm" variant="light" className="text-slate-400 hover:text-indigo-600">
+                                <HiExternalLink className="w-3.5 h-3.5" />
+                            </Button>
+                        </Tooltip>
+                        <Tooltip color="danger" content="Delete">
+                            <Button
+                                isIconOnly
+                                size="sm"
+                                variant="light"
+                                onPress={() => handleDelete(doc.id, doc.name)}
+                                className="text-slate-400 hover:text-red-500"
+                            >
+                                <HiTrash className="w-3.5 h-3.5" />
+                            </Button>
+                        </Tooltip>
+                    </div>
+                );
+            default:
+                return (doc as any)[columnKey as any];
+        }
+    };
 
     return (
         <div className="space-y-6 animate-fade-in-up">
@@ -50,26 +121,28 @@ export default function DocumentsPage() {
                     <p className="text-sm text-slate-500 mt-1">View and manage chunked documents for RAG.</p>
                 </div>
                 <div className="flex gap-2">
-                    <button
-                        onClick={handleRefresh}
-                        className="px-3 py-2 bg-white border border-slate-200 text-slate-700 text-sm font-semibold rounded-lg shadow-sm hover:bg-slate-50 transition-all flex items-center gap-2"
+                    <Button
+                        onPress={handleRefresh}
+                        variant="bordered"
+                        startContent={<HiRefresh className="w-4 h-4 text-slate-400" />}
+                        className="bg-white border-slate-200 text-slate-700 font-semibold rounded-lg"
                     >
-                        <HiRefresh className="w-4 h-4 text-slate-400" />
                         Refresh
-                    </button>
-                    <button
-                        onClick={() => setIsUploadModalOpen(true)}
-                        className="px-4 py-2 bg-indigo-600 text-white text-sm font-semibold rounded-lg shadow-sm shadow-indigo-200 hover:bg-indigo-700 hover:shadow-md transition-all flex items-center gap-2"
+                    </Button>
+                    <Button
+                        onPress={() => setIsUploadModalOpen(true)}
+                        color="primary"
+                        startContent={<HiPlus className="w-4 h-4" />}
+                        className="bg-indigo-600 text-white font-semibold rounded-lg shadow-indigo-200"
                     >
-                        <HiPlus className="w-4 h-4" />
                         Upload Document
-                    </button>
+                    </Button>
                 </div>
             </div>
 
-            {isLoading ? (
+            {isLoading && documents.length === 0 ? (
                 <div className="flex items-center justify-center py-20">
-                    <div className="w-10 h-10 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
+                    <Spinner color="primary" size="lg" />
                 </div>
             ) : documents.length === 0 ? (
                 /* Empty State */
@@ -81,76 +154,55 @@ export default function DocumentsPage() {
                     <p className="text-slate-500 max-w-sm text-center mb-8">
                         The first step is to upload some documents. We'll convert them to markdown automatically.
                     </p>
-                    <button
-                        onClick={() => setIsUploadModalOpen(true)}
-                        className="px-6 py-3 bg-indigo-600 text-white text-sm font-bold rounded-xl shadow-lg shadow-indigo-200 hover:bg-indigo-700 hover:-translate-y-0.5 transition-all flex items-center gap-2"
+                    <Button
+                        onPress={() => setIsUploadModalOpen(true)}
+                        color="primary"
+                        startContent={<HiPlus className="w-5 h-5" />}
+                        className="bg-indigo-600 px-6 h-12 text-white font-bold rounded-xl shadow-lg shadow-indigo-200"
                     >
-                        <HiPlus className="w-5 h-5" />
                         Upload your first document
-                    </button>
+                    </Button>
                 </div>
             ) : (
-                /* Documents List */
-                <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex flex-col">
-                    {/* Toolbar */}
-                    <div className="px-6 py-4 border-b border-slate-200 flex justify-between items-center bg-slate-50/50">
-                        <div className="relative flex-1 max-w-sm">
-                            <HiSearch className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-                            <input
-                                type="text"
-                                placeholder="Search documents..."
-                                className="pl-9 pr-4 py-1.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 bg-white w-full"
+                <Table
+                    aria-label="Documents management"
+                    topContent={
+                        <div className="flex justify-between gap-3 items-end mb-2">
+                            <Input
+                                isClearable
+                                className="w-full sm:max-w-[44%]"
+                                placeholder="Search by name..."
+                                startContent={<HiSearch className="text-slate-400" />}
+                                value={filterValue}
+                                variant="bordered"
+                                onClear={() => setFilterValue("")}
+                                onValueChange={setFilterValue}
+                                classNames={{
+                                    inputWrapper: "rounded-xl border-slate-200 bg-white"
+                                }}
                             />
                         </div>
-                    </div>
-
-                    <div className="overflow-x-auto">
-                        <table className="w-full text-left text-sm text-slate-600">
-                            <thead className="bg-slate-50 border-b border-slate-200">
-                                <tr>
-                                    <th className="px-6 py-3 font-semibold text-xs text-slate-500 uppercase tracking-wider">Name</th>
-                                    <th className="hidden sm:table-cell px-6 py-3 font-semibold text-xs text-slate-500 uppercase tracking-wider">Date</th>
-                                    <th className="px-6 py-3 text-right font-semibold text-xs text-slate-500 uppercase tracking-wider">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y divide-slate-200">
-                                {documents.map((doc) => (
-                                    <tr key={doc.id} className="group hover:bg-slate-50 transition-colors cursor-pointer">
-                                        <td className="px-6 py-4">
-                                            <div className="flex items-center gap-3">
-                                                <div className="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center text-indigo-600 border border-indigo-100">
-                                                    <HiDocumentText className="w-4 h-4" />
-                                                </div>
-                                                <span className="font-semibold text-slate-900 group-hover:text-indigo-600 transition-colors">{doc.name}</span>
-                                            </div>
-                                        </td>
-                                        <td className="hidden sm:table-cell px-6 py-4 text-xs text-slate-500">
-                                            {new Date(doc.created_at).toLocaleDateString()}
-                                        </td>
-                                        <td className="px-6 py-4 text-right">
-                                            <div className="flex items-center justify-end gap-2">
-                                                <button className="p-1.5 hover:bg-white hover:shadow-sm rounded text-slate-400 hover:text-indigo-600 border border-transparent hover:border-slate-200 transition-all" title="View">
-                                                    <HiExternalLink className="w-4 h-4" />
-                                                </button>
-                                                <button
-                                                    onClick={(e) => handleDelete(doc.id, doc.name, e)}
-                                                    className="p-1.5 hover:bg-white hover:shadow-sm rounded text-slate-400 hover:text-red-600 border border-transparent hover:border-slate-200 transition-all"
-                                                    title="Delete"
-                                                >
-                                                    <HiTrash className="w-4 h-4" />
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <div className="px-6 py-4 border-t border-slate-200 bg-slate-50 flex items-center justify-between">
-                        <span className="text-xs text-slate-500">Showing <span className="font-medium text-slate-900">1-{documents.length}</span> of <span className="font-medium text-slate-900">{documents.length}</span> documents</span>
-                    </div>
-                </div>
+                    }
+                    classNames={{
+                        base: "bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden",
+                        thead: "bg-slate-50 border-b border-slate-200 text-slate-500 font-semibold",
+                        wrapper: "shadow-none p-0",
+                        th: "bg-slate-50/50 text-slate-500"
+                    }}
+                >
+                    <TableHeader>
+                        <TableColumn key="name">DOCUMENT</TableColumn>
+                        <TableColumn key="created_at">UPLOAD DATE</TableColumn>
+                        <TableColumn key="actions" align="end">ACTIONS</TableColumn>
+                    </TableHeader>
+                    <TableBody items={filteredItems} emptyContent="No documents found matching your search.">
+                        {(item) => (
+                            <TableRow key={item.id} className="cursor-pointer hover:bg-slate-50/80 transition-colors">
+                                {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
+                            </TableRow>
+                        )}
+                    </TableBody>
+                </Table>
             )}
 
             <UploadModal
