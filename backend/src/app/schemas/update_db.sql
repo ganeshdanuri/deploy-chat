@@ -100,3 +100,12 @@ CREATE TABLE IF NOT EXISTS user_pricing_plans (
 
 -- 8. Add useful indexes
 CREATE INDEX IF NOT EXISTS idx_chatbot_embed_token ON chatbots(embed_token);
+
+-- 9. Create Recent Activities table
+CREATE TABLE IF NOT EXISTS recent_activities (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    activity_type VARCHAR NOT NULL,
+    details TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW()
+);

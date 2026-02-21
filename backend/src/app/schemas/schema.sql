@@ -140,3 +140,12 @@ CREATE INDEX idx_document_chunks_document_id ON document_chunks(document_id);
 
 -- Optional: vector index for similarity search (pgvector)
 CREATE INDEX idx_document_chunks_embedding ON document_chunks USING ivfflat (embedding vector_cosine_ops) WITH (lists = 100);
+
+-- Recent Activities
+CREATE TABLE recent_activities (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    activity_type VARCHAR NOT NULL,
+    details TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW()
+);

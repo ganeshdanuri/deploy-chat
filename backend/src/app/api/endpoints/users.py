@@ -2,8 +2,8 @@ from fastapi import APIRouter, Depends
 from sqlmodel import Session, select
 from app.api.deps import get_current_user
 from app.core.db import get_session
-from app.schemas.models import User, UsageTracking, PricingTier
-from typing import Optional
+from app.schemas.models import User, UsageTracking, PricingTier, RecentActivity, RecentActivityRead
+from typing import Optional, List
 
 router = APIRouter(prefix="/users")
 
@@ -50,3 +50,15 @@ async def get_user_me(
             "reset_date": usage_info.reset_date if usage_info else None
         }
     }
+
+@router.get("/recent-activity", response_model=List[RecentActivityRead])
+async def get_recent_activity(
+    current_user: User = Depends(get_current_user),
+    session: Session = Depends(get_session)
+):
+    """
+    Fetch the latest 3 recent activities for the user.
+    """
+    statement = select(RecentActivity).where(RecentActivity.user_id == current_user.id).order_by(RecentActivity.created_at.desc()).limit(3)
+    results = session.exec(statement).all()
+    return results

@@ -44,6 +44,14 @@ async def upload_document(
             markdown_content=markdown_text
         )
         session.add(new_content)
+        
+        from app.schemas.models import RecentActivity
+        activity = RecentActivity(
+            user_id=current_user.id,
+            activity_type="document_added",
+            details=f"Added document: {new_doc.name}"
+        )
+        session.add(activity)
         session.commit()
         
         return {

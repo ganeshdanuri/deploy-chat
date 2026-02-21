@@ -51,6 +51,14 @@ def create_chatbot(
             )
             session.add(link)
             
+        from app.schemas.models import RecentActivity
+        activity = RecentActivity(
+            user_id=current_user.id,
+            activity_type="chatbot_created",
+            details=f"Created chatbot: {new_chatbot.name}"
+        )
+        session.add(activity)
+
         session.commit()
         session.refresh(new_chatbot)
         return new_chatbot

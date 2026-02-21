@@ -24,6 +24,7 @@ import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import showToast from "@/lib/toast";
 import { DashboardSkeleton } from "@/app/components/ui";
+import api from "@/lib/api";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -390,41 +391,44 @@ function QuickActionsPanel() {
 
 // ─── Recent Activity Panel ────────────────────────────────────────────────────
 
-const ACTIVITY_ITEMS = [
-  {
-    color: "bg-indigo-500",
-    title: "New document uploaded",
-    time: "2 mins ago",
-    description: <>
-      <span className="font-medium text-slate-900">Courtney Henry</span> added{" "}
-      <span className="font-medium text-indigo-600">Q3_Marketing_Plan.pdf</span>
-    </>,
-    tags: ["PDF", "12 MB"],
-    hasConnector: true,
-  },
-  {
-    color: "bg-emerald-500",
-    title: "Chatbot deployed successfully",
-    time: "2 hours ago",
-    description: <>
-      <span className="font-medium text-slate-900">Customer Support Bot</span> is now active on{" "}
-      <span className="underline decoration-slate-300">production</span> environment.
-    </>,
-    hasConnector: true,
-  },
-  {
-    color: "bg-amber-500",
-    title: "Token usage alert",
-    time: "Yesterday",
-    description: <>
-      You've used <span className="font-mono font-semibold">80%</span> of your monthly token limit.{" "}
-      Upgrade to <span className="font-semibold text-indigo-600 cursor-pointer hover:underline">Enterprise</span> for unlimited tokens.
-    </>,
-    hasConnector: false,
-  },
-];
-
 function RecentActivityPanel() {
+  const [activities, setActivities] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchActivities = async () => {
+      try {
+        const res = await api.get('/api/users/recent-activity');
+        setActivities(res.data);
+      } catch (err) {
+        console.error("Failed to fetch recent activities:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchActivities();
+  }, []);
+
+  const getActivityColor = (type: string) => {
+    switch (type) {
+      case 'document_added': return 'bg-indigo-500';
+      case 'dataset_created': return 'bg-emerald-500';
+      case 'chatbot_created': return 'bg-teal-500';
+      case 'message_limit_warning': return 'bg-amber-500';
+      default: return 'bg-slate-500';
+    }
+  };
+
+  const getActivityTitle = (type: string) => {
+    switch (type) {
+      case 'document_added': return 'New document uploaded';
+      case 'dataset_created': return 'New dataset created';
+      case 'chatbot_created': return 'Chatbot deployed';
+      case 'message_limit_warning': return 'Token usage limit alert';
+      default: return 'Activity';
+    }
+  };
+
   return (
     <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6 lg:col-span-2">
       <div className="flex items-center justify-between mb-6">
@@ -437,36 +441,35 @@ function RecentActivityPanel() {
         </button>
       </div>
       <div className="space-y-0 divide-y divide-slate-100">
-        {ACTIVITY_ITEMS.map((item, idx) => (
-          <div key={idx} className="flex gap-4 py-4 group hover:bg-slate-50 transition-colors -mx-4 px-4 rounded-lg cursor-pointer">
-            <div className="relative mt-1">
-              <div className="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center border border-slate-200 shadow-sm z-10 relative">
-                <div className={`w-2.5 h-2.5 ${item.color} rounded-full`} />
-              </div>
-              {item.hasConnector && (
-                <div className="absolute top-9 left-1/2 -translate-x-1/2 w-0.5 h-full bg-slate-200 -z-0" />
-              )}
-            </div>
-            <div className="flex-1 min-w-0">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
-                <p className="text-sm font-semibold text-slate-900 truncate">{item.title}</p>
-                <span className="text-[10px] sm:text-xs text-slate-500 font-medium whitespace-nowrap font-mono italic">{item.time}</span>
-              </div>
-              <p className="text-xs sm:text-sm text-slate-600 mt-0.5 leading-relaxed">
-                {item.description}
-              </p>
-              {item.tags && (
-                <div className="mt-2 flex gap-2">
-                  {item.tags.map((tag) => (
-                    <span key={tag} className="text-[10px] uppercase font-bold text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200 font-mono">
-                      {tag}
-                    </span>
-                  ))}
+        {loading ? (
+          <div className="text-center py-4 text-slate-500 text-sm">Loading...</div>
+        ) : activities.length === 0 ? (
+          <div className="text-center py-4 text-slate-500 text-sm">No recent activity</div>
+        ) : (
+          activities.map((item, idx) => (
+            <div key={item.id} className="flex gap-4 py-4 group hover:bg-slate-50 transition-colors -mx-4 px-4 rounded-lg cursor-pointer">
+              <div className="relative mt-1">
+                <div className="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center border border-slate-200 shadow-sm z-10 relative">
+                  <div className={`w-2.5 h-2.5 ${getActivityColor(item.activity_type)} rounded-full`} />
                 </div>
-              )}
+                {idx < activities.length - 1 && (
+                  <div className="absolute top-9 left-1/2 -translate-x-1/2 w-0.5 h-full bg-slate-200 -z-0" />
+                )}
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+                  <p className="text-sm font-semibold text-slate-900 truncate">{getActivityTitle(item.activity_type)}</p>
+                  <span className="text-[10px] sm:text-xs text-slate-500 font-medium whitespace-nowrap font-mono italic">
+                    {new Date(item.created_at).toLocaleDateString()}
+                  </span>
+                </div>
+                <p className="text-xs sm:text-sm text-slate-600 mt-0.5 leading-relaxed">
+                  {item.details}
+                </p>
+              </div>
             </div>
-          </div>
-        ))}
+          ))
+        )}
       </div>
     </div>
   );

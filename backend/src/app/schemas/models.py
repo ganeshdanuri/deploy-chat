@@ -174,3 +174,18 @@ class UsageTracking(SQLModel, table=True):
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
 
+# Recent Activity
+class RecentActivityBase(SQLModel):
+    user_id: UUID = Field(foreign_key="users.id")
+    activity_type: str
+    details: str
+
+class RecentActivity(RecentActivityBase, table=True):
+    __tablename__ = "recent_activities"
+    id: UUID = Field(default_factory=uuid4, primary_key=True)
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+
+class RecentActivityRead(RecentActivityBase):
+    id: UUID
+    created_at: datetime
+

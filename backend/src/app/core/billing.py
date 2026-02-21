@@ -34,6 +34,30 @@ def verify_plan_limits(user: User, session: Session):
 
 def increment_usage(usage: UsageTracking, session: Session, token_count: int = 0):
     usage.message_count += 1
+    
+    # Check for limits (50%, 80%)
+    user = session.get(User, usage.user_id)
+    if user:
+        limit = 100
+        if user.plan_id:
+            plan = session.get(PricingTier, user.plan_id)
+            if plan:
+                limit = plan.monthly_limit
+        
+        from app.schemas.models import RecentActivity
+        old_count = usage.message_count - 1
+        new_count = usage.message_count
+        
+        for threshold in [0.5, 0.8]:
+            limit_val = int(limit * threshold)
+            if old_count < limit_val and new_count >= limit_val:
+                activity = RecentActivity(
+                    user_id=user.id,
+                    activity_type="message_limit_warning",
+                    details=f"Usage hit {int(threshold * 100)}% of your monthly limit"
+                )
+                session.add(activity)
+
     usage.token_count += token_count
     usage.updated_at = datetime.now(timezone.utc)
     session.add(usage)

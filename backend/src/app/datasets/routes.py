@@ -46,6 +46,14 @@ def create_dataset(
             )
             session.add(link)
             
+        from app.schemas.models import RecentActivity
+        activity = RecentActivity(
+            user_id=current_user.id,
+            activity_type="dataset_created",
+            details=f"Created dataset: {new_dataset.name}"
+        )
+        session.add(activity)
+
         session.commit()
         session.refresh(new_dataset)
         return new_dataset
