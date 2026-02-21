@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "../../context/AuthContext";
 import {
     HiHome,
@@ -57,6 +57,8 @@ interface SidebarProps {
 export function Sidebar({ isOpen, onClose }: SidebarProps) {
     const pathname = usePathname();
     const router = useRouter();
+    const searchParams = useSearchParams();
+    const currentTab = searchParams.get("tab") || "general";
     const { logout } = useAuth();
     const [isCollapsed, setIsCollapsed] = useState(false);
     const { data: userData } = useAppSelector((state) => state.user);
@@ -146,7 +148,8 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                     <nav className="space-y-0.5">
                         {settingsNavItems.map((item) => {
                             const Icon = item.icon;
-                            const isActive = pathname === item.path || (pathname === "/dashboard/settings" && item.id === "general" && !pathname.includes("?"));
+                            const isSettingsPath = pathname === "/dashboard/settings";
+                            const isActive = isSettingsPath ? currentTab === item.id : pathname === item.path;
 
                             return (
                                 <Link

@@ -53,14 +53,6 @@ export default function SettingsPage() {
                                 <p className="text-sm text-slate-500 mt-1">Update your account's profile information and email address.</p>
                             </div>
                             <div className="p-6 space-y-6">
-                                <div className="flex items-center gap-6">
-                                    <div className="w-20 h-20 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 text-2xl font-bold border-2 border-white shadow-md">
-                                        CH
-                                    </div>
-                                    <button className="px-4 py-2 bg-white border border-slate-200 text-slate-700 text-sm font-medium rounded-lg hover:bg-slate-50 transition-colors shadow-sm">
-                                        Change Photo
-                                    </button>
-                                </div>
 
                                 <div className="grid grid-cols-2 gap-6">
                                     <div className="col-span-2 space-y-2">
@@ -76,71 +68,20 @@ export default function SettingsPage() {
                                     </div>
                                 </div>
                             </div>
-                            <div className="px-6 py-4 bg-slate-50 border-t border-slate-200 flex justify-between items-center">
-                                <p className="text-xs text-slate-500 italic">Profiles are partially managed by Auth Provider.</p>
-                                <button
-                                    onClick={() => showToast.info("Profile updates via settings are coming soon.")}
-                                    className="px-4 py-2 bg-slate-900 text-white text-sm font-medium rounded-lg shadow-sm hover:bg-slate-800 transition-colors"
-                                >
-                                    Save Changes
-                                </button>
-                            </div>
-                        </div>
-                    )}
 
-                    {activeTab === "api-keys" && (
-                        <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-                            <div className="p-6 border-b border-slate-200 flex justify-between items-center">
-                                <div>
-                                    <h2 className="text-lg font-bold text-slate-900">API Keys</h2>
-                                    <p className="text-sm text-slate-500 mt-1">Manage your API keys for external integrations.</p>
-                                </div>
-                                <button
-                                    onClick={() => showToast.success("New API key generated successfully")}
-                                    className="px-3 py-1.5 bg-indigo-600 text-white text-xs font-semibold rounded-lg shadow-sm hover:bg-indigo-700 transition-colors"
-                                >
-                                    Create New Key
-                                </button>
-                            </div>
-                            <div className="divide-y divide-slate-100">
-                                <div className="p-4 flex items-center justify-between hover:bg-slate-50 transition-colors">
-                                    <div className="flex items-center gap-4">
-                                        <div className="p-2 bg-slate-100 rounded-lg text-slate-500">
-                                            <HiKey className="w-5 h-5" />
-                                        </div>
-                                        <div>
-                                            <h4 className="text-sm font-semibold text-slate-900">Production Key</h4>
-                                            <code className="text-xs text-slate-500 font-mono bg-slate-100 px-1 py-0.5 rounded">sk_live_...8f92</code>
-                                        </div>
-                                    </div>
-                                    <div className="text-xs text-slate-400">Created 2 days ago</div>
-                                </div>
-                                <div className="p-4 flex items-center justify-between hover:bg-slate-50 transition-colors">
-                                    <div className="flex items-center gap-4">
-                                        <div className="p-2 bg-slate-100 rounded-lg text-slate-500">
-                                            <HiKey className="w-5 h-5" />
-                                        </div>
-                                        <div>
-                                            <h4 className="text-sm font-semibold text-slate-900">Test Environment</h4>
-                                            <code className="text-xs text-slate-500 font-mono bg-slate-100 px-1 py-0.5 rounded">pk_test_...b12a</code>
-                                        </div>
-                                    </div>
-                                    <div className="text-xs text-slate-400">Created 1 month ago</div>
-                                </div>
-                            </div>
                         </div>
                     )}
 
                     {activeTab === "billing" && (
-                        <div className="space-y-6">
+                        <div className="space-y-4">
                             <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-                                <div className="p-6 border-b border-slate-200">
-                                    <h2 className="text-lg font-bold text-slate-900">Current Plan</h2>
-                                    <p className="text-sm text-slate-500 mt-1">You are currently on the {userData?.billing?.current_plan} plan.</p>
+                                <div className="p-4 border-b border-slate-200">
+                                    <h2 className="text-base font-bold text-slate-900">Current Plan</h2>
+                                    <p className="text-xs text-slate-500 mt-1">You are currently on the {userData?.billing?.current_plan} plan.</p>
                                 </div>
-                                <div className="p-6">
-                                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-                                        <div className="space-y-4 flex-1">
+                                <div className="p-5">
+                                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                                        <div className="space-y-3 flex-1">
                                             <div className="flex justify-between items-end mb-1">
                                                 <span className="text-sm font-medium text-slate-700">Monthly Usage</span>
                                                 <span className="text-sm font-semibold text-slate-900">
@@ -155,11 +96,11 @@ export default function SettingsPage() {
                                             </div>
                                             <p className="text-xs text-slate-500">Your usage resets on {userData?.usage?.reset_date ? new Date(userData.usage.reset_date).toLocaleDateString() : 'the 1st of next month'}.</p>
                                         </div>
-                                        <div className="shrink-0 flex gap-3">
-                                            <button className="px-4 py-2 bg-white border border-slate-200 text-slate-700 text-sm font-medium rounded-lg hover:bg-slate-50 transition-colors shadow-sm">
+                                        <div className="shrink-0 flex gap-2">
+                                            <button className="px-3 py-1.5 bg-white border border-slate-200 text-slate-700 text-sm font-medium rounded-lg hover:bg-slate-50 transition-colors shadow-sm">
                                                 View Invoices
                                             </button>
-                                            <button className="px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg shadow-sm hover:bg-indigo-700 transition-colors">
+                                            <button className="px-3 py-1.5 bg-indigo-600 text-white text-sm font-medium rounded-lg shadow-sm hover:bg-indigo-700 transition-colors">
                                                 Upgrade Plan
                                             </button>
                                         </div>
@@ -167,17 +108,17 @@ export default function SettingsPage() {
                                 </div>
                             </div>
 
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                                 <div className="bg-white rounded-xl border border-indigo-200 shadow-sm p-6 relative overflow-hidden">
                                     <div className="absolute top-0 right-0 p-3">
-                                        <span className="bg-indigo-50 text-indigo-600 text-[10px] font-bold px-2 py-1 rounded-full border border-indigo-100 uppercase tracking-wider">Most Popular</span>
+                                        <span className="bg-indigo-50 text-indigo-600 text-[10px] font-bold px-2 py-0.5 rounded-full border border-indigo-100 uppercase tracking-wider">Most Popular</span>
                                     </div>
                                     <h3 className="text-lg font-bold text-slate-900">Professional</h3>
-                                    <div className="mt-2 flex items-baseline gap-1">
+                                    <div className="mt-1 flex items-baseline gap-1">
                                         <span className="text-3xl font-black text-slate-900">$29</span>
                                         <span className="text-sm text-slate-500">/month</span>
                                     </div>
-                                    <ul className="mt-6 space-y-3">
+                                    <ul className="mt-5 space-y-3">
                                         {[
                                             "1,000 messages / month",
                                             "Unlimited Chatbots",
@@ -186,22 +127,22 @@ export default function SettingsPage() {
                                             "Advanced Analytics"
                                         ].map((feat, i) => (
                                             <li key={feat} className="flex items-center gap-2 text-sm text-slate-600">
-                                                <HiShieldCheck className="w-4 h-4 text-indigo-500" />
+                                                <HiShieldCheck className="w-5 h-5 text-indigo-500" />
                                                 {feat}
                                             </li>
                                         ))}
                                     </ul>
-                                    <button className="mt-8 w-full py-2.5 bg-indigo-600 text-white text-sm font-bold rounded-lg hover:bg-indigo-700 transition-all shadow-md shadow-indigo-100">
+                                    <button className="mt-6 w-full py-2.5 bg-indigo-600 text-white text-sm font-bold rounded-lg hover:bg-indigo-700 transition-all shadow-md shadow-indigo-100">
                                         Get Started
                                     </button>
                                 </div>
 
                                 <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
                                     <h3 className="text-lg font-bold text-slate-900">Enterprise</h3>
-                                    <div className="mt-2 flex items-baseline gap-1">
+                                    <div className="mt-1 flex items-baseline gap-1">
                                         <span className="text-3xl font-black text-slate-900">Custom</span>
                                     </div>
-                                    <ul className="mt-6 space-y-3">
+                                    <ul className="mt-5 space-y-3">
                                         {[
                                             "Unlimited everything",
                                             "SLA Guarantees",
@@ -210,12 +151,12 @@ export default function SettingsPage() {
                                             "On-premise deployment"
                                         ].map((feat, i) => (
                                             <li key={feat} className="flex items-center gap-2 text-sm text-slate-600">
-                                                <HiShieldCheck className="w-4 h-4 text-slate-400" />
+                                                <HiShieldCheck className="w-5 h-5 text-slate-400" />
                                                 {feat}
                                             </li>
                                         ))}
                                     </ul>
-                                    <button className="mt-8 w-full py-2.5 bg-white border border-slate-200 text-slate-700 text-sm font-bold rounded-lg hover:bg-slate-50 transition-all">
+                                    <button className="mt-6 w-full py-2.5 bg-white border border-slate-200 text-slate-700 text-sm font-bold rounded-lg hover:bg-slate-50 transition-all">
                                         Contact Sales
                                     </button>
                                 </div>
@@ -224,7 +165,7 @@ export default function SettingsPage() {
                     )}
 
                     {/* Other tabs placeholder */}
-                    {(activeTab !== "general" && activeTab !== "api-keys" && activeTab !== "billing") && (
+                    {(activeTab !== "general" && activeTab !== "billing") && (
                         <div className="flex flex-col items-center justify-center p-12 bg-white rounded-xl border border-slate-200 border-dashed">
                             <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mb-4">
                                 <HiShieldCheck className="w-8 h-8 text-slate-300" />
