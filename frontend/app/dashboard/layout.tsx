@@ -5,9 +5,7 @@ import { useEffect, useState } from "react";
 import { Sidebar } from "./components/Sidebar";
 import { TopNav } from "./components/TopNav";
 import { useAuth } from "../context/AuthContext";
-import { HiLightningBolt } from "react-icons/hi";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "@/lib/store/store";
+import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 import { fetchChatbots } from "@/lib/store/slices/chatbotsSlice";
 import { fetchDatasets } from "@/lib/store/slices/datasetsSlice";
 import { fetchDocuments } from "@/lib/store/slices/documentsSlice";
@@ -18,24 +16,24 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     const { isAuthenticated, isLoading } = useAuth();
     const router = useRouter();
     const pathname = usePathname();
-    const dispatch = useDispatch<AppDispatch>();
+    const dispatch = useAppDispatch();
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-    // Select just status to avoid unnecessary re-renders
-    const { status: chatbotStatus } = useSelector((state: RootState) => state.chatbots);
-    const { status: datasetStatus } = useSelector((state: RootState) => state.datasets);
-    const { status: documentStatus } = useSelector((state: RootState) => state.documents);
-    const { status: usageStatus } = useSelector((state: RootState) => state.usage);
+    const { status: chatbotStatus } = useAppSelector((state) => state.chatbots);
+    const { status: datasetStatus } = useAppSelector((state) => state.datasets);
+    const { status: documentStatus } = useAppSelector((state) => state.documents);
+    const { status: usageStatus } = useAppSelector((state) => state.usage);
 
     useEffect(() => {
         if (!isLoading && !isAuthenticated) {
             router.push("/");
-        } else if (isAuthenticated && !isLoading) {
-            // Fetch initial data if not already loading/loaded
-            if (chatbotStatus === 'idle') dispatch(fetchChatbots());
-            if (datasetStatus === 'idle') dispatch(fetchDatasets());
-            if (documentStatus === 'idle') dispatch(fetchDocuments());
-            if (usageStatus === 'idle') dispatch(fetchUsageStats());
+            return;
+        }
+        if (isAuthenticated && !isLoading) {
+            if (chatbotStatus === "idle") dispatch(fetchChatbots());
+            if (datasetStatus === "idle") dispatch(fetchDatasets());
+            if (documentStatus === "idle") dispatch(fetchDocuments());
+            if (usageStatus === "idle") dispatch(fetchUsageStats());
         }
     }, [isLoading, isAuthenticated, router, dispatch, chatbotStatus, datasetStatus, documentStatus, usageStatus]);
 
@@ -49,15 +47,13 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             <div className="flex min-h-screen items-center justify-center bg-slate-50">
                 <div className="animate-pulse flex flex-col items-center gap-4">
                     <Logo className="h-16 w-auto animate-bounce" />
-                    <div className="h-2 w-24 bg-slate-200 rounded"></div>
+                    <div className="h-2 w-24 bg-slate-200 rounded" />
                 </div>
             </div>
         );
     }
 
-    if (!isAuthenticated) {
-        return null; // Return nothing while redirecting
-    }
+    if (!isAuthenticated) return null;
 
     return (
         <div className="flex min-h-screen bg-slate-50 text-slate-900 font-sans overflow-hidden">

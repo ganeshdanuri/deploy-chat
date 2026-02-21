@@ -1,18 +1,8 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import api from '@/lib/api';
+import type { Document, AsyncSliceState } from '@/lib/types';
 
-interface Document {
-    id: string;
-    name: string;
-    created_at: string;
-    user_id: string;
-}
-
-interface DocumentsState {
-    items: Document[];
-    status: 'idle' | 'loading' | 'succeeded' | 'failed';
-    error: string | null;
-}
+type DocumentsState = AsyncSliceState<Document>;
 
 const initialState: DocumentsState = {
     items: [],
@@ -22,7 +12,7 @@ const initialState: DocumentsState = {
 
 export const fetchDocuments = createAsyncThunk('documents/fetchDocuments', async () => {
     const response = await api.get('/api/documents/');
-    return response.data;
+    return response.data as Document[];
 });
 
 export const uploadDocument = createAsyncThunk(
@@ -31,7 +21,7 @@ export const uploadDocument = createAsyncThunk(
         const response = await api.post('/api/documents/', formData, {
             headers: { 'Content-Type': 'multipart/form-data' },
         });
-        return response.data;
+        return response.data as Document;
     }
 );
 
@@ -46,9 +36,7 @@ const documentsSlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder
-            .addCase(fetchDocuments.pending, (state) => {
-                state.status = 'loading';
-            })
+            .addCase(fetchDocuments.pending, (state) => { state.status = 'loading'; })
             .addCase(fetchDocuments.fulfilled, (state, action: PayloadAction<Document[]>) => {
                 state.status = 'succeeded';
                 state.items = action.payload;
@@ -57,8 +45,8 @@ const documentsSlice = createSlice({
                 state.status = 'failed';
                 state.error = action.error.message || 'Failed to fetch documents';
             })
-            .addCase(uploadDocument.fulfilled, (state, action) => {
-                // Refresh items or append if the backend returns the full doc object
+            .addCase(uploadDocument.fulfilled, (state, action: PayloadAction<Document>) => {
+                state.items.unshift(action.payload);
             })
             .addCase(deleteDocument.fulfilled, (state, action: PayloadAction<string>) => {
                 state.items = state.items.filter(doc => doc.id !== action.payload);

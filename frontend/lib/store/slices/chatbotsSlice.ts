@@ -1,21 +1,8 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import api from '@/lib/api';
+import type { Chatbot, AsyncSliceState } from '@/lib/types';
 
-interface Chatbot {
-    id: string;
-    name: string;
-    created_at: string;
-    updated_at: string;
-    user_id: string;
-    system_prompt: string;
-    temperature: number;
-}
-
-interface ChatbotsState {
-    items: Chatbot[];
-    status: 'idle' | 'loading' | 'succeeded' | 'failed';
-    error: string | null;
-}
+type ChatbotsState = AsyncSliceState<Chatbot>;
 
 const initialState: ChatbotsState = {
     items: [],
@@ -25,14 +12,14 @@ const initialState: ChatbotsState = {
 
 export const fetchChatbots = createAsyncThunk('chatbots/fetchChatbots', async () => {
     const response = await api.get('/api/chatbots/');
-    return response.data;
+    return response.data as Chatbot[];
 });
 
 export const createChatbot = createAsyncThunk(
     'chatbots/createChatbot',
     async (data: { name: string; dataset_ids: string[] }) => {
         const response = await api.post('/api/chatbots/', data);
-        return response.data;
+        return response.data as Chatbot;
     }
 );
 
@@ -50,9 +37,7 @@ const chatbotsSlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder
-            .addCase(fetchChatbots.pending, (state) => {
-                state.status = 'loading';
-            })
+            .addCase(fetchChatbots.pending, (state) => { state.status = 'loading'; })
             .addCase(fetchChatbots.fulfilled, (state, action: PayloadAction<Chatbot[]>) => {
                 state.status = 'succeeded';
                 state.items = action.payload;

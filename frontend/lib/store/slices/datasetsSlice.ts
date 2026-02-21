@@ -1,19 +1,8 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import api from '@/lib/api';
+import type { Dataset, AsyncSliceState } from '@/lib/types';
 
-interface Dataset {
-    id: string;
-    name: string;
-    created_at: string;
-    updated_at: string;
-    user_id: string;
-}
-
-interface DatasetsState {
-    items: Dataset[];
-    status: 'idle' | 'loading' | 'succeeded' | 'failed';
-    error: string | null;
-}
+type DatasetsState = AsyncSliceState<Dataset>;
 
 const initialState: DatasetsState = {
     items: [],
@@ -23,14 +12,14 @@ const initialState: DatasetsState = {
 
 export const fetchDatasets = createAsyncThunk('datasets/fetchDatasets', async () => {
     const response = await api.get('/api/datasets/');
-    return response.data;
+    return response.data as Dataset[];
 });
 
 export const createDataset = createAsyncThunk(
     'datasets/createDataset',
     async (data: { name: string; document_ids: string[] }) => {
         const response = await api.post('/api/datasets/', data);
-        return response.data;
+        return response.data as Dataset;
     }
 );
 
@@ -48,9 +37,7 @@ const datasetsSlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder
-            .addCase(fetchDatasets.pending, (state) => {
-                state.status = 'loading';
-            })
+            .addCase(fetchDatasets.pending, (state) => { state.status = 'loading'; })
             .addCase(fetchDatasets.fulfilled, (state, action: PayloadAction<Dataset[]>) => {
                 state.status = 'succeeded';
                 state.items = action.payload;
