@@ -35,10 +35,13 @@ The project is **self-hostable**, **extensible**, and designed for developers fi
 ### Requirements
 
 - Python 3.12
+- Node.js (v18+)
 - PostgreSQL
 - Vector database (Pg Vector)
 - OpenAI API key (or local LLM)
 
+### Setup
+
+Please refer to the [Setup Guide](setup.md) for detailed developer instructions on how to configure and run the frontend and backend applications locally.
+
 ---
-
-
