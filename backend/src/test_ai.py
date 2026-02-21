@@ -8,7 +8,7 @@ async def test():
     with Session(engine) as session:
         key_stmt = select(PlatformAPIKey.api_key).where(
             PlatformAPIKey.provider == "google",
-            PlatformAPIKey.is_active == True
+            PlatformAPIKey.is_active
         )
         api_key = session.exec(key_stmt).first()
         if not api_key:

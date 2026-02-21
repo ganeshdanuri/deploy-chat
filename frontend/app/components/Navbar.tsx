@@ -1,9 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { HiMenu, HiX, HiLightningBolt } from "react-icons/hi";
+import { HiMenu, HiX } from "react-icons/hi";
 import { LogIn } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 

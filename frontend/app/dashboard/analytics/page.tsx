@@ -1,8 +1,33 @@
 "use client";
 
-import { HiTrendingUp, HiUsers, HiChatAlt2, HiCurrencyDollar } from "react-icons/hi";
+import { HiTrendingUp, HiLockClosed } from "react-icons/hi";
+import { useAppSelector } from "@/lib/store/hooks";
+import Link from "next/link";
 
 export default function AnalyticsPage() {
+    const { data: userData } = useAppSelector((state) => state.user);
+    const isFreePlan = userData?.billing?.current_plan === "Free" || !userData?.billing?.current_plan;
+
+    if (isFreePlan) {
+        return (
+            <div className="flex flex-col items-center justify-center h-[calc(100vh-12rem)] text-center animate-fade-in-up">
+                <div className="w-16 h-16 bg-indigo-50 rounded-2xl flex items-center justify-center mb-6 shadow-sm border border-indigo-100">
+                    <HiLockClosed className="w-8 h-8 text-indigo-500" />
+                </div>
+                <h1 className="text-2xl font-bold text-slate-900 mb-2">Analytics Pro</h1>
+                <p className="text-slate-500 mb-6 max-w-sm">
+                    Detailed analytics and usage metrics are only available on higher plans.
+                </p>
+                <Link
+                    href="/dashboard/settings?tab=billing"
+                    className="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg shadow-sm transition-colors"
+                >
+                    Upgrade Plan
+                </Link>
+            </div>
+        );
+    }
+
     return (
         <div className="space-y-6 animate-fade-in-up">
             <div className="flex items-center justify-between">

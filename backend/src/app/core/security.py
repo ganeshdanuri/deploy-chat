@@ -2,7 +2,7 @@ import bcrypt
 import jwt
 import os
 from datetime import datetime, timedelta, timezone
-from typing import Optional, Any
+from typing import Optional
 from uuid import UUID
 from app.core.constants import ALGORITHM, ACCESS_TOKEN_EXPIRE_MINUTES, REFRESH_TOKEN_EXPIRE_DAYS, DEFAULT_PLAN_NAME
 

@@ -10,8 +10,6 @@ import {
     HiDocumentText,
     HiSparkles,
     HiChartBar,
-    HiCog,
-    HiPlus,
     HiLogout,
     HiQuestionMarkCircle,
     HiX,
@@ -23,7 +21,6 @@ import {
     HiKey,
     HiBell,
 } from "react-icons/hi";
-import { theme } from "../../theme";
 import { useState } from "react";
 import Logo from "../../components/Logo";
 import { useAppSelector } from "@/lib/store/hooks";
@@ -109,31 +106,43 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                     {mainNavItems.map((item) => {
                         const Icon = item.icon;
                         const isActive = pathname === item.path;
+                        const isFreePlan = userData?.billing?.current_plan === "Free" || !userData?.billing?.current_plan;
+                        const isDisabled = item.id === "analytics" && isFreePlan;
 
                         return (
                             <Link
                                 key={item.id}
-                                href={item.path}
-                                title={isCollapsed ? item.label : undefined}
+                                href={isDisabled ? "#" : item.path}
+                                onClick={isDisabled ? (e) => e.preventDefault() : undefined}
+                                title={isCollapsed ? (isDisabled ? `${item.label} (Pro)` : item.label) : undefined}
                                 className={`
                                         relative group flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all
                                         ${isCollapsed ? "justify-center" : ""}
-                                        ${isActive
-                                        ? "bg-white text-indigo-600 shadow-sm ring-1 ring-slate-200"
-                                        : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+                                        ${isDisabled
+                                        ? "opacity-50 cursor-not-allowed text-slate-400"
+                                        : isActive
+                                            ? "bg-white text-indigo-600 shadow-sm ring-1 ring-slate-200"
+                                            : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
                                     }
                                     `}
                             >
-                                <Icon className={`w-5 h-5 shrink-0 transition-colors ${isActive ? "text-indigo-600" : "text-slate-400 group-hover:text-slate-600"}`} />
-                                {!isCollapsed && <span>{item.label}</span>}
-                                {isActive && !isCollapsed && (
+                                <Icon className={`w-5 h-5 shrink-0 transition-colors ${isActive && !isDisabled ? "text-indigo-600" : "text-slate-400 group-hover:text-slate-600"}`} />
+                                {!isCollapsed && (
+                                    <div className="flex flex-1 items-center justify-between">
+                                        <span>{item.label}</span>
+                                        {isDisabled && (
+                                            <span className="text-[9px] font-bold bg-slate-200 text-slate-500 px-1.5 py-0.5 rounded uppercase tracking-wider">Pro</span>
+                                        )}
+                                    </div>
+                                )}
+                                {isActive && !isCollapsed && !isDisabled && (
                                     <div className="absolute right-2 w-1.5 h-1.5 rounded-full bg-indigo-600"></div>
                                 )}
 
                                 {/* Tooltip for collapsed state */}
                                 {isCollapsed && (
                                     <div className="absolute left-full ml-3 px-2.5 py-1.5 bg-slate-800 text-white text-xs font-medium rounded-md opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-50 shadow-lg">
-                                        {item.label}
+                                        {isDisabled ? `${item.label} (Pro)` : item.label}
                                         <div className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1 w-2 h-2 bg-slate-800 rotate-45" />
                                     </div>
                                 )}

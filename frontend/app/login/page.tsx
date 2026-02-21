@@ -5,7 +5,6 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "../context/AuthContext";
 import { GoogleLogin } from "@react-oauth/google";
 import { theme } from "../theme";
-import { HiUser, HiLockClosed, HiLogin } from "react-icons/hi";
 import Logo from "../components/Logo";
 import gsap from "gsap";
 
@@ -119,7 +118,7 @@ function LoginContent() {
                     setError("Invalid username or password");
                 }
             }
-        } catch (err) {
+        } catch {
             setError("An unexpected error occurred");
         } finally {
             setIsLoading(false);

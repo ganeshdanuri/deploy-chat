@@ -4,7 +4,7 @@ from typing import List
 from uuid import UUID
 from app.core.db import get_session
 from app.api.deps import get_current_user
-from app.schemas.models import Chatbot, ChatbotCreate, ChatbotRead, ChatbotDatasets, User, Dataset, UsageTracking
+from app.schemas.models import Chatbot, ChatbotCreate, ChatbotRead, ChatbotDatasets, User, Dataset
 from app.core.billing import verify_plan_limits, increment_usage
 from app.core.ai import get_ai_response
 from app.core.endpoints import Endpoints

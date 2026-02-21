@@ -1,5 +1,5 @@
 import { theme } from "../app/theme";
-import { HiGlobe, HiChartBar, HiUserGroup, HiShieldCheck, HiCheck, HiStar } from "react-icons/hi";
+import { HiGlobe, HiChartBar, HiUserGroup, HiShieldCheck } from "react-icons/hi";
 import { FaBrain } from "react-icons/fa";
 import { MdIntegrationInstructions } from "react-icons/md";
 

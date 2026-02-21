@@ -3,13 +3,6 @@
 import { useLayoutEffect, useRef } from "react";
 import gsap from "gsap";
 import { theme } from "../theme";
-interface Stat {
-  id: number;
-  value: string;
-  label: string;
-  color: string;
-  bgColor: string;
-}
 
 export default function Banner() {
   const wrapperRef = useRef<HTMLDivElement>(null);

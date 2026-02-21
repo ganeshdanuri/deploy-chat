@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlmodel import Session, select
 from pydantic import BaseModel
 from app.core.db import get_session
-from app.schemas.models import Chatbot, User, UsageTracking
+from app.schemas.models import Chatbot, User
 from app.core.billing import verify_plan_limits, increment_usage
 from app.core.ai import get_ai_response
 from app.core.endpoints import Endpoints

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useRef, useEffect, useState, useCallback } from "react";
@@ -157,7 +158,6 @@ export default function DashboardOverview() {
         <DashboardSkeleton />
       ) : hasData ? (
         <DashboardSummary
-          chatbots={chatbots}
           datasets={datasets}
           documents={documents}
           message_count={message_count}
@@ -176,7 +176,6 @@ export default function DashboardOverview() {
 // ─── Sub-components ───────────────────────────────────────────────────────────
 
 interface DashboardSummaryProps {
-  chatbots: any[];
   datasets: any[];
   documents: any[];
   message_count: number;
@@ -187,7 +186,6 @@ interface DashboardSummaryProps {
 }
 
 function DashboardSummary({
-  chatbots,
   datasets,
   message_count,
   token_count,

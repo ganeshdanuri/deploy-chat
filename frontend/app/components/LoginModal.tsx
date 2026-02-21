@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../context/AuthContext";
 import { theme } from "../theme";
-import { HiX, HiArrowRight, HiShieldCheck, HiUser, HiLockClosed, HiLogin } from "react-icons/hi";
+import { HiX, HiUser, HiLockClosed, HiLogin } from "react-icons/hi";
 import { GoogleLogin } from "@react-oauth/google";
 import Logo from "./Logo";
 
@@ -54,7 +54,7 @@ export default function LoginModal({ isOpen, onClose, initialMode = 'login', ini
           setError("Invalid username or password");
         }
       }
-    } catch (err) { // 'err' is kept here as per the instruction's diff, which only removes it from the Google login catch block.
+    } catch { // 'err' is kept here as per the instruction's diff, which only removes it from the Google login catch block.
       setError("An unexpected error occurred");
     } finally {
       setIsLoading(false);

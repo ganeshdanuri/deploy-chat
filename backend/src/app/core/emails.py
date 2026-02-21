@@ -1,6 +1,5 @@
 import resend
 import os
-from typing import Optional
 
 def get_resend_key():
     return os.getenv("RESEND_API_KEY")

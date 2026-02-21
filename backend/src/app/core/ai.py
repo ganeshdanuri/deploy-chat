@@ -1,11 +1,9 @@
-import os
-from typing import List, Optional
 from uuid import UUID
 from sqlmodel import Session, select
 from pydantic_ai import Agent
 from pydantic_ai.models.gemini import GeminiModel
 from pydantic_ai.providers.google_gla import GoogleGLAProvider
-from app.schemas.models import Chatbot, Dataset, DatasetDocuments, DocumentContent, PlatformAPIKey
+from app.schemas.models import Chatbot, DatasetDocuments, DocumentContent, PlatformAPIKey
 
 def get_chatbot_context(session: Session, chatbot_id: UUID) -> str:
     """Retrieves all document content linked to a chatbot."""
@@ -94,7 +92,7 @@ async def get_ai_response(
     # 1. Get Platform API Key for Gemini
     key_stmt = select(PlatformAPIKey.api_key).where(
         PlatformAPIKey.provider == "google",
-        PlatformAPIKey.is_active == True
+        PlatformAPIKey.is_active
     )
     api_key = session.exec(key_stmt).first()
     

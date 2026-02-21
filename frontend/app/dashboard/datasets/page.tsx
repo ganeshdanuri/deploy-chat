@@ -1,10 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useEffect, useState } from "react";
 import { HiDatabase, HiPlus, HiRefresh, HiCollection, HiTrash } from "react-icons/hi";
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 import { fetchDatasets, deleteDataset } from "@/lib/store/slices/datasetsSlice";
-import { fetchDocuments } from "@/lib/store/slices/documentsSlice";
 import CreateDatasetModal from "@/app/components/CreateDatasetModal";
 import showToast from "@/lib/toast";
 import { User, Tooltip, Button, Card, CardBody } from "@heroui/react";

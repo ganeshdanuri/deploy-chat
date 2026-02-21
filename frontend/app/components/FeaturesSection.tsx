@@ -1,9 +1,6 @@
 "use client";
 
 import { theme } from "../theme";
-import { HiGlobe, HiChartBar, HiUserGroup, HiShieldCheck } from "react-icons/hi";
-import { FaBrain } from "react-icons/fa";
-import { MdIntegrationInstructions } from "react-icons/md";
 import { PLATFORM_FEATURES as features } from "../../lib/constants";
 
 
@@ -42,7 +39,7 @@ export default function FeaturesSection() {
 
         {/* Features Grid - Bento Style */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {features.map((feature, idx) => (
+          {features.map((feature) => (
             <div
               key={feature.id}
               className={`group relative overflow-hidden rounded-3xl p-8 transition-all duration-300 hover:shadow-xl border border-slate-100 bg-white/50 backdrop-blur-sm hover:bg-white ${feature.span}`}

@@ -1,6 +1,5 @@
 "use client";
 
-import { Suspense } from "react";
 import Navbar from "./components/Navbar";
 import FeaturesSection from "./components/FeaturesSection";
 import HeroSection from "./components/HeroSection";
@@ -11,7 +10,6 @@ import TestimonialsSection from "./components/TestimonialsSection";
 import FAQSection from "./components/FAQSection";
 import CTASection from "./components/CTASection";
 import Footer from "./components/Footer";
-import { theme } from "./theme";
 
 import { LANDING_STATS as stats } from "../lib/constants";
 

@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlmodel import Session, select
 from app.core.db import get_session
 from app.core.security import create_access_token, create_refresh_token, decode_token, verify_password, get_password_hash
-from app.schemas.models import User, UserCreate, UserLogin, GoogleLogin, UserRead, EmailVerification, PricingTier, UserPricingPlan
+from app.schemas.models import User, UserCreate, UserLogin, GoogleLogin, EmailVerification
 from datetime import datetime, timedelta, timezone
 import random
 from pydantic import BaseModel
@@ -175,7 +175,6 @@ def google_login(data: GoogleLogin, session: Session = Depends(get_session)):
         
         email = idinfo['email']
         google_id = idinfo['sub']
-        name = idinfo.get('name', email.split('@')[0])
         picture = idinfo.get('picture')
         
         # 2. Check if user exists by email or google_id

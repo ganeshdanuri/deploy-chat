@@ -5,7 +5,6 @@ import {
     ModalContent,
     ModalHeader,
     ModalBody,
-    ModalFooter,
     Button
 } from "@heroui/react";
 import { HiX } from "react-icons/hi";

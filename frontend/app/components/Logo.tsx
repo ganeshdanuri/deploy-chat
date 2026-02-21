@@ -1,6 +1,5 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
-
-import { theme } from "../theme";
 
 export default function Logo({ className = "h-10 w-auto" }: { className?: string }) {
     return (

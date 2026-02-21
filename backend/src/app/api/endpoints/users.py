@@ -2,9 +2,9 @@ from fastapi import APIRouter, Depends
 from sqlmodel import Session, select
 from app.api.deps import get_current_user
 from app.core.db import get_session
-from app.schemas.models import User, UsageTracking, PricingTier, UserPricingPlan, RecentActivity, RecentActivityRead
+from app.schemas.models import User, UsageTracking, UserPricingPlan, RecentActivity, RecentActivityRead
 from app.core.constants import STATUS_ACTIVE
-from typing import Optional, List
+from typing import List
 from app.core.endpoints import Endpoints
 
 router = APIRouter(prefix=Endpoints.USERS_PREFIX)

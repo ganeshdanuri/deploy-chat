@@ -1,7 +1,6 @@
 "use client";
 
 import { theme } from "../theme";
-import { HiArrowRight } from "react-icons/hi";
 
 export default function CTASection({ onGetStarted }: { onGetStarted: () => void }) {
     return (

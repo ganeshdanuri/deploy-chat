@@ -1,7 +1,7 @@
 "use client";
 
 import { theme } from "../theme";
-import { FaRobot, FaTwitter, FaGithub, FaLinkedin } from "react-icons/fa";
+import { FaTwitter, FaGithub, FaLinkedin } from "react-icons/fa";
 import Logo from "./Logo";
 
 const footerLinks = [

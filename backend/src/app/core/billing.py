@@ -1,6 +1,6 @@
 from sqlmodel import Session, select
 from fastapi import HTTPException, status
-from app.schemas.models import User, UsageTracking, PricingTier, UserPricingPlan, RecentActivity
+from app.schemas.models import User, UsageTracking, PricingTier, UserPricingPlan
 from app.core.constants import DEFAULT_PLAN_NAME, DEFAULT_FREE_PLAN_LIMIT, STATUS_ACTIVE
 from datetime import datetime, timezone
 from uuid import UUID
