@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "../context/AuthContext";
+import { GoogleLogin } from "@react-oauth/google";
 import { theme } from "../theme";
 import { HiUser, HiLockClosed, HiLogin } from "react-icons/hi";
 import Logo from "../components/Logo";
@@ -11,16 +12,27 @@ import gsap from "gsap";
 function LoginContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
-    const { login, register, isAuthenticated } = useAuth();
+    const { login, register, isAuthenticated, verifyOTP, continueWithGoogle } = useAuth();
 
     const [isRegister, setIsRegister] = useState(false);
+    const [isVerifying, setIsVerifying] = useState(false);
     const [selectedPlan, setSelectedPlan] = useState("free");
     const [username, setUsername] = useState("");
+    const [email, setEmail] = useState("");
+    const [otp, setOtp] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
     const [isLoading, setIsLoading] = useState(false);
 
     const leftSideRef = useRef<HTMLDivElement>(null);
+
+    const validateEmail = (email: string) => {
+        return String(email)
+            .toLowerCase()
+            .match(
+                /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+            );
+    };
 
     useEffect(() => {
         if (isAuthenticated) {
@@ -66,18 +78,38 @@ function LoginContent() {
         });
     }, []);
 
+    const handleVerifyOtp = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setError("");
+        setIsLoading(true);
+        try {
+            const success = await verifyOTP(email, otp);
+            if (success) {
+                router.push("/dashboard");
+            } else {
+                setError("Invalid or expired OTP");
+            }
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError("");
+
+        if (isRegister && !validateEmail(email)) {
+            setError("Please enter a valid email address.");
+            return;
+        }
+
         setIsLoading(true);
 
         try {
             if (isRegister) {
-                const success = await register(username, password, selectedPlan);
-                if (success) {
-                    router.push("/dashboard");
-                } else {
-                    setError("Registration failed. Data might be invalid or username taken.");
+                const result = await register(username, email, password, selectedPlan);
+                if (result.success) {
+                    setIsVerifying(true);
                 }
             } else {
                 const success = await login(username, password);
@@ -185,15 +217,17 @@ function LoginContent() {
                             </span>
                         </div>
                         <h2 className="text-3xl font-bold mb-2 text-slate-900 tracking-tight min-h-[1.2em]">
-                            {isRegister ? "Create an account" : "Welcome back"}
+                            {isVerifying ? "Verify your email" : isRegister ? "Create an account" : "Welcome back"}
                         </h2>
                         <p className="text-slate-500 font-medium mb-6">
-                            {isRegister
-                                ? "Join Deploy Mind today. All accounts start on our Free Plan."
-                                : "Please enter your details to continue."}
+                            {isVerifying
+                                ? `We've sent a 6-digit code to ${email}`
+                                : isRegister
+                                    ? "Join Deploy Mind today. All accounts start on our Free Plan."
+                                    : "Please enter your details to continue."}
                         </p>
 
-                        {!isRegister && (
+                        {!isVerifying && !isRegister && (
                             <div className="bg-slate-50 border border-slate-100 rounded-xl p-3 mb-6 flex items-start gap-3 opacity-80">
                                 <span className="flex-shrink-0 w-5 h-5 rounded-full bg-slate-400 text-white flex items-center justify-center text-[10px] font-bold mt-0.5">i</span>
                                 <p className="text-xs text-slate-600 leading-relaxed">
@@ -202,7 +236,7 @@ function LoginContent() {
                             </div>
                         )}
 
-                        {isRegister && (
+                        {!isVerifying && isRegister && (
                             <div className="bg-blue-50 border border-blue-100 rounded-xl p-3 mb-6 flex items-start gap-3 animate-fade-in shadow-sm">
                                 <span className="flex-shrink-0 w-5 h-5 rounded-full bg-blue-500 text-white flex items-center justify-center text-[10px] font-bold mt-0.5 animate-pulse">i</span>
                                 <p className="text-xs text-blue-800 leading-relaxed">
@@ -212,20 +246,22 @@ function LoginContent() {
                         )}
                     </div>
 
-                    <div className="mb-8 lg:text-left text-center">
-                        <p className="text-sm font-medium" style={{ color: theme.colors.neutral[600] }}>
-                            {isRegister ? "Already have an account?" : "Don't have an account?"}{" "}
-                            <button
-                                onClick={() => {
-                                    setIsRegister(!isRegister);
-                                    setError("");
-                                }}
-                                className="font-bold transition-colors text-blue-600 hover:text-blue-700 underline underline-offset-4"
-                            >
-                                {isRegister ? "Log in" : "Create one for free"}
-                            </button>
-                        </p>
-                    </div>
+                    {!isVerifying && (
+                        <div className="mb-8 lg:text-left text-center">
+                            <p className="text-sm font-medium" style={{ color: theme.colors.neutral[600] }}>
+                                {isRegister ? "Already have an account?" : "Don't have an account?"}{" "}
+                                <button
+                                    onClick={() => {
+                                        setIsRegister(!isRegister);
+                                        setError("");
+                                    }}
+                                    className="font-bold transition-colors text-blue-600 hover:text-blue-700 underline underline-offset-4"
+                                >
+                                    {isRegister ? "Log in" : "Create one for free"}
+                                </button>
+                            </p>
+                        </div>
+                    )}
 
                     {error && (
                         <div className="mb-4 p-3 border rounded-lg text-sm bg-red-50 text-red-600 border-red-200">
@@ -233,51 +269,99 @@ function LoginContent() {
                         </div>
                     )}
 
-                    <form onSubmit={handleSubmit} className="space-y-5">
-                        <div>
-                            <label className="mb-2 block text-sm font-bold text-slate-700">Email Address</label>
-                            <input
-                                type="text"
-                                required
-                                value={username}
-                                onChange={(e) => setUsername(e.target.value)}
-                                className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm focus:outline-none transition-all focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 bg-white placeholder:text-slate-400"
-                                placeholder="name@company.com"
-                            />
-                        </div>
-
-                        <div>
-                            <div className="flex items-center justify-between mb-2">
-                                <label className="block text-sm font-bold text-slate-700">Password</label>
-                                {!isRegister && (
-                                    <button type="button" className="text-xs font-bold text-blue-600 hover:text-blue-700 transition-colors">
-                                        Forgot password?
-                                    </button>
-                                )}
+                    {isVerifying ? (
+                        <form onSubmit={handleVerifyOtp} className="space-y-5">
+                            <div>
+                                <label className="mb-2 block text-sm font-bold text-slate-700">Verification Code</label>
+                                <input
+                                    type="text"
+                                    required
+                                    maxLength={6}
+                                    value={otp}
+                                    onChange={(e) => setOtp(e.target.value.replace(/\D/g, ''))}
+                                    className="w-full rounded-xl border border-slate-200 px-4 py-3 text-center text-2xl font-bold tracking-[0.5em] focus:outline-none transition-all focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 bg-white placeholder:text-slate-300"
+                                    placeholder="000000"
+                                />
                             </div>
-                            <input
-                                type="password"
-                                required
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                                className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm focus:outline-none transition-all focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 bg-white"
-                                placeholder="••••••••"
-                            />
-                        </div>
-
-                        <button
-                            type="submit"
-                            disabled={isLoading}
-                            className="w-full rounded-xl px-8 py-4 mt-4 text-sm font-bold transition-all hover:-translate-y-0.5 hover:shadow-xl active:scale-[0.99] flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed text-white shadow-lg shadow-blue-500/25"
-                            style={{ background: theme.gradients.primaryButton }}
-                        >
-                            {isLoading ? (
-                                <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                            ) : (
-                                isRegister ? "Create Free Account" : "Sign In"
+                            <button
+                                type="submit"
+                                disabled={isLoading}
+                                className="w-full rounded-xl px-8 py-4 mt-4 text-sm font-bold transition-all hover:-translate-y-0.5 hover:shadow-xl active:scale-[0.99] flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed text-white shadow-lg shadow-blue-500/25"
+                                style={{ background: theme.gradients.primaryButton }}
+                            >
+                                {isLoading ? (
+                                    <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                                ) : "Verify Email"}
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => setIsVerifying(false)}
+                                className="w-full text-sm font-bold text-slate-500 hover:text-slate-700 transition-colors"
+                            >
+                                Back to Register
+                            </button>
+                        </form>
+                    ) : (
+                        <form onSubmit={handleSubmit} className="space-y-5">
+                            {isRegister && (
+                                <div>
+                                    <label className="mb-2 block text-sm font-bold text-slate-700">Username</label>
+                                    <input
+                                        type="text"
+                                        required
+                                        value={username}
+                                        onChange={(e) => setUsername(e.target.value)}
+                                        className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm focus:outline-none transition-all focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 bg-white placeholder:text-slate-400"
+                                        placeholder="Enter username"
+                                    />
+                                </div>
                             )}
-                        </button>
-                    </form>
+
+                            <div>
+                                <label className="mb-2 block text-sm font-bold text-slate-700">Email Address</label>
+                                <input
+                                    type="email"
+                                    required
+                                    value={isRegister ? email : username}
+                                    onChange={(e) => isRegister ? setEmail(e.target.value) : setUsername(e.target.value)}
+                                    className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm focus:outline-none transition-all focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 bg-white placeholder:text-slate-400"
+                                    placeholder="name@company.com"
+                                />
+                            </div>
+
+                            <div>
+                                <div className="flex items-center justify-between mb-2">
+                                    <label className="block text-sm font-bold text-slate-700">Password</label>
+                                    {!isRegister && (
+                                        <button type="button" className="text-xs font-bold text-blue-600 hover:text-blue-700 transition-colors">
+                                            Forgot password?
+                                        </button>
+                                    )}
+                                </div>
+                                <input
+                                    type="password"
+                                    required
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm focus:outline-none transition-all focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 bg-white"
+                                    placeholder="••••••••"
+                                />
+                            </div>
+
+                            <button
+                                type="submit"
+                                disabled={isLoading}
+                                className="w-full rounded-xl px-8 py-4 mt-4 text-sm font-bold transition-all hover:-translate-y-0.5 hover:shadow-xl active:scale-[0.99] flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed text-white shadow-lg shadow-blue-500/25"
+                                style={{ background: theme.gradients.primaryButton }}
+                            >
+                                {isLoading ? (
+                                    <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                                ) : (
+                                    isRegister ? "Create Free Account" : "Sign In"
+                                )}
+                            </button>
+                        </form>
+                    )}
 
                     <div className="relative my-8">
                         <div className="absolute inset-0 flex items-center">
@@ -288,16 +372,24 @@ function LoginContent() {
                         </div>
                     </div>
 
-                    <div className="flex flex-col gap-4">
-                        <button className="w-full flex justify-center items-center gap-3 border border-slate-200 rounded-xl py-3 hover:bg-slate-50 hover:border-slate-300 transition-all text-sm font-bold text-slate-700 shadow-sm active:scale-[0.98]">
-                            <svg className="w-5 h-5" viewBox="0 0 24 24">
-                                <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
-                                <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
-                                <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" />
-                                <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
-                            </svg>
-                            Google
-                        </button>
+                    <div className="flex justify-center">
+                        <GoogleLogin
+                            onSuccess={async (credentialResponse) => {
+                                if (credentialResponse.credential) {
+                                    const success = await continueWithGoogle(credentialResponse.credential);
+                                    if (success) {
+                                        router.push("/dashboard");
+                                    }
+                                }
+                            }}
+                            onError={() => {
+                                setError("Google login failed");
+                            }}
+                            useOneTap
+                            width="280"
+                            theme="outline"
+                            shape="pill"
+                        />
                     </div>
 
                     <p className="mt-8 text-xs text-left text-slate-500">

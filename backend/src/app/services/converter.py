@@ -5,7 +5,7 @@ from markitdown import MarkItDown
 def convert_to_markdown(file_content: bytes, file_name: str) -> str:
     """
     Converts document bytes to markdown content using MarkItDown.
-    Supports .txt, .pdf, .ppt, .docx, .xlsx, etc.
+    Supports .txt, .pdf, .ppt, .docx, .xlsx, .csv, .md, etc.
     """
     markitdown = MarkItDown()
     

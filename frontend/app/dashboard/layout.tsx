@@ -10,6 +10,7 @@ import { fetchChatbots } from "@/lib/store/slices/chatbotsSlice";
 import { fetchDatasets } from "@/lib/store/slices/datasetsSlice";
 import { fetchDocuments } from "@/lib/store/slices/documentsSlice";
 import { fetchUsageStats } from "@/lib/store/slices/usageSlice";
+import { fetchUserMe } from "@/lib/store/slices/userSlice";
 import Logo from "../components/Logo";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
@@ -23,6 +24,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     const { status: datasetStatus } = useAppSelector((state) => state.datasets);
     const { status: documentStatus } = useAppSelector((state) => state.documents);
     const { status: usageStatus } = useAppSelector((state) => state.usage);
+    const { status: userStatus } = useAppSelector((state) => state.user);
 
     useEffect(() => {
         if (!isLoading && !isAuthenticated) {
@@ -34,8 +36,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             if (datasetStatus === "idle") dispatch(fetchDatasets());
             if (documentStatus === "idle") dispatch(fetchDocuments());
             if (usageStatus === "idle") dispatch(fetchUsageStats());
+            if (userStatus === "idle") dispatch(fetchUserMe());
         }
-    }, [isLoading, isAuthenticated, router, dispatch, chatbotStatus, datasetStatus, documentStatus, usageStatus]);
+    }, [isLoading, isAuthenticated, router, dispatch, chatbotStatus, datasetStatus, documentStatus, usageStatus, userStatus]);
 
     // Close sidebar on navigation (mobile)
     useEffect(() => {
@@ -69,8 +72,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
             <div className="flex-1 flex flex-col min-w-0 h-screen overflow-hidden">
                 <TopNav onMenuClick={() => setIsSidebarOpen(true)} />
-                <main className="flex-1 overflow-y-auto px-4 sm:px-6 py-4 sm:py-8">
-                    <div className="max-w-7xl mx-auto space-y-4 sm:space-y-6">
+                <main className="flex-1 overflow-y-auto px-4 sm:px-6">
+                    <div className="max-w-7xl mx-auto space-y-4 sm:space-y-6 py-10">
                         {children}
                     </div>
                 </main>

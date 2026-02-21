@@ -1,14 +1,7 @@
 from sqlmodel import Session, select
 from fastapi import HTTPException, status
-from app.schemas.models import User, UsageTracking
+from app.schemas.models import User, UsageTracking, PricingTier
 from datetime import datetime
-
-PLAN_LIMITS = {
-    "trial": 50,
-    "free": 10,
-    "professional": 5000,
-    "enterprise": 999999
-}
 
 def verify_plan_limits(user: User, session: Session):
     # 1. Get user tracking record
@@ -22,14 +15,19 @@ def verify_plan_limits(user: User, session: Session):
         session.commit()
         session.refresh(usage)
         
-    # 2. Check limits based on current_plan
-    plan = user.current_plan or "free"
-    limit = PLAN_LIMITS.get(plan, 0)
+    # 2. Get Limits from PricingTier via plan_id
+    plan_name = "free"
+    limit = 100 # Safe default
+    if user.plan_id:
+        plan = session.get(PricingTier, user.plan_id)
+        if plan:
+            plan_name = plan.name
+            limit = plan.monthly_limit
     
     if usage.message_count >= limit:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail=f"Usage limit reached for your {plan} plan ({limit} messages). Please upgrade to continue."
+            detail=f"Usage limit reached for your {plan_name} plan ({limit} messages). Please upgrade to continue."
         )
     
     return usage

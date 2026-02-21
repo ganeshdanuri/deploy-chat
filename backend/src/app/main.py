@@ -1,5 +1,13 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from dotenv import load_dotenv
+import os
+from pathlib import Path
+
+# Load environment variables from .env file
+env_path = Path(__file__).parent.parent / ".env"
+load_dotenv(dotenv_path=env_path)
+
 from app.api.router import api_router
 
 from app.core.db import init_db

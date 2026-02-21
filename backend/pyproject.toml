@@ -12,6 +12,10 @@ dependencies = [
     "pyjwt>=2.11.0",
     "sqlmodel>=0.0.32",
     "uvicorn>=0.40.0",
+    "resend>=2.6.0",
+    "python-dotenv>=1.2.1",
+    "passlib[bcrypt]",
+    "google-auth>=2.48.0",
 ]
 [project.scripts]
 dev = "uvicorn app.main:app --reload --app-dir src"

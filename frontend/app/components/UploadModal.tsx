@@ -102,7 +102,7 @@ export default function UploadModal({ isOpen, onClose, onUploadSuccess }: Upload
                         type="file"
                         onChange={handleFileChange}
                         className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                        accept=".pdf,.docx,.doc,.txt,.pptx,.ppt,.xlsx,.xls"
+                        accept=".pdf,.docx,.doc,.txt,.pptx,.ppt,.xlsx,.xls,.csv,.md"
                     />
                     <div className="w-16 h-16 bg-white shadow-xl rounded-2xl flex items-center justify-center mb-6 border border-slate-50">
                         <HiCloudUpload className="text-3xl text-indigo-600" />

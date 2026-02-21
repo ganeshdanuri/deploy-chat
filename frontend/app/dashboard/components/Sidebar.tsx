@@ -17,10 +17,16 @@ import {
     HiX,
     HiChevronLeft,
     HiChevronRight,
+    HiUser,
+    HiUsers,
+    HiCreditCard,
+    HiKey,
+    HiBell,
 } from "react-icons/hi";
 import { theme } from "../../theme";
 import { useState } from "react";
 import Logo from "../../components/Logo";
+import { useAppSelector } from "@/lib/store/hooks";
 
 const mainNavItems = [
     { id: "home", label: "Overview", path: "/dashboard", icon: HiHome },
@@ -32,8 +38,15 @@ const mainNavItems = [
 ];
 
 const secondaryNavItems = [
-    { id: "settings", label: "Settings", path: "/dashboard/settings", icon: HiCog },
     { id: "help", label: "Help & Support", path: "/dashboard/help", icon: HiQuestionMarkCircle },
+];
+
+const settingsNavItems = [
+    { id: "general", label: "Profile", path: "/dashboard/settings?tab=general", icon: HiUser },
+    { id: "team", label: "Team Members", path: "/dashboard/settings?tab=team", icon: HiUsers },
+    { id: "billing", label: "Billing & Plans", path: "/dashboard/settings?tab=billing", icon: HiCreditCard },
+    { id: "api-keys", label: "API Keys", path: "/dashboard/settings?tab=api-keys", icon: HiKey },
+    { id: "notifications", label: "Notifications", icon: HiBell },
 ];
 
 interface SidebarProps {
@@ -46,14 +59,14 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
     const router = useRouter();
     const { logout } = useAuth();
     const [isCollapsed, setIsCollapsed] = useState(false);
+    const { data: userData } = useAppSelector((state) => state.user);
 
     return (
         <aside
             className={`
-                relative fixed inset-y-0 left-0 z-50 bg-slate-50 border-r border-slate-200 flex flex-col transition-all duration-300 transform
-                lg:static lg:translate-x-0 lg:z-auto
-                    ${isOpen ? "translate-x-0 shadow-2xl" : "-translate-x-full"}
-                    ${isCollapsed ? "lg:w-[72px]" : "lg:w-64"}
+                fixed lg:static inset-y-0 left-0 z-50 bg-slate-50 border-r border-slate-200 flex flex-col transition-all duration-300 transform
+                ${isOpen ? "translate-x-0 shadow-2xl" : "-translate-x-full lg:translate-x-0"}
+                ${isCollapsed ? "lg:w-[72px]" : "lg:w-64"}
                 w-64
             `}
         >
@@ -71,7 +84,9 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                             <h2 className="text-sm font-black tracking-tight truncate text-slate-900">
                                 D<span style={{ color: "#4667ff" }}>E</span>PLOY M<span style={{ color: "#4667ff" }}>I</span>ND
                             </h2>
-                            <p className="text-[10px] font-bold text-indigo-500 uppercase tracking-tighter">Enterprise</p>
+                            <p className="text-[10px] font-bold text-indigo-500 uppercase tracking-tighter">
+                                {userData?.billing?.current_plan || "Free"}
+                            </p>
                         </div>
                     )}
                 </div>
@@ -125,26 +140,35 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                     })}
                 </nav>
 
-                {/* Separator / Categories */}
-                {!isCollapsed && (
-                    <div className="px-3">
-                        <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-2">Workspace</div>
-                        <div className="space-y-1">
-                            <button className="w-full flex items-center gap-3 px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 rounded-lg group">
-                                <div className="w-5 h-5 rounded-md border border-slate-200 bg-white flex items-center justify-center text-[10px] font-bold text-slate-500 group-hover:border-indigo-300">P</div>
-                                <span>Product Launch</span>
-                            </button>
-                            <button className="w-full flex items-center gap-3 px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 rounded-lg group">
-                                <div className="w-5 h-5 rounded-md border border-slate-200 bg-white flex items-center justify-center text-[10px] font-bold text-slate-500 group-hover:border-indigo-300">M</div>
-                                <span>Marketing Q1</span>
-                            </button>
-                            <button className="w-full flex items-center gap-3 px-3 py-2 text-xs font-medium text-indigo-600 hover:text-indigo-700 mt-2">
-                                <HiPlus className="w-3.5 h-3.5 mr-1.5" />
-                                New Project
-                            </button>
-                        </div>
-                    </div>
-                )}
+                {/* Settings Section */}
+                <div className={`${isCollapsed ? "px-2" : "px-3"}`}>
+                    {!isCollapsed && <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-2">Settings</div>}
+                    <nav className="space-y-0.5">
+                        {settingsNavItems.map((item) => {
+                            const Icon = item.icon;
+                            const isActive = pathname === item.path || (pathname === "/dashboard/settings" && item.id === "general" && !pathname.includes("?"));
+
+                            return (
+                                <Link
+                                    key={item.id}
+                                    href={item.path || "#"}
+                                    title={isCollapsed ? item.label : undefined}
+                                    className={`
+                                        relative group flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all
+                                        ${isCollapsed ? "justify-center" : ""}
+                                        ${isActive
+                                            ? "bg-white text-indigo-600 shadow-sm ring-1 ring-slate-200"
+                                            : "text-slate-500 hover:text-slate-900 hover:bg-slate-100"
+                                        }
+                                    `}
+                                >
+                                    <Icon className={`w-4 h-4 shrink-0 transition-colors ${isActive ? "text-indigo-600" : "text-slate-400 group-hover:text-slate-500"}`} />
+                                    {!isCollapsed && <span className="text-[13px]">{item.label}</span>}
+                                </Link>
+                            );
+                        })}
+                    </nav>
+                </div>
             </div>
 
             {/* Footer Navigation */}
@@ -182,17 +206,24 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
 
                 {/* User Profile Mini */}
                 <div className="mt-2 pt-2 border-t border-slate-200">
-                    <div className={`flex items-center gap-3 px-2 py-2 rounded-lg hover:bg-slate-100 cursor-pointer transition-colors ${isCollapsed ? "justify-center" : ""}`}>
+                    <div
+                        className={`flex items-center gap-3 px-2 py-2 rounded-lg hover:bg-slate-100 cursor-pointer transition-colors ${isCollapsed ? "justify-center" : ""}`}
+                        onClick={() => router.push("/dashboard/settings")}
+                    >
                         <div className="relative shrink-0">
                             <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-indigo-500 to-purple-500 flex items-center justify-center text-xs font-bold text-white shadow-sm ring-2 ring-white">
-                                CH
+                                {userData?.profile?.username?.substring(0, 2).toUpperCase() || "??"}
                             </div>
                             <div className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-green-500 border-2 border-white rounded-full"></div>
                         </div>
                         {!isCollapsed && (
                             <div className="flex-1 min-w-0">
-                                <div className="text-sm font-medium text-slate-900 truncate">Courtney Henry</div>
-                                <div className="text-xs text-slate-500 truncate">courtney@deploymind.ai</div>
+                                <div className="text-sm font-medium text-slate-900 truncate">
+                                    {userData?.profile?.username || "User"}
+                                </div>
+                                <div className="text-xs text-slate-500 truncate lowercase">
+                                    {userData?.billing?.current_plan} Plan
+                                </div>
                             </div>
                         )}
                         {!isCollapsed && (

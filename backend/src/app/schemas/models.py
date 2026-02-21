@@ -3,15 +3,26 @@ from uuid import UUID, uuid4
 from sqlmodel import Field, SQLModel
 from datetime import datetime
 
+class PricingTier(SQLModel, table=True):
+    __tablename__ = "pricing_tiers"
+    id: UUID = Field(default_factory=uuid4, primary_key=True)
+    name: str = Field(unique=True)
+    monthly_limit: int = Field(default=100)
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+
 class UserBase(SQLModel):
     username: str = Field(unique=True, index=True)
+    email: str = Field(unique=True, index=True)
     role: Optional[str] = Field(default=None)
 
 class User(UserBase, table=True):
     __tablename__ = "users"
     id: UUID = Field(default_factory=uuid4, primary_key=True)
-    password_hash: str
-    current_plan: str = Field(default="free")
+    password_hash: Optional[str] = Field(default=None)
+    google_id: Optional[str] = Field(default=None, unique=True, index=True)
+    profile_image: Optional[str] = Field(default=None)
+    plan_id: Optional[UUID] = Field(default=None, foreign_key="pricing_tiers.id")
+    is_email_verified: bool = Field(default=False)
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
 class UserCreate(UserBase):
@@ -19,13 +30,25 @@ class UserCreate(UserBase):
     plan: Optional[str] = Field(default="free")
 
 class UserLogin(SQLModel):
-    username: str
+    email: str
     password: str
+
+class GoogleLogin(SQLModel):
+    credential: str
 
 class UserRead(UserBase):
     id: UUID
-    current_plan: str
+    plan_id: Optional[UUID]
+    is_email_verified: bool
     created_at: datetime
+
+class EmailVerification(SQLModel, table=True):
+    __tablename__ = "email_verifications"
+    id: UUID = Field(default_factory=uuid4, primary_key=True)
+    email: str = Field(index=True)
+    otp_code: str
+    expires_at: datetime
+    created_at: datetime = Field(default_factory=datetime.utcnow)
 
 class DocumentBase(SQLModel):
     name: str = Field(index=True)
@@ -151,14 +174,3 @@ class UsageTracking(SQLModel, table=True):
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
 
-# Pricing Plans
-class UserPricingPlan(SQLModel, table=True):
-    __tablename__ = "user_pricing_plans"
-    id: UUID = Field(default_factory=uuid4, primary_key=True)
-    user_id: UUID = Field(foreign_key="users.id")
-    plan_name: str = Field(default="free")
-    status: str = Field(default="active")
-    started_at: datetime = Field(default_factory=datetime.utcnow)
-    expires_at: Optional[datetime] = Field(default=None)
-    created_at: datetime = Field(default_factory=datetime.utcnow)
-    updated_at: datetime = Field(default_factory=datetime.utcnow)

@@ -18,6 +18,7 @@ import {
   HiArrowRight,
   HiLightningBolt,
   HiRefresh,
+  HiCreditCard,
 } from "react-icons/hi";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
@@ -45,7 +46,7 @@ const ONBOARDING_STEPS: OnboardingStep[] = [
   {
     id: 1,
     name: "Upload Documents",
-    description: "Connect your knowledge base. Upload PDFs, CSVs, or text files for your AI to learn from.",
+    description: "Connect your knowledge base. Upload PDFs, CSVs, Markdown, or text files for your AI to learn from.",
     icon: HiDocumentText,
     href: "/dashboard/documents",
     color: "text-indigo-600",
@@ -100,6 +101,7 @@ export default function DashboardOverview() {
   const { items: datasets } = useAppSelector((state) => state.datasets);
   const { items: documents } = useAppSelector((state) => state.documents);
   const { message_count, token_count } = useAppSelector((state) => state.usage);
+  const { data: userData } = useAppSelector((state) => state.user);
 
   const hasData = chatbots.length > 0 || datasets.length > 0 || documents.length > 0;
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -148,7 +150,7 @@ export default function DashboardOverview() {
   );
 
   return (
-    <div ref={containerRef} className="min-h-[80vh] flex flex-col items-center justify-center py-10 px-4">
+    <div ref={containerRef} className="min-h-[80vh] flex flex-col items-center justify-center px-4">
       {isInitialLoading ? (
         <DashboardSkeleton />
       ) : hasData ? (
@@ -158,6 +160,7 @@ export default function DashboardOverview() {
           documents={documents}
           message_count={message_count}
           token_count={token_count}
+          userData={userData}
           isRefreshing={isRefreshing}
           onRefresh={() => loadData(true)}
         />
@@ -176,6 +179,7 @@ interface DashboardSummaryProps {
   documents: any[];
   message_count: number;
   token_count: number;
+  userData: any;
   isRefreshing: boolean;
   onRefresh: () => void;
 }
@@ -185,9 +189,13 @@ function DashboardSummary({
   datasets,
   message_count,
   token_count,
+  userData,
   isRefreshing,
   onRefresh,
 }: DashboardSummaryProps) {
+  const limit = userData?.billing?.monthly_limit || 100;
+  const usagePercentage = Math.min((message_count / limit) * 100, 100);
+
   return (
     <div className="w-full max-w-7xl animate-fade-in-up">
       {/* Page Header */}
@@ -204,6 +212,9 @@ function DashboardSummary({
             >
               <HiRefresh className="w-5 h-5" />
             </button>
+            <span className="bg-indigo-50 text-indigo-700 text-[10px] font-bold px-2 py-0.5 rounded-full border border-indigo-100 uppercase tracking-widest">
+              {userData?.billing?.current_plan || 'free'} plan
+            </span>
           </div>
           <p className="text-sm text-slate-500 mt-1 font-medium">
             Platform performance and activity summary for{" "}
@@ -211,14 +222,14 @@ function DashboardSummary({
           </p>
         </div>
         <div className="flex gap-2">
-          <button className="px-4 py-2 bg-white border border-slate-200 text-slate-700 text-sm font-medium rounded-lg shadow-sm hover:bg-slate-50 transition-all flex items-center gap-2">
-            <HiDocumentText className="w-4 h-4 text-slate-400" />
-            View Reports
-          </button>
-          <button className="px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg shadow-sm shadow-indigo-200 hover:bg-indigo-700 hover:shadow-md transition-all flex items-center gap-2">
+          <Link href="/dashboard/settings" className="px-4 py-2 bg-white border border-slate-200 text-slate-700 text-sm font-medium rounded-lg shadow-sm hover:bg-slate-50 transition-all flex items-center gap-2">
+            <HiCreditCard className="w-4 h-4 text-slate-400" />
+            Billing
+          </Link>
+          <Link href="/dashboard/chatbots" className="px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg shadow-sm shadow-indigo-200 hover:bg-indigo-700 hover:shadow-md transition-all flex items-center gap-2">
             <HiPlus className="w-4 h-4" />
             New Project
-          </button>
+          </Link>
         </div>
       </div>
 
@@ -226,13 +237,22 @@ function DashboardSummary({
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <MetricCard
           icon={HiChatAlt2}
-          label="Total Messages"
-          value={message_count.toLocaleString()}
-          trend="+12.5% this week"
+          label="Message Usage"
+          value={`${message_count.toLocaleString()} / ${limit.toLocaleString()}`}
+          trend={`${usagePercentage.toFixed(1)}% of limit used`}
           accentClass="text-indigo-600"
           accentBg="bg-indigo-50"
           ringClass="ring-indigo-100"
-          trendPositive
+          trendPositive={usagePercentage < 80}
+          href="/dashboard/analytics"
+          details={
+            <div className="mt-4 h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
+              <div
+                className={`h-full transition-all duration-1000 ${usagePercentage > 90 ? 'bg-red-500' : 'bg-indigo-600'}`}
+                style={{ width: `${usagePercentage}%` }}
+              />
+            </div>
+          }
         />
         <MetricCard
           icon={HiDatabase}
@@ -244,6 +264,7 @@ function DashboardSummary({
           ringClass="ring-emerald-100"
           trendPositive={false}
           trendNeutral
+          href="/dashboard/datasets"
         />
         <MetricCard
           icon={HiSparkles}
@@ -255,6 +276,7 @@ function DashboardSummary({
           ringClass="ring-amber-100"
           trendPositive={false}
           trendNeutral
+          href="/dashboard/analytics"
         />
       </div>
 
@@ -279,11 +301,13 @@ interface MetricCardProps {
   ringClass: string;
   trendPositive: boolean;
   trendNeutral?: boolean;
+  href: string;
+  details?: React.ReactNode;
 }
 
-function MetricCard({ icon: Icon, label, value, trend, accentClass, accentBg, ringClass, trendPositive, trendNeutral }: MetricCardProps) {
+function MetricCard({ icon: Icon, label, value, trend, accentClass, accentBg, ringClass, trendPositive, trendNeutral, href, details }: MetricCardProps) {
   return (
-    <div className="p-6 bg-white rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow group cursor-pointer relative overflow-hidden">
+    <Link href={href} className="p-6 bg-white rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow group cursor-pointer relative overflow-hidden block">
       <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
         <Icon className={`w-24 h-24 ${accentClass} transform translate-x-4 -translate-y-4`} />
       </div>
@@ -299,7 +323,8 @@ function MetricCard({ icon: Icon, label, value, trend, accentClass, accentBg, ri
         {trendPositive && <HiTrendingUp className="w-3.5 h-3.5" />}
         <span className={trendPositive ? "font-mono" : ""}>{trend}</span>
       </div>
-    </div>
+      {details && <div className="relative z-10">{details}</div>}
+    </Link>
   );
 }
 
@@ -313,14 +338,16 @@ const QUICK_ACTIONS = [
     hoverBorder: "hover:border-indigo-400 hover:bg-indigo-50/50",
     iconBg: "bg-indigo-50 text-indigo-600",
     hoverText: "group-hover:text-indigo-700",
+    href: "/dashboard/chatbots",
   },
   {
     label: "Add Knowledge Source",
-    description: "Upload PDF, CSV or scrape URL",
+    description: "Upload PDF, CSV, Markdown or scrape URL",
     icon: HiDatabase,
     hoverBorder: "hover:border-emerald-400 hover:bg-emerald-50/50",
     iconBg: "bg-emerald-50 text-emerald-600",
     hoverText: "group-hover:text-emerald-700",
+    href: "/dashboard/documents",
   },
   {
     label: "Playground",
@@ -329,6 +356,7 @@ const QUICK_ACTIONS = [
     hoverBorder: "hover:border-amber-400 hover:bg-amber-50/50",
     iconBg: "bg-amber-50 text-amber-600",
     hoverText: "group-hover:text-amber-700",
+    href: "/dashboard/playground",
   },
 ];
 
@@ -337,13 +365,14 @@ function QuickActionsPanel() {
     <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6 lg:col-span-1 h-full flex flex-col">
       <div className="flex items-center justify-between mb-6">
         <h3 className="text-base font-bold text-slate-800">Quick Actions</h3>
-        <button className="text-xs text-indigo-600 font-medium hover:underline">View All</button>
+        <Link href="/dashboard/chatbots" className="text-xs text-indigo-600 font-medium hover:underline">View All</Link>
       </div>
       <div className="space-y-3 flex-1">
         {QUICK_ACTIONS.map((action) => (
-          <button
+          <Link
             key={action.label}
-            className={`w-full flex items-center gap-4 p-3 rounded-xl border border-dashed border-slate-300 ${action.hoverBorder} transition-all group text-left`}
+            href={action.href}
+            className={`w-full flex items-center gap-4 p-3 rounded-xl border border-dashed border-slate-300 ${action.hoverBorder} transition-all group text-left block`}
           >
             <div className={`w-10 h-10 rounded-lg ${action.iconBg} flex items-center justify-center group-hover:scale-110 transition-transform shadow-sm`}>
               <action.icon className="w-5 h-5" />
@@ -352,7 +381,7 @@ function QuickActionsPanel() {
               <h4 className={`text-sm font-semibold text-slate-900 ${action.hoverText}`}>{action.label}</h4>
               <p className="text-xs text-slate-500 mt-0.5">{action.description}</p>
             </div>
-          </button>
+          </Link>
         ))}
       </div>
     </div>
@@ -500,9 +529,9 @@ function OnboardingView({ cardsRef }: { cardsRef: React.RefObject<HTMLDivElement
       <div className="hero-content mt-16 text-center">
         <p className="text-[13px] text-slate-400">
           New to Deploy Mind?{" "}
-          <a href="#" className="font-bold text-indigo-500 hover:underline">Watch a 2-minute intro</a>{" "}
+          <Link href="/dashboard/help" className="font-bold text-indigo-500 hover:underline">Watch a 2-minute intro</Link>{" "}
           or{" "}
-          <a href="#" className="font-bold text-indigo-500 hover:underline">read documentation</a>
+          <Link href="/dashboard/help" className="font-bold text-indigo-500 hover:underline">read documentation</Link>
         </p>
       </div>
     </div>
