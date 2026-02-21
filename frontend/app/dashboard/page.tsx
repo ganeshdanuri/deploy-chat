@@ -222,11 +222,11 @@ function DashboardSummary({
           </p>
         </div>
         <div className="flex gap-2">
-          <Link href="/dashboard/settings" className="px-4 py-2 bg-white border border-slate-200 text-slate-700 text-sm font-medium rounded-lg shadow-sm hover:bg-slate-50 transition-all flex items-center gap-2">
+          <Link href="/dashboard/settings" className="px-4 py-1.5 bg-white border border-slate-200 text-slate-700 text-sm font-medium rounded-lg shadow-sm hover:bg-slate-50 transition-all flex items-center gap-2">
             <HiCreditCard className="w-4 h-4 text-slate-400" />
             Billing
           </Link>
-          <Link href="/dashboard/chatbots" className="px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg shadow-sm shadow-indigo-200 hover:bg-indigo-700 hover:shadow-md transition-all flex items-center gap-2">
+          <Link href="/dashboard/chatbots" className="px-4 py-1.5 bg-indigo-600 text-white text-sm font-medium rounded-lg shadow-sm shadow-indigo-200 hover:bg-indigo-700 hover:shadow-md transition-all flex items-center gap-2">
             <HiPlus className="w-4 h-4" />
             New Project
           </Link>
@@ -518,7 +518,7 @@ function OnboardingView({ cardsRef }: { cardsRef: React.RefObject<HTMLDivElement
               </p>
               <Link
                 href={step.href}
-                className="flex items-center justify-between w-full px-4 py-2.5 rounded-xl bg-slate-50 text-slate-600 border border-slate-200 text-[13px] font-bold transition-all duration-300 group/btn hover:bg-slate-100"
+                className="flex items-center justify-between w-full px-4 py-1.5 rounded-xl bg-slate-50 text-slate-600 border border-slate-200 text-[13px] font-bold transition-all duration-300 group/btn hover:bg-slate-100"
               >
                 <span>{step.btnText}</span>
                 <HiArrowRight className="w-4 h-4 transform group-hover/btn:translate-x-1 transition-transform" />

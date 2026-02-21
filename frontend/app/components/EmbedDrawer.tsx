@@ -92,7 +92,7 @@ export default function EmbedDrawer({ isOpen, onClose, chatbot }: EmbedDrawerPro
                 <section>
                     <div className="flex items-center gap-2 mb-3">
                         <span className="w-5 h-5 rounded-full bg-indigo-100 text-indigo-700 text-[10px] font-bold flex items-center justify-center">1</span>
-                        <h3 className="text-sm font-semibold text-slate-800 flex items-center gap-1.5">
+                        <h3 className="text-xl font-semibold text-slate-800 flex items-center gap-1.5">
                             <HiChip className="w-4 h-4 text-slate-400" />
                             Embed Token
                         </h3>
@@ -119,7 +119,7 @@ export default function EmbedDrawer({ isOpen, onClose, chatbot }: EmbedDrawerPro
                 <section>
                     <div className="flex items-center gap-2 mb-3">
                         <span className="w-5 h-5 rounded-full bg-indigo-100 text-indigo-700 text-[10px] font-bold flex items-center justify-center">2</span>
-                        <h3 className="text-sm font-semibold text-slate-800 flex items-center gap-1.5">
+                        <h3 className="text-xl font-semibold text-slate-800 flex items-center gap-1.5">
                             <HiColorSwatch className="w-4 h-4 text-slate-400" />
                             Customise
                         </h3>
@@ -182,7 +182,7 @@ export default function EmbedDrawer({ isOpen, onClose, chatbot }: EmbedDrawerPro
                 <section>
                     <div className="flex items-center gap-2 mb-3">
                         <span className="w-5 h-5 rounded-full bg-indigo-100 text-indigo-700 text-[10px] font-bold flex items-center justify-center">3</span>
-                        <h3 className="text-sm font-semibold text-slate-800 flex items-center gap-1.5">
+                        <h3 className="text-xl font-semibold text-slate-800 flex items-center gap-1.5">
                             <HiGlobe className="w-4 h-4 text-slate-400" />
                             Preview
                         </h3>
@@ -229,7 +229,7 @@ export default function EmbedDrawer({ isOpen, onClose, chatbot }: EmbedDrawerPro
                     <div className="flex items-center justify-between mb-3">
                         <div className="flex items-center gap-2">
                             <span className="w-5 h-5 rounded-full bg-indigo-100 text-indigo-700 text-[10px] font-bold flex items-center justify-center">4</span>
-                            <h3 className="text-sm font-semibold text-slate-800">Embed Code</h3>
+                            <h3 className="text-xl font-semibold text-slate-800">Embed Code</h3>
                         </div>
                         <Button
                             size="sm"

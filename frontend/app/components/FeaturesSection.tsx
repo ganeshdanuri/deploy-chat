@@ -21,7 +21,7 @@ export default function FeaturesSection() {
             Powerful Features
           </div>
           <h2
-            className="mb-6 text-4xl md:text-5xl font-bold tracking-tight"
+            className="text-2xl font-semibold mb-6 tracking-tight"
             style={{ color: theme.colors.neutral[900] }}
           >
             Everything you need to build <br className="hidden md:block" />
@@ -68,7 +68,7 @@ export default function FeaturesSection() {
                 </div>
 
                 <h3
-                  className="mb-3 text-xl font-bold"
+                  className="text-xl font-semibold mb-3"
                   style={{ color: theme.colors.neutral[900] }}
                 >
                   {feature.title}
@@ -88,7 +88,7 @@ export default function FeaturesSection() {
         <div className="mt-20 text-center">
           <p className="text-slate-500 mb-6 font-medium">Ready to transform your customer experience?</p>
           <button
-            className="px-8 py-4 rounded-full text-white font-semibold text-lg shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all"
+            className="text-sm font-medium px-8 py-4 rounded-full text-white shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all"
             style={{ background: theme.gradients.primaryButton }}
           >
             Start Building Now

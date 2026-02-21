@@ -129,24 +129,26 @@ export default function DocumentsPage() {
                 title="Documents"
                 description="View and manage chunked documents for RAG."
                 actions={
-                    <>
-                        <Button
-                            onPress={handleRefresh}
-                            variant="bordered"
-                            startContent={<HiRefresh className="w-4 h-4 text-slate-400" />}
-                            className="bg-white border-slate-200 text-slate-700 text-sm font-medium rounded-lg"
-                        >
-                            Refresh
-                        </Button>
-                        <Button
-                            onPress={() => setIsUploadModalOpen(true)}
-                            color="primary"
-                            startContent={<HiPlus className="w-4 h-4" />}
-                            className="bg-indigo-600 text-white text-sm font-medium rounded-lg shadow-indigo-200"
-                        >
-                            Upload Document
-                        </Button>
-                    </>
+                    (documents.length > 0 || isLoading) ? (
+                        <>
+                            <Button
+                                onPress={handleRefresh}
+                                variant="bordered"
+                                startContent={<HiRefresh className="w-4 h-4 text-slate-400" />}
+                                className="bg-white border-slate-200 text-slate-700 text-xs sm:text-sm font-medium rounded-lg"
+                            >
+                                Refresh
+                            </Button>
+                            <Button
+                                onPress={() => setIsUploadModalOpen(true)}
+                                color="primary"
+                                startContent={<HiPlus className="w-4 h-4" />}
+                                className="bg-indigo-600 text-white text-xs sm:text-sm font-medium rounded-lg shadow-indigo-200"
+                            >
+                                Upload Document
+                            </Button>
+                        </>
+                    ) : null
                 }
             />
 

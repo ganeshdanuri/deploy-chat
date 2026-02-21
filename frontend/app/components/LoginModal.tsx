@@ -86,7 +86,7 @@ export default function LoginModal({ isOpen, onClose, initialMode = 'login', ini
         {/* Close Button */}
         <button
           onClick={handleClose}
-          className="absolute top-4 right-4 p-1 transition-colors hover:bg-gray-100 rounded-full"
+          className="text-sm font-medium absolute top-4 right-4 p-1 transition-colors hover:bg-gray-100 rounded-full"
           style={{ color: theme.colors.neutral[400] }}
         >
           <HiX className="text-2xl" />
@@ -98,7 +98,7 @@ export default function LoginModal({ isOpen, onClose, initialMode = 'login', ini
             <Logo className="h-12 w-auto" />
           </div>
           <h1
-            className="text-2xl font-semibold"
+            className="text-4xl font-bold"
             style={{ color: theme.colors.neutral[900] }}
           >
             {isRegister ? "Create an account" : "Sign in to your account"}
@@ -129,7 +129,7 @@ export default function LoginModal({ isOpen, onClose, initialMode = 'login', ini
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label
-              className="mb-1 block text-sm font-medium"
+              className="text-sm font-medium mb-1 block"
               style={{ color: theme.colors.neutral[700] }}
             >
               Username
@@ -155,7 +155,7 @@ export default function LoginModal({ isOpen, onClose, initialMode = 'login', ini
 
           <div>
             <label
-              className="mb-1 block text-sm font-medium"
+              className="text-sm font-medium mb-1 block"
               style={{ color: theme.colors.neutral[700] }}
             >
               Password
@@ -182,7 +182,7 @@ export default function LoginModal({ isOpen, onClose, initialMode = 'login', ini
           {isRegister && (
             <div>
               <label
-                className="mb-1 block text-sm font-medium"
+                className="text-sm font-medium mb-1 block"
                 style={{ color: theme.colors.neutral[700] }}
               >
                 Confirm Password
@@ -210,7 +210,7 @@ export default function LoginModal({ isOpen, onClose, initialMode = 'login', ini
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full rounded-lg px-4 py-2.5 text-sm font-medium text-white transition-all hover:-translate-y-0.5 hover:shadow-md flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="text-sm font-medium w-full rounded-lg px-4 py-2.5 text-white transition-all hover:-translate-y-0.5 hover:shadow-md flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
             style={{
               background: theme.gradients.primaryButton,
               boxShadow: theme.shadows.sm

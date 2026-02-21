@@ -155,7 +155,7 @@ function LoginContent() {
                         <span className="text-xs font-bold tracking-wider text-blue-400 uppercase">Next-Generation Platform</span>
                     </div>
 
-                    <h1 className="text-6xl font-black mb-8 gsap-text leading-[1.1] tracking-tight text-white">
+                    <h1 className="text-4xl font-bold mb-8 gsap-text leading-[1.1] tracking-tight text-white">
                         Powering the <br />
                         <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-300">
                             Autonomous Future
@@ -178,10 +178,10 @@ function LoginContent() {
                     </div>
 
                     <div className="flex items-center gap-6 gsap-text">
-                        <button className="px-8 py-3 rounded-xl bg-white text-slate-900 font-bold hover:bg-blue-50 transition-all transform hover:-translate-y-1 shadow-lg shadow-white/5">
+                        <button className="text-sm font-medium px-8 py-3 rounded-xl bg-white text-slate-900 hover:bg-blue-50 transition-all transform hover:-translate-y-1 shadow-lg shadow-white/5">
                             Platform Overview
                         </button>
-                        <button className="text-white hover:text-blue-300 transition-colors font-semibold flex items-center gap-2 group border-b border-transparent hover:border-blue-300 pb-1">
+                        <button className="text-sm font-medium text-white hover:text-blue-300 transition-colors flex items-center gap-2 group border-b border-transparent hover:border-blue-300 pb-1">
                             Documentation
                             <span className="transform group-hover:translate-x-1 transition-transform">→</span>
                         </button>
@@ -215,7 +215,7 @@ function LoginContent() {
                                 DEPLOY CHAT
                             </span>
                         </div>
-                        <h2 className="text-3xl font-bold mb-2 text-slate-900 tracking-tight min-h-[1.2em]">
+                        <h2 className="text-2xl font-semibold mb-2 text-slate-900 tracking-tight min-h-[1.2em]">
                             {isVerifying ? "Verify your email" : isRegister ? "Create an account" : "Welcome back"}
                         </h2>
                         <p className="text-slate-500 font-medium mb-6">
@@ -271,7 +271,7 @@ function LoginContent() {
                     {isVerifying ? (
                         <form onSubmit={handleVerifyOtp} className="space-y-5">
                             <div>
-                                <label className="mb-2 block text-sm font-bold text-slate-700">Verification Code</label>
+                                <label className="text-sm font-medium mb-2 block text-slate-700">Verification Code</label>
                                 <input
                                     type="text"
                                     required
@@ -285,7 +285,7 @@ function LoginContent() {
                             <button
                                 type="submit"
                                 disabled={isLoading}
-                                className="w-full rounded-xl px-8 py-4 mt-4 text-sm font-bold transition-all hover:-translate-y-0.5 hover:shadow-xl active:scale-[0.99] flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed text-white shadow-lg shadow-blue-500/25"
+                                className="text-sm font-medium w-full rounded-xl px-8 py-4 mt-4 transition-all hover:-translate-y-0.5 hover:shadow-xl active:scale-[0.99] flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed text-white shadow-lg shadow-blue-500/25"
                                 style={{ background: theme.gradients.primaryButton }}
                             >
                                 {isLoading ? (
@@ -304,7 +304,7 @@ function LoginContent() {
                         <form onSubmit={handleSubmit} className="space-y-5">
                             {isRegister && (
                                 <div>
-                                    <label className="mb-2 block text-sm font-bold text-slate-700">Username</label>
+                                    <label className="text-sm font-medium mb-2 block text-slate-700">Username</label>
                                     <input
                                         type="text"
                                         required
@@ -317,7 +317,7 @@ function LoginContent() {
                             )}
 
                             <div>
-                                <label className="mb-2 block text-sm font-bold text-slate-700">Email Address</label>
+                                <label className="text-sm font-medium mb-2 block text-slate-700">Email Address</label>
                                 <input
                                     type="email"
                                     required
@@ -330,9 +330,9 @@ function LoginContent() {
 
                             <div>
                                 <div className="flex items-center justify-between mb-2">
-                                    <label className="block text-sm font-bold text-slate-700">Password</label>
+                                    <label className="text-sm font-medium block text-slate-700">Password</label>
                                     {!isRegister && (
-                                        <button type="button" className="text-xs font-bold text-blue-600 hover:text-blue-700 transition-colors">
+                                        <button type="button" className="text-sm font-medium text-blue-600 hover:text-blue-700 transition-colors">
                                             Forgot password?
                                         </button>
                                     )}
@@ -350,7 +350,7 @@ function LoginContent() {
                             <button
                                 type="submit"
                                 disabled={isLoading}
-                                className="w-full rounded-xl px-8 py-4 mt-4 text-sm font-bold transition-all hover:-translate-y-0.5 hover:shadow-xl active:scale-[0.99] flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed text-white shadow-lg shadow-blue-500/25"
+                                className="text-sm font-medium w-full rounded-xl px-8 py-4 mt-4 transition-all hover:-translate-y-0.5 hover:shadow-xl active:scale-[0.99] flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed text-white shadow-lg shadow-blue-500/25"
                                 style={{ background: theme.gradients.primaryButton }}
                             >
                                 {isLoading ? (
@@ -393,8 +393,8 @@ function LoginContent() {
 
                     <p className="mt-8 text-xs text-left text-slate-500">
                         By continuing, you are agreeing to our{" "}
-                        <button className="underline hover:text-slate-700">Terms of Service</button> and{" "}
-                        <button className="underline hover:text-slate-700">Privacy Policy</button>.
+                        <button className="text-sm font-medium underline hover:text-slate-700">Terms of Service</button> and{" "}
+                        <button className="text-sm font-medium underline hover:text-slate-700">Privacy Policy</button>.
                     </p>
                 </div>
             </div>

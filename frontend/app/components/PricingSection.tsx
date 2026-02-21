@@ -23,7 +23,7 @@ export default function PricingSection() {
                         <HiSparkles className="w-4 h-4" />
                         Pricing Plans
                     </div>
-                    <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-slate-900 tracking-tight mb-8">
+                    <h2 className="text-2xl font-semibold text-slate-900 tracking-tight mb-8">
                         Scales with your <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">business</span>
                     </h2>
                     <p className="text-lg md:text-xl text-slate-600 leading-relaxed max-w-2xl mx-auto">
@@ -47,7 +47,7 @@ export default function PricingSection() {
                             )}
 
                             <div className="mb-8 relative z-10 pt-4">
-                                <h4 className={`text-lg font-semibold mb-4 ${plan.popular ? 'text-indigo-300' : 'text-indigo-600'}`}>
+                                <h4 className={`text-lg font-medium mb-4 ${plan.popular ? 'text-indigo-300' : 'text-indigo-600'}`}>
                                     {plan.name}
                                 </h4>
                                 <div className="flex items-baseline gap-1 mb-4">

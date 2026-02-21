@@ -68,7 +68,7 @@ export default function Footer() {
                     {/* Links */}
                     {footerLinks.map((column) => (
                         <div key={column.title} className="col-span-1 space-y-6">
-                            <h4 className="text-sm font-bold uppercase tracking-wider" style={{ color: theme.colors.neutral[900] }}>
+                            <h4 className="text-lg font-medium uppercase tracking-wider" style={{ color: theme.colors.neutral[900] }}>
                                 {column.title}
                             </h4>
                             <ul className="space-y-4">
@@ -89,7 +89,7 @@ export default function Footer() {
 
                     {/* Newsletter */}
                     <div className="col-span-2 lg:col-span-2 space-y-6">
-                        <h4 className="text-sm font-bold uppercase tracking-wider" style={{ color: theme.colors.neutral[900] }}>
+                        <h4 className="text-lg font-medium uppercase tracking-wider" style={{ color: theme.colors.neutral[900] }}>
                             Stay Updated
                         </h4>
                         <p className="text-sm" style={{ color: theme.colors.neutral[600] }}>
@@ -99,11 +99,11 @@ export default function Footer() {
                             <input
                                 type="email"
                                 placeholder="Email address"
-                                className="flex-1 px-4 py-2.5 rounded-xl border text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                                className="text-sm flex-1 px-4 py-2.5 rounded-xl border focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                                 style={{ borderColor: theme.colors.neutral[300], backgroundColor: theme.colors.neutral[50] }}
                             />
                             <button
-                                className="px-6 py-2.5 rounded-xl text-white text-sm font-bold transition-all hover:-translate-y-0.5"
+                                className="text-sm font-medium px-6 py-2.5 rounded-xl text-white transition-all hover:-translate-y-0.5"
                                 style={{ backgroundColor: theme.colors.primary.main }}
                             >
                                 Join

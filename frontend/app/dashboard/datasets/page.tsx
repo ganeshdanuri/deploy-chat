@@ -94,24 +94,26 @@ export default function DatasetsPage() {
                 title="Datasets"
                 description="Manage your knowledge sources and integrations."
                 actions={
-                    <>
-                        <Button
-                            onPress={() => dispatch(fetchDatasets())}
-                            variant="bordered"
-                            startContent={<HiRefresh className="w-4 h-4 text-slate-400" />}
-                            className="bg-white border-slate-200 text-slate-700 font-medium rounded-lg"
-                        >
-                            Refresh
-                        </Button>
-                        <Button
-                            onPress={() => setIsModalOpen(true)}
-                            color="success"
-                            startContent={<HiPlus className="w-4 h-4" />}
-                            className="bg-emerald-600 text-white text-sm font-medium rounded-lg shadow-emerald-200"
-                        >
-                            New Dataset
-                        </Button>
-                    </>
+                    (datasets.length > 0 || isLoading) ? (
+                        <>
+                            <Button
+                                onPress={() => dispatch(fetchDatasets())}
+                                variant="bordered"
+                                startContent={<HiRefresh className="w-4 h-4 text-slate-400" />}
+                                className="bg-white border-slate-200 text-slate-700 text-xs sm:text-sm font-medium rounded-lg"
+                            >
+                                Refresh
+                            </Button>
+                            <Button
+                                onPress={() => setIsModalOpen(true)}
+                                color="success"
+                                startContent={<HiPlus className="w-4 h-4" />}
+                                className="bg-emerald-600 text-white text-xs sm:text-sm font-medium rounded-lg shadow-emerald-200"
+                            >
+                                New Dataset
+                            </Button>
+                        </>
+                    ) : null
                 }
             />
 

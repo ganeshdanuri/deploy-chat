@@ -13,18 +13,18 @@ export default function FAQSection() {
         <section className="py-24 bg-transparent">
             <div className="max-w-4xl mx-auto px-6">
                 <div className="text-center mb-16">
-                    <h2
+                    <p
                         className="text-sm font-bold tracking-widest uppercase mb-3"
                         style={{ color: theme.colors.primary.main }}
                     >
                         Support
-                    </h2>
-                    <h3
-                        className="text-4xl font-bold mb-6"
+                    </p>
+                    <h2
+                        className="text-2xl font-semibold mb-6"
                         style={{ color: theme.colors.neutral[900] }}
                     >
                         Frequently Asked Questions
-                    </h3>
+                    </h2>
                 </div>
 
                 <div className="space-y-4">

@@ -40,21 +40,21 @@ export default function IntegrationSection() {
         <section id="integration" className="py-24 bg-transparent overflow-hidden">
             <div className="max-w-7xl mx-auto px-6">
                 <div className="text-center max-w-3xl mx-auto mb-20">
-                    <h2
+                    <p
                         className="text-sm font-bold tracking-widest uppercase mb-3"
                         style={{ color: theme.colors.primary.main }}
                     >
                         Seamless Integration
-                    </h2>
-                    <h3
-                        className="text-4xl md:text-5xl font-bold mb-6"
+                    </p>
+                    <h2
+                        className="text-2xl font-semibold mb-6"
                         style={{ color: theme.colors.neutral[900] }}
                     >
                         From Knowledge to Live Chat <br />
                         <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">
                             in 4 Simple Steps
                         </span>
-                    </h3>
+                    </h2>
                     <p
                         className="text-lg"
                         style={{ color: theme.colors.neutral[600] }}
@@ -91,7 +91,7 @@ export default function IntegrationSection() {
                             </div>
 
                             <h4
-                                className="text-xl font-bold mb-3"
+                                className="text-lg font-medium mb-3"
                                 style={{ color: theme.colors.neutral[900] }}
                             >
                                 {step.title}

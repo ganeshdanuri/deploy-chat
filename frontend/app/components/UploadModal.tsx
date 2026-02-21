@@ -103,7 +103,7 @@ export default function UploadModal({ isOpen, onClose, onUploadSuccess }: Upload
                     <input
                         type="file"
                         onChange={handleFileChange}
-                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                        className="text-sm absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                         accept=".pdf,.docx,.doc,.txt,.pptx,.ppt,.xlsx,.xls,.csv,.md"
                     />
                     <div className="w-16 h-16 bg-white shadow-xl rounded-2xl flex items-center justify-center mb-6 border border-slate-50">
@@ -125,7 +125,7 @@ export default function UploadModal({ isOpen, onClose, onUploadSuccess }: Upload
                             <HiLightningBolt className="w-5 h-5 text-amber-500" />
                         </div>
                         <div>
-                            <h4 className="text-sm font-medium text-slate-700">Auto-Markdown Conversion</h4>
+                            <h4 className="text-lg font-medium text-slate-700">Auto-Markdown Conversion</h4>
                             <p className="text-xs text-slate-500 mt-1 leading-relaxed">We'll automatically extract text and structure from your document to make it queryable.</p>
                         </div>
                     </CardBody>

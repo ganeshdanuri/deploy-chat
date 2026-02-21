@@ -11,19 +11,19 @@ export default function TestimonialsSection() {
         <section id="testimonials" className="py-24 bg-transparent">
             <div className="max-w-7xl mx-auto px-6">
                 <div className="text-center max-w-3xl mx-auto mb-20">
-                    <h2
+                    <p
                         className="text-sm font-bold tracking-widest uppercase mb-3"
                         style={{ color: theme.colors.primary.main }}
                     >
                         Social Proof
-                    </h2>
-                    <h3
-                        className="text-4xl md:text-5xl font-bold mb-6"
+                    </p>
+                    <h2
+                        className="text-2xl font-semibold mb-6"
                         style={{ color: theme.colors.neutral[900] }}
                     >
                         Trusted by the world's <br />
                         most innovative teams
-                    </h3>
+                    </h2>
                 </div>
 
                 <div className="grid md:grid-cols-3 gap-8">
@@ -51,7 +51,7 @@ export default function TestimonialsSection() {
                                     className="w-12 h-12 rounded-full grayscale group-hover:grayscale-0 transition-all"
                                 />
                                 <div>
-                                    <h4 className="font-bold" style={{ color: theme.colors.neutral[900] }}>
+                                    <h4 className="text-lg font-medium" style={{ color: theme.colors.neutral[900] }}>
                                         {testimonial.name}
                                     </h4>
                                     <p className="text-sm" style={{ color: theme.colors.neutral[500] }}>

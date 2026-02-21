@@ -66,7 +66,7 @@ export default function HelpPage() {
                     <p className="text-slate-400 max-w-xl mb-8 leading-relaxed">
                         Looking for dedicated support, custom integrations, or on-premise deployment? Our enterprise team is here to help.
                     </p>
-                    <button className="px-6 py-3 bg-white text-slate-900 font-bold rounded-xl hover:bg-slate-100 transition-colors shadow-lg">
+                    <button className="px-6 py-1.5 bg-white text-slate-900 font-bold rounded-xl hover:bg-slate-100 transition-colors shadow-lg">
                         Contact Sales
                     </button>
                 </div>

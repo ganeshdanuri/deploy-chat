@@ -56,13 +56,13 @@ export default function SettingsPage() {
                                 <div className="grid grid-cols-2 gap-6">
                                     <div className="col-span-2 space-y-2">
                                         <label className="text-sm font-medium text-slate-700">Username</label>
-                                        <input type="text" className="w-full border-slate-200 rounded-lg text-sm bg-slate-50 cursor-not-allowed" value={userData?.profile?.username || ""} readOnly />
+                                        <input type="text" className="py-1.5 w-full border-slate-200 rounded-lg text-sm bg-slate-50 cursor-not-allowed" value={userData?.profile?.username || ""} readOnly />
                                     </div>
                                     <div className="col-span-2 space-y-2">
                                         <label className="text-sm font-medium text-slate-700">Email Address</label>
                                         <div className="relative">
                                             <HiUser className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4" />
-                                            <input type="email" className="w-full pl-9 border-slate-200 rounded-lg text-sm bg-slate-50 cursor-not-allowed" value={userData?.profile?.email || authUser?.email || ""} readOnly />
+                                            <input type="email" className="py-1.5 w-full pl-9 border-slate-200 rounded-lg text-sm bg-slate-50 cursor-not-allowed" value={userData?.profile?.email || authUser?.email || ""} readOnly />
                                         </div>
                                     </div>
                                 </div>
@@ -111,7 +111,7 @@ export default function SettingsPage() {
                                         </div>
                                     </div>
                                     <div className="shrink-0 pt-1">
-                                        <button className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 text-slate-700 text-sm font-semibold rounded-lg hover:bg-slate-50 hover:border-slate-300 transition-all shadow-sm">
+                                        <button className="flex items-center gap-2 px-4 py-1.5 bg-white border border-slate-200 text-slate-700 text-sm font-semibold rounded-lg hover:bg-slate-50 hover:border-slate-300 transition-all shadow-sm">
                                             View Invoices
                                         </button>
                                     </div>

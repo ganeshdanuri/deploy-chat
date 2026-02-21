@@ -20,7 +20,7 @@ export default function CTASection({ onGetStarted }: { onGetStarted: () => void 
                 />
 
                 <div className="relative z-10 max-w-3xl mx-auto">
-                    <h2 className="text-4xl md:text-6xl font-bold text-white mb-8 leading-tight">
+                    <h2 className="text-2xl font-semibold text-white mb-8 leading-tight">
                         Ready to Build Your <br />
                         <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-400">
                             Intelligent Future?
@@ -34,12 +34,12 @@ export default function CTASection({ onGetStarted }: { onGetStarted: () => void 
                     <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
                         <button
                             onClick={onGetStarted}
-                            className="px-10 py-5 rounded-2xl bg-white text-slate-900 font-bold text-lg hover:-translate-y-1 transition-all shadow-xl shadow-white/10"
+                            className="text-sm font-medium px-10 py-5 rounded-2xl bg-white text-slate-900 hover:-translate-y-1 transition-all shadow-xl shadow-white/10"
                         >
                             Get Started for Free
                         </button>
                         <button
-                            className="px-10 py-5 rounded-2xl border border-slate-700 text-white font-bold text-lg hover:bg-slate-800 transition-all"
+                            className="text-sm font-medium px-10 py-5 rounded-2xl border border-slate-700 text-white hover:bg-slate-800 transition-all"
                         >
                             Talk to Sales
                         </button>

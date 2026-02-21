@@ -102,7 +102,7 @@ export default function CreateChatbotModal({ isOpen, onClose }: CreateChatbotMod
             <div className="space-y-8">
                 {/* Chatbot Name */}
                 <div className="space-y-3">
-                    <label htmlFor="chatbot-name" className="block text-sm font-medium text-slate-700">
+                    <label htmlFor="chatbot-name" className="text-sm font-medium block text-slate-700">
                         Assistant Name
                     </label>
                     <p className="text-xs text-slate-400">Give your AI a name that reflects its purpose.</p>
@@ -123,7 +123,7 @@ export default function CreateChatbotModal({ isOpen, onClose }: CreateChatbotMod
                 {/* Dataset Selection */}
                 <div className="space-y-4">
                     <div className="flex items-center justify-between">
-                        <label className="block text-sm font-medium text-slate-700">
+                        <label className="text-sm font-medium block text-slate-700">
                             Attach Knowledge
                         </label>
                         <span className="text-[11px] font-medium text-slate-400 uppercase bg-slate-100 px-2 py-0.5 rounded-full">
@@ -151,7 +151,7 @@ export default function CreateChatbotModal({ isOpen, onClose }: CreateChatbotMod
             {/* Customization */}
             <div className="space-y-6 pt-8 border-t border-slate-100">
                 <div className="space-y-3">
-                    <label htmlFor="welcome-msg" className="block text-sm font-medium text-slate-700">
+                    <label htmlFor="welcome-msg" className="text-sm font-medium block text-slate-700">
                         Welcome Message
                     </label>
                     <Input

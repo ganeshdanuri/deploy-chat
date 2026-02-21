@@ -74,7 +74,7 @@ export default function Navbar() {
             <div className="flex items-center gap-4">
               <button
                 onClick={handleMainButtonClick}
-                className="hidden sm:flex items-center gap-2 text-white text-sm font-semibold px-6 py-2.5 rounded-xl hover:-translate-y-0.5 transition-all shadow-lg shadow-indigo-500/20"
+                className="text-sm font-medium hidden sm:flex items-center gap-2 text-white px-6 py-2.5 rounded-xl hover:-translate-y-0.5 transition-all shadow-lg shadow-indigo-500/20"
                 style={{ background: theme.gradients.primaryButton }}
               >
                 <LogIn size={18} strokeWidth={2} className="opacity-80" />

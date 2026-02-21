@@ -55,7 +55,7 @@ export default function HeroSection({ stats, onGetStarted }: HeroSectionProps) {
             {/* Headline */}
             <div className="space-y-4">
               <h1
-                className="text-4xl lg:text-6xl font-bold tracking-tight leading-[1.1]"
+                className="text-4xl font-bold tracking-tight leading-[1.1]"
                 style={{ color: theme.colors.neutral[900] }}
               >
                 Build Intelligent <br />
@@ -77,7 +77,7 @@ export default function HeroSection({ stats, onGetStarted }: HeroSectionProps) {
             <div className="flex flex-col sm:flex-row gap-4">
               <button
                 onClick={onGetStarted}
-                className="flex items-center justify-center gap-2 px-8 py-4 rounded-xl text-base font-semibold text-white shadow-lg shadow-blue-500/20 transition-all hover:-translate-y-1 hover:shadow-xl"
+                className="text-sm font-medium flex items-center justify-center gap-2 px-8 py-4 rounded-xl text-white shadow-lg shadow-blue-500/20 transition-all hover:-translate-y-1 hover:shadow-xl"
                 style={{ background: theme.gradients.primaryButton }}
               >
                 Start Building Free
@@ -85,7 +85,7 @@ export default function HeroSection({ stats, onGetStarted }: HeroSectionProps) {
               </button>
 
               <button
-                className="flex items-center justify-center gap-2 px-8 py-4 rounded-xl text-base font-semibold border transition-all hover:bg-slate-50"
+                className="text-sm font-medium flex items-center justify-center gap-2 px-8 py-4 rounded-xl border transition-all hover:bg-slate-50"
                 style={{
                   color: theme.colors.neutral[700],
                   borderColor: theme.colors.neutral[300]

@@ -20,7 +20,7 @@ export default function AnalyticsPage() {
                 </p>
                 <Link
                     href="/dashboard/settings?tab=billing"
-                    className="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg shadow-sm transition-colors"
+                    className="px-6 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg shadow-sm transition-colors"
                 >
                     Upgrade Plan
                 </Link>
@@ -36,9 +36,9 @@ export default function AnalyticsPage() {
                     <p className="text-sm text-slate-500 mt-1">Usage trends and performance metrics.</p>
                 </div>
                 <div className="flex bg-white rounded-lg p-1 border border-slate-200 shadow-sm">
-                    <button className="px-3 py-1 bg-slate-100 text-slate-900 text-xs font-semibold rounded shadow-sm">7 Days</button>
-                    <button className="px-3 py-1 text-slate-500 hover:bg-slate-50 text-xs font-semibold rounded">30 Days</button>
-                    <button className="px-3 py-1 text-slate-500 hover:bg-slate-50 text-xs font-semibold rounded">90 Days</button>
+                    <button className="px-3 py-1.5 bg-slate-100 text-slate-900 text-xs font-semibold rounded shadow-sm">7 Days</button>
+                    <button className="px-3 py-1.5 text-slate-500 hover:bg-slate-50 text-xs font-semibold rounded">30 Days</button>
+                    <button className="px-3 py-1.5 text-slate-500 hover:bg-slate-50 text-xs font-semibold rounded">90 Days</button>
                 </div>
             </div>
 

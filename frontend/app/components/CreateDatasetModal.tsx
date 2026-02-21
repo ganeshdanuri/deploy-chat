@@ -96,7 +96,7 @@ export default function CreateDatasetModal({ isOpen, onClose }: CreateDatasetMod
             <div className="space-y-8">
                 {/* Dataset Name */}
                 <div className="space-y-3">
-                    <label htmlFor="dataset-name" className="block text-sm font-medium text-slate-700">
+                    <label htmlFor="dataset-name" className="text-sm font-medium block text-slate-700">
                         Dataset Name
                     </label>
                     <p className="text-xs text-slate-400">Identify this collection for your AI assistant.</p>
@@ -117,7 +117,7 @@ export default function CreateDatasetModal({ isOpen, onClose }: CreateDatasetMod
                 {/* Document Selection */}
                 <div className="space-y-4">
                     <div className="flex items-center justify-between">
-                        <label className="block text-sm font-medium text-slate-700">
+                        <label className="text-sm font-medium block text-slate-700">
                             Select Sources
                         </label>
                         <span className="text-[11px] font-medium text-slate-400 uppercase bg-slate-100 px-2 py-0.5 rounded-full">
