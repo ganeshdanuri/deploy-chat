@@ -42,7 +42,7 @@ export function StyledTable<T extends { id: string }>({
             topContent={topContent}
             classNames={{
                 base: "bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden",
-                thead: "bg-slate-50 border-b border-slate-200 text-slate-500 font-semibold",
+                thead: "bg-slate-50 border-b border-slate-200 text-slate-500 font-medium",
                 wrapper: "shadow-none p-0",
                 th: "bg-slate-50/50 text-slate-500",
             }}

@@ -74,7 +74,7 @@ export default function CreateChatbotModal({ isOpen, onClose }: CreateChatbotMod
                 onPress={handleSubmit}
                 isDisabled={isSubmitting || !name || selectedDatasets.length === 0}
                 isLoading={isSubmitting}
-                className="flex-[1.5] bg-slate-900 text-white font-semibold rounded-2xl h-12 shadow-xl"
+                className="flex-[1.5] bg-slate-900 text-white text-sm font-medium rounded-2xl h-12 shadow-xl"
             >
                 {isSubmitting ? "Creating..." : "Launch Assistant"}
             </Button>
@@ -107,8 +107,8 @@ export default function CreateChatbotModal({ isOpen, onClose }: CreateChatbotMod
                         onChange={(e) => setName(e.target.value)}
                         placeholder="e.g. Customer Support Bot"
                         classNames={{
-                            inputWrapper: "rounded-2xl border-slate-200 h-12",
-                            input: "font-medium text-sm",
+                            inputWrapper: "rounded-2xl border-2 border-slate-300 h-12 hover:border-slate-400 data-[focus=true]:border-indigo-500 shadow-none bg-white",
+                            input: "font-medium text-sm text-slate-800 placeholder:text-slate-400",
                         }}
                     />
                 </div>

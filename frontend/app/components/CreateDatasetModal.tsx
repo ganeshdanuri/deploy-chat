@@ -74,7 +74,7 @@ export default function CreateDatasetModal({ isOpen, onClose }: CreateDatasetMod
                 onPress={handleSubmit}
                 isDisabled={isSubmitting || !name || selectedDocs.length === 0}
                 isLoading={isSubmitting}
-                className="flex-[1.5] bg-emerald-600 text-white font-semibold rounded-2xl h-12 shadow-xl shadow-emerald-200"
+                className="flex-[1.5] bg-emerald-600 text-white text-sm font-medium rounded-2xl h-12"
             >
                 {isSubmitting ? "Syncing..." : "Initialize Dataset"}
             </Button>
@@ -107,8 +107,8 @@ export default function CreateDatasetModal({ isOpen, onClose }: CreateDatasetMod
                         onChange={(e) => setName(e.target.value)}
                         placeholder="e.g. Legal Documents 2024"
                         classNames={{
-                            inputWrapper: "rounded-2xl border-slate-200 h-12",
-                            input: "font-medium text-sm",
+                            inputWrapper: "rounded-2xl border-2 border-slate-300 h-12 hover:border-slate-400 data-[focus=true]:border-emerald-500 shadow-none bg-white",
+                            input: "font-medium text-sm text-slate-800 placeholder:text-slate-400",
                         }}
                     />
                 </div>

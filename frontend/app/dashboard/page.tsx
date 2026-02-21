@@ -211,11 +211,11 @@ function DashboardSummary({
           </p>
         </div>
         <div className="flex gap-2">
-          <button className="px-4 py-2 bg-white border border-slate-200 text-slate-700 text-sm font-semibold rounded-lg shadow-sm hover:bg-slate-50 transition-all flex items-center gap-2">
+          <button className="px-4 py-2 bg-white border border-slate-200 text-slate-700 text-sm font-medium rounded-lg shadow-sm hover:bg-slate-50 transition-all flex items-center gap-2">
             <HiDocumentText className="w-4 h-4 text-slate-400" />
             View Reports
           </button>
-          <button className="px-4 py-2 bg-indigo-600 text-white text-sm font-semibold rounded-lg shadow-sm shadow-indigo-200 hover:bg-indigo-700 hover:shadow-md transition-all flex items-center gap-2">
+          <button className="px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg shadow-sm shadow-indigo-200 hover:bg-indigo-700 hover:shadow-md transition-all flex items-center gap-2">
             <HiPlus className="w-4 h-4" />
             New Project
           </button>
@@ -337,7 +337,7 @@ function QuickActionsPanel() {
     <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6 lg:col-span-1 h-full flex flex-col">
       <div className="flex items-center justify-between mb-6">
         <h3 className="text-base font-bold text-slate-800">Quick Actions</h3>
-        <button className="text-xs text-indigo-600 font-semibold hover:underline">View All</button>
+        <button className="text-xs text-indigo-600 font-medium hover:underline">View All</button>
       </div>
       <div className="space-y-3 flex-1">
         {QUICK_ACTIONS.map((action) => (

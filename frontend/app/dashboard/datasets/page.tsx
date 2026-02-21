@@ -99,7 +99,7 @@ export default function DatasetsPage() {
                             onPress={() => dispatch(fetchDatasets())}
                             variant="bordered"
                             startContent={<HiRefresh className="w-4 h-4 text-slate-400" />}
-                            className="bg-white border-slate-200 text-slate-700 font-semibold rounded-lg"
+                            className="bg-white border-slate-200 text-slate-700 font-medium rounded-lg"
                         >
                             Refresh
                         </Button>
@@ -107,7 +107,7 @@ export default function DatasetsPage() {
                             onPress={() => setIsModalOpen(true)}
                             color="success"
                             startContent={<HiPlus className="w-4 h-4" />}
-                            className="bg-emerald-600 text-white font-semibold rounded-lg shadow-emerald-200"
+                            className="bg-emerald-600 text-white text-sm font-medium rounded-lg shadow-emerald-200"
                         >
                             New Dataset
                         </Button>

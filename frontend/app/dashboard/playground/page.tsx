@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import {
     HiSparkles, HiPaperAirplane, HiRefresh, HiCog,
-    HiUser, HiChatAlt2, HiChevronDown,
+    HiUser, HiChatAlt2,
 } from "react-icons/hi";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
@@ -14,6 +14,7 @@ import api from "@/lib/api";
 import showToast from "@/lib/toast";
 import type { ChatMessage } from "@/lib/types";
 import { PlaygroundConfigSkeleton } from "@/app/components/ui";
+import { Select, SelectItem } from "@heroui/react";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -164,19 +165,35 @@ function ConfigurationPanel({
                     <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">
                         Select Chatbot
                     </label>
-                    <div className="relative group">
-                        <select
-                            value={chatbotId || ""}
-                            onChange={(e) => onChatbotChange(e.target.value)}
-                            className="w-full pl-4 pr-10 py-3 text-sm font-semibold bg-slate-50/50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 appearance-none transition-all cursor-pointer group-hover:bg-white"
-                        >
-                            <option value="" disabled>Select a chatbot...</option>
-                            {chatbots.map((bot) => (
-                                <option key={bot.id} value={bot.id}>{bot.name}</option>
-                            ))}
-                        </select>
-                        <HiChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none group-hover:text-indigo-500 transition-colors" />
-                    </div>
+                    <Select
+                        placeholder="Select a chatbot..."
+                        selectedKeys={chatbotId ? new Set([chatbotId]) : new Set()}
+                        onSelectionChange={(keys) => {
+                            const selected = Array.from(keys)[0] as string;
+                            if (selected) onChatbotChange(selected);
+                        }}
+                        aria-label="Select chatbot"
+                        variant="bordered"
+                        radius="lg"
+                        classNames={{
+                            trigger: "border-slate-200 bg-slate-50/50 hover:bg-white hover:border-indigo-300 data-[open=true]:border-indigo-500 h-11 shadow-none transition-all",
+                            value: "text-sm font-medium text-slate-700",
+                            selectorIcon: "text-slate-400",
+                            popoverContent: "rounded-xl bg-white border border-slate-200 shadow-lg p-1",
+                        }}
+                    >
+                        {chatbots.map((bot) => (
+                            <SelectItem
+                                key={bot.id}
+                                classNames={{
+                                    base: "rounded-lg data-[hover=true]:bg-indigo-50 data-[selected=true]:bg-indigo-100 data-[selected=true]:text-indigo-900",
+                                    title: "text-sm font-medium",
+                                }}
+                            >
+                                {bot.name}
+                            </SelectItem>
+                        ))}
+                    </Select>
                 </div>
 
                 {/* Model Stats */}
@@ -285,7 +302,7 @@ function MessageBubble({ message: msg }: { message: ChatMessage }) {
             <div className={`max-w-[75%] space-y-2 ${!msg.isBot ? "items-end flex flex-col" : ""}`}>
                 <div className={`px-6 py-4 rounded-3xl text-[14px] leading-relaxed shadow-sm transition-all ${msg.isBot
                     ? "bg-white border border-slate-200 text-slate-700 rounded-tl-none font-medium"
-                    : "bg-indigo-600 text-white rounded-tr-none font-semibold"
+                    : "bg-indigo-600 text-white rounded-tr-none font-medium"
                     }`}>
                     {msg.isThinking ? (
                         <div className="flex gap-2 py-2">

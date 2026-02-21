@@ -156,7 +156,7 @@ export default function UploadModal({ isOpen, onClose, onUploadSuccess }: Upload
                         onPress={() => handleSubmit()}
                         isDisabled={!file || isUploading}
                         isLoading={isUploading}
-                        className="flex-[1.5] bg-indigo-600 text-white font-semibold rounded-2xl h-12 shadow-xl shadow-indigo-200"
+                        className="flex-[1.5] bg-indigo-600 text-white text-sm font-medium rounded-2xl h-12 shadow-xl shadow-indigo-200"
                     >
                         {isUploading ? "Converting..." : "Import Document"}
                     </Button>

@@ -1,7 +1,12 @@
 export { PageHeader } from "./PageHeader";
 export { EmptyState } from "./EmptyState";
 export { SelectableItemList } from "./SelectableItemList";
-export type { SelectableItem } from "./SelectableItemList";
+export type {
+    SelectableItem,
+    SelectableColors,
+    SelectableAccentColor,
+    SelectableSize,
+} from "./SelectableItemList";
 export { StyledTable } from "./StyledTable";
 export type { TableColumnDef } from "./StyledTable";
 export { DateCell } from "./DateCell";

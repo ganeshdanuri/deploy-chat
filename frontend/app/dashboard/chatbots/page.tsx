@@ -110,7 +110,7 @@ export default function ChatbotsPage() {
                             onPress={() => dispatch(fetchChatbots())}
                             variant="bordered"
                             startContent={<HiRefresh className="w-4 h-4 text-slate-400" />}
-                            className="bg-white border-slate-200 text-slate-700 font-semibold rounded-lg"
+                            className="bg-white border-slate-200 text-slate-700 font-medium rounded-lg"
                         >
                             Refresh
                         </Button>
@@ -118,7 +118,7 @@ export default function ChatbotsPage() {
                             onPress={() => setIsModalOpen(true)}
                             color="primary"
                             startContent={<HiPlus className="w-4 h-4" />}
-                            className="bg-indigo-600 text-white font-semibold rounded-lg shadow-indigo-200"
+                            className="bg-indigo-600 text-white text-sm font-medium rounded-lg shadow-indigo-200"
                         >
                             New Chatbot
                         </Button>
