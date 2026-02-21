@@ -17,7 +17,12 @@ export const fetchChatbots = createAsyncThunk('chatbots/fetchChatbots', async ()
 
 export const createChatbot = createAsyncThunk(
     'chatbots/createChatbot',
-    async (data: { name: string; dataset_ids: string[] }) => {
+    async (data: {
+        name: string;
+        dataset_ids: string[];
+        welcome_message?: string;
+        primary_color?: string;
+    }) => {
         const response = await api.post('/api/chatbots/', data);
         return response.data as Chatbot;
     }

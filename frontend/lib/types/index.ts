@@ -23,6 +23,8 @@ export interface Chatbot {
     user_id: string;
     system_prompt: string;
     temperature: number;
+    embed_token: string;
+    welcome_message: string;
 }
 
 // ─── Redux Slice State ────────────────────────────────────────────────────────

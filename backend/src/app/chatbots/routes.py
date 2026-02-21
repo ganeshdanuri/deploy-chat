@@ -31,7 +31,8 @@ def create_chatbot(
             name=chatbot_in.name,
             user_id=current_user.id,
             system_prompt=chatbot_in.system_prompt or f"You are {chatbot_in.name}, a helpful AI assistant. Be polite, concise, and professional.",
-            temperature=chatbot_in.temperature or 0.7
+            temperature=chatbot_in.temperature or 0.7,
+            welcome_message=chatbot_in.welcome_message or "Hi! How can I help you today?",
         )
         session.add(new_chatbot)
         session.commit()

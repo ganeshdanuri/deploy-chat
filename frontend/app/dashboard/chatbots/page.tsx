@@ -1,16 +1,16 @@
 "use client";
 
-import { useEffect } from "react";
-import { HiChatAlt2, HiPlus, HiRefresh, HiSparkles, HiTrash, HiCog } from "react-icons/hi";
+import { useEffect, useState } from "react";
+import { HiChatAlt2, HiPlus, HiRefresh, HiSparkles, HiTrash, HiCog, HiCode } from "react-icons/hi";
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 import { fetchChatbots, deleteChatbot } from "@/lib/store/slices/chatbotsSlice";
 import CreateChatbotModal from "@/app/components/CreateChatbotModal";
+import EmbedDrawer from "@/app/components/EmbedDrawer";
 import showToast from "@/lib/toast";
 import { User, Tooltip, Button } from "@heroui/react";
 import { PageHeader, EmptyState, StyledTable, DateCell, StatusChip, TableSkeleton } from "@/app/components/ui";
 import type { TableColumnDef } from "@/app/components/ui";
 import type { Chatbot } from "@/lib/types";
-import { useState } from "react";
 
 const COLUMNS: TableColumnDef[] = [
     { key: "name", label: "NAME" },
@@ -21,6 +21,8 @@ const COLUMNS: TableColumnDef[] = [
 
 export default function ChatbotsPage() {
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [embedBot, setEmbedBot] = useState<Chatbot | null>(null);
+
     const dispatch = useAppDispatch();
     const { items: chatbots, status } = useAppSelector((state) => state.chatbots);
     const isLoading = status === "loading";
@@ -66,6 +68,14 @@ export default function ChatbotsPage() {
             case "actions":
                 return (
                     <div className="relative flex items-center justify-end gap-2">
+                        <Button
+                            size="sm"
+                            onPress={() => setEmbedBot(bot)}
+                            className="bg-emerald-50 text-emerald-700 text-xs font-medium rounded-lg hover:bg-emerald-600 hover:text-white transition-all shadow-sm border border-emerald-100"
+                        >
+                            <HiCode className="w-3 h-3 mr-1" />
+                            Embed
+                        </Button>
                         <Button
                             size="sm"
                             onPress={() => {
@@ -150,6 +160,14 @@ export default function ChatbotsPage() {
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
             />
+
+            {embedBot && (
+                <EmbedDrawer
+                    isOpen={!!embedBot}
+                    onClose={() => setEmbedBot(null)}
+                    chatbot={embedBot}
+                />
+            )}
         </div>
     );
 }

@@ -13,8 +13,8 @@ def on_startup():
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # Frontend URL
-    allow_credentials=True,
+    allow_origins=["*"],  # Widget is embedded on any customer domain
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )

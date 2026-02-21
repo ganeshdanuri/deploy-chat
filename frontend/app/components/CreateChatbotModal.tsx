@@ -18,6 +18,7 @@ interface CreateChatbotModalProps {
 
 export default function CreateChatbotModal({ isOpen, onClose }: CreateChatbotModalProps) {
     const [name, setName] = useState("");
+    const [welcomeMessage, setWelcomeMessage] = useState("Hi! How can I help you today?");
     const [selectedDatasets, setSelectedDatasets] = useState<string[]>([]);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -41,9 +42,14 @@ export default function CreateChatbotModal({ isOpen, onClose }: CreateChatbotMod
 
         setIsSubmitting(true);
         try {
-            await dispatch(createChatbot({ name, dataset_ids: selectedDatasets })).unwrap();
+            await dispatch(createChatbot({
+                name,
+                dataset_ids: selectedDatasets,
+                welcome_message: welcomeMessage,
+            })).unwrap();
             showToast.success(`Chatbot "${name}" created successfully!`);
             setName("");
+            setWelcomeMessage("Hi! How can I help you today?");
             setSelectedDatasets([]);
             onClose();
         } catch (error: any) {
@@ -139,6 +145,28 @@ export default function CreateChatbotModal({ isOpen, onClose }: CreateChatbotMod
                         />
                     )}
                 </div>
+            </div>
+
+            {/* Customization */}
+            <div className="space-y-6 pt-8 border-t border-slate-100">
+                <div className="space-y-3">
+                    <label htmlFor="welcome-msg" className="block text-sm font-medium text-slate-700">
+                        Welcome Message
+                    </label>
+                    <Input
+                        id="welcome-msg"
+                        type="text"
+                        variant="bordered"
+                        value={welcomeMessage}
+                        onChange={(e) => setWelcomeMessage(e.target.value)}
+                        placeholder="Hi! How can I help you?"
+                        classNames={{
+                            inputWrapper: "rounded-2xl border-2 border-slate-300 h-12 hover:border-slate-400 data-[focus=true]:border-indigo-500 shadow-none bg-white",
+                            input: "font-medium text-sm text-slate-800",
+                        }}
+                    />
+                </div>
+
             </div>
         </Drawer>
     );

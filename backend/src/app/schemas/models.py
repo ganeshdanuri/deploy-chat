@@ -86,10 +86,12 @@ class ChatbotBase(SQLModel):
     user_id: UUID = Field(foreign_key="users.id")
     system_prompt: str = Field(default="You are a helpful AI assistant.")
     temperature: float = Field(default=0.7)
+    welcome_message: str = Field(default="Hi! How can I help you today?")
 
 class Chatbot(ChatbotBase, table=True):
     __tablename__ = "chatbots"
     id: UUID = Field(default_factory=uuid4, primary_key=True)
+    embed_token: str = Field(default_factory=lambda: str(uuid4()), unique=True, index=True)
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
 
@@ -98,9 +100,11 @@ class ChatbotCreate(SQLModel):
     dataset_ids: List[UUID]
     system_prompt: Optional[str] = None
     temperature: Optional[float] = 0.7
+    welcome_message: Optional[str] = "Hi! How can I help you today?"
 
 class ChatbotRead(ChatbotBase):
     id: UUID
+    embed_token: str
     created_at: datetime
     updated_at: datetime
 
