@@ -3,36 +3,7 @@
 import { theme } from "../theme";
 import { FaTwitter, FaGithub, FaLinkedin } from "react-icons/fa";
 import Logo from "./Logo";
-
-const footerLinks = [
-    {
-        title: "Product",
-        links: [
-            { name: "Features", href: "#features" },
-            { name: "Integrations", href: "#integration" },
-            { name: "Pricing", href: "#pricing" },
-            { name: "Changelog", href: "#" },
-        ],
-    },
-    {
-        title: "Resources",
-        links: [
-            { name: "Documentation", href: "#" },
-            { name: "Help Center", href: "#" },
-            { name: "API Reference", href: "#" },
-            { name: "Community", href: "#" },
-        ],
-    },
-    {
-        title: "Company",
-        links: [
-            { name: "About Us", href: "#" },
-            { name: "Privacy Policy", href: "#" },
-            { name: "Terms of Service", href: "#" },
-            { name: "Contact", href: "#" },
-        ],
-    },
-];
+import { FOOTER_LINKS as footerLinks } from "../../lib/constants";
 
 export default function Footer() {
     return (
@@ -44,7 +15,7 @@ export default function Footer() {
                         <div className="flex items-center gap-2">
                             <Logo className="h-10 w-auto" />
                             <span className="text-2xl font-black tracking-tight text-slate-900">
-                                D<span style={{ color: "#4667ff" }}>E</span>PLOY C<span style={{ color: "#4667ff" }}>H</span>AT
+                                DEPLOY <span style={{ color: theme.colors.primary.main }}>CHAT</span>
                             </span>
                         </div>
                         <p className="max-w-xs text-sm leading-relaxed" style={{ color: theme.colors.neutral[600] }}>
@@ -112,7 +83,7 @@ export default function Footer() {
                     </div>
                 </div>
 
-                <div className="mt-20 pt-8 border-t flex flex-col md:flex-row justify-between items-center gap-6" style={{ borderColor: theme.colors.neutral[100] }}>
+                <div className="mt-14 pt-8 border-t flex flex-col md:flex-row justify-between items-center gap-6" style={{ borderColor: theme.colors.neutral[100] }}>
                     <p className="text-xs" style={{ color: theme.colors.neutral[500] }}>
                         © {new Date().getFullYear()} Deploy Chat Inc. All rights reserved.
                     </p>

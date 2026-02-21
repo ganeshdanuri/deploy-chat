@@ -8,6 +8,7 @@ import { useAuth } from "../context/AuthContext";
 
 import { theme } from "../theme";
 import Logo from "./Logo";
+import { NAV_LINKS as navLinks } from "../../lib/constants";
 
 
 export default function Navbar() {
@@ -17,13 +18,6 @@ export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
 
-
-  const navLinks = [
-    { label: "Features", href: "#features" },
-    { label: "Integration", href: "#integration" },
-    { label: "Testimonials", href: "#testimonials" },
-    { label: "Pricing", href: "#pricing" },
-  ];
 
   const handleMainButtonClick = () => {
     if (isAuthenticated) {
@@ -51,7 +45,7 @@ export default function Navbar() {
               <Logo className="h-10 w-auto" />
               <div className="flex items-center">
                 <span className="text-2xl font-black tracking-tight block leading-none text-slate-900">
-                  D<span style={{ color: "#4667ff" }}>E</span>PLOY C<span style={{ color: "#4667ff" }}>H</span>AT
+                  DEPLOY <span style={{ color: theme.colors.primary.main }}>CHAT</span>
                 </span>
               </div>
             </div>

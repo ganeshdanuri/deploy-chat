@@ -6,7 +6,6 @@ import HeroSection from "./components/HeroSection";
 import Banner from "./components/Banner";
 import IntegrationSection from "./components/IntegrationSection";
 import PricingSection from "./components/PricingSection";
-import TestimonialsSection from "./components/TestimonialsSection";
 import FAQSection from "./components/FAQSection";
 import CTASection from "./components/CTASection";
 import Footer from "./components/Footer";
@@ -18,15 +17,28 @@ export default function LandingPage() {
 
   return (
     <main
-      className="min-h-screen relative z-10"
+      className="min-h-screen relative z-10 overflow-hidden"
       style={{ background: "transparent" }}
     >
+      {/* Subtle Background Geometries & Thin Lines */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
+        {/* Geometric Shapes */}
+        <div className="absolute top-[40%] left-[20%] w-48 h-48 border border-slate-300 rotate-45 opacity-25" />
+        <div className="absolute top-[80%] left-[10%] w-56 h-56 border border-slate-300 opacity-20 rotate-12" />
+
+        {/* Thin Lines */}
+        <div className="absolute top-0 left-[15%] w-[1px] h-full bg-gradient-to-b from-transparent via-slate-300 to-transparent opacity-40" />
+        <div className="absolute top-0 right-[20%] w-[1px] h-full bg-gradient-to-b from-transparent via-slate-300 to-transparent opacity-40" />
+        <div className="absolute top-[30%] left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-slate-300 to-transparent opacity-40" />
+        <div className="absolute top-[70%] left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-slate-300 to-transparent opacity-40" />
+      </div>
+
       {/* First Screen */}
       <div className="min-h-screen flex flex-col">
         <Navbar />
 
         {/* Hero Section */}
-        <div className="flex-1 flex flex-col pt-20">
+        <div className="flex-1 flex flex-col pt-16">
           <HeroSection
             stats={stats}
             onGetStarted={() => window.open('/login?register=true', '_blank', 'noopener,noreferrer')}
@@ -34,9 +46,7 @@ export default function LandingPage() {
         </div>
 
         {/* Banner Section */}
-        <div className="pb-10">
-          <Banner />
-        </div>
+        <Banner />
       </div>
 
       {/* Features Section */}
@@ -44,9 +54,6 @@ export default function LandingPage() {
 
       {/* Integration Section */}
       <IntegrationSection />
-
-      {/* Social Proof */}
-      <TestimonialsSection />
 
       {/* Pricing Section */}
       <PricingSection />

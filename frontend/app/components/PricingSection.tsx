@@ -1,120 +1,172 @@
 "use client";
 
-import { HiCheck, HiOutlineInformationCircle, HiSparkles } from "react-icons/hi";
+import { HiCheck, HiSparkles, HiArrowRight, HiLightningBolt } from "react-icons/hi";
+import { theme } from "../theme";
+import { PRICING_PLANS as PLANS, PricingPlan as Plan } from "../../lib/constants";
 
-import { PRICING_PLANS as plans } from "../../lib/constants";
+// ─── Helpers ─────────────────────────────────────────────────────────────────
+
+function getPlanHref(plan: Plan): string {
+    if (plan.name === "Enterprise") return "mailto:sales@deploymind.com";
+    return `/login?register=true&plan=${plan.name.toLowerCase()}`;
+}
+
+// ─── Sub-components ───────────────────────────────────────────────────────────
+
+function PlanPrice({ price, popular }: { price: string; popular?: boolean }) {
+    if (price === "Custom") {
+        return (
+            <p className={`text-3xl font-bold tracking-tight ${popular ? "text-white" : "text-slate-900"}`}>
+                Custom
+            </p>
+        );
+    }
+    return (
+        <div className="flex items-baseline gap-1">
+            <span className={`text-4xl font-bold tabular-nums tracking-tight ${popular ? "text-white" : "text-slate-900"}`}>
+                ${price}
+            </span>
+            <span className={`text-sm font-medium ${popular ? "" : "text-slate-500"}`} style={popular ? { color: theme.colors.primary.light } : {}}>/mo</span>
+        </div>
+    );
+}
+
+function FeatureItem({ feature, popular }: { feature: string; popular?: boolean }) {
+    return (
+        <li className="flex items-start gap-3">
+            <span
+                aria-hidden="true"
+                className={`mt-0.5 flex-shrink-0 rounded-full p-0.5 ${popular ? "text-white" : ""
+                    }`}
+                style={popular ? { backgroundColor: theme.colors.primary.main } : { backgroundColor: `${theme.colors.primary.main}18`, color: theme.colors.primary.main }}
+            >
+                <HiCheck className="h-3.5 w-3.5" />
+            </span>
+            <span className={`text-sm leading-relaxed ${popular ? "" : "text-slate-600"}`} style={popular ? { color: `${theme.colors.primary.lightest}` } : {}}>
+                {feature}
+            </span>
+        </li>
+    );
+}
+
+function PlanCard({ plan }: { plan: Plan }) {
+    const href = getPlanHref(plan);
+    const isExternal = href.startsWith("mailto:");
+
+    return (
+        <div
+            className={[
+                "relative flex flex-col rounded-3xl border p-8 transition-shadow duration-200",
+                plan.popular
+                    ? "shadow-2xl"
+                    : "border-slate-200 bg-white shadow-sm hover:shadow-md",
+            ].join(" ")}
+            style={plan.popular ? { borderColor: theme.colors.primary.main, backgroundColor: theme.colors.primary.main, boxShadow: `0 25px 50px -12px ${theme.colors.primary.main}4d` } : {}}
+        >
+            {/* Popular badge */}
+            {plan.popular && (
+                <div className="mb-6 -mt-2 flex items-center gap-1.5 self-start rounded-full bg-amber-400 px-3 py-1">
+                    <HiLightningBolt className="h-3.5 w-3.5 text-amber-900" aria-hidden="true" />
+                    <span className="text-xs font-semibold uppercase tracking-widest text-amber-900">
+                        Most popular
+                    </span>
+                </div>
+            )}
+
+            {/* Plan name */}
+            <h3
+                className="mb-1 text-xs font-semibold uppercase tracking-widest"
+                style={{ color: plan.popular ? theme.colors.primary.light : theme.colors.primary.main }}
+            >
+                {plan.name}
+            </h3>
+
+            {/* Price */}
+            <div className="mb-3">
+                <PlanPrice price={plan.price} popular={plan.popular} />
+            </div>
+
+            {/* Description */}
+            <p className={`mb-8 text-sm leading-relaxed ${plan.popular ? "" : "text-slate-500"}`} style={plan.popular ? { color: theme.colors.primary.lighter } : {}}>
+                {plan.description}
+            </p>
+
+            {/* Features */}
+            <ul className="mb-10 flex flex-col gap-3" role="list">
+                {plan.features.map((feature) => (
+                    <FeatureItem key={feature} feature={feature} popular={plan.popular} />
+                ))}
+            </ul>
+
+            {/* CTA */}
+            <a
+                href={href}
+                target={isExternal ? "_blank" : undefined}
+                rel={isExternal ? "noopener noreferrer" : undefined}
+                className={[
+                    "mt-auto flex items-center justify-center gap-2 rounded-xl px-6 py-3.5 text-sm font-semibold",
+                    "transition-all duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2",
+                    plan.popular
+                        ? "bg-white focus-visible:outline-white"
+                        : "border border-slate-200 bg-slate-50 text-slate-800 hover:bg-white focus-visible:outline-indigo-600",
+                ].join(" ")}
+                style={plan.popular ? { color: theme.colors.primary.main } : {}}
+            >
+                {plan.cta}
+                <HiArrowRight className="h-4 w-4" aria-hidden="true" />
+            </a>
+        </div>
+    );
+}
+
+// ─── Main export ─────────────────────────────────────────────────────────────
 
 export default function PricingSection() {
     return (
-        <section id="pricing" className="py-24 relative overflow-hidden bg-slate-50 sm:py-32">
-            {/* Background glowing effects */}
-            <div className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80" aria-hidden="true">
-                <div
-                    className="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#6366f1] to-[#a855f7] opacity-20 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]"
-                    style={{
-                        clipPath: 'polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)'
-                    }}
-                />
-            </div>
-
-            <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
-                <div className="mx-auto max-w-4xl text-center mb-20">
-                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 border border-indigo-100 text-indigo-600 text-xs font-bold uppercase tracking-widest mb-6">
-                        <HiSparkles className="w-4 h-4" />
-                        Pricing Plans
+        <section
+            id="pricing"
+            aria-labelledby="pricing-heading"
+            className="bg-slate-50 py-20 sm:py-24"
+        >
+            <div className="mx-auto max-w-7xl px-6 lg:px-8">
+                {/* Header */}
+                <div className="mx-auto mb-16 max-w-2xl text-center">
+                    <div className="mb-4 inline-flex items-center gap-2 rounded-full border bg-white px-3 py-1 text-xs font-semibold uppercase tracking-widest shadow-sm" style={{ borderColor: `${theme.colors.primary.main}20`, color: theme.colors.primary.main }}>
+                        <HiSparkles className="h-3.5 w-3.5" aria-hidden="true" />
+                        Pricing
                     </div>
-                    <h2 className="text-2xl font-semibold text-slate-900 tracking-tight mb-8">
-                        Scales with your <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">business</span>
+
+                    <h2
+                        id="pricing-heading"
+                        className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl"
+                    >
+                        Simple pricing that scales with you
                     </h2>
-                    <p className="text-lg md:text-xl text-slate-600 leading-relaxed max-w-2xl mx-auto">
-                        Simple, transparent pricing. Unbeatable value. Join hundreds of growing teams automating their customer support today.
+
+                    <p className="mt-4 text-lg text-slate-600">
+                        No hidden fees. No surprise overages. Cancel any time.
                     </p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                    {plans.map((plan) => (
-                        <div
-                            key={plan.name}
-                            className={`relative flex flex-col p-8 rounded-[2rem] border transition-all duration-500 hover:-translate-y-2 ${plan.popular
-                                ? 'bg-slate-900 border-slate-900 shadow-2xl scale-105 z-10 ring-4 ring-indigo-500/20 md:transform lg:scale-110'
-                                : 'bg-white border-slate-200 shadow-xl shadow-slate-200/50 hover:shadow-2xl hover:border-indigo-200'
-                                }`}
-                        >
-                            {plan.popular && (
-                                <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1.5 rounded-full text-xs font-bold text-white uppercase tracking-widest bg-gradient-to-r from-indigo-500 to-purple-500 shadow-lg">
-                                    Most Popular
-                                </div>
-                            )}
-
-                            <div className="mb-8 relative z-10 pt-4">
-                                <h4 className={`text-lg font-medium mb-4 ${plan.popular ? 'text-indigo-300' : 'text-indigo-600'}`}>
-                                    {plan.name}
-                                </h4>
-                                <div className="flex items-baseline gap-1 mb-4">
-                                    {plan.price === 'Custom' ? (
-                                        <span className={`text-4xl font-black tracking-tight ${plan.popular ? 'text-white' : 'text-slate-900'}`}>
-                                            Custom
-                                        </span>
-                                    ) : (
-                                        <>
-                                            <span className={`text-5xl font-black tracking-tight ${plan.popular ? 'text-white' : 'text-slate-900'}`}>
-                                                ${plan.price}
-                                            </span>
-                                            <span className={`text-base font-medium ${plan.popular ? 'text-slate-400' : 'text-slate-500'}`}>
-                                                /month
-                                            </span>
-                                        </>
-                                    )}
-                                </div>
-                                <p className={`text-sm leading-relaxed ${plan.popular ? 'text-slate-300' : 'text-slate-600'}`}>
-                                    {plan.description}
-                                </p>
-                            </div>
-
-                            <div className="flex-1">
-                                <ul className="space-y-4 mb-8">
-                                    {plan.features.map((feature, idx) => (
-                                        <li key={idx} className="flex items-start gap-3 text-sm">
-                                            <div className={`mt-0.5 rounded-full p-1 ${plan.popular ? 'bg-indigo-500/20 text-indigo-400' : 'bg-indigo-50 text-indigo-600'}`}>
-                                                <HiCheck className="w-4 h-4 flex-shrink-0" />
-                                            </div>
-                                            <span className={`font-medium ${plan.popular ? 'text-slate-300' : 'text-slate-700'}`}>
-                                                {feature}
-                                            </span>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
-
-                            <button
-                                onClick={() => {
-                                    if (plan.name === 'Free') {
-                                        window.open(`/login?register=true&plan=free`, '_blank', 'noopener,noreferrer');
-                                    } else {
-                                        window.open(`/login?register=true&plan=${plan.name.toLowerCase()}`, '_blank', 'noopener,noreferrer');
-                                    }
-                                }}
-                                className={`mt-auto w-full py-4 rounded-xl font-bold transition-all duration-300 active:scale-95 flex items-center justify-center gap-2 ${plan.popular
-                                    ? 'bg-indigo-500 text-white hover:bg-indigo-400 shadow-[0_0_20px_rgba(99,102,241,0.4)] hover:shadow-[0_0_25px_rgba(99,102,241,0.6)]'
-                                    : 'bg-slate-50 text-slate-900 border border-slate-200 hover:bg-slate-100 hover:border-slate-300'
-                                    }`}
-                            >
-                                {plan.cta}
-                            </button>
-                        </div>
+                {/* Grid */}
+                <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4 lg:gap-8">
+                    {PLANS.map((plan) => (
+                        <PlanCard key={plan.name} plan={plan} />
                     ))}
                 </div>
 
-                <div className="mt-16 text-center lg:mt-24">
-                    <div className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-2xl bg-white border border-slate-200 shadow-sm text-slate-700 text-sm font-medium hover:shadow-md transition-all cursor-pointer group">
-                        <HiOutlineInformationCircle className="text-xl text-indigo-500 group-hover:scale-110 transition-transform" />
-                        <span>Have specific requirements?</span>
-                        <a href="mailto:sales@deploymind.com" className="font-bold text-indigo-600 hover:text-indigo-700 flex items-center gap-1">
-                            Contact our sales team
-                            <span className="group-hover:translate-x-1 transition-transform">→</span>
-                        </a>
-                    </div>
-                </div>
+                {/* Enterprise footnote */}
+                <p className="mt-12 text-center text-sm text-slate-500">
+                    Need a custom volume deal or dedicated infrastructure?{" "}
+                    <a
+                        href="mailto:sales@deploymind.com"
+                        className="font-semibold underline-offset-2 hover:underline"
+                        style={{ color: theme.colors.primary.main }}
+                    >
+                        Talk to our sales team
+                    </a>
+                    .
+                </p>
             </div>
         </section>
     );

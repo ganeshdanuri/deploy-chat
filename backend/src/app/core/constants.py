@@ -16,3 +16,7 @@ DEFAULT_WELCOME_MESSAGE = "Hi! How can I help you today?"
 
 # Status Flags
 STATUS_ACTIVE = "active"
+
+# Documents
+MAX_DOCUMENT_SIZE_MB = 10
+IDEAL_DOCUMENT_SIZE_MB = 5

@@ -4,6 +4,7 @@ import { HiSearch, HiBell, HiQuestionMarkCircle, HiMenuAlt2 } from "react-icons/
 import { useRouter } from "next/navigation";
 import showToast from "@/lib/toast";
 import { useAppSelector } from "@/lib/store/hooks";
+import { theme } from "../../theme";
 
 interface TopNavProps {
     onMenuClick?: () => void;
@@ -28,7 +29,7 @@ export function TopNav({ onMenuClick }: TopNavProps) {
                     <input
                         type="text"
                         placeholder="Search documents, chatbots, or commands... (Cmd+K)"
-                        className="w-full pl-9 pr-4 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-600 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all font-medium"
+                        className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-600 placeholder:text-slate-400 focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all font-medium"
                     />
                     <div className="absolute right-3 top-1/2 -translate-y-1/2 flex gap-1">
                         <span className="text-[10px] font-bold text-slate-400 bg-white border border-slate-200 rounded px-1.5 py-0.5 shadow-sm">⌘</span>
@@ -60,15 +61,14 @@ export function TopNav({ onMenuClick }: TopNavProps) {
                     </button>
                 </div>
 
-                {(!userData?.billing?.current_plan || userData.billing.current_plan.toLowerCase() === 'free') && (
-                    <button
-                        className="flex items-center gap-2 px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs sm:text-sm font-semibold rounded-lg shadow-sm shadow-indigo-200 transition-all"
-                        onClick={() => router.push("/dashboard/settings?tab=billing")}
-                    >
-                        <span className="hidden sm:inline">Upgrade Plan</span>
-                        <span className="sm:hidden">Upgrade</span>
-                    </button>
-                )}
+                <button
+                    className="flex items-center gap-2 px-5 py-2 text-white text-sm font-medium rounded-xl transition-all hover:-translate-y-0.5 shadow-lg shadow-indigo-200"
+                    style={{ backgroundColor: theme.colors.primary.main }}
+                    onClick={() => router.push("/dashboard/settings?tab=billing")}
+                >
+                    <span className="hidden sm:inline">Upgrade Plan</span>
+                    <span className="sm:hidden">Upgrade</span>
+                </button>
             </div>
         </header>
     );

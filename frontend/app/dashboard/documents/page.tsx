@@ -19,6 +19,7 @@ import { User, Tooltip, Button, Input } from "@heroui/react";
 import { PageHeader, EmptyState, StyledTable, DateCell, TableSkeleton } from "@/app/components/ui";
 import type { TableColumnDef } from "@/app/components/ui";
 import type { Document } from "@/lib/types";
+import { theme } from "@/app/theme";
 
 const COLUMNS: TableColumnDef[] = [
     { key: "name", label: "DOCUMENT" },
@@ -108,17 +109,20 @@ export default function DocumentsPage() {
     };
 
     const tableTopContent = (
-        <div className="flex justify-between gap-3 items-end mb-2">
+        <div className="flex justify-between gap-3 items-end mb-4">
             <Input
                 isClearable
                 className="w-full sm:max-w-[44%]"
                 placeholder="Search by name..."
-                startContent={<HiSearch className="text-slate-400" />}
+                startContent={<HiSearch className="text-slate-400 ml-1" />}
                 value={filterValue}
                 variant="bordered"
                 onClear={() => setFilterValue("")}
                 onValueChange={setFilterValue}
-                classNames={{ inputWrapper: "rounded-xl border-slate-200 bg-white" }}
+                classNames={{
+                    inputWrapper: "rounded-xl border border-slate-200 h-11 px-4 hover:border-indigo-400 data-[focus=true]:border-indigo-500 data-[focus=true]:ring-4 data-[focus=true]:ring-indigo-500/10 shadow-none bg-slate-50 transition-all",
+                    input: "font-medium text-sm text-slate-800 placeholder:text-slate-400 ml-2"
+                }}
             />
         </div>
     );
@@ -129,21 +133,21 @@ export default function DocumentsPage() {
                 title="Documents"
                 description="View and manage chunked documents for RAG."
                 actions={
-                    (documents.length > 0 || isLoading) ? (
+                    documents.length > 0 ? (
                         <>
                             <Button
                                 onPress={handleRefresh}
                                 variant="bordered"
                                 startContent={<HiRefresh className="w-4 h-4 text-slate-400" />}
-                                className="bg-white border-slate-200 text-slate-700 text-xs sm:text-sm font-medium rounded-lg"
+                                className="bg-white border-slate-200 text-slate-700 text-xs sm:text-sm font-medium rounded-xl transition-all hover:-translate-y-0.5"
                             >
                                 Refresh
                             </Button>
                             <Button
                                 onPress={() => setIsUploadModalOpen(true)}
-                                color="primary"
                                 startContent={<HiPlus className="w-4 h-4" />}
-                                className="bg-indigo-600 text-white text-xs sm:text-sm font-medium rounded-lg shadow-indigo-200"
+                                className="text-white text-xs sm:text-sm font-medium rounded-xl transition-all hover:-translate-y-0.5 shadow-lg shadow-indigo-200"
+                                style={{ backgroundColor: theme.colors.primary.main }}
                             >
                                 Upload Document
                             </Button>

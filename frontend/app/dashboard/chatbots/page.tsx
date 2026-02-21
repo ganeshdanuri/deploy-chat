@@ -2,16 +2,17 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { HiChatAlt2, HiPlus, HiRefresh, HiSparkles, HiTrash, HiCog, HiCode } from "react-icons/hi";
+import { HiChatAlt2, HiPlus, HiRefresh, HiSparkles, HiTrash, HiCog, HiCode, HiSearch } from "react-icons/hi";
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 import { fetchChatbots, deleteChatbot } from "@/lib/store/slices/chatbotsSlice";
 import CreateChatbotModal from "@/app/components/CreateChatbotModal";
 import EmbedDrawer from "@/app/components/EmbedDrawer";
 import showToast from "@/lib/toast";
-import { User, Tooltip, Button } from "@heroui/react";
+import { User, Tooltip, Button, Input } from "@heroui/react";
 import { PageHeader, EmptyState, StyledTable, DateCell, StatusChip, TableSkeleton } from "@/app/components/ui";
 import type { TableColumnDef } from "@/app/components/ui";
 import type { Chatbot } from "@/lib/types";
+import { theme } from "@/app/theme";
 
 const COLUMNS: TableColumnDef[] = [
     { key: "name", label: "NAME" },
@@ -22,6 +23,7 @@ const COLUMNS: TableColumnDef[] = [
 
 export default function ChatbotsPage() {
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [filterValue, setFilterValue] = useState("");
     const [embedBot, setEmbedBot] = useState<Chatbot | null>(null);
 
     const dispatch = useAppDispatch();
@@ -72,7 +74,7 @@ export default function ChatbotsPage() {
                         <Button
                             size="sm"
                             onPress={() => setEmbedBot(bot)}
-                            className="bg-emerald-50 text-emerald-700 text-xs font-medium rounded-lg hover:bg-emerald-600 hover:text-white transition-all shadow-sm border border-emerald-100"
+                            className="bg-emerald-50 text-emerald-700 text-xs font-medium rounded-xl hover:bg-emerald-600 hover:text-white transition-all hover:-translate-y-0.5 shadow-sm border border-emerald-100"
                         >
                             <HiCode className="w-3 h-3 mr-1" />
                             Embed
@@ -82,7 +84,7 @@ export default function ChatbotsPage() {
                             onPress={() => {
                                 window.location.href = `/dashboard/playground?chatbotId=${bot.id}`;
                             }}
-                            className="bg-indigo-50 text-indigo-600 text-xs font-medium rounded-lg hover:bg-indigo-600 hover:text-white transition-all shadow-sm border border-indigo-100"
+                            className="bg-indigo-50 text-indigo-600 text-xs font-medium rounded-xl hover:bg-indigo-600 hover:text-white transition-all hover:-translate-y-0.5 shadow-sm border border-indigo-100"
                         >
                             <HiSparkles className="w-3 h-3 mr-1" />
                             Test
@@ -116,21 +118,21 @@ export default function ChatbotsPage() {
                 title="Chatbots"
                 description="Manage, train and deploy your AI assistants."
                 actions={
-                    (chatbots.length > 0 || isLoading) ? (
+                    chatbots.length > 0 ? (
                         <>
                             <Button
                                 onPress={() => dispatch(fetchChatbots())}
                                 variant="bordered"
                                 startContent={<HiRefresh className="w-4 h-4 text-slate-400" />}
-                                className="bg-white border-slate-200 text-slate-700 text-xs sm:text-sm font-medium rounded-lg"
+                                className="bg-white border-slate-200 text-slate-700 text-xs sm:text-sm font-medium rounded-xl transition-all hover:-translate-y-0.5"
                             >
                                 Refresh
                             </Button>
                             <Button
                                 onPress={() => setIsModalOpen(true)}
-                                color="primary"
                                 startContent={<HiPlus className="w-4 h-4" />}
-                                className="bg-indigo-600 text-white text-xs sm:text-sm font-medium rounded-lg shadow-indigo-200"
+                                className="text-white text-xs sm:text-sm font-medium rounded-xl transition-all hover:-translate-y-0.5 shadow-lg shadow-indigo-200"
+                                style={{ backgroundColor: theme.colors.primary.main }}
                             >
                                 New Chatbot
                             </Button>
@@ -154,8 +156,26 @@ export default function ChatbotsPage() {
                 <StyledTable
                     aria-label="Chatbots list"
                     columns={COLUMNS}
-                    items={chatbots}
+                    items={chatbots.filter(bot => bot.name.toLowerCase().includes(filterValue.toLowerCase()))}
                     renderCell={renderCell}
+                    topContent={
+                        <div className="flex justify-between gap-3 items-end mb-2">
+                            <Input
+                                isClearable
+                                className="w-full sm:max-w-[44%]"
+                                placeholder="Search chatbots..."
+                                startContent={<HiSearch className="text-slate-400 ml-1" />}
+                                value={filterValue}
+                                variant="bordered"
+                                onClear={() => setFilterValue("")}
+                                onValueChange={setFilterValue}
+                                classNames={{
+                                    inputWrapper: "rounded-xl border border-slate-200 h-11 px-4 hover:border-indigo-400 data-[focus=true]:border-indigo-500 data-[focus=true]:ring-4 data-[focus=true]:ring-indigo-500/10 shadow-none bg-slate-50 transition-all",
+                                    input: "font-medium text-sm text-slate-800 placeholder:text-slate-400 ml-2"
+                                }}
+                            />
+                        </div>
+                    }
                 />
             )}
 

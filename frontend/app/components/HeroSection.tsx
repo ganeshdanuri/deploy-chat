@@ -3,6 +3,7 @@
 import { theme } from "../theme";
 import { HiArrowRight, HiPlay, HiCheck } from "react-icons/hi";
 import { FaRobot, FaBolt } from "react-icons/fa";
+import { HERO_CHECKMARKS } from "../../lib/constants";
 
 
 interface Stat {
@@ -21,6 +22,15 @@ interface HeroSectionProps {
 export default function HeroSection({ stats, onGetStarted }: HeroSectionProps) {
   return (
     <section className="relative overflow-hidden bg-transparent pt-10">
+      {/* Subtle Background Geometries & Thin Lines for Hero */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
+        {/* Geometric Shapes */}
+        <div className="absolute top-[15%] left-[5%] w-32 h-32 border border-slate-300 rounded-lg opacity-25 rotate-12" />
+        <div className="absolute top-[5%] right-[25%] w-24 h-24 border border-slate-300 opacity-20 rotate-45" />
+
+        {/* Thin Lines - REMOVED TO PREVENT COLLISION WITH BUTTONS */}
+      </div>
+
       {/* Background Decor - Subtle Gradients for Enterprise Feel */}
       <div
         className="absolute top-0 right-0 -z-10 h-[600px] w-[600px] opacity-20 blur-3xl rounded-full"
@@ -31,7 +41,7 @@ export default function HeroSection({ stats, onGetStarted }: HeroSectionProps) {
         style={{ background: `radial-gradient(circle, ${theme.colors.accent.purple} 0%, transparent 70%)` }}
       />
 
-      <div className="mx-auto max-w-7xl px-6 py-12 lg:py-20">
+      <div className="mx-auto max-w-7xl px-6 py-8 lg:py-14">
         <div className="grid gap-16 lg:grid-cols-2 lg:items-center">
 
           {/* Left Content - Value Proposition */}
@@ -59,7 +69,7 @@ export default function HeroSection({ stats, onGetStarted }: HeroSectionProps) {
                 style={{ color: theme.colors.neutral[900] }}
               >
                 Build Intelligent <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">
+                <span style={{ color: theme.colors.primary.main }}>
                   Conversational AI
                 </span>
               </h1>
@@ -98,11 +108,7 @@ export default function HeroSection({ stats, onGetStarted }: HeroSectionProps) {
 
             {/* Feature Checkmarks (Mini) */}
             <div className="pt-4 flex flex-wrap gap-x-8 gap-y-3">
-              {[
-                "No credit card required",
-                "GDPR Compliant",
-                "14-day free trial"
-              ].map((item, idx) => (
+              {HERO_CHECKMARKS.map((item, idx) => (
                 <div key={idx} className="flex items-center gap-2 text-sm text-slate-500 font-medium">
                   <HiCheck className="text-green-500 text-lg" />
                   {item}
@@ -193,7 +199,7 @@ export default function HeroSection({ stats, onGetStarted }: HeroSectionProps) {
                 <FaBolt className="text-xl" style={{ color: stats[0].color }} />
               </div>
               <div>
-                <div className="text-2xl font-bold font-mono text-slate-900">{stats[0].value}</div>
+                <div className="text-2xl font-bold text-slate-900">{stats[0].value}</div>
                 <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider">{stats[0].label}</div>
               </div>
             </div>

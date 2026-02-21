@@ -16,10 +16,10 @@ export function Skeleton({ className }: SkeletonProps) {
     return (
         <div
             className={cn(
-                "relative overflow-hidden rounded-lg bg-slate-100",
+                "relative overflow-hidden rounded-lg bg-slate-200/60",
                 "before:absolute before:inset-0 before:-translate-x-full",
-                "before:bg-gradient-to-r before:from-transparent before:via-white/60 before:to-transparent",
-                "before:animate-[shimmer_1.5s_infinite]",
+                "before:bg-gradient-to-r before:from-transparent before:via-white/80 before:to-transparent",
+                "before:animate-shimmer",
                 className
             )}
         />
@@ -221,6 +221,58 @@ export function SelectableListSkeleton({ rows = 3 }: { rows?: number }) {
                     <Skeleton className="w-5 h-5 rounded-full" />
                 </div>
             ))}
+        </div>
+    );
+}
+
+// ─── Settings Skeleton ────────────────────────────────────────────────────────
+
+/**
+ * Skeleton shown in SettingsPage while user data loads.
+ */
+export function SettingsSkeleton() {
+    return (
+        <div className="space-y-6 animate-pulse-subtle">
+            {/* Form Card */}
+            <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+                <div className="p-6 border-b border-slate-200 space-y-2">
+                    <Skeleton className="h-5 w-40 rounded-full" />
+                    <Skeleton className="h-3 w-64 rounded-full" />
+                </div>
+                <div className="p-6 space-y-8">
+                    <div className="grid grid-cols-2 gap-6">
+                        <div className="col-span-2 space-y-3">
+                            <Skeleton className="h-4 w-24 rounded-full" />
+                            <Skeleton className="h-10 w-full rounded-xl" />
+                        </div>
+                        <div className="col-span-2 space-y-3">
+                            <Skeleton className="h-4 w-32 rounded-full" />
+                            <Skeleton className="h-10 w-full rounded-xl" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* Billing Card Skeleton */}
+            <div className="p-6 bg-white rounded-xl border border-slate-200 shadow-sm flex flex-col md:flex-row gap-6">
+                <div className="flex-1 space-y-4">
+                    <div className="flex items-center gap-3">
+                        <Skeleton className="w-10 h-10 rounded-full" />
+                        <div className="space-y-2">
+                            <Skeleton className="h-5 w-32 rounded-full" />
+                            <Skeleton className="h-3 w-48 rounded-full" />
+                        </div>
+                    </div>
+                    <div className="space-y-2 pt-2">
+                        <div className="flex justify-between">
+                            <Skeleton className="h-3 w-24 rounded-full" />
+                            <Skeleton className="h-3 w-16 rounded-full" />
+                        </div>
+                        <Skeleton className="h-2 w-full rounded-full" />
+                    </div>
+                </div>
+                <Skeleton className="h-10 w-32 rounded-xl" />
+            </div>
         </div>
     );
 }

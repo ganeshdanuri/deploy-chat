@@ -42,7 +42,8 @@ export function PricingCard({
             </ul>
             <button
                 onClick={onButtonClick}
-                className={`text-sm font-medium mt-6 w-full py-2.5 rounded-lg transition-all ${isPopular ? 'bg-indigo-600 text-white hover:bg-indigo-700 shadow-md shadow-indigo-100' : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-50' }`}
+                className={`text-sm font-medium mt-6 w-full py-2.5 rounded-xl transition-all hover:-translate-y-0.5 ${isPopular ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-100' : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-50'}`}
+                style={isPopular ? { backgroundColor: "#4667ff" } : {}}
             >
                 {buttonText}
             </button>

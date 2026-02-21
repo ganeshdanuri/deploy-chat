@@ -7,7 +7,7 @@ import { PLATFORM_FEATURES as features } from "../../lib/constants";
 
 export default function FeaturesSection() {
   return (
-    <section id="features" className="relative py-24 bg-transparent overflow-hidden">
+    <section id="features" className="relative py-20 bg-transparent overflow-hidden">
       {/* Background Gradients */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden -z-10">
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-100 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"></div>
@@ -16,21 +16,21 @@ export default function FeaturesSection() {
 
       <div className="mx-auto max-w-7xl px-6">
         {/* Section Header */}
-        <div className="mb-20 text-center max-w-3xl mx-auto">
-          <div className="inline-flex items-center justify-center px-4 py-1.5 mb-6 rounded-full bg-blue-50 text-blue-700 text-sm font-semibold tracking-wide uppercase">
+        <div className="mb-16 text-center max-w-3xl mx-auto">
+          <div className="inline-flex items-center justify-center px-3 py-1 mb-4 rounded-full border border-blue-100 bg-blue-50 text-blue-700 text-xs font-bold tracking-widest uppercase">
             Powerful Features
           </div>
           <h2
-            className="text-2xl font-semibold mb-6 tracking-tight"
+            className="text-3xl font-bold mb-6 tracking-tight sm:text-4xl"
             style={{ color: theme.colors.neutral[900] }}
           >
             Everything you need to build <br className="hidden md:block" />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-violet-600">
+            <span style={{ color: theme.colors.primary.main }}>
               Intelligent Chatbots
             </span>
           </h2>
           <p
-            className="text-lg md:text-xl leading-relaxed"
+            className="text-lg leading-relaxed"
             style={{ color: theme.colors.neutral[600] }}
           >
             A complete suite of tools designed for developers and businesses to create, deploy, and manage AI conversational agents.
@@ -82,17 +82,6 @@ export default function FeaturesSection() {
               </div>
             </div>
           ))}
-        </div>
-
-        {/* Bottom CTA */}
-        <div className="mt-20 text-center">
-          <p className="text-slate-500 mb-6 font-medium">Ready to transform your customer experience?</p>
-          <button
-            className="text-sm font-medium px-8 py-4 rounded-full text-white shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all"
-            style={{ background: theme.gradients.primaryButton }}
-          >
-            Start Building Now
-          </button>
         </div>
       </div>
     </section>

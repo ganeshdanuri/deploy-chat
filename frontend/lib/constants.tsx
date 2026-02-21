@@ -1,9 +1,9 @@
 import { theme } from "../app/theme";
-import { HiGlobe, HiChartBar, HiUserGroup, HiShieldCheck } from "react-icons/hi";
+import { HiGlobe, HiChartBar, HiUserGroup, HiShieldCheck, HiDatabase, HiLightningBolt, HiColorSwatch, HiCode, HiSparkles, HiDocumentText, HiCursorClick } from "react-icons/hi";
 import { FaBrain } from "react-icons/fa";
 import { MdIntegrationInstructions } from "react-icons/md";
 
-// From page.tsx
+// ─── Landing Page Stats (HeroSection) ────────────────────────────────────────
 export const LANDING_STATS = [
     {
         id: 1,
@@ -28,7 +28,35 @@ export const LANDING_STATS = [
     },
 ];
 
-// From FeaturesSection.tsx
+// ─── Hero Checkmarks ─────────────────────────────────────────────────────────
+export const HERO_CHECKMARKS = [
+    "No credit card required",
+    "GDPR Compliant",
+    "Free trial",
+];
+
+// ─── Navbar Links ────────────────────────────────────────────────────────────
+export const NAV_LINKS = [
+    { label: "Features", href: "#features" },
+    { label: "Integration", href: "#integration" },
+    { label: "Pricing", href: "#pricing" },
+    { label: "FAQ", href: "#faq" },
+];
+
+// ─── Banner Keywords ─────────────────────────────────────────────────────────
+export const BANNER_KEYWORDS = [
+    { label: "AI Customer Support", icon: HiSparkles },
+    { label: "Train on Your Docs", icon: HiDocumentText },
+    { label: "One-line Embed", icon: HiCode },
+    { label: "No Watermarks", icon: HiShieldCheck },
+    { label: "Custom Branding", icon: HiColorSwatch },
+    { label: "Works with Any Website", icon: HiGlobe },
+    { label: "Live in Minutes", icon: HiLightningBolt },
+    { label: "No Coding Required", icon: HiCursorClick },
+    { label: "Powered by RAG", icon: FaBrain },
+];
+
+// ─── Platform Features (FeaturesSection) ─────────────────────────────────────
 export const PLATFORM_FEATURES = [
     {
         id: 1,
@@ -80,8 +108,73 @@ export const PLATFORM_FEATURES = [
     },
 ];
 
-// From PricingSection.tsx
-export const PRICING_PLANS = [
+// ─── Integration Steps ───────────────────────────────────────────────────────
+export interface IntegrationStep {
+    id: string;
+    title: string;
+    description: string;
+    icon: React.ComponentType<{ className?: string }>;
+}
+
+export const INTEGRATION_STEPS: IntegrationStep[] = [
+    {
+        id: "01",
+        title: "Connect your data",
+        description:
+            "Upload PDFs, crawl your site, or sync from Notion and Google Drive. Stays up to date automatically.",
+        icon: HiDatabase,
+    },
+    {
+        id: "02",
+        title: "Train your AI",
+        description:
+            "Our RAG engine processes and indexes your knowledge base. Refine responses in the live playground.",
+        icon: HiLightningBolt,
+    },
+    {
+        id: "03",
+        title: "Style to your brand",
+        description:
+            "Set colors, logo, and tone of voice. No 'Powered by DeployChat' badge. Your widget, your identity.",
+        icon: HiColorSwatch,
+    },
+    {
+        id: "04",
+        title: "Paste one line and ship",
+        description:
+            "Copy the snippet below into your <head>. Works with React, Next.js, WordPress — anything with HTML.",
+        icon: HiCode,
+    },
+];
+
+export const EMBED_SNIPPET = `<script
+  src="https://cdn.deploychat.io/widget.js"
+  data-bot-id="YOUR_BOT_ID"
+  data-theme="custom"
+  async
+></script>`;
+
+export const COMPATIBLE_TECHS = [
+    "React",
+    "Next.js",
+    "Vue",
+    "WordPress",
+    "Webflow",
+    "Shopify",
+    "Any HTML",
+];
+
+// ─── Pricing Plans ───────────────────────────────────────────────────────────
+export interface PricingPlan {
+    name: string;
+    price: string;
+    description: string;
+    features: string[];
+    cta: string;
+    popular: boolean;
+}
+
+export const PRICING_PLANS: PricingPlan[] = [
     {
         name: "Free",
         price: "0",
@@ -138,7 +231,7 @@ export const PRICING_PLANS = [
     },
 ];
 
-// From FAQSection.tsx
+// ─── FAQs ────────────────────────────────────────────────────────────────────
 export const FAQS = [
     {
         question: "How does the AI training work?",
@@ -158,7 +251,38 @@ export const FAQS = [
     },
 ];
 
-// From TestimonialsSection.tsx
+// ─── Footer Links ────────────────────────────────────────────────────────────
+export const FOOTER_LINKS = [
+    {
+        title: "Product",
+        links: [
+            { name: "Features", href: "#features" },
+            { name: "Integrations", href: "#integration" },
+            { name: "Pricing", href: "#pricing" },
+            { name: "Changelog", href: "#" },
+        ],
+    },
+    {
+        title: "Resources",
+        links: [
+            { name: "Documentation", href: "#" },
+            { name: "Help Center", href: "#" },
+            { name: "API Reference", href: "#" },
+            { name: "Community", href: "#" },
+        ],
+    },
+    {
+        title: "Company",
+        links: [
+            { name: "About Us", href: "#" },
+            { name: "Privacy Policy", href: "#" },
+            { name: "Terms of Service", href: "#" },
+            { name: "Contact", href: "#" },
+        ],
+    },
+];
+
+// ─── Testimonials ────────────────────────────────────────────────────────────
 export const TESTIMONIALS = [
     {
         name: "Sarah Chen",

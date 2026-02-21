@@ -2,15 +2,16 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { HiDatabase, HiPlus, HiRefresh, HiCollection, HiTrash } from "react-icons/hi";
+import { HiDatabase, HiPlus, HiRefresh, HiCollection, HiTrash, HiSearch } from "react-icons/hi";
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 import { fetchDatasets, deleteDataset } from "@/lib/store/slices/datasetsSlice";
 import CreateDatasetModal from "@/app/components/CreateDatasetModal";
 import showToast from "@/lib/toast";
-import { User, Tooltip, Button, Card, CardBody } from "@heroui/react";
+import { User, Tooltip, Button, Card, CardBody, Input } from "@heroui/react";
 import { PageHeader, EmptyState, StyledTable, DateCell, StatusChip, TableSkeleton } from "@/app/components/ui";
 import type { TableColumnDef } from "@/app/components/ui";
 import type { Dataset } from "@/lib/types";
+import { theme } from "@/app/theme";
 
 const COLUMNS: TableColumnDef[] = [
     { key: "name", label: "NAME" },
@@ -21,6 +22,7 @@ const COLUMNS: TableColumnDef[] = [
 
 export default function DatasetsPage() {
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [filterValue, setFilterValue] = useState("");
     const dispatch = useAppDispatch();
     const { items: datasets, status } = useAppSelector((state) => state.datasets);
     const isLoading = status === "loading";
@@ -94,21 +96,21 @@ export default function DatasetsPage() {
                 title="Datasets"
                 description="Manage your knowledge sources and integrations."
                 actions={
-                    (datasets.length > 0 || isLoading) ? (
+                    datasets.length > 0 ? (
                         <>
                             <Button
                                 onPress={() => dispatch(fetchDatasets())}
                                 variant="bordered"
                                 startContent={<HiRefresh className="w-4 h-4 text-slate-400" />}
-                                className="bg-white border-slate-200 text-slate-700 text-xs sm:text-sm font-medium rounded-lg"
+                                className="bg-white border-slate-200 text-slate-700 text-xs sm:text-sm font-medium rounded-xl transition-all hover:-translate-y-0.5"
                             >
                                 Refresh
                             </Button>
                             <Button
                                 onPress={() => setIsModalOpen(true)}
-                                color="success"
                                 startContent={<HiPlus className="w-4 h-4" />}
-                                className="bg-emerald-600 text-white text-xs sm:text-sm font-medium rounded-lg shadow-emerald-200"
+                                className="text-white text-xs sm:text-sm font-medium rounded-xl transition-all hover:-translate-y-0.5 shadow-lg shadow-emerald-200"
+                                style={{ backgroundColor: theme.colors.primary.main }}
                             >
                                 New Dataset
                             </Button>
@@ -133,8 +135,26 @@ export default function DatasetsPage() {
                     <StyledTable
                         aria-label="Datasets list"
                         columns={COLUMNS}
-                        items={datasets}
+                        items={datasets.filter(ds => ds.name.toLowerCase().includes(filterValue.toLowerCase()))}
                         renderCell={renderCell}
+                        topContent={
+                            <div className="flex justify-between gap-3 items-end mb-2">
+                                <Input
+                                    isClearable
+                                    className="w-full sm:max-w-[44%]"
+                                    placeholder="Search datasets..."
+                                    startContent={<HiSearch className="text-slate-400 ml-1" />}
+                                    value={filterValue}
+                                    variant="bordered"
+                                    onClear={() => setFilterValue("")}
+                                    onValueChange={setFilterValue}
+                                    classNames={{
+                                        inputWrapper: "rounded-xl border border-slate-200 h-11 px-4 hover:border-emerald-400 data-[focus=true]:border-emerald-500 data-[focus=true]:ring-4 data-[focus=true]:ring-emerald-500/10 shadow-none bg-slate-50 transition-all",
+                                        input: "font-medium text-sm text-slate-800 placeholder:text-slate-400 ml-2"
+                                    }}
+                                />
+                            </div>
+                        }
                     />
 
                     {/* Quick Add Card */}

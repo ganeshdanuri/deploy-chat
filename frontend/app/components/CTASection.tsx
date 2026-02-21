@@ -4,9 +4,9 @@ import { theme } from "../theme";
 
 export default function CTASection({ onGetStarted }: { onGetStarted: () => void }) {
     return (
-        <section className="py-24 px-6">
+        <section className="py-20 px-6">
             <div
-                className="max-w-7xl mx-auto rounded-[3rem] p-12 md:p-24 text-center relative overflow-hidden shadow-2xl"
+                className="max-w-7xl mx-auto rounded-[3rem] p-12 md:p-20 text-center relative overflow-hidden shadow-2xl"
                 style={{ background: theme.colors.neutral[900] }}
             >
                 {/* Decorative Gradients */}
@@ -20,15 +20,15 @@ export default function CTASection({ onGetStarted }: { onGetStarted: () => void 
                 />
 
                 <div className="relative z-10 max-w-3xl mx-auto">
-                    <h2 className="text-2xl font-semibold text-white mb-8 leading-tight">
+                    <h2 className="text-3xl font-bold text-white mb-8 leading-tight sm:text-4xl">
                         Ready to Build Your <br />
-                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-400">
+                        <span style={{ color: theme.colors.primary.main }}>
                             Intelligent Future?
                         </span>
                     </h2>
-                    <p className="text-xl text-slate-400 mb-12">
+                    <p className="text-lg text-slate-400 mb-12">
                         Join 500+ developers and businesses who are scaling their
-                        support with <span className="font-black tracking-tight text-white">D<span style={{ color: "#4667ff" }}>E</span>PLOY C<span style={{ color: "#4667ff" }}>H</span>AT</span>. Start your 14-day free trial today.
+                        support with <span className="font-black tracking-tight text-white">DEPLOY <span style={{ color: theme.colors.primary.main }}>CHAT</span></span>. Start your 14-day free trial today.
                     </p>
 
                     <div className="flex flex-col sm:flex-row items-center justify-center gap-6">

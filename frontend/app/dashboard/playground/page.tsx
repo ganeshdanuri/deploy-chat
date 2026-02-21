@@ -284,7 +284,7 @@ function ChatHeader({ chatbot, onReset }: { chatbot: any; onReset: () => void })
 
 function ChatMessages({ messages }: { messages: ChatMessage[] }) {
     return (
-        <div className="flex-1 p-8 bg-slate-50/30 space-y-8 overflow-y-auto scroll-smooth">
+        <div className="flex-1 p-6 bg-slate-50/30 space-y-4 overflow-y-auto scroll-smooth">
             {messages.map((msg) => (
                 <MessageBubble key={msg.id} message={msg} />
             ))}
@@ -294,14 +294,14 @@ function ChatMessages({ messages }: { messages: ChatMessage[] }) {
 
 function MessageBubble({ message: msg }: { message: ChatMessage }) {
     return (
-        <div className={`flex gap-4 ${!msg.isBot ? "flex-row-reverse" : ""}`}>
+        <div className={`flex gap-3 ${!msg.isBot ? "flex-row-reverse" : ""}`}>
             <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 border shadow-sm transition-transform hover:scale-105 ${msg.isBot ? "bg-white border-slate-200 text-indigo-600" : "bg-indigo-600 border-indigo-700 text-white"
                 }`}>
                 {msg.isBot ? <HiChatAlt2 className="w-5 h-5" /> : <HiUser className="w-5 h-5" />}
             </div>
 
             <div className={`max-w-[75%] space-y-2 ${!msg.isBot ? "items-end flex flex-col" : ""}`}>
-                <div className={`px-6 py-4 rounded-3xl text-[14px] leading-relaxed shadow-sm transition-all ${msg.isBot
+                <div className={`px-4 py-2.5 rounded-2xl text-[14px] leading-relaxed shadow-sm transition-all ${msg.isBot
                     ? "bg-white border border-slate-200 text-slate-700 rounded-tl-none font-medium"
                     : "bg-indigo-600 text-white rounded-tr-none font-medium"
                     }`}>

@@ -2,12 +2,13 @@
 "use client";
 
 import { useState } from "react";
-import { HiCloudUpload, HiCheckCircle, HiExclamationCircle, HiLightningBolt } from "react-icons/hi";
+import { HiCloudUpload, HiCheckCircle, HiExclamationCircle, HiLightningBolt, HiX, HiDocumentText } from "react-icons/hi";
 import api from "@/lib/api";
 import Modal from "./Modal";
 import showToast from "@/lib/toast";
 import { Button, Card, CardBody } from "@heroui/react";
 import { ENDPOINTS } from "@/lib/endpoints";
+import { theme } from "../theme";
 
 interface UploadModalProps {
     isOpen: boolean;
@@ -15,24 +16,50 @@ interface UploadModalProps {
     onUploadSuccess: () => void;
 }
 
+const MAX_SIZE_MB = 10;
+const IDEAL_SIZE_MB = 5;
+
 export default function UploadModal({ isOpen, onClose, onUploadSuccess }: UploadModalProps) {
-    const [file, setFile] = useState<File | null>(null);
+    const [files, setFiles] = useState<File[]>([]);
     const [isUploading, setIsUploading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [uploadStatus, setUploadStatus] = useState<'idle' | 'success' | 'error'>('idle');
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.files && e.target.files[0]) {
-            setFile(e.target.files[0]);
+        if (e.target.files) {
+            const newFiles = Array.from(e.target.files);
+            validateAndAddFiles(newFiles);
+        }
+    };
+
+    const validateAndAddFiles = (newFiles: File[]) => {
+        const validFiles: File[] = [];
+        let sizeError = false;
+
+        newFiles.forEach(file => {
+            if (file.size > MAX_SIZE_MB * 1024 * 1024) {
+                showToast.error(`File "${file.name}" exceeds ${MAX_SIZE_MB}MB limit`);
+                sizeError = true;
+            } else {
+                validFiles.push(file);
+            }
+        });
+
+        if (validFiles.length > 0) {
+            setFiles(prev => [...prev, ...validFiles]);
             setError(null);
             setUploadStatus('idle');
         }
     };
 
+    const removeFile = (index: number) => {
+        setFiles(prev => prev.filter((_, i) => i !== index));
+    };
+
     const handleSubmit = async (e?: React.FormEvent) => {
         e?.preventDefault();
-        if (!file) {
-            showToast.error("Please select a file first");
+        if (files.length === 0) {
+            showToast.error("Please select at least one file");
             return;
         }
 
@@ -41,7 +68,9 @@ export default function UploadModal({ isOpen, onClose, onUploadSuccess }: Upload
         setUploadStatus('idle');
 
         const formData = new FormData();
-        formData.append("file", file);
+        files.forEach(file => {
+            formData.append("files", file);
+        });
 
         try {
             await api.post(ENDPOINTS.DOCUMENTS.BASE, formData, {
@@ -50,14 +79,14 @@ export default function UploadModal({ isOpen, onClose, onUploadSuccess }: Upload
                 },
             });
             setUploadStatus('success');
-            showToast.success(`Document "${file.name}" uploaded successfully!`);
+            showToast.success(`${files.length} file(s) uploaded successfully!`);
             setTimeout(() => {
                 onUploadSuccess();
                 handleClose();
             }, 1000);
         } catch (err: any) {
             console.error("Upload failed:", err);
-            const errorMessage = err.response?.data?.detail || "Failed to upload and convert document";
+            const errorMessage = err.response?.data?.detail || "Failed to upload and convert documents";
             setError(errorMessage);
             setUploadStatus('error');
             showToast.error(errorMessage);
@@ -67,7 +96,7 @@ export default function UploadModal({ isOpen, onClose, onUploadSuccess }: Upload
     };
 
     const handleClose = () => {
-        setFile(null);
+        setFiles([]);
         setError(null);
         setUploadStatus('idle');
         setIsUploading(false);
@@ -85,82 +114,106 @@ export default function UploadModal({ isOpen, onClose, onUploadSuccess }: Upload
             iconColor="text-indigo-600"
             maxWidth="lg"
         >
-            <div className="space-y-8">
+            <div className="space-y-6">
                 <div
-                    className={`relative border-2 border-dashed rounded-[2.5rem] p-10 transition-all duration-500 text-center flex flex-col items-center justify-center 
-                        ${file
+                    className={`relative border-2 border-dashed rounded-[2rem] p-8 transition-all duration-500 text-center flex flex-col items-center justify-center 
+                        ${files.length > 0
                             ? 'border-indigo-400 bg-indigo-50/30'
                             : 'border-slate-200 hover:border-indigo-300 hover:bg-slate-50/50 hover:scale-[1.01]'
                         }`}
                     onDragOver={(e) => e.preventDefault()}
                     onDrop={(e) => {
                         e.preventDefault();
-                        if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-                            setFile(e.dataTransfer.files[0]);
+                        if (e.dataTransfer.files) {
+                            validateAndAddFiles(Array.from(e.dataTransfer.files));
                         }
                     }}
                 >
                     <input
                         type="file"
+                        multiple
                         onChange={handleFileChange}
                         className="text-sm absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                         accept=".pdf,.docx,.doc,.txt,.pptx,.ppt,.xlsx,.xls,.csv,.md"
                     />
-                    <div className="w-16 h-16 bg-white shadow-xl rounded-2xl flex items-center justify-center mb-6 border border-slate-50">
-                        <HiCloudUpload className="text-3xl text-indigo-600" />
+                    <div className="w-12 h-12 bg-white shadow-lg rounded-xl flex items-center justify-center mb-4 border border-slate-50">
+                        <HiCloudUpload className="text-2xl text-indigo-600" />
                     </div>
-                    <div className="space-y-2">
-                        <p className="text-sm font-medium text-slate-800">
-                            {file ? file.name : "Drop document here"}
+                    <div className="space-y-1">
+                        <p className="text-sm font-semibold text-slate-800">
+                            {files.length > 0 ? `${files.length} file(s) selected` : "Drop documents here"}
                         </p>
-                        <p className="text-[13px] text-slate-500 font-medium">
-                            or click to browse files
+                        <p className="text-[12px] text-slate-500 font-medium">
+                            Max {MAX_SIZE_MB}MB per file. Ideal size: {IDEAL_SIZE_MB}MB.
                         </p>
                     </div>
                 </div>
 
-                <Card className="bg-slate-50 rounded-3xl shadow-none border border-slate-100">
-                    <CardBody className="flex flex-row items-start gap-4 p-5">
-                        <div className="w-10 h-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center shrink-0 shadow-sm">
-                            <HiLightningBolt className="w-5 h-5 text-amber-500" />
+                {/* Selected Files List */}
+                {files.length > 0 && (
+                    <div className="max-h-40 overflow-y-auto space-y-2 pr-2">
+                        {files.map((f, i) => (
+                            <div key={i} className="flex items-center justify-between p-3 bg-white border border-slate-200 rounded-xl animate-scale-in">
+                                <div className="flex items-center gap-3 overflow-hidden">
+                                    <HiDocumentText className="text-indigo-500 w-5 h-5 shrink-0" />
+                                    <div className="overflow-hidden">
+                                        <p className="text-xs font-bold text-slate-700 truncate">{f.name}</p>
+                                        <p className="text-[10px] text-slate-400">{(f.size / (1024 * 1024)).toFixed(2)} MB</p>
+                                    </div>
+                                </div>
+                                <button
+                                    onClick={() => removeFile(i)}
+                                    className="p-1 hover:bg-red-50 text-slate-400 hover:text-red-500 rounded-lg transition-colors"
+                                >
+                                    <HiX className="w-4 h-4" />
+                                </button>
+                            </div>
+                        ))}
+                    </div>
+                )}
+
+                <Card className="bg-slate-50 rounded-2xl shadow-none border border-slate-100">
+                    <CardBody className="flex flex-row items-start gap-4 p-4">
+                        <div className="w-9 h-9 rounded-xl bg-white border border-slate-200 flex items-center justify-center shrink-0 shadow-sm">
+                            <HiLightningBolt className="w-4 h-4 text-amber-500" />
                         </div>
                         <div>
-                            <h4 className="text-lg font-medium text-slate-700">Auto-Markdown Conversion</h4>
-                            <p className="text-xs text-slate-500 mt-1 leading-relaxed">We'll automatically extract text and structure from your document to make it queryable.</p>
+                            <h4 className="text-sm font-bold text-slate-700">Auto-Markdown Conversion</h4>
+                            <p className="text-[11px] text-slate-500 mt-0.5 leading-relaxed">System-wide RAG support with native markdown conversion.</p>
                         </div>
                     </CardBody>
                 </Card>
 
                 {error && (
-                    <div className="flex items-center gap-3 p-4 rounded-2xl bg-red-50 text-red-600 text-xs font-medium border border-red-100 animate-fade-in">
-                        <HiExclamationCircle className="text-lg flex-shrink-0" />
+                    <div className="flex items-center gap-3 p-3 rounded-xl bg-red-50 text-red-600 text-[11px] font-medium border border-red-100 animate-fade-in">
+                        <HiExclamationCircle className="text-base flex-shrink-0" />
                         <span>{error}</span>
                     </div>
                 )}
 
                 {uploadStatus === 'success' && (
-                    <div className="flex items-center gap-3 p-4 rounded-2xl bg-emerald-50 text-emerald-600 text-xs font-medium border border-emerald-100 animate-fade-in">
-                        <HiCheckCircle className="text-lg flex-shrink-0" />
-                        <span>Document ingested successfully!</span>
+                    <div className="flex items-center gap-3 p-3 rounded-xl bg-emerald-50 text-emerald-600 text-[11px] font-medium border border-emerald-100 animate-fade-in">
+                        <HiCheckCircle className="text-base flex-shrink-0" />
+                        <span>Documents ingested successfully!</span>
                     </div>
                 )}
 
-                <div className="pt-4 flex gap-4">
+                <div className="pt-2 flex gap-4">
                     <Button
                         variant="bordered"
                         onPress={handleClose}
-                        className="flex-1 font-medium rounded-2xl h-12"
+                        className="flex-1 font-bold text-slate-600 border-slate-300 rounded-xl h-11 transition-all hover:-translate-y-0.5"
                     >
                         Cancel
                     </Button>
                     <Button
-                        color="primary"
                         onPress={() => handleSubmit()}
-                        isDisabled={!file || isUploading}
+                        isDisabled={files.length === 0 || isUploading}
                         isLoading={isUploading}
-                        className="flex-[1.5] bg-indigo-600 text-white text-sm font-medium rounded-2xl h-12 shadow-xl shadow-indigo-200"
+                        className="flex-[1.5] text-white text-[13px] font-bold rounded-xl h-11 shadow-lg shadow-indigo-100 transition-all hover:-translate-y-0.5"
+                        style={{ backgroundColor: theme.colors.primary.main }}
                     >
-                        {isUploading ? "Converting..." : "Import Document"}
+                        {isUploading ? "Processing..." : `Import ${files.length > 1 ? `${files.length} Files` : "Document"}`}
                     </Button>
                 </div>
             </div>

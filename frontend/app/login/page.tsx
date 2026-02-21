@@ -24,6 +24,7 @@ function LoginContent() {
     const [isLoading, setIsLoading] = useState(false);
 
     const leftSideRef = useRef<HTMLDivElement>(null);
+    const rightSideRef = useRef<HTMLDivElement>(null);
 
     const validateEmail = (email: string) => {
         return String(email)
@@ -133,7 +134,7 @@ function LoginContent() {
                 className="hidden lg:flex lg:w-4/6 relative overflow-hidden flex-col justify-center items-start p-16"
                 style={{ backgroundColor: theme.colors.neutral[900] }}
             >
-                <div className="absolute inset-0 opacity-30" style={{
+                <div className="absolute inset-0 opacity-10" style={{
                     backgroundImage: `radial-gradient(circle at 50% 50%, ${theme.colors.primary.main} 0%, transparent 60%)`,
                 }} />
 
@@ -142,9 +143,6 @@ function LoginContent() {
                     backgroundImage: `linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)`,
                     backgroundSize: '40px 40px'
                 }} />
-
-                <div className="absolute -bottom-20 -left-20 w-72 h-72 rounded-full gsap-shape shadow-2xl opacity-20 backdrop-blur-3xl"
-                    style={{ background: `linear-gradient(135deg, ${theme.colors.primary.lighter}, ${theme.colors.accent.blue})`, boxShadow: `0 0 80px ${theme.colors.accent.blue}80` }} />
 
                 <div className="relative z-10 max-w-2xl px-8">
                     <div className="gsap-text inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary-main/10 border border-primary-main/20 mb-8 backdrop-blur-md">
@@ -157,7 +155,7 @@ function LoginContent() {
 
                     <h1 className="text-4xl font-bold mb-8 gsap-text leading-[1.1] tracking-tight text-white">
                         Powering the <br />
-                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-300">
+                        <span style={{ color: theme.colors.primary.main }}>
                             Autonomous Future
                         </span>
                     </h1>
@@ -197,7 +195,10 @@ function LoginContent() {
             </div>
 
             {/* Right Side - Login Form (Inspired by the image layout) */}
-            <div className="w-full lg:w-2/6 flex flex-col justify-center px-8 sm:px-16 xl:px-20 bg-white relative">
+            <div
+                ref={rightSideRef}
+                className="w-full lg:w-2/6 flex flex-col justify-center px-8 sm:px-16 xl:px-20 bg-white relative"
+            >
                 <div className="absolute top-8 left-8 lg:hidden">
                     <div className="flex items-center gap-2 cursor-pointer" onClick={() => router.push("/")}>
                         <Logo className="h-8 w-auto" />
@@ -385,9 +386,10 @@ function LoginContent() {
                                 setError("Google login failed");
                             }}
                             useOneTap
-                            width="280"
+                            width="320"
                             theme="outline"
-                            shape="pill"
+                            shape="square"
+                            containerProps={{}}
                         />
                     </div>
 

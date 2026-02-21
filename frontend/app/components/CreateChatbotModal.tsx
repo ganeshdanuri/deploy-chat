@@ -11,6 +11,7 @@ import showToast from "@/lib/toast";
 import { Button, Input } from "@heroui/react";
 import { SelectableItemList, SelectableListSkeleton } from "./ui";
 import type { SelectableItem } from "./ui";
+import { theme } from "../theme";
 
 interface CreateChatbotModalProps {
     isOpen: boolean;
@@ -72,16 +73,16 @@ export default function CreateChatbotModal({ isOpen, onClose }: CreateChatbotMod
             <Button
                 variant="bordered"
                 onPress={onClose}
-                className="flex-1 font-medium rounded-2xl h-12"
+                className="flex-1 font-medium rounded-xl h-12 transition-all hover:-translate-y-0.5 border-slate-300 text-slate-600"
             >
                 Cancel
             </Button>
             <Button
-                color="primary"
                 onPress={handleSubmit}
                 isDisabled={isSubmitting || !name || selectedDatasets.length === 0}
                 isLoading={isSubmitting}
-                className="flex-[1.5] bg-slate-900 text-white text-sm font-medium rounded-2xl h-12 shadow-xl"
+                className="flex-[1.5] text-white text-sm font-medium rounded-xl h-12 shadow-xl transition-all hover:-translate-y-0.5"
+                style={{ backgroundColor: theme.colors.primary.main }}
             >
                 {isSubmitting ? "Creating..." : "Launch Assistant"}
             </Button>
@@ -114,7 +115,7 @@ export default function CreateChatbotModal({ isOpen, onClose }: CreateChatbotMod
                         onChange={(e) => setName(e.target.value)}
                         placeholder="e.g. Customer Support Bot"
                         classNames={{
-                            inputWrapper: "rounded-2xl border-2 border-slate-300 h-12 hover:border-slate-400 data-[focus=true]:border-indigo-500 shadow-none bg-white",
+                            inputWrapper: "rounded-xl border border-slate-300 h-11 hover:border-indigo-400 data-[focus=true]:border-indigo-500 data-[focus=true]:ring-4 data-[focus=true]:ring-indigo-500/10 shadow-none bg-slate-50 transition-all",
                             input: "font-medium text-sm text-slate-800 placeholder:text-slate-400",
                         }}
                     />
@@ -162,7 +163,7 @@ export default function CreateChatbotModal({ isOpen, onClose }: CreateChatbotMod
                         onChange={(e) => setWelcomeMessage(e.target.value)}
                         placeholder="Hi! How can I help you?"
                         classNames={{
-                            inputWrapper: "rounded-2xl border-2 border-slate-300 h-12 hover:border-slate-400 data-[focus=true]:border-indigo-500 shadow-none bg-white",
+                            inputWrapper: "rounded-xl border border-slate-300 h-11 hover:border-indigo-400 data-[focus=true]:border-indigo-500 data-[focus=true]:ring-4 data-[focus=true]:ring-indigo-500/10 shadow-none bg-slate-50 transition-all",
                             input: "font-medium text-sm text-slate-800",
                         }}
                     />

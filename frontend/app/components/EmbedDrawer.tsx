@@ -108,7 +108,7 @@ export default function EmbedDrawer({ isOpen, onClose, chatbot }: EmbedDrawerPro
                             size="sm"
                             isIconOnly
                             onPress={copyToken}
-                            className="bg-white border border-slate-200 text-slate-500 hover:text-indigo-600 hover:border-indigo-300 rounded-lg"
+                            className="bg-white border border-slate-200 text-slate-500 hover:text-indigo-600 hover:border-indigo-300 rounded-xl transition-all hover:-translate-y-0.5"
                         >
                             {copiedToken ? <HiCheck className="w-4 h-4 text-green-500" /> : <HiClipboardCopy className="w-4 h-4" />}
                         </Button>
@@ -165,7 +165,7 @@ export default function EmbedDrawer({ isOpen, onClose, chatbot }: EmbedDrawerPro
                                     <button
                                         key={pos}
                                         onClick={() => setPosition(pos)}
-                                        className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-all ${position === pos
+                                        className={`px-3 py-1.5 rounded-xl text-xs font-medium border transition-all hover:-translate-y-0.5 ${position === pos
                                             ? "bg-indigo-50 border-indigo-300 text-indigo-700"
                                             : "bg-white border-slate-200 text-slate-500 hover:border-slate-300"
                                             }`}
@@ -235,7 +235,7 @@ export default function EmbedDrawer({ isOpen, onClose, chatbot }: EmbedDrawerPro
                             size="sm"
                             onPress={copySnippet}
                             startContent={copiedSnippet ? <HiCheck className="w-3.5 h-3.5" /> : <HiClipboardCopy className="w-3.5 h-3.5" />}
-                            className={`text-xs font-medium rounded-lg transition-all ${copiedSnippet
+                            className={`text-xs font-medium rounded-xl transition-all hover:-translate-y-0.5 ${copiedSnippet
                                 ? "bg-green-50 border border-green-300 text-green-700"
                                 : "bg-indigo-50 border border-indigo-200 text-indigo-700 hover:bg-indigo-100"
                                 }`}

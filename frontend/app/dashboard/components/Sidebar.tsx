@@ -24,6 +24,7 @@ import {
 import { useState } from "react";
 import Logo from "../../components/Logo";
 import { useAppSelector } from "@/lib/store/hooks";
+import { theme } from "../../theme";
 
 const mainNavItems = [
     { id: "home", label: "Overview", path: "/dashboard", icon: HiHome },
@@ -83,7 +84,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                             <h2 className="text-sm font-black tracking-tight truncate text-slate-900">
                                 D<span style={{ color: "#4667ff" }}>E</span>PLOY C<span style={{ color: "#4667ff" }}>H</span>AT
                             </h2>
-                            <p className="text-[10px] font-bold text-indigo-500 uppercase tracking-tighter">
+                            <p className="text-[10px] font-bold uppercase tracking-tighter" style={{ color: theme.colors.primary.main }}>
                                 {userData?.billing?.current_plan || "Free"}
                             </p>
                         </div>
@@ -121,12 +122,16 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                                         ${isDisabled
                                         ? "opacity-50 cursor-not-allowed text-slate-400"
                                         : isActive
-                                            ? "bg-white text-indigo-600 shadow-sm ring-1 ring-slate-200"
+                                            ? "bg-white shadow-sm ring-1 ring-slate-200"
                                             : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
                                     }
                                     `}
+                                style={isActive && !isDisabled ? { color: theme.colors.primary.main } : {}}
                             >
-                                <Icon className={`w-5 h-5 shrink-0 transition-colors ${isActive && !isDisabled ? "text-indigo-600" : "text-slate-400 group-hover:text-slate-600"}`} />
+                                <Icon
+                                    className={`w-5 h-5 shrink-0 transition-colors ${isActive && !isDisabled ? "" : "text-slate-400 group-hover:text-slate-600"}`}
+                                    style={isActive && !isDisabled ? { color: theme.colors.primary.main } : {}}
+                                />
                                 {!isCollapsed && (
                                     <div className="flex flex-1 items-center justify-between">
                                         <span>{item.label}</span>
@@ -136,7 +141,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                                     </div>
                                 )}
                                 {isActive && !isCollapsed && !isDisabled && (
-                                    <div className="absolute right-2 w-1.5 h-1.5 rounded-full bg-indigo-600"></div>
+                                    <div className="absolute right-2 w-1.5 h-1.5 rounded-full" style={{ backgroundColor: theme.colors.primary.main }}></div>
                                 )}
 
                                 {/* Tooltip for collapsed state */}
@@ -169,12 +174,16 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                                         relative group flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all
                                         ${isCollapsed ? "justify-center" : ""}
                                         ${isActive
-                                            ? "bg-white text-indigo-600 shadow-sm ring-1 ring-slate-200"
+                                            ? "bg-white shadow-sm ring-1 ring-slate-200"
                                             : "text-slate-500 hover:text-slate-900 hover:bg-slate-100"
                                         }
                                     `}
+                                    style={isActive ? { color: theme.colors.primary.main } : {}}
                                 >
-                                    <Icon className={`w-4 h-4 shrink-0 transition-colors ${isActive ? "text-indigo-600" : "text-slate-400 group-hover:text-slate-500"}`} />
+                                    <Icon
+                                        className={`w-4 h-4 shrink-0 transition-colors ${isActive ? "" : "text-slate-400 group-hover:text-slate-500"}`}
+                                        style={isActive ? { color: theme.colors.primary.main } : {}}
+                                    />
                                     {!isCollapsed && <span className="text-[13px]">{item.label}</span>}
                                 </Link>
                             );
@@ -197,12 +206,16 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                                     relative group flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all
                                     ${isCollapsed ? "justify-center" : ""}
                                     ${isActive
-                                    ? "bg-white text-indigo-600 shadow-sm ring-1 ring-slate-200"
+                                    ? "bg-white shadow-sm ring-1 ring-slate-200"
                                     : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
                                 }
                                 `}
+                            style={isActive ? { color: theme.colors.primary.main } : {}}
                         >
-                            <Icon className={`w-5 h-5 shrink-0 ${isActive ? "text-indigo-600" : "text-slate-400"}`} />
+                            <Icon
+                                className={`w-5 h-5 shrink-0 ${isActive ? "" : "text-slate-400"}`}
+                                style={isActive ? { color: theme.colors.primary.main } : {}}
+                            />
                             {!isCollapsed && <span>{item.label}</span>}
 
                             {/* Tooltip for collapsed state */}

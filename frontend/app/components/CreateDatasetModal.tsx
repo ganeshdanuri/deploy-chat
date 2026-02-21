@@ -66,16 +66,15 @@ export default function CreateDatasetModal({ isOpen, onClose }: CreateDatasetMod
             <Button
                 variant="bordered"
                 onPress={onClose}
-                className="flex-1 font-medium rounded-2xl h-12"
+                className="flex-1 font-medium rounded-xl h-12 transition-all hover:-translate-y-0.5 border-slate-300 text-slate-600"
             >
                 Cancel
             </Button>
             <Button
-                color="success"
                 onPress={handleSubmit}
                 isDisabled={isSubmitting || !name || selectedDocs.length === 0}
                 isLoading={isSubmitting}
-                className="flex-[1.5] bg-emerald-600 text-white text-sm font-medium rounded-2xl h-12"
+                className="flex-[1.5] bg-emerald-600 text-white text-sm font-medium rounded-xl h-12 transition-all hover:-translate-y-0.5 shadow-lg shadow-emerald-100"
             >
                 {isSubmitting ? "Syncing..." : "Initialize Dataset"}
             </Button>
@@ -108,7 +107,7 @@ export default function CreateDatasetModal({ isOpen, onClose }: CreateDatasetMod
                         onChange={(e) => setName(e.target.value)}
                         placeholder="e.g. Legal Documents 2024"
                         classNames={{
-                            inputWrapper: "rounded-2xl border-2 border-slate-300 h-12 hover:border-slate-400 data-[focus=true]:border-emerald-500 shadow-none bg-white",
+                            inputWrapper: "rounded-xl border border-slate-300 h-11 hover:border-emerald-400 data-[focus=true]:border-emerald-500 data-[focus=true]:ring-4 data-[focus=true]:ring-emerald-500/10 shadow-none bg-slate-50 transition-all",
                             input: "font-medium text-sm text-slate-800 placeholder:text-slate-400",
                         }}
                     />

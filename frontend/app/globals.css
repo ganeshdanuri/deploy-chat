@@ -50,7 +50,7 @@ input:disabled {
 }
 
 .animate-shimmer {
-  animation: shimmer 3s infinite linear;
+  animation: shimmer 2s infinite linear;
 }
 
 /* Used by skeleton containers */

@@ -39,7 +39,7 @@ export function StyledTable<T extends { id: string }>({
     return (
         <Table
             aria-label={ariaLabel}
-            topContent={topContent}
+            topContent={topContent && <div className="p-4 pb-2">{topContent}</div>}
             classNames={{
                 base: "bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden",
                 thead: "bg-slate-50 border-b border-slate-200 text-slate-500 font-medium",

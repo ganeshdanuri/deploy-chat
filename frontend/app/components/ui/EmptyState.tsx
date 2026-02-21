@@ -61,7 +61,7 @@ export function EmptyState({
                 <Button
                     onPress={onAction}
                     startContent={<HiPlus className="w-5 h-5" />}
-                    className={`${colors.btn} px-6 h-12 text-white font-medium rounded-xl shadow-lg`}
+                    className={`${colors.btn} px-6 h-12 text-white font-medium rounded-xl shadow-lg transition-all hover:-translate-y-0.5`}
                 >
                     {actionLabel}
                 </Button>

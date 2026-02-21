@@ -222,13 +222,9 @@ function DashboardSummary({
           </p>
         </div>
         <div className="flex gap-2">
-          <Link href="/dashboard/settings" className="px-4 py-1.5 bg-white border border-slate-200 text-slate-700 text-sm font-medium rounded-lg shadow-sm hover:bg-slate-50 transition-all flex items-center gap-2">
+          <Link href="/dashboard/settings?tab=billing" className="px-4 py-1.5 bg-white border border-slate-200 text-slate-700 text-sm font-medium rounded-lg shadow-sm hover:bg-slate-50 transition-all flex items-center gap-2">
             <HiCreditCard className="w-4 h-4 text-slate-400" />
             Billing
-          </Link>
-          <Link href="/dashboard/chatbots" className="px-4 py-1.5 bg-indigo-600 text-white text-sm font-medium rounded-lg shadow-sm shadow-indigo-200 hover:bg-indigo-700 hover:shadow-md transition-all flex items-center gap-2">
-            <HiPlus className="w-4 h-4" />
-            New Project
           </Link>
         </div>
       </div>
@@ -441,9 +437,30 @@ function RecentActivityPanel() {
       </div>
       <div className="space-y-0 divide-y divide-slate-100">
         {loading ? (
-          <div className="text-center py-4 text-slate-500 text-sm">Loading...</div>
+          <div className="space-y-4 py-4">
+            {Array.from({ length: 3 }).map((_, i) => (
+              <div key={i} className="flex gap-4 py-3">
+                <div className="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center border border-slate-200 shadow-sm shrink-0">
+                  <div className="w-2.5 h-2.5 bg-slate-300 rounded-full" />
+                </div>
+                <div className="flex-1 space-y-2">
+                  <div className="flex justify-between">
+                    <div className="h-3 w-32 bg-slate-100 rounded-full overflow-hidden relative">
+                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/60 to-transparent animate-shimmer" />
+                    </div>
+                    <div className="h-2 w-16 bg-slate-50 rounded-full overflow-hidden relative">
+                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/60 to-transparent animate-shimmer" />
+                    </div>
+                  </div>
+                  <div className="h-2.5 w-full bg-slate-50 rounded-full overflow-hidden relative">
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/60 to-transparent animate-shimmer" />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
         ) : activities.length === 0 ? (
-          <div className="text-center py-4 text-slate-500 text-sm">No recent activity</div>
+          <div className="text-center py-6 text-slate-500 text-sm italic">No recent activity</div>
         ) : (
           activities.map((item, idx) => (
             <div key={item.id} className="flex gap-4 py-4 group hover:bg-slate-50 transition-colors -mx-4 px-4 rounded-lg cursor-pointer">
