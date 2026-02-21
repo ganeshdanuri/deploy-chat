@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import api from '@/lib/api';
+import { ENDPOINTS } from '@/lib/endpoints';
 import type { Dataset, AsyncSliceState } from '@/lib/types';
 
 type DatasetsState = AsyncSliceState<Dataset>;
@@ -11,14 +12,14 @@ const initialState: DatasetsState = {
 };
 
 export const fetchDatasets = createAsyncThunk('datasets/fetchDatasets', async () => {
-    const response = await api.get('/api/datasets/');
+    const response = await api.get(ENDPOINTS.DATASETS.BASE);
     return response.data as Dataset[];
 });
 
 export const createDataset = createAsyncThunk(
     'datasets/createDataset',
     async (data: { name: string; document_ids: string[] }) => {
-        const response = await api.post('/api/datasets/', data);
+        const response = await api.post(ENDPOINTS.DATASETS.BASE, data);
         return response.data as Dataset;
     }
 );
@@ -26,7 +27,7 @@ export const createDataset = createAsyncThunk(
 export const deleteDataset = createAsyncThunk(
     'datasets/deleteDataset',
     async (datasetId: string) => {
-        await api.delete(`/api/datasets/${datasetId}`);
+        await api.delete(ENDPOINTS.DATASETS.BY_ID(datasetId));
         return datasetId;
     }
 );

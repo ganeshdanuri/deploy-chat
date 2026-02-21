@@ -3,8 +3,6 @@
 import { useLayoutEffect, useRef } from "react";
 import gsap from "gsap";
 import { theme } from "../theme";
-import { FaGoogle, FaAmazon, FaMicrosoft, FaSpotify, FaSlack, FaUber, FaAirbnb } from "react-icons/fa";
-
 interface Stat {
   id: number;
   value: string;
@@ -13,12 +11,7 @@ interface Stat {
   bgColor: string;
 }
 
-interface BannerProps {
-  stats: Stat[];
-  onStartNow: () => void;
-}
-
-export default function Banner({ stats, onStartNow }: BannerProps) {
+export default function Banner() {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const marqueeRef = useRef<HTMLDivElement>(null);
 
@@ -26,9 +19,6 @@ export default function Banner({ stats, onStartNow }: BannerProps) {
     const ctx = gsap.context(() => {
       const marquee = marqueeRef.current;
       if (!marquee) return;
-
-      const totalWidth = marquee.scrollWidth;
-      const visibleWidth = marquee.parentElement?.offsetWidth || 0;
 
       // Clone content to ensure seamless loop if needed, 
       // but for simplicity with GSAP, we can just animate xPercent

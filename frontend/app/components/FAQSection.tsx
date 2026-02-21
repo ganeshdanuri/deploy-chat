@@ -4,24 +4,7 @@ import { useState } from "react";
 import { theme } from "../theme";
 import { HiPlus, HiMinus } from "react-icons/hi";
 
-const faqs = [
-    {
-        question: "How does the AI training work?",
-        answer: "We use a technique called Retrieval-Augmented Generation (RAG). You provide documents or website URLs, and we convert them into high-dimensional vectors. When a user asks a question, our AI searches for the most relevant context in your data to generate a precise, factual answer.",
-    },
-    {
-        question: "Is my data secure?",
-        answer: "Absolutely. We use enterprise-grade encryption for all data at rest and in transit. Your training data is never used to train our base AI models, ensuring your intellectual property remains private and proprietary.",
-    },
-    {
-        question: "Do I need coding skills to integrate it?",
-        answer: "No. You can deploy our chatbot by simply copying and pasting a single line of script into your website. For developers, we also offer a comprehensive API and React components for more custom implementations.",
-    },
-    {
-        question: "Can I customize the chatbot's personality?",
-        answer: "Yes. In the dashboard, you can define 'System Prompts' to give your chatbot a specific tone, set boundaries on what it should discuss, and even give it a name and custom avatar.",
-    },
-];
+import { FAQS as faqs } from "../../lib/constants";
 
 export default function FAQSection() {
     const [openIndex, setOpenIndex] = useState<number | null>(0);

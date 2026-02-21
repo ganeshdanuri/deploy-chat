@@ -7,10 +7,11 @@ from app.api.deps import get_current_user
 from app.schemas.models import Chatbot, ChatbotCreate, ChatbotRead, ChatbotDatasets, User, Dataset, UsageTracking
 from app.core.billing import verify_plan_limits, increment_usage
 from app.core.ai import get_ai_response
+from app.core.endpoints import Endpoints
 
-router = APIRouter(prefix="/chatbots")
+router = APIRouter(prefix=Endpoints.CHATBOTS_PREFIX)
 
-@router.get("/", response_model=List[ChatbotRead])
+@router.get(Endpoints.CHATBOTS_BASE, response_model=List[ChatbotRead])
 def get_chatbots(
     session: Session = Depends(get_session),
     current_user: User = Depends(get_current_user)
@@ -19,7 +20,7 @@ def get_chatbots(
     results = session.exec(statement).all()
     return results
 
-@router.post("/", response_model=ChatbotRead)
+@router.post(Endpoints.CHATBOTS_BASE, response_model=ChatbotRead)
 def create_chatbot(
     chatbot_in: ChatbotCreate,
     session: Session = Depends(get_session),
@@ -69,7 +70,7 @@ def create_chatbot(
             detail=f"Failed to create chatbot: {str(e)}"
         )
 
-@router.post("/{chatbot_id}/chat")
+@router.post(Endpoints.CHATBOTS_CHAT)
 async def chatbot_chat(
     chatbot_id: UUID,
     message: str,
@@ -98,7 +99,7 @@ async def chatbot_chat(
     
     return {"response": response, "usage_count": usage.message_count, "token_usage": token_count}
 
-@router.delete("/{chatbot_id}")
+@router.delete(Endpoints.CHATBOTS_BY_ID)
 def delete_chatbot(
     chatbot_id: UUID,
     session: Session = Depends(get_session),

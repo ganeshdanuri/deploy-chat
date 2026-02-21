@@ -5,15 +5,16 @@ from app.core.db import get_session
 from app.schemas.models import Chatbot, User, UsageTracking
 from app.core.billing import verify_plan_limits, increment_usage
 from app.core.ai import get_ai_response
+from app.core.endpoints import Endpoints
 
-router = APIRouter(prefix="/widget")
+router = APIRouter(prefix=Endpoints.WIDGET_PREFIX)
 
 
 class WidgetChatRequest(BaseModel):
     message: str
 
 
-@router.post("/{embed_token}/chat")
+@router.post(Endpoints.WIDGET_CHAT)
 async def widget_chat(
     embed_token: str,
     body: WidgetChatRequest,
@@ -58,7 +59,7 @@ async def widget_chat(
     }
 
 
-@router.get("/{embed_token}/info")
+@router.get(Endpoints.WIDGET_INFO)
 def widget_info(
     embed_token: str,
     session: Session = Depends(get_session),

@@ -2,14 +2,13 @@
 
 import { useState, useEffect } from "react";
 import { HiUser, HiKey, HiCreditCard, HiUsers, HiBell, HiShieldCheck } from "react-icons/hi";
-import showToast from "@/lib/toast";
 import { useAppSelector } from "@/lib/store/hooks";
 import { useAuth } from "@/app/context/AuthContext";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
+import { PricingCard } from "@/app/components/ui/PricingCard";
 
 export default function SettingsPage() {
     const searchParams = useSearchParams();
-    const router = useRouter();
     const [activeTab, setActiveTab] = useState("general");
 
     useEffect(() => {
@@ -120,81 +119,47 @@ export default function SettingsPage() {
                             </div>
 
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mt-6">
-                                <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6 relative overflow-hidden flex flex-col">
-                                    <h3 className="text-lg font-bold text-slate-900">Starter</h3>
-                                    <div className="mt-1 flex items-baseline gap-1">
-                                        <span className="text-3xl font-black text-slate-900">$19</span>
-                                        <span className="text-sm text-slate-500">/month</span>
-                                    </div>
-                                    <ul className="mt-5 space-y-3 flex-1">
-                                        {[
-                                            "1,000 Messages / month",
-                                            "1 AI Chatbot",
-                                            "Standard Analytics",
-                                            "Email Support"
-                                        ].map((feat, i) => (
-                                            <li key={feat} className="flex items-center gap-2 text-sm text-slate-600">
-                                                <HiShieldCheck className="w-5 h-5 text-slate-400 shrink-0" />
-                                                {feat}
-                                            </li>
-                                        ))}
-                                    </ul>
-                                    <button className="mt-6 w-full py-2.5 bg-white border border-slate-200 text-slate-700 text-sm font-bold rounded-lg hover:bg-slate-50 transition-all">
-                                        Upgrade
-                                    </button>
-                                </div>
-
-                                <div className="bg-white rounded-xl border border-indigo-200 shadow-sm p-6 relative overflow-hidden flex flex-col">
-                                    <div className="absolute top-0 right-0 p-3">
-                                        <span className="bg-indigo-50 text-indigo-600 text-[10px] font-bold px-2 py-0.5 rounded-full border border-indigo-100 uppercase tracking-wider">Most Popular</span>
-                                    </div>
-                                    <h3 className="text-lg font-bold text-slate-900">Professional</h3>
-                                    <div className="mt-1 flex items-baseline gap-1">
-                                        <span className="text-3xl font-black text-slate-900">$49</span>
-                                        <span className="text-sm text-slate-500">/month</span>
-                                    </div>
-                                    <ul className="mt-5 space-y-3 flex-1">
-                                        {[
-                                            "10,000 Messages / month",
-                                            "5 AI Chatbots",
-                                            "Advanced Analytics",
-                                            "Priority Support",
-                                            "Remove Branding"
-                                        ].map((feat, i) => (
-                                            <li key={feat} className="flex items-center gap-2 text-sm text-slate-600">
-                                                <HiShieldCheck className="w-5 h-5 text-indigo-500 shrink-0" />
-                                                {feat}
-                                            </li>
-                                        ))}
-                                    </ul>
-                                    <button className="mt-6 w-full py-2.5 bg-indigo-600 text-white text-sm font-bold rounded-lg hover:bg-indigo-700 transition-all shadow-md shadow-indigo-100">
-                                        Get Started
-                                    </button>
-                                </div>
-
-                                <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6 flex flex-col">
-                                    <h3 className="text-lg font-bold text-slate-900">Enterprise</h3>
-                                    <div className="mt-1 flex items-baseline gap-1">
-                                        <span className="text-3xl font-black text-slate-900">Custom</span>
-                                    </div>
-                                    <ul className="mt-5 space-y-3 flex-1">
-                                        {[
-                                            "Unlimited everything",
-                                            "Dedicated Azure Server",
-                                            "SLA Guarantees",
-                                            "Custom Integrations",
-                                            "Single Sign-On (SSO)"
-                                        ].map((feat, i) => (
-                                            <li key={feat} className="flex items-center gap-2 text-sm text-slate-600">
-                                                <HiShieldCheck className="w-5 h-5 text-slate-400 shrink-0" />
-                                                {feat}
-                                            </li>
-                                        ))}
-                                    </ul>
-                                    <button className="mt-6 w-full py-2.5 bg-white border border-slate-200 text-slate-700 text-sm font-bold rounded-lg hover:bg-slate-50 transition-all">
-                                        Contact Sales
-                                    </button>
-                                </div>
+                                <PricingCard
+                                    title="Starter"
+                                    price="19"
+                                    interval="/month"
+                                    features={[
+                                        "1,000 Messages / month",
+                                        "1 AI Chatbot",
+                                        "Standard Analytics",
+                                        "Email Support"
+                                    ]}
+                                    buttonText="Upgrade"
+                                    onButtonClick={() => { }}
+                                />
+                                <PricingCard
+                                    title="Professional"
+                                    price="49"
+                                    interval="/month"
+                                    features={[
+                                        "10,000 Messages / month",
+                                        "5 AI Chatbots",
+                                        "Advanced Analytics",
+                                        "Priority Support",
+                                        "Remove Branding"
+                                    ]}
+                                    buttonText="Get Started"
+                                    isPopular={true}
+                                    onButtonClick={() => { }}
+                                />
+                                <PricingCard
+                                    title="Enterprise"
+                                    price="Custom"
+                                    features={[
+                                        "Unlimited everything",
+                                        "Dedicated Azure Server",
+                                        "SLA Guarantees",
+                                        "Custom Integrations",
+                                        "Single Sign-On (SSO)"
+                                    ]}
+                                    buttonText="Contact Sales"
+                                    onButtonClick={() => { }}
+                                />
                             </div>
                         </div>
                     )}

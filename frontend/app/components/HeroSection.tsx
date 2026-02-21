@@ -1,15 +1,9 @@
 "use client";
 
 import { theme } from "../theme";
-import { HiArrowRight, HiPlay, HiCheck, HiShieldCheck } from "react-icons/hi";
-import { FaRobot, FaCode, FaBolt } from "react-icons/fa";
+import { HiArrowRight, HiPlay, HiCheck } from "react-icons/hi";
+import { FaRobot, FaBolt } from "react-icons/fa";
 
-interface Feature {
-  id: number;
-  title: string;
-  description: string;
-  icon: string;
-}
 
 interface Stat {
   id: number;
@@ -20,12 +14,11 @@ interface Stat {
 }
 
 interface HeroSectionProps {
-  features: Feature[];
   stats: Stat[];
   onGetStarted: () => void;
 }
 
-export default function HeroSection({ features, stats, onGetStarted }: HeroSectionProps) {
+export default function HeroSection({ stats, onGetStarted }: HeroSectionProps) {
   return (
     <section className="relative overflow-hidden bg-transparent pt-10">
       {/* Background Decor - Subtle Gradients for Enterprise Feel */}

@@ -5,10 +5,11 @@ from uuid import UUID
 from app.core.db import get_session
 from app.api.deps import get_current_user
 from app.schemas.models import Dataset, DatasetCreate, DatasetRead, DatasetDocuments, User, Document
+from app.core.endpoints import Endpoints
 
-router = APIRouter(prefix="/datasets")
+router = APIRouter(prefix=Endpoints.DATASETS_PREFIX)
 
-@router.get("/", response_model=List[DatasetRead])
+@router.get(Endpoints.DATASETS_BASE, response_model=List[DatasetRead])
 def get_datasets(
     session: Session = Depends(get_session),
     current_user: User = Depends(get_current_user)
@@ -17,7 +18,7 @@ def get_datasets(
     results = session.exec(statement).all()
     return results
 
-@router.post("/", response_model=DatasetRead)
+@router.post(Endpoints.DATASETS_BASE, response_model=DatasetRead)
 def create_dataset(
     dataset_in: DatasetCreate,
     session: Session = Depends(get_session),
@@ -64,7 +65,7 @@ def create_dataset(
             detail=f"Failed to create dataset: {str(e)}"
         )
 
-@router.delete("/{dataset_id}")
+@router.delete(Endpoints.DATASETS_BY_ID)
 def delete_dataset(
     dataset_id: UUID,
     session: Session = Depends(get_session),

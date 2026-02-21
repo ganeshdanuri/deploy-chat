@@ -25,6 +25,7 @@ import { useGSAP } from "@gsap/react";
 import showToast from "@/lib/toast";
 import { DashboardSkeleton } from "@/app/components/ui";
 import api from "@/lib/api";
+import { ENDPOINTS } from "@/lib/endpoints";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -398,7 +399,7 @@ function RecentActivityPanel() {
   useEffect(() => {
     const fetchActivities = async () => {
       try {
-        const res = await api.get('/api/users/recent-activity');
+        const res = await api.get(ENDPOINTS.USERS.RECENT_ACTIVITY);
         setActivities(res.data);
       } catch (err) {
         console.error("Failed to fetch recent activities:", err);

@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import api from '@/lib/api';
+import { ENDPOINTS } from '@/lib/endpoints';
 import type { Chatbot, AsyncSliceState } from '@/lib/types';
 
 type ChatbotsState = AsyncSliceState<Chatbot>;
@@ -11,7 +12,7 @@ const initialState: ChatbotsState = {
 };
 
 export const fetchChatbots = createAsyncThunk('chatbots/fetchChatbots', async () => {
-    const response = await api.get('/api/chatbots/');
+    const response = await api.get(ENDPOINTS.CHATBOTS.BASE);
     return response.data as Chatbot[];
 });
 
@@ -23,7 +24,7 @@ export const createChatbot = createAsyncThunk(
         welcome_message?: string;
         primary_color?: string;
     }) => {
-        const response = await api.post('/api/chatbots/', data);
+        const response = await api.post(ENDPOINTS.CHATBOTS.BASE, data);
         return response.data as Chatbot;
     }
 );
@@ -31,7 +32,7 @@ export const createChatbot = createAsyncThunk(
 export const deleteChatbot = createAsyncThunk(
     'chatbots/deleteChatbot',
     async (chatbotId: string) => {
-        await api.delete(`/api/chatbots/${chatbotId}`);
+        await api.delete(ENDPOINTS.CHATBOTS.BY_ID(chatbotId));
         return chatbotId;
     }
 );

@@ -4,12 +4,10 @@ import os
 from datetime import datetime, timedelta, timezone
 from typing import Optional, Any
 from uuid import UUID
+from app.core.constants import ALGORITHM, ACCESS_TOKEN_EXPIRE_MINUTES, REFRESH_TOKEN_EXPIRE_DAYS, DEFAULT_PLAN_NAME
 
 # Use env var for SECRET_KEY, fallback only for dev
 SECRET_KEY = os.getenv("SECRET_KEY", "your-secret-key-change-this-in-production")
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 2 # 2 minutes
-REFRESH_TOKEN_EXPIRE_DAYS = 7 # 7 days
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     try:
@@ -28,7 +26,7 @@ def get_password_hash(password: str) -> str:
     hashed = bcrypt.hashpw(pwd_bytes, salt)
     return hashed.decode("utf-8")
 
-def create_access_token(subject: str | UUID, plan: str = "free", expires_delta: Optional[timedelta] = None) -> str:
+def create_access_token(subject: str | UUID, plan: str = DEFAULT_PLAN_NAME, expires_delta: Optional[timedelta] = None) -> str:
     if expires_delta:
         expire = datetime.now(timezone.utc) + expires_delta
     else:

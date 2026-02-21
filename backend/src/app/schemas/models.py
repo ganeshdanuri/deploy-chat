@@ -2,6 +2,7 @@ from typing import Optional, List
 from uuid import UUID, uuid4
 from sqlmodel import Field, SQLModel
 from datetime import datetime, timedelta
+from app.core.constants import DEFAULT_SYSTEM_PROMPT, DEFAULT_WELCOME_MESSAGE, STATUS_ACTIVE, DEFAULT_PLAN_NAME
 
 class PricingTier(SQLModel, table=True):
     __tablename__ = "pricing_tiers"
@@ -16,7 +17,7 @@ class UserPricingPlan(SQLModel, table=True):
     id: UUID = Field(default_factory=uuid4, primary_key=True)
     user_id: UUID = Field(foreign_key="users.id")
     tier_id: UUID = Field(foreign_key="pricing_tiers.id")
-    status: str = Field(default="active")
+    status: str = Field(default=STATUS_ACTIVE)
     started_at: datetime = Field(default_factory=datetime.utcnow)
     expires_at: Optional[datetime] = Field(default_factory=lambda: datetime.utcnow() + timedelta(days=30))
     created_at: datetime = Field(default_factory=datetime.utcnow)
@@ -38,7 +39,7 @@ class User(UserBase, table=True):
 
 class UserCreate(UserBase):
     password: str
-    plan: Optional[str] = Field(default="free")
+    plan: Optional[str] = Field(default=DEFAULT_PLAN_NAME)
 
 class UserLogin(SQLModel):
     email: str
@@ -117,9 +118,9 @@ class ChatbotDatasets(SQLModel, table=True):
 class ChatbotBase(SQLModel):
     name: str = Field(index=True)
     user_id: UUID = Field(foreign_key="users.id")
-    system_prompt: str = Field(default="You are a helpful AI assistant.")
+    system_prompt: str = Field(default=DEFAULT_SYSTEM_PROMPT)
     temperature: float = Field(default=0.7)
-    welcome_message: str = Field(default="Hi! How can I help you today?")
+    welcome_message: str = Field(default=DEFAULT_WELCOME_MESSAGE)
 
 class Chatbot(ChatbotBase, table=True):
     __tablename__ = "chatbots"
@@ -133,7 +134,7 @@ class ChatbotCreate(SQLModel):
     dataset_ids: List[UUID]
     system_prompt: Optional[str] = None
     temperature: Optional[float] = 0.7
-    welcome_message: Optional[str] = "Hi! How can I help you today?"
+    welcome_message: Optional[str] = DEFAULT_WELCOME_MESSAGE
 
 class ChatbotRead(ChatbotBase):
     id: UUID

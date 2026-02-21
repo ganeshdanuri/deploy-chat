@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 
 import api from "@/lib/api";
 import showToast from "@/lib/toast";
+import { ENDPOINTS } from "@/lib/endpoints";
 
 interface AuthContextType {
   isAuthenticated: boolean;
@@ -39,7 +40,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const login = async (email: string, password: string): Promise<boolean> => {
     try {
-      const response = await api.post("/api/auth/login", { email, password });
+      const response = await api.post(ENDPOINTS.AUTH.LOGIN, { email, password });
       if (response.data.access_token) {
         const userData = {
           username: response.data.username,
@@ -66,7 +67,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const continueWithGoogle = async (credential: string): Promise<boolean> => {
     try {
-      const response = await api.post("/api/auth/google", { credential });
+      const response = await api.post(ENDPOINTS.AUTH.GOOGLE, { credential });
       if (response.data.access_token) {
         const userData = {
           username: response.data.username,
@@ -94,7 +95,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const register = async (username: string, email: string, password: string, plan: string = "free") => {
     try {
-      const response = await api.post("/api/auth/register", { username, email, password, plan });
+      const response = await api.post(ENDPOINTS.AUTH.REGISTER, { username, email, password, plan });
       if (response.data.message) {
         showToast.success("Registration successful! Please check your email for OTP.");
         return { success: true, email: response.data.email };
@@ -109,7 +110,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const verifyOTP = async (email: string, otpCode: string): Promise<boolean> => {
     try {
-      const response = await api.post("/api/auth/verify-otp", { email, otp_code: otpCode });
+      const response = await api.post(ENDPOINTS.AUTH.VERIFY_OTP, { email, otp_code: otpCode });
       if (response.data.access_token) {
         const userData = {
           username: response.data.username,

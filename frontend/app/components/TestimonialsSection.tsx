@@ -3,26 +3,7 @@
 import { theme } from "../theme";
 import { HiStar } from "react-icons/hi";
 
-const testimonials = [
-    {
-        name: "Sarah Chen",
-        role: "CTO at TechFlow",
-        content: "Deploy Chat transformed our customer support. We reduced response times by 80% in the first week. The RAG engine is incredibly accurate.",
-        image: "https://i.pravatar.cc/150?u=sarah",
-    },
-    {
-        name: "Marcus Wright",
-        role: "VP of Product at ScaleAI",
-        content: "The easiest integration I've ever seen. We had a custom-trained chatbot live on our docs in less than 30 minutes. Absolute game changer.",
-        image: "https://i.pravatar.cc/150?u=marcus",
-    },
-    {
-        name: "Elena Rodriguez",
-        role: "Founder of GrowthBox",
-        content: "Being able to train on our own Notion docs and PDFs without any coding knowledge is what sets Deploy Chat apart. Our customers love it.",
-        image: "https://i.pravatar.cc/150?u=elena",
-    },
-];
+import { TESTIMONIALS as testimonials } from "../../lib/constants";
 
 export default function TestimonialsSection() {
     return (

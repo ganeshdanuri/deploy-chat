@@ -6,6 +6,7 @@ import api from "@/lib/api";
 import Modal from "./Modal";
 import showToast from "@/lib/toast";
 import { Button, Card, CardBody } from "@heroui/react";
+import { ENDPOINTS } from "@/lib/endpoints";
 
 interface UploadModalProps {
     isOpen: boolean;
@@ -42,7 +43,7 @@ export default function UploadModal({ isOpen, onClose, onUploadSuccess }: Upload
         formData.append("file", file);
 
         try {
-            await api.post("/api/documents/", formData, {
+            await api.post(ENDPOINTS.DOCUMENTS.BASE, formData, {
                 headers: {
                     "Content-Type": "multipart/form-data",
                 },

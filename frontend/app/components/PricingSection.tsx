@@ -2,62 +2,7 @@
 
 import { HiCheck, HiOutlineInformationCircle, HiSparkles } from "react-icons/hi";
 
-const plans = [
-    {
-        name: "Free",
-        price: "0",
-        description: "Test the platform with a small usage limit to see how it works.",
-        features: [
-            "1 AI Chatbot",
-            "10 Messages included",
-            "Basic Analytics",
-            "Community Support",
-        ],
-        cta: "Start Free",
-        popular: false,
-    },
-    {
-        name: "Starter",
-        price: "19",
-        description: "Perfect for personal projects and small websites.",
-        features: [
-            "1 AI Chatbot",
-            "1,000 Messages / month",
-            "Standard Analytics",
-            "Email Support",
-        ],
-        cta: "Get Started",
-        popular: false,
-    },
-    {
-        name: "Professional",
-        price: "49",
-        description: "For scaling startups with heavy usage needs.",
-        features: [
-            "5 AI Chatbots",
-            "10,000 Messages / month",
-            "Advanced Analytics",
-            "Priority Support",
-            "Remove Branding",
-        ],
-        cta: "Start Professional",
-        popular: true,
-    },
-    {
-        name: "Enterprise",
-        price: "Custom",
-        description: "Full control and white-labeled infrastructure.",
-        features: [
-            "Unlimited Chatbots & Messages",
-            "Dedicated Azure Server",
-            "SLA Support",
-            "Custom Security Audits",
-            "Single Sign-On (SSO)",
-        ],
-        cta: "Talk to Sales",
-        popular: false,
-    },
-];
+import { PRICING_PLANS as plans } from "../../lib/constants";
 
 export default function PricingSection() {
     return (
@@ -91,8 +36,8 @@ export default function PricingSection() {
                         <div
                             key={plan.name}
                             className={`relative flex flex-col p-8 rounded-[2rem] border transition-all duration-500 hover:-translate-y-2 ${plan.popular
-                                    ? 'bg-slate-900 border-slate-900 shadow-2xl scale-105 z-10 ring-4 ring-indigo-500/20 md:transform lg:scale-110'
-                                    : 'bg-white border-slate-200 shadow-xl shadow-slate-200/50 hover:shadow-2xl hover:border-indigo-200'
+                                ? 'bg-slate-900 border-slate-900 shadow-2xl scale-105 z-10 ring-4 ring-indigo-500/20 md:transform lg:scale-110'
+                                : 'bg-white border-slate-200 shadow-xl shadow-slate-200/50 hover:shadow-2xl hover:border-indigo-200'
                                 }`}
                         >
                             {plan.popular && (
@@ -150,8 +95,8 @@ export default function PricingSection() {
                                     }
                                 }}
                                 className={`mt-auto w-full py-4 rounded-xl font-bold transition-all duration-300 active:scale-95 flex items-center justify-center gap-2 ${plan.popular
-                                        ? 'bg-indigo-500 text-white hover:bg-indigo-400 shadow-[0_0_20px_rgba(99,102,241,0.4)] hover:shadow-[0_0_25px_rgba(99,102,241,0.6)]'
-                                        : 'bg-slate-50 text-slate-900 border border-slate-200 hover:bg-slate-100 hover:border-slate-300'
+                                    ? 'bg-indigo-500 text-white hover:bg-indigo-400 shadow-[0_0_20px_rgba(99,102,241,0.4)] hover:shadow-[0_0_25px_rgba(99,102,241,0.6)]'
+                                    : 'bg-slate-50 text-slate-900 border border-slate-200 hover:bg-slate-100 hover:border-slate-300'
                                     }`}
                             >
                                 {plan.cta}

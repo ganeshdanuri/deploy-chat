@@ -1,61 +1,12 @@
 "use client";
 
 import { theme } from "../theme";
-import { HiLightningBolt, HiGlobe, HiChartBar, HiUserGroup, HiCode, HiShieldCheck } from "react-icons/hi";
-import { FaBrain, FaRobot } from "react-icons/fa";
-import { MdIntegrationInstructions, MdSupportAgent } from "react-icons/md";
+import { HiGlobe, HiChartBar, HiUserGroup, HiShieldCheck } from "react-icons/hi";
+import { FaBrain } from "react-icons/fa";
+import { MdIntegrationInstructions } from "react-icons/md";
+import { PLATFORM_FEATURES as features } from "../../lib/constants";
 
-const features = [
-  {
-    id: 1,
-    title: "Easy Integration",
-    description: "Add AI chatbots to your website with just a few lines of code. No complex setup required.",
-    icon: MdIntegrationInstructions,
-    color: theme.colors.primary.main,
-    span: "col-span-1 md:col-span-2 lg:col-span-1",
-  },
-  {
-    id: 2,
-    title: "Custom Training",
-    description: "Train your chatbot on your own content, documentation, and knowledge base for accurate responses.",
-    icon: FaBrain,
-    color: theme.colors.accent.purple,
-    span: "col-span-1 md:col-span-2 lg:col-span-2",
-  },
-  {
-    id: 3,
-    title: "24/7 Support",
-    description: "Your AI chatbot works around the clock to provide instant answers.",
-    icon: HiGlobe,
-    color: theme.colors.accent.green,
-    span: "col-span-1",
-  },
-  {
-    id: 4,
-    title: "Analytics Dashboard",
-    description: "Track conversations, user satisfaction, and chatbot performance.",
-    icon: HiChartBar,
-    color: theme.colors.accent.blue,
-    span: "col-span-1",
 
-  },
-  {
-    id: 5,
-    title: "Multi-language",
-    description: "Support customers in multiple languages with AI-powered translation.",
-    icon: HiUserGroup,
-    color: theme.colors.accent.yellow,
-    span: "col-span-1 md:col-span-2 lg:col-span-1",
-  },
-  {
-    id: 6,
-    title: "Enterprise Security",
-    description: "Bank-grade encryption and GDPR compliance out of the box.",
-    icon: HiShieldCheck,
-    color: theme.colors.accent.teal,
-    span: "col-span-1 md:col-span-3 lg:col-span-3",
-  },
-];
 
 export default function FeaturesSection() {
   return (

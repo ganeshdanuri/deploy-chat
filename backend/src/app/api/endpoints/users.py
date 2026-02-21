@@ -3,11 +3,13 @@ from sqlmodel import Session, select
 from app.api.deps import get_current_user
 from app.core.db import get_session
 from app.schemas.models import User, UsageTracking, PricingTier, UserPricingPlan, RecentActivity, RecentActivityRead
+from app.core.constants import STATUS_ACTIVE
 from typing import Optional, List
+from app.core.endpoints import Endpoints
 
-router = APIRouter(prefix="/users")
+router = APIRouter(prefix=Endpoints.USERS_PREFIX)
 
-@router.get("/me")
+@router.get(Endpoints.USERS_ME)
 async def get_user_me(
     current_user: User = Depends(get_current_user),
     session: Session = Depends(get_session)
@@ -17,21 +19,21 @@ async def get_user_me(
     including general profile, billing status, and usage metrics.
     """
     # 1. Fetch Plan Details from UserPricingPlan
-    plan_name = "free"
-    monthly_limit = 10
+    from app.core.billing import get_user_plan
+
+    plan_name, monthly_limit = get_user_plan(current_user.id, session)
+    
+    # We also need started_at and expires_at, let's fetch those directly
     started_at = current_user.created_at
     expires_at = None
     
-    plan_stmt = select(UserPricingPlan, PricingTier).join(PricingTier).where(
+    plan_stmt = select(UserPricingPlan).where(
         UserPricingPlan.user_id == current_user.id,
-        UserPricingPlan.status == "active"
+        UserPricingPlan.status == STATUS_ACTIVE
     )
-    plan_result = session.exec(plan_stmt).first()
+    user_plan = session.exec(plan_stmt).first()
     
-    if plan_result:
-        user_plan, tier = plan_result
-        plan_name = tier.name
-        monthly_limit = tier.monthly_limit
+    if user_plan:
         started_at = user_plan.started_at
         expires_at = user_plan.expires_at
     
@@ -50,7 +52,7 @@ async def get_user_me(
         "billing": {
             "current_plan": plan_name,
             "monthly_limit": monthly_limit,
-            "plan_status": "active",
+            "plan_status": STATUS_ACTIVE,
             "started_at": started_at,
             "expires_at": expires_at
         },
@@ -61,7 +63,7 @@ async def get_user_me(
         }
     }
 
-@router.get("/recent-activity", response_model=List[RecentActivityRead])
+@router.get(Endpoints.USERS_RECENT_ACTIVITY, response_model=List[RecentActivityRead])
 async def get_recent_activity(
     current_user: User = Depends(get_current_user),
     session: Session = Depends(get_session)

@@ -15,6 +15,7 @@ import showToast from "@/lib/toast";
 import type { ChatMessage } from "@/lib/types";
 import { PlaygroundConfigSkeleton } from "@/app/components/ui";
 import { Select, SelectItem } from "@heroui/react";
+import { ENDPOINTS } from "@/lib/endpoints";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -57,7 +58,7 @@ export default function PlaygroundPage() {
         ]);
 
         try {
-            const response = await api.post(`/api/chatbots/${chatbotId}/chat`, null, {
+            const response = await api.post(ENDPOINTS.CHATBOTS.CHAT(chatbotId), null, {
                 params: { message: userMessage },
             });
             setMessages((prev) => [

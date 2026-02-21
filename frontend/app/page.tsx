@@ -13,44 +13,8 @@ import CTASection from "./components/CTASection";
 import Footer from "./components/Footer";
 import { theme } from "./theme";
 
-const stats = [
-  {
-    id: 1,
-    value: "98%",
-    label: "Accuracy Rate",
-    color: theme.colors.accent.green,
-    bgColor: theme.colors.accent.greenLight,
-  },
-  {
-    id: 2,
-    value: "24/7",
-    label: "Always Available",
-    color: theme.colors.accent.yellow,
-    bgColor: theme.colors.accent.yellowLight,
-  },
-  {
-    id: 3,
-    value: "10K+",
-    label: "Active Users",
-    color: theme.colors.accent.purple,
-    bgColor: theme.colors.accent.purpleLight,
-  },
-];
+import { LANDING_STATS as stats } from "../lib/constants";
 
-const features = [
-  {
-    id: 1,
-    title: "Easy Integration",
-    description: "Add AI chatbots to your website in minutes with our simple embed code and comprehensive documentation.",
-    icon: "⚡",
-  },
-  {
-    id: 2,
-    title: "Smart AI Responses",
-    description: "Train chatbots on your own content and provide accurate, contextual answers to customer queries instantly.",
-    icon: "🎯",
-  },
-];
 
 export default function LandingPage() {
 
@@ -66,7 +30,6 @@ export default function LandingPage() {
         {/* Hero Section */}
         <div className="flex-1 flex flex-col pt-20">
           <HeroSection
-            features={features}
             stats={stats}
             onGetStarted={() => window.open('/login?register=true', '_blank', 'noopener,noreferrer')}
           />
@@ -74,10 +37,7 @@ export default function LandingPage() {
 
         {/* Banner Section */}
         <div className="pb-10">
-          <Banner
-            stats={stats}
-            onStartNow={() => window.open('/login?register=true', '_blank', 'noopener,noreferrer')}
-          />
+          <Banner />
         </div>
       </div>
 

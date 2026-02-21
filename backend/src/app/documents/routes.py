@@ -5,10 +5,11 @@ from app.core.db import get_session
 from app.api.deps import get_current_user
 from app.schemas.models import Document, DocumentContent, User, DocumentRead
 from app.services.converter import convert_to_markdown
+from app.core.endpoints import Endpoints
 
-router = APIRouter(prefix="/documents")
+router = APIRouter(prefix=Endpoints.DOCUMENTS_PREFIX)
 
-@router.get("/", response_model=List[DocumentRead])
+@router.get(Endpoints.DOCUMENTS_BASE, response_model=List[DocumentRead])
 def get_documents(
     session: Session = Depends(get_session),
     current_user: User = Depends(get_current_user)
@@ -17,7 +18,7 @@ def get_documents(
     results = session.exec(statement).all()
     return results
 
-@router.post("/")
+@router.post(Endpoints.DOCUMENTS_BASE)
 async def upload_document(
     file: UploadFile = File(...),
     session: Session = Depends(get_session),

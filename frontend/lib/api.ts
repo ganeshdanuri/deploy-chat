@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { ENDPOINTS } from './endpoints';
 
 const api = axios.create({
     baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000',
@@ -44,7 +45,7 @@ api.interceptors.response.use(
         const originalRequest = error.config;
 
         // Ensure we only attempt to refresh once, and not stuck in infinite loops
-        if (error.response?.status === 401 && !originalRequest._retry && originalRequest.url !== '/api/auth/refresh') {
+        if (error.response?.status === 401 && !originalRequest._retry && originalRequest.url !== ENDPOINTS.AUTH.REFRESH) {
             if (isRefreshing) {
                 return new Promise(function (resolve, reject) {
                     failedQueue.push({ resolve, reject });
@@ -72,7 +73,7 @@ api.interceptors.response.use(
             }
 
             try {
-                const rs = await axios.post(`${api.defaults.baseURL}/api/auth/refresh`, {
+                const rs = await axios.post(`${api.defaults.baseURL}${ENDPOINTS.AUTH.REFRESH}`, {
                     refresh_token: refreshToken
                 });
 

@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import api from '@/lib/api';
+import { ENDPOINTS } from '@/lib/endpoints';
 
 export interface UserMe {
     profile: {
@@ -36,7 +37,7 @@ const initialState: UserState = {
 };
 
 export const fetchUserMe = createAsyncThunk('user/fetchMe', async () => {
-    const response = await api.get('/api/users/me');
+    const response = await api.get(ENDPOINTS.USERS.ME);
     return response.data;
 });
 

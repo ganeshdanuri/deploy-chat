@@ -7,13 +7,15 @@ from datetime import datetime, timedelta, timezone
 import random
 from pydantic import BaseModel
 from app.core.emails import send_otp_email
+from app.core.billing import get_user_plan, assign_free_tier
 from google.oauth2 import id_token
 from google.auth.transport import requests
 import os
+from app.core.endpoints import Endpoints
 
 GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
 
-router = APIRouter(prefix="/auth")
+router = APIRouter(prefix=Endpoints.AUTH_PREFIX)
 
 class OTPVerify(BaseModel):
     email: str
@@ -22,7 +24,7 @@ class OTPVerify(BaseModel):
 class RefreshRequest(BaseModel):
     refresh_token: str
 
-@router.post("/register")
+@router.post(Endpoints.AUTH_REGISTER)
 def register(user_data: UserCreate, session: Session = Depends(get_session)):
     # 1. Check if email exists
     statement = select(User).where(User.email == user_data.email)
@@ -84,7 +86,7 @@ def register(user_data: UserCreate, session: Session = Depends(get_session)):
         "email": user_data.email
     }
 
-@router.post("/verify-otp")
+@router.post(Endpoints.AUTH_VERIFY_OTP)
 def verify_otp(data: OTPVerify, session: Session = Depends(get_session)):
     # 1. Check OTP
     statement = select(EmailVerification).where(
@@ -103,15 +105,7 @@ def verify_otp(data: OTPVerify, session: Session = Depends(get_session)):
         raise HTTPException(status_code=404, detail="User not found")
         
     # 3. Assign Free Tier
-    plan_statement = select(PricingTier).where(PricingTier.name == "Free")
-    free_plan = session.exec(plan_statement).first()
-    if free_plan:
-        active_plan = UserPricingPlan(
-            user_id=user.id,
-            tier_id=free_plan.id,
-            status="active"
-        )
-        session.add(active_plan)
+    assign_free_tier(user.id, session)
         
     user.is_email_verified = True
     session.add(user)
@@ -121,14 +115,8 @@ def verify_otp(data: OTPVerify, session: Session = Depends(get_session)):
     session.commit()
     
     # 5. Generate token (use plan name in token)
-    plan_name = "free"
-    plan_stmt = select(UserPricingPlan, PricingTier).join(PricingTier).where(
-        UserPricingPlan.user_id == user.id,
-        UserPricingPlan.status == "active"
-    )
-    plan_result = session.exec(plan_stmt).first()
-    if plan_result:
-        plan_name = plan_result[1].name.lower()
+    plan_name, _ = get_user_plan(user.id, session)
+    plan_name = plan_name.lower()
         
     access_token = create_access_token(subject=user.id, plan=plan_name)
     refresh_token = create_refresh_token(subject=user.id)
@@ -141,7 +129,7 @@ def verify_otp(data: OTPVerify, session: Session = Depends(get_session)):
         "current_plan": plan_name
     }
 
-@router.post("/login")
+@router.post(Endpoints.AUTH_LOGIN)
 def login(login_data: UserLogin, session: Session = Depends(get_session)):
     # Login via email as requested
     statement = select(User).where(User.email == login_data.email)
@@ -165,14 +153,8 @@ def login(login_data: UserLogin, session: Session = Depends(get_session)):
             detail="Email not verified. Please verify your email first."
         )
     
-    plan_name = "free"
-    plan_stmt = select(UserPricingPlan, PricingTier).join(PricingTier).where(
-        UserPricingPlan.user_id == user.id,
-        UserPricingPlan.status == "active"
-    )
-    plan_result = session.exec(plan_stmt).first()
-    if plan_result:
-        plan_name = plan_result[1].name.lower()
+    plan_name, _ = get_user_plan(user.id, session)
+    plan_name = plan_name.lower()
         
     access_token = create_access_token(subject=user.id, plan=plan_name)
     refresh_token = create_refresh_token(subject=user.id)
@@ -185,7 +167,7 @@ def login(login_data: UserLogin, session: Session = Depends(get_session)):
         "current_plan": plan_name
     }
 
-@router.post("/google")
+@router.post(Endpoints.AUTH_GOOGLE)
 def google_login(data: GoogleLogin, session: Session = Depends(get_session)):
     try:
         # 1. Verify Google Token
@@ -225,15 +207,7 @@ def google_login(data: GoogleLogin, session: Session = Depends(get_session)):
             )
             
             # Assign Free Tier
-            plan_statement = select(PricingTier).where(PricingTier.name == "Free")
-            free_plan = session.exec(plan_statement).first()
-            if free_plan:
-                active_plan = UserPricingPlan(
-                    user_id=user.id,
-                    tier_id=free_plan.id,
-                    status="active"
-                )
-                session.add(active_plan)
+            assign_free_tier(user.id, session)
                 
             session.add(user)
             session.commit()
@@ -249,14 +223,8 @@ def google_login(data: GoogleLogin, session: Session = Depends(get_session)):
             session.refresh(user)
             
         # 5. Generate token
-        plan_name = "free"
-        plan_stmt = select(UserPricingPlan, PricingTier).join(PricingTier).where(
-            UserPricingPlan.user_id == user.id,
-            UserPricingPlan.status == "active"
-        )
-        plan_result = session.exec(plan_stmt).first()
-        if plan_result:
-            plan_name = plan_result[1].name.lower()
+        plan_name, _ = get_user_plan(user.id, session)
+        plan_name = plan_name.lower()
             
         access_token = create_access_token(subject=user.id, plan=plan_name)
         refresh_token = create_refresh_token(subject=user.id)
@@ -273,7 +241,7 @@ def google_login(data: GoogleLogin, session: Session = Depends(get_session)):
         # Invalid token
         raise HTTPException(status_code=400, detail="Invalid Google token")
 
-@router.post("/refresh")
+@router.post(Endpoints.AUTH_REFRESH)
 def refresh_token(data: RefreshRequest, session: Session = Depends(get_session)):
     user_id = decode_token(data.refresh_token, verify_type="refresh")
     if not user_id:
@@ -291,14 +259,8 @@ def refresh_token(data: RefreshRequest, session: Session = Depends(get_session))
             detail="User not found"
         )
         
-    plan_name = "free"
-    plan_stmt = select(UserPricingPlan, PricingTier).join(PricingTier).where(
-        UserPricingPlan.user_id == user.id,
-        UserPricingPlan.status == "active"
-    )
-    plan_result = session.exec(plan_stmt).first()
-    if plan_result:
-        plan_name = plan_result[1].name.lower()
+    plan_name, _ = get_user_plan(user.id, session)
+    plan_name = plan_name.lower()
         
     new_access_token = create_access_token(subject=user.id, plan=plan_name)
     new_refresh_token = create_refresh_token(subject=user.id)

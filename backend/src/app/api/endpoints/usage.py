@@ -3,10 +3,11 @@ from sqlmodel import Session, select
 from app.core.db import get_session
 from app.api.deps import get_current_user
 from app.schemas.models import User, UsageTracking
+from app.core.endpoints import Endpoints
 
-router = APIRouter(prefix="/usage")
+router = APIRouter(prefix=Endpoints.USAGE_PREFIX)
 
-@router.get("/stats")
+@router.get(Endpoints.USAGE_STATS)
 def get_usage_stats(
     session: Session = Depends(get_session),
     current_user: User = Depends(get_current_user)

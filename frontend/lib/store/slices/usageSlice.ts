@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import api from '@/lib/api';
+import { ENDPOINTS } from '@/lib/endpoints';
 
 interface UsageState {
     message_count: number;
@@ -16,7 +17,7 @@ const initialState: UsageState = {
 };
 
 export const fetchUsageStats = createAsyncThunk('usage/fetchStats', async () => {
-    const response = await api.get('/api/usage/stats');
+    const response = await api.get(ENDPOINTS.USAGE.STATS);
     return response.data;
 });
 
