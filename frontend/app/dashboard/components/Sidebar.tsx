@@ -11,14 +11,12 @@ import {
     HiSparkles,
     HiChartBar,
     HiCog,
-    HiChevronDown,
     HiPlus,
-    HiSearch,
-    HiLightningBolt,
     HiLogout,
     HiQuestionMarkCircle,
     HiX,
-    HiMenu
+    HiChevronLeft,
+    HiChevronRight,
 } from "react-icons/hi";
 import { theme } from "../../theme";
 import { useState } from "react";
@@ -52,17 +50,17 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
     return (
         <aside
             className={`
-                fixed inset-y-0 left-0 z-50 bg-slate-50 border-r border-slate-200 flex flex-col transition-all duration-300 transform
-                lg:static lg:translate-x-0
-                ${isOpen ? "translate-x-0 shadow-2xl" : "-translate-x-full"}
-                ${isCollapsed ? "lg:w-20" : "lg:w-64"}
+                relative fixed inset-y-0 left-0 z-50 bg-slate-50 border-r border-slate-200 flex flex-col transition-all duration-300 transform
+                lg:static lg:translate-x-0 lg:z-auto
+                    ${isOpen ? "translate-x-0 shadow-2xl" : "-translate-x-full"}
+                    ${isCollapsed ? "lg:w-[72px]" : "lg:w-64"}
                 w-64
             `}
         >
             {/* Workspace Selector / Brand */}
-            <div className="h-16 flex items-center px-4 border-b border-slate-200 justify-between">
+            <div className="h-16 flex items-center px-3 border-b border-slate-200 justify-between shrink-0">
                 <div
-                    className="flex items-center gap-3 p-2 hover:bg-slate-100 rounded-lg cursor-pointer transition-colors group flex-1 min-w-0"
+                    className={`flex items-center gap-3 p-1.5 hover:bg-slate-100 rounded-lg cursor-pointer transition-colors group ${isCollapsed ? "justify-center w-full" : "flex-1 min-w-0"}`}
                     onClick={() => !isCollapsed && router.push("/dashboard")}
                 >
                     <div className="shrink-0">
@@ -80,25 +78,17 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
 
                 {/* Mobile Close Button */}
                 <button
-                    className="lg:hidden p-2 text-slate-500 hover:text-slate-700 hover:bg-slate-100 rounded-lg"
+                    className="lg:hidden p-2 text-slate-500 hover:text-slate-700 hover:bg-slate-100 rounded-lg shrink-0"
                     onClick={onClose}
                 >
                     <HiX className="w-5 h-5" />
                 </button>
-
-                {/* Desktop Collapse Toggle */}
-                <button
-                    className="hidden lg:flex p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-md transition-colors"
-                    onClick={() => setIsCollapsed(!isCollapsed)}
-                >
-                    <HiMenu className={`w-4 h-4 transition-transform ${isCollapsed ? "rotate-90" : ""}`} />
-                </button>
             </div>
 
             {/* Main Navigation */}
-            <div className="flex-1 overflow-y-auto py-6 px-3 space-y-6">
+            <div className="flex-1 overflow-y-auto py-4 px-2 space-y-6">
                 {/* Primary Links */}
-                <nav className="space-y-1">
+                <nav className="space-y-0.5">
                     {mainNavItems.map((item) => {
                         const Icon = item.icon;
                         const isActive = pathname === item.path;
@@ -107,18 +97,28 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                             <Link
                                 key={item.id}
                                 href={item.path}
+                                title={isCollapsed ? item.label : undefined}
                                 className={`
-                  relative group flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all
-                  ${isActive
+                                        relative group flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all
+                                        ${isCollapsed ? "justify-center" : ""}
+                                        ${isActive
                                         ? "bg-white text-indigo-600 shadow-sm ring-1 ring-slate-200"
                                         : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
                                     }
-                `}
+                                    `}
                             >
                                 <Icon className={`w-5 h-5 shrink-0 transition-colors ${isActive ? "text-indigo-600" : "text-slate-400 group-hover:text-slate-600"}`} />
                                 {!isCollapsed && <span>{item.label}</span>}
                                 {isActive && !isCollapsed && (
                                     <div className="absolute right-2 w-1.5 h-1.5 rounded-full bg-indigo-600"></div>
+                                )}
+
+                                {/* Tooltip for collapsed state */}
+                                {isCollapsed && (
+                                    <div className="absolute left-full ml-3 px-2.5 py-1.5 bg-slate-800 text-white text-xs font-medium rounded-md opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-50 shadow-lg">
+                                        {item.label}
+                                        <div className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1 w-2 h-2 bg-slate-800 rotate-45" />
+                                    </div>
                                 )}
                             </Link>
                         );
@@ -148,7 +148,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
             </div>
 
             {/* Footer Navigation */}
-            <div className="p-3 border-t border-slate-200 space-y-1">
+            <div className="p-2 border-t border-slate-200 space-y-0.5 shrink-0">
                 {secondaryNavItems.map((item) => {
                     const Icon = item.icon;
                     const isActive = pathname === item.path;
@@ -156,24 +156,34 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                         <Link
                             key={item.id}
                             href={item.path}
+                            title={isCollapsed ? item.label : undefined}
                             className={`
-                  flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all
-                  ${isActive
+                                    relative group flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all
+                                    ${isCollapsed ? "justify-center" : ""}
+                                    ${isActive
                                     ? "bg-white text-indigo-600 shadow-sm ring-1 ring-slate-200"
                                     : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
                                 }
-                `}
+                                `}
                         >
                             <Icon className={`w-5 h-5 shrink-0 ${isActive ? "text-indigo-600" : "text-slate-400"}`} />
                             {!isCollapsed && <span>{item.label}</span>}
+
+                            {/* Tooltip for collapsed state */}
+                            {isCollapsed && (
+                                <div className="absolute left-full ml-3 px-2.5 py-1.5 bg-slate-800 text-white text-xs font-medium rounded-md opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-50 shadow-lg">
+                                    {item.label}
+                                    <div className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1 w-2 h-2 bg-slate-800 rotate-45" />
+                                </div>
+                            )}
                         </Link>
                     );
                 })}
 
                 {/* User Profile Mini */}
-                <div className="mt-4 pt-4 border-t border-slate-200">
+                <div className="mt-2 pt-2 border-t border-slate-200">
                     <div className={`flex items-center gap-3 px-2 py-2 rounded-lg hover:bg-slate-100 cursor-pointer transition-colors ${isCollapsed ? "justify-center" : ""}`}>
-                        <div className="relative">
+                        <div className="relative shrink-0">
                             <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-indigo-500 to-purple-500 flex items-center justify-center text-xs font-bold text-white shadow-sm ring-2 ring-white">
                                 CH
                             </div>
@@ -191,7 +201,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                                     e.stopPropagation();
                                     logout();
                                 }}
-                                className="p-1 hover:bg-slate-200 rounded transition-colors text-slate-400 hover:text-red-500"
+                                className="p-1 hover:bg-slate-200 rounded transition-colors text-slate-400 hover:text-red-500 shrink-0"
                                 title="Logout"
                             >
                                 <HiLogout className="w-4 h-4" />
@@ -200,6 +210,19 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                     </div>
                 </div>
             </div>
+
+            {/* Desktop Collapse Toggle — fixed arrow tab on the right edge */}
+            <button
+                className="hidden lg:flex absolute -right-3.5 top-1/2 -translate-y-1/2 w-7 h-7 items-center justify-center bg-white border border-slate-200 rounded-full shadow-md text-slate-500 hover:text-indigo-600 hover:border-indigo-300 hover:shadow-indigo-100 transition-all z-10"
+                onClick={() => setIsCollapsed(!isCollapsed)}
+                title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+            >
+                {isCollapsed ? (
+                    <HiChevronRight className="w-4 h-4" />
+                ) : (
+                    <HiChevronLeft className="w-4 h-4" />
+                )}
+            </button>
         </aside>
     );
 }
