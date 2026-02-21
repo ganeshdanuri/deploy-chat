@@ -1,7 +1,7 @@
 from sqlmodel import create_engine, Session, SQLModel
 import os
 
-DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://postgres:postgres@localhost:5432/deploy_mind")
+DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://postgres:postgres@localhost:5432/deploy_chat")
 
 engine = create_engine(DATABASE_URL, echo=True)
 

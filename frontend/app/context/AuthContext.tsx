@@ -29,7 +29,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     const token = localStorage.getItem("access_token");
-    if (storedUser && token) {
+    const refreshToken = localStorage.getItem("refresh_token");
+    if (storedUser && token && refreshToken) {
       setUser(JSON.parse(storedUser));
       setIsAuthenticated(true);
     }
@@ -49,6 +50,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setIsAuthenticated(true);
         localStorage.setItem("user", JSON.stringify(userData));
         localStorage.setItem("access_token", response.data.access_token);
+        if (response.data.refresh_token) {
+          localStorage.setItem("refresh_token", response.data.refresh_token);
+        }
         showToast.success(`Welcome back, ${userData.username}!`);
         return true;
       }
@@ -74,6 +78,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setIsAuthenticated(true);
         localStorage.setItem("user", JSON.stringify(userData));
         localStorage.setItem("access_token", response.data.access_token);
+        if (response.data.refresh_token) {
+          localStorage.setItem("refresh_token", response.data.refresh_token);
+        }
         showToast.success(`Welcome back, ${userData.username}!`);
         return true;
       }
@@ -113,6 +120,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setIsAuthenticated(true);
         localStorage.setItem("user", JSON.stringify(userData));
         localStorage.setItem("access_token", response.data.access_token);
+        if (response.data.refresh_token) {
+          localStorage.setItem("refresh_token", response.data.refresh_token);
+        }
         showToast.success(`Email verified! Welcome, ${userData.username}!`);
         return true;
       }
@@ -129,6 +139,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setIsAuthenticated(false);
     localStorage.removeItem("user");
     localStorage.removeItem("access_token");
+    localStorage.removeItem("refresh_token");
     showToast.info("You have been logged out.");
     router.push("/");
   };

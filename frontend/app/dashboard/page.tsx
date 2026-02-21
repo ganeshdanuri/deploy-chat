@@ -528,7 +528,7 @@ function OnboardingView({ cardsRef }: { cardsRef: React.RefObject<HTMLDivElement
 
       <div className="hero-content mt-16 text-center">
         <p className="text-[13px] text-slate-400">
-          New to Deploy Mind?{" "}
+          New to Deploy Chat?{" "}
           <Link href="/dashboard/help" className="font-bold text-indigo-500 hover:underline">Watch a 2-minute intro</Link>{" "}
           or{" "}
           <Link href="/dashboard/help" className="font-bold text-indigo-500 hover:underline">read documentation</Link>

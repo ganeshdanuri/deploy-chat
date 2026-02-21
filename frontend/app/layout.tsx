@@ -20,7 +20,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Deploy Mind - Open Source Chatbot",
+  title: "Deploy Chat - Open Source Chatbot",
   description: "An open-source chatbot platform built for developers.",
 };
 

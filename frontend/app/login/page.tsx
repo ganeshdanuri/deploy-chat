@@ -164,7 +164,7 @@ function LoginContent() {
                     </h1>
 
                     <p className="text-xl mb-12 text-slate-200 gsap-text leading-relaxed font-normal max-w-lg">
-                        Deploy Mind enables teams to build, scale, and monitor intelligent AI agents with production-grade RAG and native dataset connectors.
+                        Deploy Chat enables teams to build, scale, and monitor intelligent AI agents with production-grade RAG and native dataset connectors.
                     </p>
 
                     <div className="grid grid-cols-2 gap-8 gsap-text mb-12">
@@ -203,7 +203,7 @@ function LoginContent() {
                     <div className="flex items-center gap-2 cursor-pointer" onClick={() => router.push("/")}>
                         <Logo className="h-8 w-auto" />
                         <span className="text-xl font-bold tracking-tight block leading-none text-slate-900">
-                            DEPLOY MIND
+                            DEPLOY CHAT
                         </span>
                     </div>
                 </div>
@@ -213,7 +213,7 @@ function LoginContent() {
                         <div className="hidden lg:flex items-center gap-2 mb-8 cursor-pointer" onClick={() => router.push("/")}>
                             <Logo className="h-8 w-auto" />
                             <span className="text-2xl font-bold tracking-tight block leading-none" style={{ color: theme.colors.neutral[900] }}>
-                                DEPLOY MIND
+                                DEPLOY CHAT
                             </span>
                         </div>
                         <h2 className="text-3xl font-bold mb-2 text-slate-900 tracking-tight min-h-[1.2em]">
@@ -223,7 +223,7 @@ function LoginContent() {
                             {isVerifying
                                 ? `We've sent a 6-digit code to ${email}`
                                 : isRegister
-                                    ? "Join Deploy Mind today. All accounts start on our Free Plan."
+                                    ? "Join Deploy Chat today. All accounts start on our Free Plan."
                                     : "Please enter your details to continue."}
                         </p>
 

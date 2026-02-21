@@ -58,7 +58,7 @@ export default function IntegrationSection() {
                         className="text-lg"
                         style={{ color: theme.colors.neutral[600] }}
                     >
-                        Deploy Mind makes it incredibly easy to deploy a custom AI chatbot that actually knows your business.
+                        Deploy Chat makes it incredibly easy to deploy a custom AI chatbot that actually knows your business.
                         No complex setup, no coding required.
                     </p>
                 </div>
@@ -129,14 +129,14 @@ export default function IntegrationSection() {
                             </div>
                             <div className="flex gap-4">
                                 <span className="text-slate-600 select-none">3</span>
-                                <span className="text-blue-400 font-bold italic">{"    <!-- Add Deploy Mind AI -->"}</span>
+                                <span className="text-blue-400 font-bold italic">{"    <!-- Add Deploy Chat AI -->"}</span>
                             </div>
                             <div className="flex gap-4">
                                 <span className="text-slate-600 select-none">4</span>
                                 <span className="text-slate-300">{"    <script "}
                                     <span className="text-purple-400">src</span>
                                     <span>=</span>
-                                    <span className="text-green-400">"https://cdn.deploymind.ai/widget.js"</span>
+                                    <span className="text-green-400">"https://cdn.deploychat.ai/widget.js"</span>
                                     <span>{" async></script>"}</span>
                                 </span>
                             </div>
@@ -146,7 +146,7 @@ export default function IntegrationSection() {
                             </div>
                             <div className="flex gap-4">
                                 <span className="text-slate-600 select-none">6</span>
-                                <span className="text-slate-300">{"      window.DeployMind.init({ "}
+                                <span className="text-slate-300">{"      window.DeployChat.init({ "}
                                     <span className="text-purple-400">id</span>
                                     <span>: </span>
                                     <span className="text-green-400">"YOUR_CHATBOT_ID"</span>

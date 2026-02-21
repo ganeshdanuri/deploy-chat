@@ -1,7 +1,7 @@
 from sqlmodel import Session, select
 from fastapi import HTTPException, status
 from app.schemas.models import User, UsageTracking, PricingTier
-from datetime import datetime
+from datetime import datetime, timezone
 
 def verify_plan_limits(user: User, session: Session):
     # 1. Get user tracking record
@@ -35,7 +35,7 @@ def verify_plan_limits(user: User, session: Session):
 def increment_usage(usage: UsageTracking, session: Session, token_count: int = 0):
     usage.message_count += 1
     usage.token_count += token_count
-    usage.updated_at = datetime.utcnow()
+    usage.updated_at = datetime.now(timezone.utc)
     session.add(usage)
     session.commit()
     session.refresh(usage)

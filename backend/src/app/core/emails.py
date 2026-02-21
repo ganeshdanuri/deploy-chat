@@ -17,12 +17,12 @@ def send_otp_email(email: str, otp_code: str):
     resend.api_key = api_key
     try:
         params = {
-            "from": "Deploy Mind <onboarding@resend.dev>",
+            "from": "Deploy Chat <onboarding@resend.dev>",
             "to": [email],
-            "subject": "Verify your email - Deploy Mind",
+            "subject": "Verify your email - Deploy Chat",
             "html": f"""
                 <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e2e8f0; rounded: 12px;">
-                    <h2 style="color: #1e293b; margin-bottom: 16px;">Welcome to Deploy Mind!</h2>
+                    <h2 style="color: #1e293b; margin-bottom: 16px;">Welcome to Deploy Chat!</h2>
                     <p style="color: #475569; font-size: 16px; line-height: 1.6;">
                         Thank you for signing up. Please use the following 6-digit code to verify your email address:
                     </p>
@@ -34,7 +34,7 @@ def send_otp_email(email: str, otp_code: str):
                     </p>
                     <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 32px 0;" />
                     <p style="color: #94a3b8; font-size: 12px; text-align: center;">
-                        &copy; 2026 Deploy Mind. Built with passion for autonomous agents.
+                        &copy; 2026 Deploy Chat. Built with passion for autonomous agents.
                     </p>
                 </div>
             """,

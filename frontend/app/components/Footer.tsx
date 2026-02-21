@@ -44,7 +44,7 @@ export default function Footer() {
                         <div className="flex items-center gap-2">
                             <Logo className="h-10 w-auto" />
                             <span className="text-2xl font-black tracking-tight text-slate-900">
-                                D<span style={{ color: "#4667ff" }}>E</span>PLOY M<span style={{ color: "#4667ff" }}>I</span>ND
+                                D<span style={{ color: "#4667ff" }}>E</span>PLOY C<span style={{ color: "#4667ff" }}>H</span>AT
                             </span>
                         </div>
                         <p className="max-w-xs text-sm leading-relaxed" style={{ color: theme.colors.neutral[600] }}>
@@ -114,7 +114,7 @@ export default function Footer() {
 
                 <div className="mt-20 pt-8 border-t flex flex-col md:flex-row justify-between items-center gap-6" style={{ borderColor: theme.colors.neutral[100] }}>
                     <p className="text-xs" style={{ color: theme.colors.neutral[500] }}>
-                        © {new Date().getFullYear()} Deploy Mind Inc. All rights reserved.
+                        © {new Date().getFullYear()} Deploy Chat Inc. All rights reserved.
                     </p>
                     <div className="flex gap-8">
                         <a href="#" className="text-xs transition-colors hover:text-blue-600" style={{ color: theme.colors.neutral[500] }}>Status</a>

@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlmodel import Session, select
 from app.core.db import get_session
-from app.core.security import create_access_token, verify_password, get_password_hash
+from app.core.security import create_access_token, create_refresh_token, decode_token, verify_password, get_password_hash
 from app.schemas.models import User, UserCreate, UserLogin, GoogleLogin, UserRead, EmailVerification, PricingTier
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 import random
 from pydantic import BaseModel
 from app.core.emails import send_otp_email
@@ -19,34 +19,59 @@ class OTPVerify(BaseModel):
     email: str
     otp_code: str
 
+class RefreshRequest(BaseModel):
+    refresh_token: str
+
 @router.post("/register")
 def register(user_data: UserCreate, session: Session = Depends(get_session)):
-    # 1. Check if username exists
-    statement = select(User).where(User.username == user_data.username)
-    if session.exec(statement).first():
-        raise HTTPException(status_code=400, detail="Username already registered")
-    
-    # 2. Check if email exists
+    # 1. Check if email exists
     statement = select(User).where(User.email == user_data.email)
-    if session.exec(statement).first():
-        raise HTTPException(status_code=400, detail="Email already registered")
+    existing_user = session.exec(statement).first()
     
-    # 3. Create user (unverified)
-    new_user = User(
-        username=user_data.username,
-        email=user_data.email,
-        password_hash=get_password_hash(user_data.password), 
-        role=user_data.role,
-        is_email_verified=False
-    )
+    if existing_user:
+        if existing_user.is_email_verified:
+            raise HTTPException(status_code=400, detail="Email already registered")
+        
+        # Check if username is taken by another user
+        user_stmt = select(User).where(User.username == user_data.username)
+        username_user = session.exec(user_stmt).first()
+        if username_user and username_user.id != existing_user.id:
+            raise HTTPException(status_code=400, detail="Username already registered")
+            
+        # Update unverified user
+        existing_user.username = user_data.username
+        existing_user.password_hash = get_password_hash(user_data.password)
+        existing_user.role = user_data.role
+        new_user = existing_user
+    else:
+        # Check if username exists for new registration
+        statement = select(User).where(User.username == user_data.username)
+        if session.exec(statement).first():
+            raise HTTPException(status_code=400, detail="Username already registered")
+            
+        # 2. Create user (unverified)
+        new_user = User(
+            username=user_data.username,
+            email=user_data.email,
+            password_hash=get_password_hash(user_data.password), 
+            role=user_data.role,
+            is_email_verified=False
+        )
+    
     session.add(new_user)
     
-    # 4. Generate & Save OTP
+    # 3. Clean up old OTPs for this email
+    old_otp_stmt = select(EmailVerification).where(EmailVerification.email == user_data.email)
+    old_otps = session.exec(old_otp_stmt).all()
+    for old_otp in old_otps:
+        session.delete(old_otp)
+    
+    # 4. Generate & Save New OTP
     otp_code = str(random.randint(100000, 999999))
     verification = EmailVerification(
         email=user_data.email,
         otp_code=otp_code,
-        expires_at=datetime.utcnow() + timedelta(minutes=10)
+        expires_at=datetime.now(timezone.utc) + timedelta(minutes=10)
     )
     session.add(verification)
     session.commit()
@@ -68,7 +93,7 @@ def verify_otp(data: OTPVerify, session: Session = Depends(get_session)):
     )
     verification = session.exec(statement).first()
     
-    if not verification or verification.expires_at < datetime.utcnow():
+    if not verification or verification.expires_at.replace(tzinfo=timezone.utc) < datetime.now(timezone.utc):
         raise HTTPException(status_code=400, detail="Invalid or expired OTP")
     
     # 2. Mark user as verified
@@ -97,8 +122,10 @@ def verify_otp(data: OTPVerify, session: Session = Depends(get_session)):
         if p: plan_name = p.name.lower()
         
     access_token = create_access_token(subject=user.id, plan=plan_name)
+    refresh_token = create_refresh_token(subject=user.id)
     return {
         "access_token": access_token,
+        "refresh_token": refresh_token,
         "token_type": "bearer",
         "username": user.username,
         "email": user.email,
@@ -111,6 +138,12 @@ def login(login_data: UserLogin, session: Session = Depends(get_session)):
     statement = select(User).where(User.email == login_data.email)
     user = session.exec(statement).first()
     
+    if user and user.google_id and not user.password_hash:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="This email is registered via Google. Please log in using Google."
+        )
+        
     if not user or not verify_password(login_data.password, user.password_hash):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -129,8 +162,10 @@ def login(login_data: UserLogin, session: Session = Depends(get_session)):
         if p: plan_name = p.name.lower()
         
     access_token = create_access_token(subject=user.id, plan=plan_name)
+    refresh_token = create_refresh_token(subject=user.id)
     return {
         "access_token": access_token,
+        "refresh_token": refresh_token,
         "token_type": "bearer",
         "username": user.username,
         "email": user.email,
@@ -152,6 +187,14 @@ def google_login(data: GoogleLogin, session: Session = Depends(get_session)):
         statement = select(User).where((User.email == email) | (User.google_id == google_id))
         user = session.exec(statement).first()
         
+        if user:
+            # Strict match requirement for security
+            if user.email != email or user.google_id != google_id:
+                if user.google_id is None:
+                    raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="This email is registered with a password. Please log in using your password.")
+                else:
+                    raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Account credentials mismatch. Please use the correct Google account.")
+                    
         if not user:
             # 3. Create new user if not exists
             # Generate a unique username if needed
@@ -194,8 +237,10 @@ def google_login(data: GoogleLogin, session: Session = Depends(get_session)):
             if p: plan_name = p.name.lower()
             
         access_token = create_access_token(subject=user.id, plan=plan_name)
+        refresh_token = create_refresh_token(subject=user.id)
         return {
             "access_token": access_token,
+            "refresh_token": refresh_token,
             "token_type": "bearer",
             "username": user.username,
             "email": user.email,
@@ -205,3 +250,36 @@ def google_login(data: GoogleLogin, session: Session = Depends(get_session)):
     except ValueError:
         # Invalid token
         raise HTTPException(status_code=400, detail="Invalid Google token")
+
+@router.post("/refresh")
+def refresh_token(data: RefreshRequest, session: Session = Depends(get_session)):
+    user_id = decode_token(data.refresh_token, verify_type="refresh")
+    if not user_id:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid or expired refresh token"
+        )
+        
+    statement = select(User).where(User.id == user_id)
+    user = session.exec(statement).first()
+    
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User not found"
+        )
+        
+    plan_name = "free"
+    if user.plan_id:
+        p = session.get(PricingTier, user.plan_id)
+        if p: plan_name = p.name.lower()
+        
+    new_access_token = create_access_token(subject=user.id, plan=plan_name)
+    new_refresh_token = create_refresh_token(subject=user.id)
+    
+    return {
+        "access_token": new_access_token,
+        "refresh_token": new_refresh_token,
+        "token_type": "bearer"
+    }
+

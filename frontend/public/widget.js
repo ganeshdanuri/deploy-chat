@@ -19,7 +19,7 @@
   };
 
   if (!CONFIG.token) {
-    console.warn("[DeployMind Widget] Missing data-token attribute.");
+    console.warn("[DeployChat Widget] Missing data-token attribute.");
     return;
   }
 
@@ -173,7 +173,7 @@
         if (data.name) this.botName = data.name;
         if (data.greeting) this.greeting = data.greeting;
       } catch (err) {
-        console.error("[DeployMind Widget] Failed to load config:", err);
+        console.error("[DeployChat Widget] Failed to load config:", err);
       }
     },
 
@@ -263,8 +263,8 @@
             <textarea id="dm-input" rows="1" placeholder="Message..."></textarea>
             <button id="dm-send">${ASSETS.ICONS.SEND}</button>
           </div>
-          <a href="https://deploymind.ai" target="_blank" id="dm-footer">
-            <span>Powered by DeployMind</span>
+          <a href="https://deploychat.ai" target="_blank" id="dm-footer">
+            <span>Powered by DeployChat</span>
             ${ASSETS.ICONS.LOGO}
           </a>
         </div>

@@ -717,7 +717,7 @@ wheels = [
 ]
 
 [[package]]
-name = "deploy-mind-backend"
+name = "deploy-chat-backend"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [

@@ -52,7 +52,7 @@ export default function Navbar() {
               <Logo className="h-10 w-auto" />
               <div className="flex items-center">
                 <span className="text-2xl font-black tracking-tight block leading-none text-slate-900">
-                  D<span style={{ color: "#4667ff" }}>E</span>PLOY M<span style={{ color: "#4667ff" }}>I</span>ND
+                  D<span style={{ color: "#4667ff" }}>E</span>PLOY C<span style={{ color: "#4667ff" }}>H</span>AT
                 </span>
               </div>
             </div>

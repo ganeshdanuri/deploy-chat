@@ -82,7 +82,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                     {!isCollapsed && (
                         <div className="flex-1 min-w-0">
                             <h2 className="text-sm font-black tracking-tight truncate text-slate-900">
-                                D<span style={{ color: "#4667ff" }}>E</span>PLOY M<span style={{ color: "#4667ff" }}>I</span>ND
+                                D<span style={{ color: "#4667ff" }}>E</span>PLOY C<span style={{ color: "#4667ff" }}>H</span>AT
                             </h2>
                             <p className="text-[10px] font-bold text-indigo-500 uppercase tracking-tighter">
                                 {userData?.billing?.current_plan || "Free"}

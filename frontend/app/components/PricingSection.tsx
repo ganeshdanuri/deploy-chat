@@ -7,7 +7,7 @@ const plans = [
     {
         name: "Trial",
         price: "0",
-        description: "Test the power of Deploy Mind with no configuration required.",
+        description: "Test the power of Deploy Chat with no configuration required.",
         features: [
             "Unlimited AI Chatbots",
             "50 Messages (Platform Key)",
