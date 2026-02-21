@@ -63,7 +63,7 @@ export function TopNav({ onMenuClick }: TopNavProps) {
                 {(!userData?.billing?.current_plan || userData.billing.current_plan.toLowerCase() === 'free') && (
                     <button
                         className="flex items-center gap-2 px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs sm:text-sm font-semibold rounded-lg shadow-sm shadow-indigo-200 transition-all"
-                        onClick={() => router.push("/dashboard/settings")}
+                        onClick={() => router.push("/dashboard/settings?tab=billing")}
                     >
                         <span className="hidden sm:inline">Upgrade Plan</span>
                         <span className="sm:hidden">Upgrade</span>

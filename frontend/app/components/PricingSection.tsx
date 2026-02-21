@@ -1,142 +1,158 @@
 "use client";
 
-import { theme } from "../theme";
-import { HiCheck, HiOutlineInformationCircle } from "react-icons/hi";
+import { HiCheck, HiOutlineInformationCircle, HiSparkles } from "react-icons/hi";
 
 const plans = [
     {
-        name: "Trial",
+        name: "Free",
         price: "0",
-        description: "Test the power of Deploy Chat with no configuration required.",
+        description: "Test the platform with a small usage limit to see how it works.",
         features: [
-            "Unlimited AI Chatbots",
-            "50 Messages (Platform Key)",
-            "Basic Analytics Dashboard",
-            "3 Documents Included",
-            "Community support",
+            "1 AI Chatbot",
+            "10 Messages included",
+            "Basic Analytics",
+            "Community Support",
         ],
-        cta: "Start Free Trial",
+        cta: "Start Free",
         popular: false,
-        color: theme.colors.neutral[600],
+    },
+    {
+        name: "Starter",
+        price: "19",
+        description: "Perfect for personal projects and small websites.",
+        features: [
+            "1 AI Chatbot",
+            "1,000 Messages / month",
+            "Standard Analytics",
+            "Email Support",
+        ],
+        cta: "Get Started",
+        popular: false,
     },
     {
         name: "Professional",
-        price: "19",
-        description: "Perfect for scaling startups with heavy usage needs.",
+        price: "49",
+        description: "For scaling startups with heavy usage needs.",
         features: [
-            "Unlimited AI Chatbots",
-            "5,000 Managed Messages",
-            "Advanced Analytics & Trends",
-            "AI-Powered Conversation Insights",
-            "Priority support",
+            "5 AI Chatbots",
+            "10,000 Messages / month",
+            "Advanced Analytics",
+            "Priority Support",
+            "Remove Branding",
         ],
-        cta: "Get Started",
+        cta: "Start Professional",
         popular: true,
-        color: theme.colors.primary.main,
     },
     {
         name: "Enterprise",
         price: "Custom",
         description: "Full control and white-labeled infrastructure.",
         features: [
-            "Unlimited everything",
-            "Custom Insights & Reporting",
-            "Dedicated Infrastructure",
+            "Unlimited Chatbots & Messages",
+            "Dedicated Azure Server",
             "SLA Support",
             "Custom Security Audits",
+            "Single Sign-On (SSO)",
         ],
         cta: "Talk to Sales",
         popular: false,
-        color: theme.colors.accent.purple,
     },
 ];
 
 export default function PricingSection() {
     return (
-        <section id="pricing" className="py-24 bg-transparent">
-            <div className="max-w-7xl mx-auto px-6">
-                <div className="text-center max-w-3xl mx-auto mb-20">
-                    <h2
-                        className="text-sm font-bold tracking-widest uppercase mb-3"
-                        style={{ color: theme.colors.primary.main }}
-                    >
+        <section id="pricing" className="py-24 relative overflow-hidden bg-slate-50 sm:py-32">
+            {/* Background glowing effects */}
+            <div className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80" aria-hidden="true">
+                <div
+                    className="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#6366f1] to-[#a855f7] opacity-20 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]"
+                    style={{
+                        clipPath: 'polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)'
+                    }}
+                />
+            </div>
+
+            <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
+                <div className="mx-auto max-w-4xl text-center mb-20">
+                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 border border-indigo-100 text-indigo-600 text-xs font-bold uppercase tracking-widest mb-6">
+                        <HiSparkles className="w-4 h-4" />
                         Pricing Plans
+                    </div>
+                    <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-slate-900 tracking-tight mb-8">
+                        Scales with your <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">business</span>
                     </h2>
-                    <h3
-                        className="text-4xl md:text-5xl font-bold mb-6"
-                        style={{ color: theme.colors.neutral[900] }}
-                    >
-                        Scales with your business
-                    </h3>
-                    <p
-                        className="text-lg"
-                        style={{ color: theme.colors.neutral[600] }}
-                    >
-                        Simple, transparent pricing. Unbeatable value. <br />
-                        Join 500+ teams automating their support today.
+                    <p className="text-lg md:text-xl text-slate-600 leading-relaxed max-w-2xl mx-auto">
+                        Simple, transparent pricing. Unbeatable value. Join hundreds of growing teams automating their customer support today.
                     </p>
                 </div>
 
-                <div className="grid md:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                     {plans.map((plan) => (
                         <div
                             key={plan.name}
-                            className={`relative flex flex-col p-8 rounded-3xl border transition-all hover:shadow-2xl ${plan.popular ? 'bg-white shadow-xl scale-105 z-10' : 'bg-transparent'
+                            className={`relative flex flex-col p-8 rounded-[2rem] border transition-all duration-500 hover:-translate-y-2 ${plan.popular
+                                    ? 'bg-slate-900 border-slate-900 shadow-2xl scale-105 z-10 ring-4 ring-indigo-500/20 md:transform lg:scale-110'
+                                    : 'bg-white border-slate-200 shadow-xl shadow-slate-200/50 hover:shadow-2xl hover:border-indigo-200'
                                 }`}
-                            style={{
-                                borderColor: plan.popular ? theme.colors.primary.main : theme.colors.neutral[200],
-                            }}
                         >
                             {plan.popular && (
-                                <div
-                                    className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 px-4 py-1 rounded-full text-xs font-bold text-white uppercase tracking-wider"
-                                    style={{ background: theme.colors.primary.main }}
-                                >
+                                <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1.5 rounded-full text-xs font-bold text-white uppercase tracking-widest bg-gradient-to-r from-indigo-500 to-purple-500 shadow-lg">
                                     Most Popular
                                 </div>
                             )}
 
-                            <div className="mb-8">
-                                <h4 className="text-xl font-bold mb-2" style={{ color: theme.colors.neutral[900] }}>
+                            <div className="mb-8 relative z-10 pt-4">
+                                <h4 className={`text-lg font-semibold mb-4 ${plan.popular ? 'text-indigo-300' : 'text-indigo-600'}`}>
                                     {plan.name}
                                 </h4>
                                 <div className="flex items-baseline gap-1 mb-4">
-                                    <span className="text-4xl font-bold" style={{ color: theme.colors.neutral[900] }}>
-                                        ${plan.price}
-                                    </span>
-                                    <span className="text-slate-500 font-medium">/month</span>
+                                    {plan.price === 'Custom' ? (
+                                        <span className={`text-4xl font-black tracking-tight ${plan.popular ? 'text-white' : 'text-slate-900'}`}>
+                                            Custom
+                                        </span>
+                                    ) : (
+                                        <>
+                                            <span className={`text-5xl font-black tracking-tight ${plan.popular ? 'text-white' : 'text-slate-900'}`}>
+                                                ${plan.price}
+                                            </span>
+                                            <span className={`text-base font-medium ${plan.popular ? 'text-slate-400' : 'text-slate-500'}`}>
+                                                /month
+                                            </span>
+                                        </>
+                                    )}
                                 </div>
-                                <p className="text-sm leading-relaxed" style={{ color: theme.colors.neutral[600] }}>
+                                <p className={`text-sm leading-relaxed ${plan.popular ? 'text-slate-300' : 'text-slate-600'}`}>
                                     {plan.description}
                                 </p>
                             </div>
 
-                            <ul className="space-y-4 mb-8 flex-1">
-                                {plan.features.map((feature) => (
-                                    <li key={feature} className="flex items-start gap-3 text-sm">
-                                        <HiCheck className="text-lg flex-shrink-0 mt-0.5" style={{ color: theme.colors.accent.green }} />
-                                        <span style={{ color: theme.colors.neutral[700] }}>{feature}</span>
-                                    </li>
-                                ))}
-                            </ul>
+                            <div className="flex-1">
+                                <ul className="space-y-4 mb-8">
+                                    {plan.features.map((feature, idx) => (
+                                        <li key={idx} className="flex items-start gap-3 text-sm">
+                                            <div className={`mt-0.5 rounded-full p-1 ${plan.popular ? 'bg-indigo-500/20 text-indigo-400' : 'bg-indigo-50 text-indigo-600'}`}>
+                                                <HiCheck className="w-4 h-4 flex-shrink-0" />
+                                            </div>
+                                            <span className={`font-medium ${plan.popular ? 'text-slate-300' : 'text-slate-700'}`}>
+                                                {feature}
+                                            </span>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
 
                             <button
                                 onClick={() => {
-                                    if (plan.name === 'Trial') {
-                                        window.open(`/login?register=true&plan=trial`, '_blank', 'noopener,noreferrer');
+                                    if (plan.name === 'Free') {
+                                        window.open(`/login?register=true&plan=free`, '_blank', 'noopener,noreferrer');
                                     } else {
-                                        // Handle other plans or just default to register
                                         window.open(`/login?register=true&plan=${plan.name.toLowerCase()}`, '_blank', 'noopener,noreferrer');
                                     }
                                 }}
-                                className={`w-full py-4 rounded-xl font-bold transition-all ${plan.popular ? 'text-white' : 'border'
+                                className={`mt-auto w-full py-4 rounded-xl font-bold transition-all duration-300 active:scale-95 flex items-center justify-center gap-2 ${plan.popular
+                                        ? 'bg-indigo-500 text-white hover:bg-indigo-400 shadow-[0_0_20px_rgba(99,102,241,0.4)] hover:shadow-[0_0_25px_rgba(99,102,241,0.6)]'
+                                        : 'bg-slate-50 text-slate-900 border border-slate-200 hover:bg-slate-100 hover:border-slate-300'
                                     }`}
-                                style={{
-                                    backgroundColor: plan.popular ? theme.colors.primary.main : 'transparent',
-                                    borderColor: plan.popular ? 'transparent' : theme.colors.neutral[300],
-                                    color: plan.popular ? 'white' : theme.colors.neutral[700],
-                                    boxShadow: plan.popular ? `0 10px 15px -3px ${theme.colors.primary.main}30` : 'none',
-                                }}
                             >
                                 {plan.cta}
                             </button>
@@ -144,10 +160,14 @@ export default function PricingSection() {
                     ))}
                 </div>
 
-                <div className="mt-16 text-center">
-                    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-50 border border-blue-100 text-blue-700 text-sm font-medium">
-                        <HiOutlineInformationCircle className="text-lg" />
-                        Looking for something else? <button className="font-bold underline decoration-2 underline-offset-4 ml-1">Custom Quote</button>
+                <div className="mt-16 text-center lg:mt-24">
+                    <div className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-2xl bg-white border border-slate-200 shadow-sm text-slate-700 text-sm font-medium hover:shadow-md transition-all cursor-pointer group">
+                        <HiOutlineInformationCircle className="text-xl text-indigo-500 group-hover:scale-110 transition-transform" />
+                        <span>Have specific requirements?</span>
+                        <a href="mailto:sales@deploymind.com" className="font-bold text-indigo-600 hover:text-indigo-700 flex items-center gap-1">
+                            Contact our sales team
+                            <span className="group-hover:translate-x-1 transition-transform">→</span>
+                        </a>
                     </div>
                 </div>
             </div>

@@ -1,6 +1,6 @@
 from sqlmodel import Session, select
 from fastapi import HTTPException, status
-from app.schemas.models import User, UsageTracking, PricingTier
+from app.schemas.models import User, UsageTracking, PricingTier, UserPricingPlan
 from datetime import datetime, timezone
 
 def verify_plan_limits(user: User, session: Session):
@@ -15,14 +15,18 @@ def verify_plan_limits(user: User, session: Session):
         session.commit()
         session.refresh(usage)
         
-    # 2. Get Limits from PricingTier via plan_id
+    # 2. Get Limits from UserPricingPlan via User
     plan_name = "free"
-    limit = 100 # Safe default
-    if user.plan_id:
-        plan = session.get(PricingTier, user.plan_id)
-        if plan:
-            plan_name = plan.name
-            limit = plan.monthly_limit
+    limit = 10 
+    plan_stmt = select(UserPricingPlan, PricingTier).join(PricingTier).where(
+        UserPricingPlan.user_id == user.id,
+        UserPricingPlan.status == "active"
+    )
+    plan_result = session.exec(plan_stmt).first()
+    
+    if plan_result:
+        plan_name = plan_result[1].name
+        limit = plan_result[1].monthly_limit
     
     if usage.message_count >= limit:
         raise HTTPException(
@@ -38,11 +42,14 @@ def increment_usage(usage: UsageTracking, session: Session, token_count: int = 0
     # Check for limits (50%, 80%)
     user = session.get(User, usage.user_id)
     if user:
-        limit = 100
-        if user.plan_id:
-            plan = session.get(PricingTier, user.plan_id)
-            if plan:
-                limit = plan.monthly_limit
+        limit = 10
+        plan_stmt = select(UserPricingPlan, PricingTier).join(PricingTier).where(
+            UserPricingPlan.user_id == user.id,
+            UserPricingPlan.status == "active"
+        )
+        plan_result = session.exec(plan_stmt).first()
+        if plan_result:
+            limit = plan_result[1].monthly_limit
         
         from app.schemas.models import RecentActivity
         old_count = usage.message_count - 1

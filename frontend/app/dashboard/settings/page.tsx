@@ -75,59 +75,94 @@ export default function SettingsPage() {
                     {activeTab === "billing" && (
                         <div className="space-y-4">
                             <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-                                <div className="p-4 border-b border-slate-200">
-                                    <h2 className="text-base font-bold text-slate-900">Current Plan</h2>
-                                    <p className="text-xs text-slate-500 mt-1">You are currently on the {userData?.billing?.current_plan} plan.</p>
-                                </div>
-                                <div className="p-5">
-                                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                                        <div className="space-y-3 flex-1">
-                                            <div className="flex justify-between items-end mb-1">
-                                                <span className="text-sm font-medium text-slate-700">Monthly Usage</span>
+                                <div className="p-5 sm:p-6 flex flex-col md:flex-row md:items-start justify-between gap-6">
+                                    <div className="flex-1 space-y-4">
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-10 h-10 rounded-full bg-indigo-50 flex items-center justify-center border border-indigo-100 shrink-0">
+                                                <HiCreditCard className="w-5 h-5 text-indigo-600" />
+                                            </div>
+                                            <div>
+                                                <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
+                                                    {userData?.billing?.current_plan ? userData.billing.current_plan.charAt(0).toUpperCase() + userData.billing.current_plan.slice(1) : 'Free'} plan
+                                                    <span className="bg-emerald-50 text-emerald-600 border border-emerald-200 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">Active</span>
+                                                </h2>
+                                                <p className="text-sm text-slate-500 mt-0.5">
+                                                    {userData?.billing?.expires_at
+                                                        ? `Your plan will renew on ${new Date(userData.billing.expires_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}.`
+                                                        : 'You are currently on the free tier.'}
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        <div className="mt-2 text-slate-700 max-w-sm">
+                                            <div className="flex justify-between items-end mb-1.5">
                                                 <span className="text-sm font-semibold text-slate-900">
-                                                    {userData?.usage?.messages_sent || 0} / {userData?.billing?.monthly_limit || 100} messages
+                                                    {userData?.usage?.messages_sent || 0} <span className="text-slate-500 font-medium">/ {userData?.billing?.monthly_limit || 100} msgs</span>
+                                                </span>
+                                                <span className="text-xs font-medium text-slate-500">
+                                                    Resets on {userData?.usage?.reset_date ? new Date(userData.usage.reset_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '1st of month'}
                                                 </span>
                                             </div>
-                                            <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
+                                            <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
                                                 <div
-                                                    className="h-full bg-indigo-600 rounded-full transition-all duration-1000"
+                                                    className={`h-full rounded-full transition-all duration-1000 ${((userData?.usage?.messages_sent || 0) / (userData?.billing?.monthly_limit || 100)) > 0.9 ? 'bg-red-500' : 'bg-indigo-600'}`}
                                                     style={{ width: `${Math.min(((userData?.usage?.messages_sent || 0) / (userData?.billing?.monthly_limit || 100)) * 100, 100)}%` }}
                                                 />
                                             </div>
-                                            <p className="text-xs text-slate-500">Your usage resets on {userData?.usage?.reset_date ? new Date(userData.usage.reset_date).toLocaleDateString() : 'the 1st of next month'}.</p>
                                         </div>
-                                        <div className="shrink-0 flex gap-2">
-                                            <button className="px-3 py-1.5 bg-white border border-slate-200 text-slate-700 text-sm font-medium rounded-lg hover:bg-slate-50 transition-colors shadow-sm">
-                                                View Invoices
-                                            </button>
-                                            <button className="px-3 py-1.5 bg-indigo-600 text-white text-sm font-medium rounded-lg shadow-sm hover:bg-indigo-700 transition-colors">
-                                                Upgrade Plan
-                                            </button>
-                                        </div>
+                                    </div>
+                                    <div className="shrink-0 pt-1">
+                                        <button className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 text-slate-700 text-sm font-semibold rounded-lg hover:bg-slate-50 hover:border-slate-300 transition-all shadow-sm">
+                                            View Invoices
+                                        </button>
                                     </div>
                                 </div>
                             </div>
 
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                                <div className="bg-white rounded-xl border border-indigo-200 shadow-sm p-6 relative overflow-hidden">
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mt-6">
+                                <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6 relative overflow-hidden flex flex-col">
+                                    <h3 className="text-lg font-bold text-slate-900">Starter</h3>
+                                    <div className="mt-1 flex items-baseline gap-1">
+                                        <span className="text-3xl font-black text-slate-900">$19</span>
+                                        <span className="text-sm text-slate-500">/month</span>
+                                    </div>
+                                    <ul className="mt-5 space-y-3 flex-1">
+                                        {[
+                                            "1,000 Messages / month",
+                                            "1 AI Chatbot",
+                                            "Standard Analytics",
+                                            "Email Support"
+                                        ].map((feat, i) => (
+                                            <li key={feat} className="flex items-center gap-2 text-sm text-slate-600">
+                                                <HiShieldCheck className="w-5 h-5 text-slate-400 shrink-0" />
+                                                {feat}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                    <button className="mt-6 w-full py-2.5 bg-white border border-slate-200 text-slate-700 text-sm font-bold rounded-lg hover:bg-slate-50 transition-all">
+                                        Upgrade
+                                    </button>
+                                </div>
+
+                                <div className="bg-white rounded-xl border border-indigo-200 shadow-sm p-6 relative overflow-hidden flex flex-col">
                                     <div className="absolute top-0 right-0 p-3">
                                         <span className="bg-indigo-50 text-indigo-600 text-[10px] font-bold px-2 py-0.5 rounded-full border border-indigo-100 uppercase tracking-wider">Most Popular</span>
                                     </div>
                                     <h3 className="text-lg font-bold text-slate-900">Professional</h3>
                                     <div className="mt-1 flex items-baseline gap-1">
-                                        <span className="text-3xl font-black text-slate-900">$29</span>
+                                        <span className="text-3xl font-black text-slate-900">$49</span>
                                         <span className="text-sm text-slate-500">/month</span>
                                     </div>
-                                    <ul className="mt-5 space-y-3">
+                                    <ul className="mt-5 space-y-3 flex-1">
                                         {[
-                                            "1,000 messages / month",
-                                            "Unlimited Chatbots",
-                                            "Custom Branding",
+                                            "10,000 Messages / month",
+                                            "5 AI Chatbots",
+                                            "Advanced Analytics",
                                             "Priority Support",
-                                            "Advanced Analytics"
+                                            "Remove Branding"
                                         ].map((feat, i) => (
                                             <li key={feat} className="flex items-center gap-2 text-sm text-slate-600">
-                                                <HiShieldCheck className="w-5 h-5 text-indigo-500" />
+                                                <HiShieldCheck className="w-5 h-5 text-indigo-500 shrink-0" />
                                                 {feat}
                                             </li>
                                         ))}
@@ -137,21 +172,21 @@ export default function SettingsPage() {
                                     </button>
                                 </div>
 
-                                <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
+                                <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6 flex flex-col">
                                     <h3 className="text-lg font-bold text-slate-900">Enterprise</h3>
                                     <div className="mt-1 flex items-baseline gap-1">
                                         <span className="text-3xl font-black text-slate-900">Custom</span>
                                     </div>
-                                    <ul className="mt-5 space-y-3">
+                                    <ul className="mt-5 space-y-3 flex-1">
                                         {[
                                             "Unlimited everything",
+                                            "Dedicated Azure Server",
                                             "SLA Guarantees",
-                                            "Dedicated Account Manager",
                                             "Custom Integrations",
-                                            "On-premise deployment"
+                                            "Single Sign-On (SSO)"
                                         ].map((feat, i) => (
                                             <li key={feat} className="flex items-center gap-2 text-sm text-slate-600">
-                                                <HiShieldCheck className="w-5 h-5 text-slate-400" />
+                                                <HiShieldCheck className="w-5 h-5 text-slate-400 shrink-0" />
                                                 {feat}
                                             </li>
                                         ))}

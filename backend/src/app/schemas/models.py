@@ -1,14 +1,26 @@
 from typing import Optional, List
 from uuid import UUID, uuid4
 from sqlmodel import Field, SQLModel
-from datetime import datetime
+from datetime import datetime, timedelta
 
 class PricingTier(SQLModel, table=True):
     __tablename__ = "pricing_tiers"
     id: UUID = Field(default_factory=uuid4, primary_key=True)
     name: str = Field(unique=True)
+    price: float = Field(default=0.0)
     monthly_limit: int = Field(default=100)
     created_at: datetime = Field(default_factory=datetime.utcnow)
+
+class UserPricingPlan(SQLModel, table=True):
+    __tablename__ = "user_pricing_plans"
+    id: UUID = Field(default_factory=uuid4, primary_key=True)
+    user_id: UUID = Field(foreign_key="users.id")
+    tier_id: UUID = Field(foreign_key="pricing_tiers.id")
+    status: str = Field(default="active")
+    started_at: datetime = Field(default_factory=datetime.utcnow)
+    expires_at: Optional[datetime] = Field(default_factory=lambda: datetime.utcnow() + timedelta(days=30))
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
 
 class UserBase(SQLModel):
     username: str = Field(unique=True, index=True)
@@ -21,7 +33,6 @@ class User(UserBase, table=True):
     password_hash: Optional[str] = Field(default=None)
     google_id: Optional[str] = Field(default=None, unique=True, index=True)
     profile_image: Optional[str] = Field(default=None)
-    plan_id: Optional[UUID] = Field(default=None, foreign_key="pricing_tiers.id")
     is_email_verified: bool = Field(default=False)
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
@@ -38,7 +49,6 @@ class GoogleLogin(SQLModel):
 
 class UserRead(UserBase):
     id: UUID
-    plan_id: Optional[UUID]
     is_email_verified: bool
     created_at: datetime
 

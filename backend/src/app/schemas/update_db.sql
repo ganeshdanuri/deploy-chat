@@ -4,6 +4,7 @@
 CREATE TABLE IF NOT EXISTS pricing_tiers (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     name VARCHAR NOT NULL UNIQUE,
+    price FLOAT DEFAULT 0.0,
     monthly_limit INTEGER DEFAULT 100,
     created_at TIMESTAMP DEFAULT NOW()
 );
@@ -11,20 +12,24 @@ CREATE TABLE IF NOT EXISTS pricing_tiers (
 -- Ensure price_id is removed if it was added previously
 ALTER TABLE pricing_tiers DROP COLUMN IF EXISTS price_id;
 
+-- Ensure price is added
+ALTER TABLE pricing_tiers ADD COLUMN IF NOT EXISTS price FLOAT DEFAULT 0.0;
+
 -- 2. Insert Default Tiers if not exists
-INSERT INTO pricing_tiers (name, monthly_limit) VALUES ('Free', 100) ON CONFLICT DO NOTHING;
-INSERT INTO pricing_tiers (name, monthly_limit) VALUES ('Professional', 1000) ON CONFLICT DO NOTHING;
+INSERT INTO pricing_tiers (id, name, price, monthly_limit, created_at) VALUES (gen_random_uuid(), 'Free', 0.0, 100, NOW()) ON CONFLICT (name) DO NOTHING;
+INSERT INTO pricing_tiers (id, name, price, monthly_limit, created_at) VALUES (gen_random_uuid(), 'Starter', 19.0, 1000, NOW()) ON CONFLICT (name) DO NOTHING;
+INSERT INTO pricing_tiers (id, name, price, monthly_limit, created_at) VALUES (gen_random_uuid(), 'Professional', 49.0, 10000, NOW()) ON CONFLICT (name) DO NOTHING;
 
 -- 3. Update users table
 ALTER TABLE users ADD COLUMN IF NOT EXISTS email VARCHAR UNIQUE;
 ALTER TABLE users ADD COLUMN IF NOT EXISTS is_email_verified BOOLEAN DEFAULT FALSE;
-ALTER TABLE users ADD COLUMN IF NOT EXISTS plan_id UUID REFERENCES pricing_tiers(id);
 ALTER TABLE users ADD COLUMN IF NOT EXISTS google_id VARCHAR UNIQUE;
 ALTER TABLE users ADD COLUMN IF NOT EXISTS profile_image VARCHAR;
 ALTER TABLE users ALTER COLUMN password_hash DROP NOT NULL;
 
--- Explicitly remove old plan column and table
+-- Explicitly remove old plan column and table plan_id
 ALTER TABLE users DROP COLUMN IF EXISTS current_plan;
+ALTER TABLE users DROP COLUMN IF EXISTS plan_id;
 DROP TABLE IF EXISTS user_pricing_plans CASCADE;
 
 -- Migrate existing current_plan data (Optional but good)
@@ -90,7 +95,7 @@ CREATE TABLE IF NOT EXISTS usage_tracking (
 CREATE TABLE IF NOT EXISTS user_pricing_plans (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    plan_name VARCHAR NOT NULL DEFAULT 'free',
+    tier_id UUID NOT NULL REFERENCES pricing_tiers(id),
     status VARCHAR NOT NULL DEFAULT 'active',
     started_at TIMESTAMP DEFAULT NOW(),
     expires_at TIMESTAMP,

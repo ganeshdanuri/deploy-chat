@@ -5,6 +5,7 @@ CREATE EXTENSION IF NOT EXISTS vector;
 CREATE TABLE pricing_tiers (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     name VARCHAR NOT NULL UNIQUE,
+    price FLOAT DEFAULT 0.0,
     monthly_limit INTEGER DEFAULT 100, -- e.g. messages/month
     created_at TIMESTAMP DEFAULT NOW()
 );
@@ -20,7 +21,6 @@ CREATE TABLE users (
     email VARCHAR NOT NULL UNIQUE,
     role VARCHAR,
     password_hash VARCHAR NOT NULL,
-    plan_id UUID REFERENCES pricing_tiers(id),
     is_email_verified BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT NOW()
 );
@@ -32,6 +32,18 @@ CREATE TABLE email_verifications (
     otp_code VARCHAR NOT NULL,
     expires_at TIMESTAMP NOT NULL,
     created_at TIMESTAMP DEFAULT NOW()
+);
+
+-- User Pricing Plans
+CREATE TABLE user_pricing_plans (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    tier_id UUID NOT NULL REFERENCES pricing_tiers(id),
+    status VARCHAR NOT NULL DEFAULT 'active',
+    started_at TIMESTAMP DEFAULT NOW(),
+    expires_at TIMESTAMP,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
 );
 
 -- Chatbots

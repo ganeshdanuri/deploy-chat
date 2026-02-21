@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends
 from sqlmodel import Session, select
 from app.api.deps import get_current_user
 from app.core.db import get_session
-from app.schemas.models import User, UsageTracking, PricingTier, RecentActivity, RecentActivityRead
+from app.schemas.models import User, UsageTracking, PricingTier, UserPricingPlan, RecentActivity, RecentActivityRead
 from typing import Optional, List
 
 router = APIRouter(prefix="/users")
@@ -16,14 +16,24 @@ async def get_user_me(
     Fetch comprehensive information about the current user,
     including general profile, billing status, and usage metrics.
     """
-    # 1. Fetch Plan Details from PricingTier
+    # 1. Fetch Plan Details from UserPricingPlan
     plan_name = "free"
-    monthly_limit = 100
-    if current_user.plan_id:
-        plan = session.get(PricingTier, current_user.plan_id)
-        if plan:
-            plan_name = plan.name
-            monthly_limit = plan.monthly_limit
+    monthly_limit = 10
+    started_at = current_user.created_at
+    expires_at = None
+    
+    plan_stmt = select(UserPricingPlan, PricingTier).join(PricingTier).where(
+        UserPricingPlan.user_id == current_user.id,
+        UserPricingPlan.status == "active"
+    )
+    plan_result = session.exec(plan_stmt).first()
+    
+    if plan_result:
+        user_plan, tier = plan_result
+        plan_name = tier.name
+        monthly_limit = tier.monthly_limit
+        started_at = user_plan.started_at
+        expires_at = user_plan.expires_at
     
     # 2. Fetch Aggregated Usage
     usage_statement = select(UsageTracking).where(UsageTracking.user_id == current_user.id)
@@ -41,8 +51,8 @@ async def get_user_me(
             "current_plan": plan_name,
             "monthly_limit": monthly_limit,
             "plan_status": "active",
-            "started_at": current_user.created_at,
-            "expires_at": None
+            "started_at": started_at,
+            "expires_at": expires_at
         },
         "usage": {
             "messages_sent": usage_info.message_count if usage_info else 0,
