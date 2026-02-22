@@ -14,7 +14,7 @@ export const Tooltip = ({ children, classNames, ...props }: TooltipProps) => {
                     "py-1.5 px-3",
                     classNames?.content,
                 ].filter(Boolean).join(" "),
-                arrow: "bg-slate-900/90",
+                arrow: "bg-slate-900",
             }}
             {...props}
         >

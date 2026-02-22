@@ -31,3 +31,13 @@ GEMINI_TEXT_EMBEDDING_MODEL = "models/gemini-embedding-001"
 DEFAULT_AI_MODEL = "gemini-2.5-flash"
 CHUNK_MAX_LENGTH = 1000
 CHUNK_OVERLAP = 200
+
+# Activity Types
+ACTIVITY_TYPE_DOCUMENT_ADDED = "document_added"
+ACTIVITY_TYPE_DATASET_CREATED = "dataset_created"
+ACTIVITY_TYPE_CHATBOT_CREATED = "chatbot_created"
+ACTIVITY_TYPE_LIMIT_WARNING = "message_limit_warning"
+
+# Chat Roles
+ROLE_USER = "user"
+ROLE_ASSISTANT = "assistant"

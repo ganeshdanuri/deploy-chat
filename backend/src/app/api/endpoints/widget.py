@@ -4,6 +4,7 @@ from pydantic import BaseModel
 from app.core.db import get_session
 from app.schemas.models import Chatbot, User
 from app.core.billing import verify_plan_limits, increment_usage
+from app.core.constants import ROLE_USER, ROLE_ASSISTANT
 from app.core.ai import get_ai_response
 from app.core.endpoints import Endpoints
 
@@ -89,8 +90,8 @@ async def widget_chat(
             session.commit()
             session.refresh(chat_session)
             
-        user_msg = ChatMessage(session_id=chat_session.id, role="user", content=body.message)
-        bot_msg = ChatMessage(session_id=chat_session.id, role="assistant", content=response)
+        user_msg = ChatMessage(session_id=chat_session.id, role=ROLE_USER, content=body.message)
+        bot_msg = ChatMessage(session_id=chat_session.id, role=ROLE_ASSISTANT, content=response)
         session.add(user_msg)
         session.add(bot_msg)
         session.commit()

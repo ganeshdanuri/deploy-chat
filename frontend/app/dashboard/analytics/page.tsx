@@ -3,7 +3,7 @@
 import { HiTrendingUp, HiLockClosed } from "react-icons/hi";
 import { useAppSelector } from "@/lib/store/hooks";
 import Link from "next/link";
-import { TOOLTIP_STYLE_CLASSES, TOOLTIP_ARROW_CLASSES } from "@/lib/constants";
+import { TOOLTIP_STYLE_CLASSES, TOOLTIP_ARROW_CLASSES, PLANS } from "@/lib/constants";
 import { AnalyticsSkeleton } from "@/app/components/ui";
 import { useEffect, useState } from "react";
 
@@ -16,7 +16,9 @@ export default function AnalyticsPage() {
         return () => clearTimeout(timer);
     }, []);
 
-    const isFreePlan = !userData?.billing?.current_plan || userData?.billing?.current_plan.toLowerCase() === "free" || userData?.billing?.current_plan.toLowerCase() === "trial";
+    const isFreePlan = !userData?.billing?.current_plan ||
+        userData?.billing?.current_plan.toLowerCase() === PLANS.FREE ||
+        userData?.billing?.current_plan.toLowerCase() === PLANS.TRIAL;
 
     if (loading) {
         return <AnalyticsSkeleton />;

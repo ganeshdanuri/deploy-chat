@@ -10,7 +10,7 @@ from app.core.ai import get_ai_response
 from app.core.endpoints import Endpoints
 from app.core.chunking import process_chatbot_documents
 
-from app.core.constants import CHATBOT_STATUS_ACTIVE, CHATBOT_STATUS_CREATING
+from app.core.constants import CHATBOT_STATUS_ACTIVE, CHATBOT_STATUS_CREATING, CHATBOT_STATUS_FAILED, ACTIVITY_TYPE_CHATBOT_CREATED
 
 router = APIRouter(prefix=Endpoints.CHATBOTS_PREFIX)
 
@@ -85,7 +85,7 @@ def create_chatbot(
         from app.schemas.models import RecentActivity
         activity = RecentActivity(
             user_id=current_user.id,
-            activity_type="chatbot_created",
+            activity_type=ACTIVITY_TYPE_CHATBOT_CREATED,
             details=f"Created chatbot: {new_chatbot.name}"
         )
         session.add(activity)
@@ -169,12 +169,7 @@ def delete_chatbot(
     if not chatbot or chatbot.user_id != current_user.id:
         raise HTTPException(status_code=404, detail="Chatbot not found")
     
-    # Delete links first
-    statement = select(ChatbotDatasets).where(ChatbotDatasets.chatbot_id == chatbot_id)
-    links = session.exec(statement).all()
-    for link in links:
-        session.delete(link)
-        
+    # Delete the chatbot (ChatbotDatasets, ChatSessions, and UsageTracking will be cascaded by DB)
     session.delete(chatbot)
     session.commit()
     return {"message": "Chatbot deleted successfully"}

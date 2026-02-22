@@ -1,7 +1,7 @@
 from sqlmodel import Session, select
 from fastapi import HTTPException, status
 from app.schemas.models import User, UsageTracking, PricingTier, UserPricingPlan
-from app.core.constants import DEFAULT_PLAN_NAME, DEFAULT_FREE_PLAN_LIMIT, STATUS_ACTIVE
+from app.core.constants import DEFAULT_PLAN_NAME, DEFAULT_FREE_PLAN_LIMIT, STATUS_ACTIVE, ACTIVITY_TYPE_LIMIT_WARNING
 from datetime import datetime, timezone
 from uuid import UUID
 
@@ -71,7 +71,7 @@ def increment_usage(usage: UsageTracking, session: Session, token_count: int = 0
             if old_count < limit_val and new_count >= limit_val:
                 activity = RecentActivity(
                     user_id=user.id,
-                    activity_type="message_limit_warning",
+                    activity_type=ACTIVITY_TYPE_LIMIT_WARNING,
                     details=f"Usage hit {int(threshold * 100)}% of your monthly limit"
                 )
                 session.add(activity)

@@ -16,7 +16,7 @@ import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 import { fetchDocuments, deleteDocument } from "@/lib/store/slices/documentsSlice";
 import showToast from "@/lib/toast";
 import { User, Button, Input } from "@heroui/react";
-import { PageHeader, EmptyState, StyledTable, DateCell, TableSkeleton, Tooltip } from "@/app/components/ui";
+import { PageHeader, EmptyState, StyledTable, DateCell, TableSkeleton, Tooltip, DeleteConfirmationModal } from "@/app/components/ui";
 import type { TableColumnDef } from "@/app/components/ui";
 import type { Document } from "@/lib/types";
 import { theme } from "@/app/theme";
@@ -34,6 +34,10 @@ export default function DocumentsPage() {
     const { items: documents, status } = useAppSelector((state) => state.documents);
     const isLoading = status === "loading";
 
+    const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+    const [itemToDelete, setItemToDelete] = useState<{ id: string; name: string } | null>(null);
+    const [isDeleting, setIsDeleting] = useState(false);
+
     useEffect(() => {
         dispatch(fetchDocuments());
     }, [dispatch]);
@@ -47,13 +51,23 @@ export default function DocumentsPage() {
         }
     };
 
-    const handleDelete = async (id: string, name: string) => {
-        if (!confirm(`Are you sure you want to delete "${name}"?`)) return;
+    const handleDeleteClick = (id: string, name: string) => {
+        setItemToDelete({ id, name });
+        setDeleteModalOpen(true);
+    };
+
+    const handleConfirmDelete = async () => {
+        if (!itemToDelete) return;
+        setIsDeleting(true);
         try {
-            await dispatch(deleteDocument(id)).unwrap();
-            showToast.success(`Document "${name}" deleted successfully`);
+            await dispatch(deleteDocument(itemToDelete.id)).unwrap();
+            showToast.success(`Document "${itemToDelete.name}" deleted successfully`);
+            setDeleteModalOpen(false);
         } catch (error: any) {
             showToast.error(error?.message || "Failed to delete document");
+        } finally {
+            setIsDeleting(false);
+            setItemToDelete(null);
         }
     };
 
@@ -90,12 +104,12 @@ export default function DocumentsPage() {
                                 <HiExternalLink className="w-3.5 h-3.5" />
                             </Button>
                         </Tooltip>
-                        <Tooltip color="danger" content="Delete">
+                        <Tooltip content="Delete">
                             <Button
                                 isIconOnly
                                 size="sm"
                                 variant="light"
-                                onPress={() => handleDelete(doc.id, doc.name)}
+                                onPress={() => handleDeleteClick(doc.id, doc.name)}
                                 className="text-slate-400 hover:text-red-500"
                             >
                                 <HiTrash className="w-3.5 h-3.5" />
@@ -183,6 +197,16 @@ export default function DocumentsPage() {
                 isOpen={isUploadModalOpen}
                 onClose={() => setIsUploadModalOpen(false)}
                 onUploadSuccess={() => dispatch(fetchDocuments())}
+            />
+
+            <DeleteConfirmationModal
+                isOpen={deleteModalOpen}
+                onClose={() => setDeleteModalOpen(false)}
+                onConfirm={handleConfirmDelete}
+                isLoading={isDeleting}
+                title="Delete Document"
+                description="Are you sure you want to delete this document?"
+                itemName={itemToDelete?.name}
             />
         </div>
     );

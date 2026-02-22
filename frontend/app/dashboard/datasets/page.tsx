@@ -8,7 +8,7 @@ import { fetchDatasets, deleteDataset } from "@/lib/store/slices/datasetsSlice";
 import CreateDatasetModal from "@/app/components/CreateDatasetModal";
 import showToast from "@/lib/toast";
 import { User, Tooltip, Button, Card, CardBody, Input } from "@heroui/react";
-import { PageHeader, EmptyState, StyledTable, DateCell, StatusChip, TableSkeleton } from "@/app/components/ui";
+import { PageHeader, EmptyState, StyledTable, DateCell, StatusChip, TableSkeleton, DeleteConfirmationModal } from "@/app/components/ui";
 import type { TableColumnDef } from "@/app/components/ui";
 import type { Dataset } from "@/lib/types";
 import { theme } from "@/app/theme";
@@ -27,17 +27,31 @@ export default function DatasetsPage() {
     const { items: datasets, status } = useAppSelector((state) => state.datasets);
     const isLoading = status === "loading";
 
+    const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+    const [itemToDelete, setItemToDelete] = useState<{ id: string; name: string } | null>(null);
+    const [isDeleting, setIsDeleting] = useState(false);
+
     useEffect(() => {
         dispatch(fetchDatasets());
     }, [dispatch]);
 
-    const handleDelete = async (id: string, name: string) => {
-        if (!confirm("Are you sure you want to delete this dataset?")) return;
+    const handleDeleteClick = (id: string, name: string) => {
+        setItemToDelete({ id, name });
+        setDeleteModalOpen(true);
+    };
+
+    const handleConfirmDelete = async () => {
+        if (!itemToDelete) return;
+        setIsDeleting(true);
         try {
-            await dispatch(deleteDataset(id)).unwrap();
-            showToast.success(`Dataset "${name}" deleted successfully`);
+            await dispatch(deleteDataset(itemToDelete.id)).unwrap();
+            showToast.success(`Dataset "${itemToDelete.name}" deleted successfully`);
+            setDeleteModalOpen(false);
         } catch (error: any) {
             showToast.error(error?.message || "Failed to delete dataset");
+        } finally {
+            setIsDeleting(false);
+            setItemToDelete(null);
         }
     };
 
@@ -72,12 +86,12 @@ export default function DatasetsPage() {
                                 <HiCollection className="w-3.5 h-3.5" />
                             </Button>
                         </Tooltip>
-                        <Tooltip color="danger" content="Delete">
+                        <Tooltip content="Delete">
                             <Button
                                 isIconOnly
                                 size="sm"
                                 variant="light"
-                                onPress={() => handleDelete(ds.id, ds.name)}
+                                onPress={() => handleDeleteClick(ds.id, ds.name)}
                                 className="text-slate-400 hover:text-red-500"
                             >
                                 <HiTrash className="w-3.5 h-3.5" />
@@ -178,6 +192,16 @@ export default function DatasetsPage() {
             <CreateDatasetModal
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
+            />
+
+            <DeleteConfirmationModal
+                isOpen={deleteModalOpen}
+                onClose={() => setDeleteModalOpen(false)}
+                onConfirm={handleConfirmDelete}
+                isLoading={isDeleting}
+                title="Delete Dataset"
+                description="Are you sure you want to delete this dataset? All documents linked only to this dataset will remain, but the grouping will be removed."
+                itemName={itemToDelete?.name}
             />
         </div>
     );

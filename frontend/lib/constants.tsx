@@ -438,5 +438,27 @@ export const PRESET_COLORS = [
     { label: "Slate", value: "#334155" },
 ];
 // ─── Global Tooltip Styles ──────────────────────────────────────────────────
-export const TOOLTIP_STYLE_CLASSES = "bg-slate-900/90 backdrop-blur-sm text-white text-[10px] font-bold rounded-lg shadow-[0_10px_30px_-5px_rgba(0,0,0,0.3)] border border-white/10 transition-all duration-300 pointer-events-none z-50 shadow-xl whitespace-nowrap";
-export const TOOLTIP_ARROW_CLASSES = "bg-slate-900/90 border-white/10 rotate-45";
+export const TOOLTIP_STYLE_CLASSES = "bg-slate-900 text-white text-[10px] font-bold rounded-lg shadow-xl border border-white/10 transition-all duration-300 pointer-events-none z-50 whitespace-nowrap";
+export const TOOLTIP_ARROW_CLASSES = "bg-slate-900 border-white/10 rotate-45";
+
+// ─── Plan Names ─────────────────────────────────────────────────────────────
+export const PLANS = {
+    FREE: "free",
+    TRIAL: "trial",
+    STARTER: "starter",
+    PROFESSIONAL: "professional",
+    ENTERPRISE: "enterprise",
+};
+
+// ─── Entity Statuses ────────────────────────────────────────────────────────
+export const STATUS = {
+    CREATING: "creating",
+    FAILED: "failed",
+    ACTIVE: "active",
+};
+
+// ─── Chat Roles ─────────────────────────────────────────────────────────────
+export const ROLES = {
+    USER: "user",
+    ASSISTANT: "assistant",
+};

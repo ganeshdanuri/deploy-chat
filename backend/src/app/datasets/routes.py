@@ -6,6 +6,7 @@ from app.core.db import get_session
 from app.api.deps import get_current_user
 from app.schemas.models import Dataset, DatasetCreate, DatasetRead, DatasetDocuments, User, Document
 from app.core.endpoints import Endpoints
+from app.core.constants import ACTIVITY_TYPE_DATASET_CREATED
 
 router = APIRouter(prefix=Endpoints.DATASETS_PREFIX)
 
@@ -50,7 +51,7 @@ def create_dataset(
         from app.schemas.models import RecentActivity
         activity = RecentActivity(
             user_id=current_user.id,
-            activity_type="dataset_created",
+            activity_type=ACTIVITY_TYPE_DATASET_CREATED,
             details=f"Created dataset: {new_dataset.name}"
         )
         session.add(activity)
@@ -75,12 +76,7 @@ def delete_dataset(
     if not dataset or dataset.user_id != current_user.id:
         raise HTTPException(status_code=404, detail="Dataset not found")
     
-    # Delete links first
-    statement = select(DatasetDocuments).where(DatasetDocuments.dataset_id == dataset_id)
-    links = session.exec(statement).all()
-    for link in links:
-        session.delete(link)
-        
+    # Delete the dataset (DatasetDocuments and ChatbotDatasets link will be cascaded by DB)
     session.delete(dataset)
     session.commit()
     return {"message": "Dataset deleted successfully"}

@@ -99,8 +99,8 @@ class DocumentChunk(SQLModel, table=True):
 # Datasets
 class DatasetDocuments(SQLModel, table=True):
     __tablename__ = "dataset_documents"
-    dataset_id: UUID = Field(foreign_key="datasets.id", primary_key=True)
-    document_id: UUID = Field(foreign_key="documents.id", primary_key=True)
+    dataset_id: UUID = Field(foreign_key="datasets.id", primary_key=True, ondelete="CASCADE")
+    document_id: UUID = Field(foreign_key="documents.id", primary_key=True, ondelete="CASCADE")
 
 class DatasetBase(SQLModel):
     name: str = Field(index=True)
@@ -124,8 +124,8 @@ class DatasetRead(DatasetBase):
 # Chatbots
 class ChatbotDatasets(SQLModel, table=True):
     __tablename__ = "chatbot_datasets"
-    chatbot_id: UUID = Field(foreign_key="chatbots.id", primary_key=True)
-    dataset_id: UUID = Field(foreign_key="datasets.id", primary_key=True)
+    chatbot_id: UUID = Field(foreign_key="chatbots.id", primary_key=True, ondelete="CASCADE")
+    dataset_id: UUID = Field(foreign_key="datasets.id", primary_key=True, ondelete="CASCADE")
 
 class ChatbotBase(SQLModel):
     name: str = Field(index=True)
@@ -225,7 +225,7 @@ class UsageTracking(SQLModel, table=True):
     __tablename__ = "usage_tracking"
     id: UUID = Field(default_factory=uuid4, primary_key=True)
     user_id: UUID = Field(foreign_key="users.id")
-    chatbot_id: Optional[UUID] = Field(default=None, foreign_key="chatbots.id")
+    chatbot_id: Optional[UUID] = Field(default=None, foreign_key="chatbots.id", ondelete="CASCADE")
     message_count: int = Field(default=0)
     token_count: int = Field(default=0)
     reset_date: datetime = Field(default_factory=datetime.utcnow)

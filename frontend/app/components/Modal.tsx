@@ -55,8 +55,8 @@ export default function Modal({
                                     </div>
                                 )}
                                 <div>
-                                    <h2 className="text-2xl font-semibold text-slate-800 leading-tight">{title}</h2>
-                                    {subtitle && <p className="text-xs text-slate-500 mt-0.5">{subtitle}</p>}
+                                    <h2 className="text-xl font-bold text-slate-800 leading-tight">{title}</h2>
+                                    {subtitle && <p className="text-[11px] text-slate-500 mt-0.5 uppercase tracking-wider font-bold">{subtitle}</p>}
                                 </div>
                             </div>
                             <Button

@@ -1,9 +1,10 @@
 from fastapi import APIRouter, UploadFile, File, Depends, HTTPException, status
 from sqlmodel import Session, select
 from typing import List
+from uuid import UUID
 from app.core.db import get_session
 from app.api.deps import get_current_user
-from app.schemas.models import Document, DocumentContent, User, DocumentRead
+from app.schemas.models import Document, DocumentContent, User, DocumentRead, DatasetDocuments
 from app.services.converter import convert_to_markdown
 from app.core.endpoints import Endpoints
 
@@ -24,7 +25,7 @@ async def upload_documents(
     session: Session = Depends(get_session),
     current_user: User = Depends(get_current_user)
 ):
-    from app.core.constants import MAX_DOCUMENT_SIZE_MB
+    from app.core.constants import MAX_DOCUMENT_SIZE_MB, ACTIVITY_TYPE_DOCUMENT_ADDED
     max_bytes = MAX_DOCUMENT_SIZE_MB * 1024 * 1024
     
     uploaded_docs = []
@@ -61,7 +62,7 @@ async def upload_documents(
             from app.schemas.models import RecentActivity
             activity = RecentActivity(
                 user_id=current_user.id,
-                activity_type="document_added",
+                activity_type=ACTIVITY_TYPE_DOCUMENT_ADDED,
                 details=f"Added document: {new_doc.name}"
             )
             session.add(activity)
@@ -85,3 +86,19 @@ async def upload_documents(
         "documents": uploaded_docs,
         "message": f"{len(uploaded_docs)} files uploaded and converted successfully"
     }
+
+@router.delete(Endpoints.DOCUMENTS_BY_ID)
+def delete_document(
+    document_id: UUID,
+    session: Session = Depends(get_session),
+    current_user: User = Depends(get_current_user)
+):
+    document = session.get(Document, document_id)
+    if not document or document.user_id != current_user.id:
+        raise HTTPException(status_code=404, detail="Document not found")
+    
+    # Delete the document (DocumentContent, DocumentChunk, and DatasetDocuments link will be cascaded by DB)
+    session.delete(document)
+    session.commit()
+    
+    return {"message": "Document deleted successfully"}

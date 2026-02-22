@@ -9,7 +9,7 @@ from app.schemas.models import Chatbot, DatasetDocuments, DocumentContent, Platf
 
 from app.core.chunking import generate_embedding
 from app.schemas.models import ChatbotDatasets, DocumentChunk
-from app.core.constants import DEFAULT_AI_MODEL
+from app.core.constants import DEFAULT_AI_MODEL, ROLE_USER
 
 @dataclass
 class ChatbotDependencies:
@@ -166,7 +166,7 @@ async def get_ai_response(
     message_history = []
     if history:
         for item in history:
-            if item.role in ["user", "human"]:
+            if item.role in [ROLE_USER, "human"]:
                 message_history.append(ModelRequest(parts=[UserPromptPart(content=item.content)]))
             else:
                 message_history.append(ModelResponse(parts=[TextPart(content=item.content)]))

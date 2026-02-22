@@ -11,9 +11,10 @@ import CreateChatbotModal from "@/app/components/CreateChatbotModal";
 import EmbedDrawer from "@/app/components/EmbedDrawer";
 import showToast from "@/lib/toast";
 import { Button, Input } from "@heroui/react";
-import { PageHeader, EmptyState, DateCell, StatusChip, ChatbotCardSkeleton, Tooltip } from "@/app/components/ui";
+import { PageHeader, EmptyState, DateCell, StatusChip, ChatbotCardSkeleton, Tooltip, DeleteConfirmationModal } from "@/app/components/ui";
 import type { Chatbot } from "@/lib/types";
 import { theme } from "@/app/theme";
+import { STATUS } from "@/lib/constants";
 
 
 export default function ChatbotsPage() {
@@ -25,17 +26,31 @@ export default function ChatbotsPage() {
     const { items: chatbots, status } = useAppSelector((state) => state.chatbots);
     const isLoading = status === "loading";
 
+    const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+    const [itemToDelete, setItemToDelete] = useState<{ id: string; name: string } | null>(null);
+    const [isDeleting, setIsDeleting] = useState(false);
+
     useEffect(() => {
         dispatch(fetchChatbots());
     }, [dispatch]);
 
-    const handleDelete = async (id: string, name: string) => {
-        if (!confirm("Are you sure you want to delete this chatbot?")) return;
+    const handleDeleteClick = (id: string, name: string) => {
+        setItemToDelete({ id, name });
+        setDeleteModalOpen(true);
+    };
+
+    const handleConfirmDelete = async () => {
+        if (!itemToDelete) return;
+        setIsDeleting(true);
         try {
-            await dispatch(deleteChatbot(id)).unwrap();
-            showToast.success(`Chatbot "${name}" deleted successfully`);
+            await dispatch(deleteChatbot(itemToDelete.id)).unwrap();
+            showToast.success(`Chatbot "${itemToDelete.name}" deleted successfully`);
+            setDeleteModalOpen(false);
         } catch (error: any) {
             showToast.error(error?.message || "Failed to delete chatbot");
+        } finally {
+            setIsDeleting(false);
+            setItemToDelete(null);
         }
     };
 
@@ -54,8 +69,8 @@ export default function ChatbotsPage() {
     );
 
     const ChatbotCard = ({ bot }: { bot: Chatbot }) => {
-        const isCreating = (bot as any).status === "creating";
-        const isFailed = (bot as any).status === "failed";
+        const isCreating = (bot as any).status === STATUS.CREATING;
+        const isFailed = (bot as any).status === STATUS.FAILED;
 
         return (
             <div className="bg-white rounded-xl border border-slate-200 p-5 hover:border-indigo-300 hover:shadow-xl hover:shadow-indigo-500/5 transition-all group relative animate-fade-in">
@@ -99,12 +114,12 @@ export default function ChatbotsPage() {
                                 </Button>
                             </Tooltip>
                         )}
-                        <Tooltip color="danger" content="Delete">
+                        <Tooltip content="Delete">
                             <Button
                                 isIconOnly
                                 size="sm"
                                 variant="light"
-                                onPress={() => handleDelete(bot.id, bot.name)}
+                                onPress={() => handleDeleteClick(bot.id, bot.name)}
                                 className="text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-md h-8 w-8"
                             >
                                 <HiTrash className="w-4 h-4" />
@@ -238,6 +253,16 @@ export default function ChatbotsPage() {
                     chatbot={embedBot}
                 />
             )}
+
+            <DeleteConfirmationModal
+                isOpen={deleteModalOpen}
+                onClose={() => setDeleteModalOpen(false)}
+                onConfirm={handleConfirmDelete}
+                isLoading={isDeleting}
+                title="Delete Chatbot"
+                description="Are you sure you want to delete this chatbot? This will also remove all its chat history and analytics."
+                itemName={itemToDelete?.name}
+            />
         </div>
     );
 }

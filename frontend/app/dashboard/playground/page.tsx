@@ -16,6 +16,7 @@ import type { ChatMessage, Chatbot } from "@/lib/types";
 import { PlaygroundConfigSkeleton } from "@/app/components/ui";
 import { Select, SelectItem } from "@heroui/react";
 import { ENDPOINTS } from "@/lib/endpoints";
+import { STATUS, ROLES } from "@/lib/constants";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -39,7 +40,7 @@ export default function PlaygroundPage() {
     const [temperature, setTemperature] = useState(0.7);
 
     useEffect(() => {
-        if (status === "idle") dispatch(fetchChatbots());
+        if (status === STATUS.ACTIVE || status === "idle") dispatch(fetchChatbots());
     }, [status, dispatch]);
 
     useEffect(() => {
@@ -56,7 +57,7 @@ export default function PlaygroundPage() {
         const chatHistory = messages
             .filter(m => !m.isThinking && m.id !== 1) // Exclude "Thinking..." and initial greeting
             .map(m => ({
-                role: m.isBot ? "assistant" : "user",
+                role: m.isBot ? ROLES.ASSISTANT : ROLES.USER,
                 content: m.text
             }));
 
