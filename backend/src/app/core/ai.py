@@ -1,51 +1,104 @@
 from uuid import UUID
 from sqlmodel import Session, select
-from pydantic_ai import Agent
+from dataclasses import dataclass
+from pydantic_ai import Agent, RunContext
 from pydantic_ai.models.gemini import GeminiModel
 from pydantic_ai.providers.google_gla import GoogleGLAProvider
-from app.schemas.models import Chatbot, DatasetDocuments, DocumentContent, PlatformAPIKey
+from pydantic_ai.messages import ModelRequest, ModelResponse, UserPromptPart, TextPart
+from app.schemas.models import Chatbot, DatasetDocuments, DocumentContent, PlatformAPIKey, ChatMessageItem
 
-def get_chatbot_context(session: Session, chatbot_id: UUID) -> str:
-    """Retrieves all document content linked to a chatbot."""
-    # 1. Get all datasets linked to this chatbot
-    # This assumes chatbot_datasets table is used correctly
-    from app.schemas.models import ChatbotDatasets
-    
+from app.core.chunking import generate_embedding
+from app.schemas.models import ChatbotDatasets, DocumentChunk
+from app.core.constants import DEFAULT_AI_MODEL
+
+@dataclass
+class ChatbotDependencies:
+    session: Session
+    chatbot_id: UUID
+    api_key: str
+
+async def get_chatbot_context(session: Session, chatbot_id: UUID, user_message: str, api_key: str) -> str:
+    """Retrieves relevant document chunks using vector similarity search."""
+    # 1. Generate query embedding
+    query_embedding = await generate_embedding(user_message, api_key)
+    if not query_embedding:
+        return ""
+        
+    # 2. Get all datasets linked to this chatbot
     dataset_ids_stmt = select(ChatbotDatasets.dataset_id).where(ChatbotDatasets.chatbot_id == chatbot_id)
     dataset_ids = session.exec(dataset_ids_stmt).all()
     
     if not dataset_ids:
         return ""
         
-    # 2. Get all documents in these datasets
+    # 3. Get all documents in these datasets
     doc_ids_stmt = select(DatasetDocuments.document_id).where(DatasetDocuments.dataset_id.in_(dataset_ids))
     doc_ids = session.exec(doc_ids_stmt).all()
     
     if not doc_ids:
         return ""
         
-    # 3. Get all content for these documents
+    # Deduplicate doc_ids
+    doc_ids = list(set(doc_ids))
+        
+    # 4. Search document chunks using pgvector (cosine distance)
+    try:
+        stmt = (
+            select(DocumentChunk)
+            .where(DocumentChunk.document_id.in_(doc_ids))
+            .order_by(DocumentChunk.embedding.cosine_distance(query_embedding))
+            .limit(5)  # Get top 5 most relevant chunks
+        )
+        chunks = session.exec(stmt).all()
+        
+        if chunks:
+            return "\n\n".join([f"--- Context Segment ---\n{chunk.content}" for chunk in chunks])
+    except Exception as e:
+        # Log error or fallback
+        pass
+        
+    # Fallback to fetching all raw content if no chunks exist (e.g., chunking is still processing)
     content_stmt = select(DocumentContent.markdown_content).where(DocumentContent.document_id.in_(doc_ids))
     contents = session.exec(content_stmt).all()
     
-    return "\n\n".join(contents)
+    fallback_text = "\n\n".join(contents)
+    
+    # Preemptively prevent Context Window overflow on Gemini
+    if len(fallback_text) > 15000:
+        return fallback_text[:15000] + "\n\n...[Context truncated due to size limits. Additional data omitted.]"
+        
+    return fallback_text
     
 class GoogleAIWrapper:
     """Wrapper for Google Gemini models via Pydantic AI."""
-    def __init__(self, api_key: str, model_name: str = "gemini-2.0-flash"):
+    def __init__(self, api_key: str, model_name: str = DEFAULT_AI_MODEL):
         self.api_key = api_key
         self.model_name = model_name
         self.provider = GoogleGLAProvider(api_key=api_key)
         self.model = GeminiModel(self.model_name, provider=self.provider)
 
-    async def run(self, system_prompt: str, user_message: str, temperature: float = 0.7) -> tuple[str, int]:
+    async def run(
+        self, 
+        system_prompt: str, 
+        user_message: str, 
+        temperature: float = 0.7, 
+        deps: ChatbotDependencies = None,
+        message_history: list = None
+    ) -> tuple[str, int]:
         """Runs the agent with the given system prompt and user message."""
         # Setup model settings (e.g., temperature)
         from pydantic_ai.models import ModelSettings
         settings = ModelSettings(temperature=temperature)
         
-        agent = Agent(self.model, system_prompt=system_prompt, model_settings=settings)
-        result = await agent.run(user_message)
+        agent = Agent(self.model, system_prompt=system_prompt, model_settings=settings, deps_type=ChatbotDependencies)
+        
+        if deps:
+            @agent.tool
+            async def search_documents(ctx: RunContext[ChatbotDependencies], query: str) -> str:
+                """Search through user uploaded documents to find relevant context for answering questions."""
+                return await get_chatbot_context(ctx.deps.session, ctx.deps.chatbot_id, query, ctx.deps.api_key)
+        
+        result = await agent.run(user_message, deps=deps, message_history=message_history)
         
         # Calculate tokens if available, otherwise estimate
         # Note: PydanticAI might not expose exact token counts for all models/providers easily yet
@@ -85,6 +138,7 @@ async def get_ai_response(
     session: Session, 
     chatbot: Chatbot, 
     user_message: str,
+    history: list[ChatMessageItem] = None,
     temperature: float = 0.7
 ) -> tuple[str, int]:
     """Calls AI via wrapper with document context."""
@@ -99,16 +153,29 @@ async def get_ai_response(
     if not api_key:
         return "Error: AI Service configuration missing (Platform API Key not found).", 0
 
-    # 2. Build Context
-    context = get_chatbot_context(session, chatbot.id)
-    
-    # 3. Setup Prompt
+    # 2. Setup Prompt (clean, no raw context appended)
     system_prompt = chatbot.system_prompt
-    if context:
-        system_prompt += f"\n\nContext based on uploaded documents:\n{context}"
-    else:
-        system_prompt += "\n\nNote: No specific document context was found for this chatbot."
 
-    # 4. Use Wrapper
-    ai_wrapper = GoogleAIWrapper(api_key=api_key, model_name="gemini-2.5-flash")
-    return await ai_wrapper.run(system_prompt, user_message, temperature=temperature)
+    # 3. Create Dependencies and Use Wrapper
+    deps = ChatbotDependencies(
+        session=session,
+        chatbot_id=chatbot.id,
+        api_key=api_key
+    )
+    
+    message_history = []
+    if history:
+        for item in history:
+            if item.role in ["user", "human"]:
+                message_history.append(ModelRequest(parts=[UserPromptPart(content=item.content)]))
+            else:
+                message_history.append(ModelResponse(parts=[TextPart(content=item.content)]))
+    
+    ai_wrapper = GoogleAIWrapper(api_key=api_key, model_name=DEFAULT_AI_MODEL)
+    return await ai_wrapper.run(
+        system_prompt, 
+        user_message, 
+        temperature=temperature, 
+        deps=deps,
+        message_history=message_history
+    )

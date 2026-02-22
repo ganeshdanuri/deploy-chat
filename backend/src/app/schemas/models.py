@@ -1,8 +1,10 @@
-from typing import Optional, List
+from typing import Optional, List, Any
 from uuid import UUID, uuid4
+from sqlalchemy import Column
+from pgvector.sqlalchemy import Vector
 from sqlmodel import Field, SQLModel
 from datetime import datetime, timedelta
-from app.core.constants import DEFAULT_SYSTEM_PROMPT, DEFAULT_WELCOME_MESSAGE, STATUS_ACTIVE, DEFAULT_PLAN_NAME
+from app.core.constants import DEFAULT_SYSTEM_PROMPT, DEFAULT_WELCOME_MESSAGE, STATUS_ACTIVE, DEFAULT_PLAN_NAME, CHATBOT_STATUS_CREATING
 
 class PricingTier(SQLModel, table=True):
     __tablename__ = "pricing_tiers"
@@ -84,6 +86,16 @@ class DocumentRead(DocumentBase):
     created_at: datetime
     updated_at: datetime
 
+class DocumentChunk(SQLModel, table=True):
+    __tablename__ = "document_chunks"
+    id: UUID = Field(default_factory=uuid4, primary_key=True)
+    document_id: UUID = Field(foreign_key="documents.id", ondelete="CASCADE")
+    chunk_index: int
+    content: str
+    embedding: Any = Field(sa_column=Column(Vector(768)))
+    embedding_model: Optional[str] = Field(default=None)
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+
 # Datasets
 class DatasetDocuments(SQLModel, table=True):
     __tablename__ = "dataset_documents"
@@ -121,6 +133,7 @@ class ChatbotBase(SQLModel):
     system_prompt: str = Field(default=DEFAULT_SYSTEM_PROMPT)
     temperature: float = Field(default=0.7)
     welcome_message: str = Field(default=DEFAULT_WELCOME_MESSAGE)
+    status: str = Field(default=CHATBOT_STATUS_CREATING)
 
 class Chatbot(ChatbotBase, table=True):
     __tablename__ = "chatbots"
@@ -129,20 +142,54 @@ class Chatbot(ChatbotBase, table=True):
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
 
+class ChatbotAllowedOrigin(SQLModel, table=True):
+    __tablename__ = "chatbot_allowed_origins"
+    id: UUID = Field(default_factory=uuid4, primary_key=True)
+    chatbot_id: UUID = Field(foreign_key="chatbots.id", ondelete="CASCADE")
+    domain: str = Field(index=True)
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+
 class ChatbotCreate(SQLModel):
     name: str
     dataset_ids: List[UUID]
     system_prompt: Optional[str] = None
     temperature: Optional[float] = 0.7
-    welcome_message: Optional[str] = DEFAULT_WELCOME_MESSAGE
+    welcome_message: str
+    allowed_domains: str
 
 class ChatbotRead(ChatbotBase):
     id: UUID
     embed_token: str
+    status: str
+    chunk_count: int = 0
     created_at: datetime
     updated_at: datetime
 
+# Sessions
+class ChatSession(SQLModel, table=True):
+    __tablename__ = "chat_sessions"
+    id: UUID = Field(default_factory=uuid4, primary_key=True)
+    chatbot_id: UUID = Field(foreign_key="chatbots.id", ondelete="CASCADE")
+    session_token: str = Field(unique=True, index=True)
+    ip_address: Optional[str] = None
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+
+class ChatMessage(SQLModel, table=True):
+    __tablename__ = "chat_messages"
+    id: UUID = Field(default_factory=uuid4, primary_key=True)
+    session_id: UUID = Field(foreign_key="chat_sessions.id", ondelete="CASCADE")
+    role: str
+    content: str
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+
 # API Configs
+class ChatMessageItem(SQLModel):
+    role: str
+    content: str
+
+class ChatRequest(SQLModel):
+    message: str
+    history: List[ChatMessageItem] = []
 class PlatformAPIKey(SQLModel, table=True):
     __tablename__ = "platform_api_keys"
     id: UUID = Field(default_factory=uuid4, primary_key=True)

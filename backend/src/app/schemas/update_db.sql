@@ -114,3 +114,37 @@ CREATE TABLE IF NOT EXISTS recent_activities (
     details TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT NOW()
 );
+
+-- Drop allowed_domains column from chatbots if it exists
+ALTER TABLE chatbots DROP COLUMN IF EXISTS allowed_domains;
+
+-- Chatbot Allowed Origins
+CREATE TABLE IF NOT EXISTS chatbot_allowed_origins (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    chatbot_id UUID NOT NULL REFERENCES chatbots(id) ON DELETE CASCADE,
+    domain VARCHAR NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW()
+);
+CREATE INDEX IF NOT EXISTS idx_chatbot_allowed_origins_domain ON chatbot_allowed_origins(domain);
+
+-- Add chat_sessions table
+CREATE TABLE IF NOT EXISTS chat_sessions (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    chatbot_id UUID NOT NULL REFERENCES chatbots(id) ON DELETE CASCADE,
+    session_token VARCHAR NOT NULL UNIQUE,
+    ip_address VARCHAR,
+    created_at TIMESTAMP DEFAULT NOW()
+);
+
+-- Add chat_messages table
+CREATE TABLE IF NOT EXISTS chat_messages (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    session_id UUID NOT NULL REFERENCES chat_sessions(id) ON DELETE CASCADE,
+    role VARCHAR NOT NULL,
+    content TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW()
+);
+
+
+-- Add status column to chatbots
+ALTER TABLE chatbots ADD COLUMN IF NOT EXISTS status VARCHAR DEFAULT 'creating';

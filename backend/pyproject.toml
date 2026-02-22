@@ -16,6 +16,9 @@ dependencies = [
     "python-dotenv>=1.2.1",
     "passlib[bcrypt]",
     "google-auth>=2.48.0",
+    "pgvector>=0.4.2",
+    "httpx>=0.28.1",
+    "slowapi>=0.1.9",
 ]
 [project.scripts]
 dev = "uvicorn app.main:app --reload --app-dir src"

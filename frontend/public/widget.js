@@ -156,8 +156,18 @@
     botName: "Assistant",
     greeting: "Hi! How can I help you today?",
     elements: {},
+    chatHistory: [],
+    sessionId: null,
 
     init() {
+      const storageKey = `dm_session_${CONFIG.token}`;
+      let sid = sessionStorage.getItem(storageKey);
+      if (!sid) {
+        sid = "sess_" + Math.random().toString(36).substr(2, 9) + Date.now().toString(36);
+        sessionStorage.setItem(storageKey, sid);
+      }
+      this.sessionId = sid;
+
       this.fetchInfo()
         .finally(() => {
           this.injectStyles();
@@ -341,16 +351,25 @@
       this.appendMessage(text, true);
       this.toggleTyping(true);
 
+      this.chatHistory.push({ role: "user", content: text });
+
       fetch(`${CONFIG.apiBase}/api/widget/${CONFIG.token}/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: text }),
+        body: JSON.stringify({
+          message: text,
+          session_id: this.sessionId,
+          history: this.chatHistory.slice(0, -1)
+        }),
       })
         .then(async (r) => {
           this.toggleTyping(false);
           const data = await r.json();
           if (!r.ok) throw new Error(data.detail || "Server error");
-          this.appendMessage(data.response || "No response received.", false);
+
+          const botResponse = data.response || "No response received.";
+          this.chatHistory.push({ role: "assistant", content: botResponse });
+          this.appendMessage(botResponse, false);
         })
         .catch((err) => {
           this.toggleTyping(false);

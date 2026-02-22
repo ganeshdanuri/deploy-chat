@@ -55,8 +55,36 @@ CREATE TABLE chatbots (
     temperature FLOAT DEFAULT 0.7,
     welcome_message TEXT DEFAULT 'Hi! How can I help you today?',
     embed_token VARCHAR UNIQUE NOT NULL,
+    status VARCHAR DEFAULT 'creating',
     created_at TIMESTAMP DEFAULT NOW(),
     updated_at TIMESTAMP DEFAULT NOW()
+);
+
+-- Chatbot Allowed Origins
+CREATE TABLE chatbot_allowed_origins (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    chatbot_id UUID NOT NULL REFERENCES chatbots(id) ON DELETE CASCADE,
+    domain VARCHAR NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW()
+);
+CREATE INDEX idx_chatbot_allowed_origins_domain ON chatbot_allowed_origins(domain);
+
+-- Chat Widget Sessions
+CREATE TABLE chat_sessions (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    chatbot_id UUID NOT NULL REFERENCES chatbots(id) ON DELETE CASCADE,
+    session_token VARCHAR NOT NULL UNIQUE,
+    ip_address VARCHAR,
+    created_at TIMESTAMP DEFAULT NOW()
+);
+
+-- Chat Widget Messages
+CREATE TABLE chat_messages (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    session_id UUID NOT NULL REFERENCES chat_sessions(id) ON DELETE CASCADE,
+    role VARCHAR NOT NULL,
+    content TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW()
 );
 
 -- Datasets
@@ -105,9 +133,10 @@ CREATE TABLE document_chunks (
     document_id UUID NOT NULL REFERENCES documents(id) ON DELETE CASCADE,
     chunk_index INTEGER NOT NULL,
     content TEXT NOT NULL,
-    embedding vector(1536),
+    embedding vector(768),
     embedding_model VARCHAR,
-    created_at TIMESTAMP DEFAULT NOW()
+    created_at TIMESTAMP DEFAULT NOW(),
+    UNIQUE(document_id, chunk_index)
 );
 
 -- Platform API Keys

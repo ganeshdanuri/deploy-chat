@@ -51,6 +51,13 @@ export default function PlaygroundPage() {
 
         const userMessage = input;
         setInput("");
+        const chatHistory = messages
+            .filter(m => !m.isThinking && m.id !== 1) // Exclude "Thinking..." and initial greeting
+            .map(m => ({
+                role: m.isBot ? "assistant" : "user",
+                content: m.text
+            }));
+
         setMessages((prev) => [
             ...prev,
             { id: Date.now(), text: userMessage, isBot: false },
@@ -58,8 +65,9 @@ export default function PlaygroundPage() {
         ]);
 
         try {
-            const response = await api.post(ENDPOINTS.CHATBOTS.CHAT(chatbotId), null, {
-                params: { message: userMessage },
+            const response = await api.post(ENDPOINTS.CHATBOTS.CHAT(chatbotId), {
+                message: userMessage,
+                history: chatHistory
             });
             setMessages((prev) => [
                 ...prev.filter((m) => !m.isThinking),

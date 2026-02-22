@@ -2,7 +2,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { HiDatabase, HiSparkles } from "react-icons/hi";
+import { HiDatabase, HiSparkles, HiTrash } from "react-icons/hi";
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 import { fetchDatasets } from "@/lib/store/slices/datasetsSlice";
 import { createChatbot } from "@/lib/store/slices/chatbotsSlice";
@@ -21,6 +21,7 @@ interface CreateChatbotModalProps {
 export default function CreateChatbotModal({ isOpen, onClose }: CreateChatbotModalProps) {
     const [name, setName] = useState("");
     const [welcomeMessage, setWelcomeMessage] = useState("Hi! How can I help you today?");
+    const [allowedDomains, setAllowedDomains] = useState<string[]>(["*"]);
     const [selectedDatasets, setSelectedDatasets] = useState<string[]>([]);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -40,7 +41,11 @@ export default function CreateChatbotModal({ isOpen, onClose }: CreateChatbotMod
     };
 
     const handleSubmit = async () => {
-        if (!name || selectedDatasets.length === 0) return;
+        const validDomains = allowedDomains.filter(d => d.trim() !== "");
+        if (!name || selectedDatasets.length === 0 || !welcomeMessage || validDomains.length === 0) {
+            showToast.error("All fields are mandatory. Please fill out all fields.");
+            return;
+        }
 
         setIsSubmitting(true);
         try {
@@ -48,10 +53,12 @@ export default function CreateChatbotModal({ isOpen, onClose }: CreateChatbotMod
                 name,
                 dataset_ids: selectedDatasets,
                 welcome_message: welcomeMessage,
+                allowed_domains: validDomains.join(","),
             })).unwrap();
             showToast.success(`Chatbot "${name}" created successfully!`);
             setName("");
             setWelcomeMessage("Hi! How can I help you today?");
+            setAllowedDomains(["*"]);
             setSelectedDatasets([]);
             onClose();
         } catch (error: any) {
@@ -79,7 +86,7 @@ export default function CreateChatbotModal({ isOpen, onClose }: CreateChatbotMod
             </Button>
             <Button
                 onPress={handleSubmit}
-                isDisabled={isSubmitting || !name || selectedDatasets.length === 0}
+                isDisabled={isSubmitting}
                 isLoading={isSubmitting}
                 className="flex-[1.5] text-white text-sm font-medium rounded-xl h-12 shadow-xl transition-all hover:-translate-y-0.5"
                 style={{ backgroundColor: theme.colors.primary.main }}
@@ -167,6 +174,57 @@ export default function CreateChatbotModal({ isOpen, onClose }: CreateChatbotMod
                             input: "font-medium text-sm text-slate-800",
                         }}
                     />
+                </div>
+
+                <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                        <label className="text-sm font-medium block text-slate-700">
+                            Allowed Domains
+                        </label>
+                        <Button
+                            size="sm"
+                            variant="light"
+                            onPress={() => setAllowedDomains([...allowedDomains, ""])}
+                            className="text-indigo-600 hover:bg-indigo-50 font-medium"
+                        >
+                            + Add Domain
+                        </Button>
+                    </div>
+                    <p className="text-xs text-slate-400">Specify websites allowed to use this widget. Use * for all.</p>
+
+                    <div className="space-y-3">
+                        {allowedDomains.map((domain, index) => (
+                            <div key={index} className="flex items-center gap-2">
+                                <Input
+                                    type="text"
+                                    variant="bordered"
+                                    value={domain}
+                                    onChange={(e) => {
+                                        const newDomains = [...allowedDomains];
+                                        newDomains[index] = e.target.value;
+                                        setAllowedDomains(newDomains);
+                                    }}
+                                    placeholder="yourdomain.com OR *"
+                                    classNames={{
+                                        inputWrapper: "rounded-xl border border-slate-300 h-11 hover:border-indigo-400 data-[focus=true]:border-indigo-500 data-[focus=true]:ring-4 data-[focus=true]:ring-indigo-500/10 shadow-none bg-slate-50 transition-all",
+                                        input: "font-medium text-sm text-slate-800 placeholder:text-slate-400",
+                                    }}
+                                />
+                                <Button
+                                    isIconOnly
+                                    size="sm"
+                                    variant="light"
+                                    onPress={() => {
+                                        const newDomains = allowedDomains.filter((_, i) => i !== index);
+                                        setAllowedDomains(newDomains.length === 0 ? [""] : newDomains);
+                                    }}
+                                    className="text-slate-400 hover:text-red-500 shrink-0"
+                                >
+                                    <HiTrash className="w-5 h-5" />
+                                </Button>
+                            </div>
+                        ))}
+                    </div>
                 </div>
 
             </div>

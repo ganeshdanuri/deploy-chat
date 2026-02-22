@@ -17,6 +17,17 @@ DEFAULT_WELCOME_MESSAGE = "Hi! How can I help you today?"
 # Status Flags
 STATUS_ACTIVE = "active"
 
+# Chatbot Status
+CHATBOT_STATUS_CREATING = "creating"
+CHATBOT_STATUS_ACTIVE = "active"
+CHATBOT_STATUS_FAILED = "failed"
+
 # Documents
 MAX_DOCUMENT_SIZE_MB = 10
 IDEAL_DOCUMENT_SIZE_MB = 5
+
+# AI & Chunking
+GEMINI_TEXT_EMBEDDING_MODEL = "models/gemini-embedding-001"
+DEFAULT_AI_MODEL = "gemini-2.5-flash"
+CHUNK_MAX_LENGTH = 1000
+CHUNK_OVERLAP = 200

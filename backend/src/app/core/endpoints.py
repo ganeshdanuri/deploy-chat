@@ -29,6 +29,7 @@ class Endpoints:
     CHATBOTS_PREFIX = "/chatbots"
     CHATBOTS_BASE = "/"
     CHATBOTS_BY_ID = "/{chatbot_id}"
+    CHATBOTS_RESUME = "/{chatbot_id}/resume"
     CHATBOTS_CHAT = "/{chatbot_id}/chat"
 
     # Dataset Endpoints
