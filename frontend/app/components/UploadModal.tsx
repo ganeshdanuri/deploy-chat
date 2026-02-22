@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any, react/no-unescaped-entities */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useState } from "react";
@@ -34,12 +34,10 @@ export default function UploadModal({ isOpen, onClose, onUploadSuccess }: Upload
 
     const validateAndAddFiles = (newFiles: File[]) => {
         const validFiles: File[] = [];
-        let sizeError = false;
 
         newFiles.forEach(file => {
             if (file.size > MAX_SIZE_MB * 1024 * 1024) {
                 showToast.error(`File "${file.name}" exceeds ${MAX_SIZE_MB}MB limit`);
-                sizeError = true;
             } else {
                 validFiles.push(file);
             }
@@ -116,7 +114,7 @@ export default function UploadModal({ isOpen, onClose, onUploadSuccess }: Upload
         >
             <div className="space-y-6">
                 <div
-                    className={`relative border-2 border-dashed rounded-[2rem] p-8 transition-all duration-500 text-center flex flex-col items-center justify-center 
+                    className={`relative border-2 border-dashed rounded-xl p-8 transition-all duration-500 text-center flex flex-col items-center justify-center 
                         ${files.length > 0
                             ? 'border-indigo-400 bg-indigo-50/30'
                             : 'border-slate-200 hover:border-indigo-300 hover:bg-slate-50/50 hover:scale-[1.01]'
@@ -136,7 +134,7 @@ export default function UploadModal({ isOpen, onClose, onUploadSuccess }: Upload
                         className="text-sm absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                         accept=".pdf,.docx,.doc,.txt,.pptx,.ppt,.xlsx,.xls,.csv,.md"
                     />
-                    <div className="w-12 h-12 bg-white shadow-lg rounded-xl flex items-center justify-center mb-4 border border-slate-50">
+                    <div className="w-12 h-12 bg-white shadow-lg rounded-lg flex items-center justify-center mb-4 border border-slate-50">
                         <HiCloudUpload className="text-2xl text-indigo-600" />
                     </div>
                     <div className="space-y-1">
@@ -172,9 +170,9 @@ export default function UploadModal({ isOpen, onClose, onUploadSuccess }: Upload
                     </div>
                 )}
 
-                <Card className="bg-slate-50 rounded-2xl shadow-none border border-slate-100">
+                <Card className="bg-slate-50 rounded-xl shadow-none border border-slate-100">
                     <CardBody className="flex flex-row items-start gap-4 p-4">
-                        <div className="w-9 h-9 rounded-xl bg-white border border-slate-200 flex items-center justify-center shrink-0 shadow-sm">
+                        <div className="w-9 h-9 rounded-lg bg-white border border-slate-200 flex items-center justify-center shrink-0 shadow-sm">
                             <HiLightningBolt className="w-4 h-4 text-amber-500" />
                         </div>
                         <div>
@@ -202,7 +200,7 @@ export default function UploadModal({ isOpen, onClose, onUploadSuccess }: Upload
                     <Button
                         variant="bordered"
                         onPress={handleClose}
-                        className="flex-1 font-bold text-slate-600 border-slate-300 rounded-xl h-11 transition-all hover:-translate-y-0.5"
+                        className="flex-1 font-medium text-slate-600 border border-slate-200 bg-white rounded-lg h-11 transition-all hover:bg-slate-50 shadow-sm"
                     >
                         Cancel
                     </Button>
@@ -210,10 +208,10 @@ export default function UploadModal({ isOpen, onClose, onUploadSuccess }: Upload
                         onPress={() => handleSubmit()}
                         isDisabled={files.length === 0 || isUploading}
                         isLoading={isUploading}
-                        className="flex-[1.5] text-white text-[13px] font-bold rounded-xl h-11 shadow-lg shadow-indigo-100 transition-all hover:-translate-y-0.5"
+                        className="flex-[1.5] text-white text-[13px] font-medium rounded-lg h-11 shadow-lg shadow-indigo-500/20 transition-all hover:-translate-y-0.5"
                         style={{ backgroundColor: theme.colors.primary.main }}
                     >
-                        {isUploading ? "Processing..." : `Import ${files.length > 1 ? `${files.length} Files` : "Document"}`}
+                        {isUploading ? "Ingesting..." : `Import ${files.length > 1 ? `${files.length} Files` : "Document"}`}
                     </Button>
                 </div>
             </div>

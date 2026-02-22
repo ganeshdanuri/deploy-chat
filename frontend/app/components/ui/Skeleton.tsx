@@ -7,12 +7,13 @@ import { cn } from "@/lib/utils";
 
 interface SkeletonProps {
     className?: string;
+    style?: React.CSSProperties;
 }
 
 /**
  * A single animated shimmer block. Compose these to build any skeleton screen.
  */
-export function Skeleton({ className }: SkeletonProps) {
+export function Skeleton({ className, style }: SkeletonProps) {
     return (
         <div
             className={cn(
@@ -22,6 +23,7 @@ export function Skeleton({ className }: SkeletonProps) {
                 "before:animate-shimmer",
                 className
             )}
+            style={style}
         />
     );
 }
@@ -272,6 +274,97 @@ export function SettingsSkeleton() {
                     </div>
                 </div>
                 <Skeleton className="h-10 w-32 rounded-xl" />
+            </div>
+        </div>
+    );
+}
+// ─── Analytics Page Skeleton ──────────────────────────────────────────────────
+
+/**
+ * Skeleton shown in AnalyticsPage while it loads.
+ */
+export function AnalyticsSkeleton() {
+    return (
+        <div className="space-y-6 animate-pulse-subtle">
+            {/* Header */}
+            <div className="flex items-center justify-between">
+                <div className="space-y-2">
+                    <Skeleton className="h-7 w-40 rounded-lg" />
+                    <Skeleton className="h-3 w-64 rounded-full" />
+                </div>
+                <Skeleton className="h-10 w-48 rounded-lg" />
+            </div>
+
+            {/* Summary Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                {Array.from({ length: 4 }).map((_, i) => (
+                    <div key={i} className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-3">
+                        <Skeleton className="h-3 w-32 rounded-full" />
+                        <Skeleton className="h-7 w-20 rounded-lg" />
+                        <Skeleton className="h-3 w-16 rounded-full" />
+                    </div>
+                ))}
+            </div>
+
+            {/* Charts Section */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {Array.from({ length: 2 }).map((_, i) => (
+                    <div key={i} className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm h-80 space-y-6">
+                        <Skeleton className="h-4 w-40 rounded-full" />
+                        <div className="flex-1 flex items-end justify-between gap-2 h-48">
+                            {Array.from({ length: 12 }).map((_, j) => (
+                                <Skeleton
+                                    key={j}
+                                    className="w-full bg-slate-100/50 rounded-t-sm"
+                                    style={{ height: `${Math.random() * 60 + 20}%` }}
+                                />
+                            ))}
+                        </div>
+                        <div className="flex justify-between border-t border-slate-100 pt-3">
+                            {Array.from({ length: 6 }).map((_, k) => (
+                                <Skeleton key={k} className="h-2.5 w-8 rounded-full" />
+                            ))}
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+}
+// ─── Chatbot Card Skeleton ────────────────────────────────────────────────────
+
+/**
+ * Skeleton for a single chatbot card in the grid view.
+ */
+export function ChatbotCardSkeleton() {
+    return (
+        <div className="bg-white rounded-xl border border-slate-200 p-5 space-y-4 animate-pulse-subtle">
+            <div className="flex justify-between items-start">
+                <div className="flex items-center gap-3">
+                    <Skeleton className="w-10 h-10 rounded-lg" />
+                    <div className="space-y-2">
+                        <Skeleton className="h-4 w-24 rounded-full" />
+                        <Skeleton className="h-3 w-16 rounded-full" />
+                    </div>
+                </div>
+                <div className="flex gap-1">
+                    <Skeleton className="w-8 h-8 rounded-md" />
+                    <Skeleton className="w-8 h-8 rounded-md" />
+                </div>
+            </div>
+            <div className="space-y-3">
+                <div className="bg-slate-50 rounded-lg p-3 space-y-2">
+                    <Skeleton className="h-2 w-20 rounded-full opacity-50" />
+                    <Skeleton className="h-3 w-full rounded-full" />
+                </div>
+                <div className="flex justify-between items-center">
+                    <Skeleton className="h-2 w-12 rounded-full" />
+                    <Skeleton className="h-2 w-20 rounded-full" />
+                </div>
+            </div>
+            <div className="grid grid-cols-2 gap-2 pt-2">
+                <Skeleton className="h-10 rounded-lg" />
+                <Skeleton className="h-10 rounded-lg" />
             </div>
         </div>
     );

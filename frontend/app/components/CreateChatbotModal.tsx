@@ -80,7 +80,7 @@ export default function CreateChatbotModal({ isOpen, onClose }: CreateChatbotMod
             <Button
                 variant="bordered"
                 onPress={onClose}
-                className="flex-1 font-medium rounded-xl h-12 transition-all hover:-translate-y-0.5 border-slate-300 text-slate-600"
+                className="flex-1 font-medium rounded-lg h-12 transition-all hover:bg-slate-50 border border-slate-200 text-slate-600 shadow-sm"
             >
                 Cancel
             </Button>
@@ -88,7 +88,7 @@ export default function CreateChatbotModal({ isOpen, onClose }: CreateChatbotMod
                 onPress={handleSubmit}
                 isDisabled={isSubmitting}
                 isLoading={isSubmitting}
-                className="flex-[1.5] text-white text-sm font-medium rounded-xl h-12 shadow-xl transition-all hover:-translate-y-0.5"
+                className="flex-[1.5] text-white text-sm font-medium rounded-lg h-12 shadow-lg shadow-indigo-500/20 transition-all hover:-translate-y-0.5"
                 style={{ backgroundColor: theme.colors.primary.main }}
             >
                 {isSubmitting ? "Creating..." : "Launch Assistant"}
@@ -122,7 +122,7 @@ export default function CreateChatbotModal({ isOpen, onClose }: CreateChatbotMod
                         onChange={(e) => setName(e.target.value)}
                         placeholder="e.g. Customer Support Bot"
                         classNames={{
-                            inputWrapper: "rounded-xl border border-slate-300 h-11 hover:border-indigo-400 data-[focus=true]:border-indigo-500 data-[focus=true]:ring-4 data-[focus=true]:ring-indigo-500/10 shadow-none bg-slate-50 transition-all",
+                            inputWrapper: "rounded-lg border border-slate-300 h-11 hover:border-indigo-400 data-[focus=true]:border-indigo-500 data-[focus=true]:ring-4 data-[focus=true]:ring-indigo-500/10 shadow-none bg-slate-50 transition-all",
                             input: "font-medium text-sm text-slate-800 placeholder:text-slate-400",
                         }}
                     />
@@ -170,7 +170,7 @@ export default function CreateChatbotModal({ isOpen, onClose }: CreateChatbotMod
                         onChange={(e) => setWelcomeMessage(e.target.value)}
                         placeholder="Hi! How can I help you?"
                         classNames={{
-                            inputWrapper: "rounded-xl border border-slate-300 h-11 hover:border-indigo-400 data-[focus=true]:border-indigo-500 data-[focus=true]:ring-4 data-[focus=true]:ring-indigo-500/10 shadow-none bg-slate-50 transition-all",
+                            inputWrapper: "rounded-lg border border-slate-300 h-11 hover:border-indigo-400 data-[focus=true]:border-indigo-500 data-[focus=true]:ring-4 data-[focus=true]:ring-indigo-500/10 shadow-none bg-slate-50 transition-all",
                             input: "font-medium text-sm text-slate-800",
                         }}
                     />
@@ -206,7 +206,7 @@ export default function CreateChatbotModal({ isOpen, onClose }: CreateChatbotMod
                                     }}
                                     placeholder="yourdomain.com OR *"
                                     classNames={{
-                                        inputWrapper: "rounded-xl border border-slate-300 h-11 hover:border-indigo-400 data-[focus=true]:border-indigo-500 data-[focus=true]:ring-4 data-[focus=true]:ring-indigo-500/10 shadow-none bg-slate-50 transition-all",
+                                        inputWrapper: "rounded-lg border border-slate-300 h-11 hover:border-indigo-400 data-[focus=true]:border-indigo-500 data-[focus=true]:ring-4 data-[focus=true]:ring-indigo-500/10 shadow-none bg-slate-50 transition-all",
                                         input: "font-medium text-sm text-slate-800 placeholder:text-slate-400",
                                     }}
                                 />

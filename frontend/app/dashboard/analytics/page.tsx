@@ -3,10 +3,24 @@
 import { HiTrendingUp, HiLockClosed } from "react-icons/hi";
 import { useAppSelector } from "@/lib/store/hooks";
 import Link from "next/link";
+import { TOOLTIP_STYLE_CLASSES, TOOLTIP_ARROW_CLASSES } from "@/lib/constants";
+import { AnalyticsSkeleton } from "@/app/components/ui";
+import { useEffect, useState } from "react";
 
 export default function AnalyticsPage() {
+    const [loading, setLoading] = useState(true);
     const { data: userData } = useAppSelector((state) => state.user);
-    const isFreePlan = userData?.billing?.current_plan === "Free" || !userData?.billing?.current_plan;
+
+    useEffect(() => {
+        const timer = setTimeout(() => setLoading(false), 800);
+        return () => clearTimeout(timer);
+    }, []);
+
+    const isFreePlan = !userData?.billing?.current_plan || userData?.billing?.current_plan.toLowerCase() === "free" || userData?.billing?.current_plan.toLowerCase() === "trial";
+
+    if (loading) {
+        return <AnalyticsSkeleton />;
+    }
 
     if (isFreePlan) {
         return (
@@ -95,8 +109,9 @@ export default function AnalyticsPage() {
                                     style={{ height: `${h}%` }}
                                 ></div>
                                 {/* Tooltip */}
-                                <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-[10px] py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-10">
+                                <div className={`absolute -top-9 left-1/2 -translate-x-1/2 px-2 py-1 opacity-0 group-hover:opacity-100 ${TOOLTIP_STYLE_CLASSES} translate-y-1 group-hover:translate-y-0 text-[9px]`}>
                                     {h * 12} chats
+                                    <div className={`absolute bottom-[-4px] left-1/2 -translate-x-1/2 w-2 h-2 border-r border-b ${TOOLTIP_ARROW_CLASSES}`} />
                                 </div>
                             </div>
                         ))}

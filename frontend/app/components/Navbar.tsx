@@ -51,12 +51,12 @@ export default function Navbar() {
             </div>
 
             {/* Desktop Navigation */}
-            <div className="hidden md:flex gap-1 items-center bg-slate-50/50 p-1 rounded-full border border-slate-200/50">
+            <div className="hidden md:flex gap-1 items-center bg-slate-50/50 p-1 rounded-lg border border-slate-200/50">
               {navLinks.map((link) => (
                 <a
                   key={link.label}
                   href={link.href}
-                  className="text-sm font-medium px-5 py-2 rounded-full transition-all hover:bg-white hover:text-indigo-600 hover:shadow-sm"
+                  className="text-sm font-medium px-5 py-2 rounded-md transition-all hover:bg-white hover:text-indigo-600 hover:shadow-sm"
                   style={{ color: theme.colors.neutral[600] }}
                 >
                   {link.label}
@@ -68,7 +68,7 @@ export default function Navbar() {
             <div className="flex items-center gap-4">
               <button
                 onClick={handleMainButtonClick}
-                className="text-sm font-medium hidden sm:flex items-center gap-2 text-white px-6 py-2.5 rounded-xl hover:-translate-y-0.5 transition-all shadow-lg shadow-indigo-500/20"
+                className="text-sm font-medium hidden sm:flex items-center gap-2 text-white px-6 py-2.5 rounded-lg hover:-translate-y-0.5 transition-all shadow-lg shadow-indigo-500/20"
                 style={{ background: theme.gradients.primaryButton }}
               >
                 <LogIn size={18} strokeWidth={2} className="opacity-80" />
@@ -104,7 +104,7 @@ export default function Navbar() {
                     handleMainButtonClick();
                     setIsMobileMenuOpen(false);
                   }}
-                  className="w-full py-2.5 text-white text-sm font-semibold rounded-xl shadow-lg shadow-indigo-500/20"
+                  className="w-full py-2.5 text-white text-sm font-semibold rounded-lg shadow-lg shadow-indigo-500/20"
                   style={{ background: theme.gradients.primaryButton }}
                 >
                   Get Started

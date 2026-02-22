@@ -14,6 +14,7 @@ import {
 } from "react-icons/hi";
 import showToast from "@/lib/toast";
 import type { Chatbot } from "@/lib/types";
+import { PRESET_COLORS } from "@/lib/constants";
 
 // ─── Types ─────────────────────────────────────────────────────────────────────
 
@@ -27,15 +28,6 @@ type Position = "bottom-right" | "bottom-left";
 
 // ─── Helpers ───────────────────────────────────────────────────────────────────
 
-const PRESET_COLORS = [
-    { label: "Indigo", value: "#4f46e5" },
-    { label: "Violet", value: "#7c3aed" },
-    { label: "Rose", value: "#e11d48" },
-    { label: "Sky", value: "#0284c7" },
-    { label: "Teal", value: "#0d9488" },
-    { label: "Amber", value: "#d97706" },
-    { label: "Slate", value: "#334155" },
-];
 
 function buildSnippet(token: string, color: string, position: Position, apiBase: string) {
     return `<script
@@ -108,7 +100,7 @@ export default function EmbedDrawer({ isOpen, onClose, chatbot }: EmbedDrawerPro
                             size="sm"
                             isIconOnly
                             onPress={copyToken}
-                            className="bg-white border border-slate-200 text-slate-500 hover:text-indigo-600 hover:border-indigo-300 rounded-xl transition-all hover:-translate-y-0.5"
+                            className="bg-white border border-slate-200 text-slate-500 hover:text-indigo-600 hover:border-indigo-300 rounded-lg transition-all hover:-translate-y-0.5"
                         >
                             {copiedToken ? <HiCheck className="w-4 h-4 text-green-500" /> : <HiClipboardCopy className="w-4 h-4" />}
                         </Button>
@@ -165,7 +157,7 @@ export default function EmbedDrawer({ isOpen, onClose, chatbot }: EmbedDrawerPro
                                     <button
                                         key={pos}
                                         onClick={() => setPosition(pos)}
-                                        className={`px-3 py-1.5 rounded-xl text-xs font-medium border transition-all hover:-translate-y-0.5 ${position === pos
+                                        className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-all hover:-translate-y-0.5 ${position === pos
                                             ? "bg-indigo-50 border-indigo-300 text-indigo-700"
                                             : "bg-white border-slate-200 text-slate-500 hover:border-slate-300"
                                             }`}
@@ -187,7 +179,7 @@ export default function EmbedDrawer({ isOpen, onClose, chatbot }: EmbedDrawerPro
                             Preview
                         </h3>
                     </div>
-                    <div className="relative h-44 rounded-xl bg-gradient-to-br from-slate-100 to-slate-200 border border-slate-200 overflow-hidden">
+                    <div className="relative h-44 rounded-lg bg-gradient-to-br from-slate-100 to-slate-200 border border-slate-200 overflow-hidden">
                         {/* Fake browser chrome */}
                         <div className="h-8 bg-white border-b border-slate-200 flex items-center gap-1.5 px-3">
                             <span className="w-2.5 h-2.5 rounded-full bg-red-400" />
@@ -207,7 +199,7 @@ export default function EmbedDrawer({ isOpen, onClose, chatbot }: EmbedDrawerPro
                             style={{ left: position === "bottom-left" ? "12px" : "auto", right: position === "bottom-right" ? "12px" : "auto" }}
                         >
                             {/* Mini chat pop */}
-                            <div className="px-3 py-2 rounded-xl text-white text-[10px] font-medium shadow-md max-w-[130px] leading-snug"
+                            <div className="px-3 py-2 rounded-lg text-white text-[10px] font-medium shadow-md max-w-[130px] leading-snug"
                                 style={{ background: activeColor }}>
                                 👋 Hi! I&apos;m {chatbot.name}
                             </div>
@@ -235,7 +227,7 @@ export default function EmbedDrawer({ isOpen, onClose, chatbot }: EmbedDrawerPro
                             size="sm"
                             onPress={copySnippet}
                             startContent={copiedSnippet ? <HiCheck className="w-3.5 h-3.5" /> : <HiClipboardCopy className="w-3.5 h-3.5" />}
-                            className={`text-xs font-medium rounded-xl transition-all hover:-translate-y-0.5 ${copiedSnippet
+                            className={`text-xs font-medium rounded-lg transition-all hover:-translate-y-0.5 ${copiedSnippet
                                 ? "bg-green-50 border border-green-300 text-green-700"
                                 : "bg-indigo-50 border border-indigo-200 text-indigo-700 hover:bg-indigo-100"
                                 }`}
@@ -243,7 +235,7 @@ export default function EmbedDrawer({ isOpen, onClose, chatbot }: EmbedDrawerPro
                             {copiedSnippet ? "Copied!" : "Copy Code"}
                         </Button>
                     </div>
-                    <div className="relative rounded-xl bg-slate-900 overflow-hidden">
+                    <div className="relative rounded-lg bg-slate-900 overflow-hidden">
                         <div className="flex items-center gap-1.5 px-4 py-2.5 border-b border-slate-700/60">
                             <span className="text-[10px] text-slate-400 font-mono">HTML</span>
                             <span className="ml-auto text-[10px] text-slate-500">Paste before &lt;/body&gt;</span>
@@ -255,7 +247,7 @@ export default function EmbedDrawer({ isOpen, onClose, chatbot }: EmbedDrawerPro
                 </section>
 
                 {/* ── Instructions ─────────────────────────────────────────── */}
-                <section className="rounded-xl bg-amber-50 border border-amber-100 p-4 space-y-2">
+                <section className="rounded-lg bg-amber-50 border border-amber-100 p-4 space-y-2">
                     <p className="text-xs font-semibold text-amber-800 flex items-center gap-1.5">
                         <HiExternalLink className="w-3.5 h-3.5" />
                         How to add to your website

@@ -42,8 +42,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
     // Close sidebar on navigation (mobile)
     useEffect(() => {
-        setIsSidebarOpen(false);
-    }, [pathname]);
+        if (isSidebarOpen) {
+            queueMicrotask(() => setIsSidebarOpen(false));
+        }
+    }, [pathname, isSidebarOpen]);
 
     if (isLoading) {
         return (

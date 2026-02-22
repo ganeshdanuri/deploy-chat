@@ -87,7 +87,7 @@ export default function HeroSection({ stats, onGetStarted }: HeroSectionProps) {
             <div className="flex flex-col sm:flex-row gap-4">
               <button
                 onClick={onGetStarted}
-                className="text-sm font-medium flex items-center justify-center gap-2 px-8 py-4 rounded-xl text-white shadow-lg shadow-blue-500/20 transition-all hover:-translate-y-1 hover:shadow-xl"
+                className="text-sm font-medium flex items-center justify-center gap-2 px-8 py-4 rounded-lg text-white shadow-lg shadow-blue-500/20 transition-all hover:-translate-y-1 hover:shadow-xl"
                 style={{ background: theme.gradients.primaryButton }}
               >
                 Start Building Free
@@ -95,7 +95,7 @@ export default function HeroSection({ stats, onGetStarted }: HeroSectionProps) {
               </button>
 
               <button
-                className="text-sm font-medium flex items-center justify-center gap-2 px-8 py-4 rounded-xl border transition-all hover:bg-slate-50"
+                className="text-sm font-medium flex items-center justify-center gap-2 px-8 py-4 rounded-lg border transition-all hover:bg-slate-50"
                 style={{
                   color: theme.colors.neutral[700],
                   borderColor: theme.colors.neutral[300]
@@ -121,7 +121,7 @@ export default function HeroSection({ stats, onGetStarted }: HeroSectionProps) {
           <div className="relative mx-auto w-full max-w-[500px] lg:max-w-none">
             {/* Main 'Dashboard' Card */}
             <div
-              className="relative z-10 overflow-hidden rounded-2xl border shadow-2xl bg-white"
+              className="relative z-10 overflow-hidden rounded-xl border shadow-2xl bg-white"
               style={{ borderColor: theme.colors.neutral[200] }}
             >
               {/* Fake Window Header */}
@@ -189,7 +189,7 @@ export default function HeroSection({ stats, onGetStarted }: HeroSectionProps) {
 
             {/* Floating Card 1: Accuracy */}
             <div
-              className="absolute -right-8 -top-8 z-20 hidden lg:flex items-center gap-4 rounded-xl bg-white p-4 shadow-xl border border-slate-100 animate-bounce-slow"
+              className="absolute -right-8 -top-8 z-20 hidden lg:flex items-center gap-4 rounded-lg bg-white p-4 shadow-xl border border-slate-100 animate-bounce-slow"
               style={{ animationDuration: '3s' }}
             >
               <div
@@ -206,7 +206,7 @@ export default function HeroSection({ stats, onGetStarted }: HeroSectionProps) {
 
             {/* Floating Card 2: Active Users */}
             <div
-              className="absolute -left-12 bottom-12 z-20 hidden lg:flex flex-col gap-2 rounded-xl bg-white p-5 shadow-xl border border-slate-100"
+              className="absolute -left-12 bottom-12 z-20 hidden lg:flex flex-col gap-2 rounded-lg bg-white p-5 shadow-xl border border-slate-100"
             >
               <div className="flex items-center gap-3">
                 <div className="flex -space-x-2">

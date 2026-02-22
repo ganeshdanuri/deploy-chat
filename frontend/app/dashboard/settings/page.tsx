@@ -10,12 +10,14 @@ import { SettingsSkeleton } from "@/app/components/ui/Skeleton";
 
 export default function SettingsPage() {
     const searchParams = useSearchParams();
-    const [activeTab, setActiveTab] = useState("general");
+    const [activeTab, setActiveTab] = useState(searchParams.get("tab") || "general");
 
     useEffect(() => {
         const tab = searchParams.get("tab");
-        if (tab) setActiveTab(tab);
-    }, [searchParams]);
+        if (tab && tab !== activeTab) {
+            queueMicrotask(() => setActiveTab(tab));
+        }
+    }, [searchParams, activeTab]);
 
     const { data: userData, status: userStatus } = useAppSelector((state) => state.user);
     const { user: authUser } = useAuth();
@@ -50,10 +52,10 @@ export default function SettingsPage() {
                 ) : (
                     <div className="w-full">
                         {activeTab === "general" && (
-                            <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+                            <div className="bg-white rounded-lg border border-slate-200 shadow-sm overflow-hidden">
                                 <div className="p-6 border-b border-slate-200">
                                     <h2 className="text-lg font-bold text-slate-900">Profile Information</h2>
-                                    <p className="text-sm text-slate-500 mt-1">Update your account's profile information and email address.</p>
+                                    <p className="text-sm text-slate-500 mt-1">Update your account&apos;s profile information and email address.</p>
                                 </div>
                                 <div className="p-6 space-y-6">
 
@@ -77,7 +79,7 @@ export default function SettingsPage() {
 
                         {activeTab === "billing" && (
                             <div className="space-y-4">
-                                <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+                                <div className="bg-white rounded-lg border border-slate-200 shadow-sm overflow-hidden">
                                     <div className="p-5 sm:p-6 flex flex-col md:flex-row md:items-start justify-between gap-6">
                                         <div className="flex-1 space-y-4">
                                             <div className="flex items-center gap-3">
@@ -115,7 +117,7 @@ export default function SettingsPage() {
                                             </div>
                                         </div>
                                         <div className="shrink-0 pt-1">
-                                            <button className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 text-slate-700 text-sm font-semibold rounded-xl hover:bg-slate-50 hover:border-slate-300 transition-all hover:-translate-y-0.5 shadow-sm">
+                                            <button className="flex items-center gap-2 px-5 py-2.5 bg-white border border-slate-200 text-slate-700 text-sm font-medium rounded-lg hover:bg-slate-50 hover:border-slate-300 transition-all hover:-translate-y-0.5 shadow-sm">
                                                 View Invoices
                                             </button>
                                         </div>

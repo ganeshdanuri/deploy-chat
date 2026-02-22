@@ -13,88 +13,26 @@ import {
   HiDatabase,
   HiSparkles,
   HiTrendingUp,
-  HiPlus,
-  HiDocumentText,
   HiDotsVertical,
   HiArrowRight,
   HiLightningBolt,
   HiRefresh,
   HiCreditCard,
 } from "react-icons/hi";
+import { Tooltip } from "@/app/components/ui";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import showToast from "@/lib/toast";
 import { DashboardSkeleton } from "@/app/components/ui";
 import api from "@/lib/api";
 import { ENDPOINTS } from "@/lib/endpoints";
+import {
+  QUICK_ACTIONS,
+  ONBOARDING_STEPS,
+} from "@/lib/constants";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
-interface OnboardingStep {
-  id: number;
-  name: string;
-  description: string;
-  icon: React.ElementType;
-  href: string;
-  color: string;
-  bgColor: string;
-  borderColor: string;
-  gradientFrom: string;
-  btnText: string;
-}
-
-// ─── Constants ────────────────────────────────────────────────────────────────
-
-const ONBOARDING_STEPS: OnboardingStep[] = [
-  {
-    id: 1,
-    name: "Upload Documents",
-    description: "Connect your knowledge base. Upload PDFs, CSVs, Markdown, or text files for your AI to learn from.",
-    icon: HiDocumentText,
-    href: "/dashboard/documents",
-    color: "text-indigo-600",
-    bgColor: "bg-indigo-50",
-    borderColor: "border-indigo-100",
-    gradientFrom: "from-indigo-500 to-indigo-600",
-    btnText: "Add Documents",
-  },
-  {
-    id: 2,
-    name: "Create Datasets",
-    description: "Organize nodes into logical groups to help your chatbot retrieve precise information.",
-    icon: HiDatabase,
-    href: "/dashboard/datasets",
-    color: "text-emerald-600",
-    bgColor: "bg-emerald-50",
-    borderColor: "border-emerald-100",
-    gradientFrom: "from-emerald-500 to-emerald-600",
-    btnText: "Setup Datasets",
-  },
-  {
-    id: 3,
-    name: "Build Chatbots",
-    description: "Define how your AI speaks and which datasets it should prioritize for better context.",
-    icon: HiChatAlt2,
-    href: "/dashboard/chatbots",
-    color: "text-amber-600",
-    bgColor: "bg-amber-50",
-    borderColor: "border-amber-100",
-    gradientFrom: "from-amber-400 to-amber-500",
-    btnText: "Create Assistant",
-  },
-  {
-    id: 4,
-    name: "Test & Launch",
-    description: "Perfect your responses in the playground before deploying to your users.",
-    icon: HiSparkles,
-    href: "/dashboard/playground",
-    color: "text-purple-600",
-    bgColor: "bg-purple-50",
-    borderColor: "border-purple-100",
-    gradientFrom: "from-purple-500 to-purple-600",
-    btnText: "Try Playground",
-  },
-];
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
@@ -195,6 +133,7 @@ function DashboardSummary({
 }: DashboardSummaryProps) {
   const limit = userData?.billing?.monthly_limit || 100;
   const usagePercentage = Math.min((message_count / limit) * 100, 100);
+  const isFreePlan = !userData?.billing?.current_plan || ["free", "trial"].includes(userData?.billing?.current_plan.toLowerCase());
 
   return (
     <div className="w-full max-w-7xl animate-fade-in-up">
@@ -203,17 +142,18 @@ function DashboardSummary({
         <div>
           <div className="flex items-center gap-3">
             <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Dashboard Overview</h1>
-            <button
-              onClick={onRefresh}
-              disabled={isRefreshing}
-              className={`p-1.5 rounded-full hover:bg-slate-100 text-slate-400 hover:text-indigo-600 transition-all focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-1 ${isRefreshing ? "animate-spin text-indigo-600" : ""
-                }`}
-              title="Refresh Dashboard Data"
-            >
-              <HiRefresh className="w-5 h-5" />
-            </button>
-            <span className="bg-indigo-50 text-indigo-700 text-[10px] font-bold px-2 py-0.5 rounded-full border border-indigo-100 uppercase tracking-widest">
-              {userData?.billing?.current_plan || 'free'} plan
+            <Tooltip content="Refresh Dashboard Data">
+              <button
+                onClick={onRefresh}
+                disabled={isRefreshing}
+                className={`p-1.5 rounded-full hover:bg-slate-100 text-slate-400 hover:text-indigo-600 transition-all focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-1 ${isRefreshing ? "animate-spin text-indigo-600" : ""
+                  }`}
+              >
+                <HiRefresh className="w-5 h-5" />
+              </button>
+            </Tooltip>
+            <span className="bg-indigo-50 text-indigo-700 text-[10px] font-bold px-2 py-0.5 rounded-lg border border-indigo-100 uppercase tracking-widest">
+              {(userData?.billing?.current_plan || 'free').toUpperCase()} plan
             </span>
           </div>
           <p className="text-sm text-slate-500 mt-1 font-medium">
@@ -222,9 +162,9 @@ function DashboardSummary({
           </p>
         </div>
         <div className="flex gap-2">
-          <Link href="/dashboard/settings?tab=billing" className="px-4 py-1.5 bg-white border border-slate-200 text-slate-700 text-sm font-medium rounded-lg shadow-sm hover:bg-slate-50 transition-all flex items-center gap-2">
+          <Link href="/dashboard/settings?tab=billing" className="px-5 py-2 bg-white border border-slate-200 text-slate-700 text-sm font-medium rounded-lg shadow-sm hover:bg-slate-50 transition-all flex items-center gap-2">
             <HiCreditCard className="w-4 h-4 text-slate-400" />
-            Billing
+            Billing & Plans
           </Link>
         </div>
       </div>
@@ -240,7 +180,8 @@ function DashboardSummary({
           accentBg="bg-indigo-50"
           ringClass="ring-indigo-100"
           trendPositive={usagePercentage < 80}
-          href="/dashboard/analytics"
+          href={isFreePlan ? "/dashboard/settings?tab=billing" : "/dashboard/analytics"}
+          isLocked={isFreePlan}
           details={
             <div className="mt-4 h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
               <div
@@ -272,7 +213,8 @@ function DashboardSummary({
           ringClass="ring-amber-100"
           trendPositive={false}
           trendNeutral
-          href="/dashboard/analytics"
+          href={isFreePlan ? "/dashboard/settings?tab=billing" : "/dashboard/analytics"}
+          isLocked={isFreePlan}
         />
       </div>
 
@@ -298,12 +240,13 @@ interface MetricCardProps {
   trendPositive: boolean;
   trendNeutral?: boolean;
   href: string;
+  isLocked?: boolean;
   details?: React.ReactNode;
 }
 
-function MetricCard({ icon: Icon, label, value, trend, accentClass, accentBg, ringClass, trendPositive, trendNeutral, href, details }: MetricCardProps) {
+function MetricCard({ icon: Icon, label, value, trend, accentClass, accentBg, ringClass, trendPositive, trendNeutral, href, isLocked, details }: MetricCardProps) {
   return (
-    <Link href={href} className="p-6 bg-white rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow group cursor-pointer relative overflow-hidden block">
+    <Link href={href} className="p-6 bg-white rounded-lg border border-slate-200 shadow-sm hover:shadow-md transition-shadow group cursor-pointer relative overflow-hidden block">
       <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
         <Icon className={`w-24 h-24 ${accentClass} transform translate-x-4 -translate-y-4`} />
       </div>
@@ -311,10 +254,18 @@ function MetricCard({ icon: Icon, label, value, trend, accentClass, accentBg, ri
         <div className={`p-2.5 ${accentBg} ${accentClass} rounded-lg ring-1 ${ringClass}`}>
           <Icon className="w-5 h-5" />
         </div>
-        <span className="text-sm font-semibold text-slate-600">{label}</span>
+        <div className="flex flex-1 items-center justify-between">
+          <span className="text-sm font-semibold text-slate-600">{label}</span>
+          {isLocked && (
+            <div className="flex items-center gap-1 text-[10px] font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded border border-amber-100">
+              <HiLightningBolt className="w-3 h-3" />
+              PRO
+            </div>
+          )}
+        </div>
       </div>
       <div className="text-3xl font-bold text-slate-900 mb-1 relative z-10 font-mono">{value}</div>
-      <div className={`flex items-center gap-1.5 text-xs font-bold w-fit px-2 py-0.5 rounded-full relative z-10 ${trendNeutral ? "text-slate-500 bg-slate-50" : "text-emerald-600 bg-emerald-50"
+      <div className={`flex items-center gap-1.5 text-xs font-bold w-fit px-2 py-0.5 rounded-lg relative z-10 ${trendNeutral ? "text-slate-500 bg-slate-50" : "text-emerald-600 bg-emerald-50"
         }`}>
         {trendPositive && <HiTrendingUp className="w-3.5 h-3.5" />}
         <span className={trendPositive ? "font-mono" : ""}>{trend}</span>
@@ -326,39 +277,10 @@ function MetricCard({ icon: Icon, label, value, trend, accentClass, accentBg, ri
 
 // ─── Quick Actions Panel ──────────────────────────────────────────────────────
 
-const QUICK_ACTIONS = [
-  {
-    label: "New Chatbot",
-    description: "Deploy a new AI assistant",
-    icon: HiChatAlt2,
-    hoverBorder: "hover:border-indigo-400 hover:bg-indigo-50/50",
-    iconBg: "bg-indigo-50 text-indigo-600",
-    hoverText: "group-hover:text-indigo-700",
-    href: "/dashboard/chatbots",
-  },
-  {
-    label: "Add Knowledge Source",
-    description: "Upload PDF, CSV, Markdown or scrape URL",
-    icon: HiDatabase,
-    hoverBorder: "hover:border-emerald-400 hover:bg-emerald-50/50",
-    iconBg: "bg-emerald-50 text-emerald-600",
-    hoverText: "group-hover:text-emerald-700",
-    href: "/dashboard/documents",
-  },
-  {
-    label: "Playground",
-    description: "Test your prompts immediately",
-    icon: HiSparkles,
-    hoverBorder: "hover:border-amber-400 hover:bg-amber-50/50",
-    iconBg: "bg-amber-50 text-amber-600",
-    hoverText: "group-hover:text-amber-700",
-    href: "/dashboard/playground",
-  },
-];
 
 function QuickActionsPanel() {
   return (
-    <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6 lg:col-span-1 h-full flex flex-col">
+    <div className="bg-white rounded-lg border border-slate-200 shadow-sm p-6 lg:col-span-1 h-full flex flex-col">
       <div className="flex items-center justify-between mb-6">
         <h3 className="text-base font-bold text-slate-800">Quick Actions</h3>
         <Link href="/dashboard/chatbots" className="text-xs text-indigo-600 font-medium hover:underline">View All</Link>
@@ -368,7 +290,7 @@ function QuickActionsPanel() {
           <Link
             key={action.label}
             href={action.href}
-            className={`w-full flex items-center gap-4 p-3 rounded-xl border border-dashed border-slate-300 ${action.hoverBorder} transition-all group text-left block`}
+            className={`w-full flex items-center gap-4 p-3 rounded-lg border border-dashed border-slate-300 ${action.hoverBorder} transition-all group text-left block`}
           >
             <div className={`w-10 h-10 rounded-lg ${action.iconBg} flex items-center justify-center group-hover:scale-110 transition-transform shadow-sm`}>
               <action.icon className="w-5 h-5" />
@@ -425,11 +347,11 @@ function RecentActivityPanel() {
   };
 
   return (
-    <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6 lg:col-span-2">
+    <div className="bg-white rounded-lg border border-slate-200 shadow-sm p-6 lg:col-span-2">
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
           <h3 className="text-base font-bold text-slate-800">Recent Activity</h3>
-          <span className="bg-indigo-100 text-indigo-700 text-xs font-bold px-2 py-0.5 rounded-full">New</span>
+          <span className="bg-indigo-100 text-indigo-700 text-xs font-bold px-2 py-0.5 rounded-lg">New</span>
         </div>
         <button className="p-1.5 hover:bg-slate-100 rounded text-slate-400 hover:text-slate-600">
           <HiDotsVertical className="w-4 h-4" />
@@ -519,9 +441,9 @@ function OnboardingView({ cardsRef }: { cardsRef: React.RefObject<HTMLDivElement
 
         {ONBOARDING_STEPS.map((step) => (
           <div key={step.id} className="step-card group relative z-10">
-            <div className="bg-white p-6 md:p-8 rounded-[2rem] border border-slate-200 shadow-sm hover:shadow-2xl hover:border-indigo-100 transition-all duration-500 flex flex-col h-full relative overflow-hidden">
+            <div className="bg-white p-6 md:p-8 rounded-xl border border-slate-200 shadow-sm hover:shadow-2xl hover:border-indigo-100 transition-all duration-500 flex flex-col h-full relative overflow-hidden">
               <div className={`absolute top-0 left-0 w-full h-1 bg-gradient-to-r ${step.gradientFrom} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
-              <div className={`w-12 h-12 ${step.bgColor} ${step.color} rounded-xl flex items-center justify-center mb-6 shadow-sm ring-1 ring-inset ${step.borderColor} group-hover:scale-110 group-hover:rotate-3 transition-all duration-500`}>
+              <div className={`w-12 h-12 ${step.bgColor} ${step.color} rounded-lg flex items-center justify-center mb-6 shadow-sm ring-1 ring-inset ${step.borderColor} group-hover:scale-110 group-hover:rotate-3 transition-all duration-500`}>
                 <step.icon className="w-6 h-6" />
               </div>
               <div className="flex items-center gap-2 mb-2">
@@ -535,7 +457,7 @@ function OnboardingView({ cardsRef }: { cardsRef: React.RefObject<HTMLDivElement
               </p>
               <Link
                 href={step.href}
-                className="flex items-center justify-between w-full px-4 py-1.5 rounded-xl bg-slate-50 text-slate-600 border border-slate-200 text-[13px] font-bold transition-all duration-300 group/btn hover:bg-slate-100"
+                className="flex items-center justify-between w-full px-5 py-2.5 rounded-lg bg-slate-50 text-slate-700 border border-slate-200 text-[13px] font-medium transition-all duration-300 group/btn hover:bg-slate-800 hover:text-white hover:border-slate-800 shadow-sm"
               >
                 <span>{step.btnText}</span>
                 <HiArrowRight className="w-4 h-4 transform group-hover/btn:translate-x-1 transition-transform" />

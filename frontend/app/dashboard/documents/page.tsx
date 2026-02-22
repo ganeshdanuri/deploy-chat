@@ -15,8 +15,8 @@ import UploadModal from "@/app/components/UploadModal";
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 import { fetchDocuments, deleteDocument } from "@/lib/store/slices/documentsSlice";
 import showToast from "@/lib/toast";
-import { User, Tooltip, Button, Input } from "@heroui/react";
-import { PageHeader, EmptyState, StyledTable, DateCell, TableSkeleton } from "@/app/components/ui";
+import { User, Button, Input } from "@heroui/react";
+import { PageHeader, EmptyState, StyledTable, DateCell, TableSkeleton, Tooltip } from "@/app/components/ui";
 import type { TableColumnDef } from "@/app/components/ui";
 import type { Document } from "@/lib/types";
 import { theme } from "@/app/theme";
@@ -69,7 +69,7 @@ export default function DocumentsPage() {
                         avatarProps={{
                             radius: "lg",
                             fallback: <HiDocumentText className="w-4 h-4 text-indigo-600" />,
-                            className: "bg-indigo-50 border border-indigo-100",
+                            className: "bg-indigo-50 border border-indigo-100 rounded-lg",
                             size: "sm",
                         }}
                         description={`ID: ${doc.id.slice(0, 8)}`}
@@ -120,7 +120,7 @@ export default function DocumentsPage() {
                 onClear={() => setFilterValue("")}
                 onValueChange={setFilterValue}
                 classNames={{
-                    inputWrapper: "rounded-xl border border-slate-200 h-11 px-4 hover:border-indigo-400 data-[focus=true]:border-indigo-500 data-[focus=true]:ring-4 data-[focus=true]:ring-indigo-500/10 shadow-none bg-slate-50 transition-all",
+                    inputWrapper: "rounded-lg border border-slate-200 h-11 px-4 hover:border-indigo-400 data-[focus=true]:border-indigo-500 shadow-none bg-slate-50 transition-all",
                     input: "font-medium text-sm text-slate-800 placeholder:text-slate-400 ml-2"
                 }}
             />
@@ -138,15 +138,16 @@ export default function DocumentsPage() {
                             <Button
                                 onPress={handleRefresh}
                                 variant="bordered"
-                                startContent={<HiRefresh className="w-4 h-4 text-slate-400" />}
-                                className="bg-white border-slate-200 text-slate-700 text-xs sm:text-sm font-medium rounded-xl transition-all hover:-translate-y-0.5"
+                                isLoading={isLoading}
+                                startContent={<HiRefresh className={`w-4 h-4 text-slate-400 ${isLoading ? 'animate-spin' : ''}`} />}
+                                className="bg-white border-slate-200 text-slate-700 text-xs sm:text-sm font-medium rounded-lg transition-all hover:bg-slate-50 h-11 px-6 shadow-sm mr-2"
                             >
                                 Refresh
                             </Button>
                             <Button
                                 onPress={() => setIsUploadModalOpen(true)}
                                 startContent={<HiPlus className="w-4 h-4" />}
-                                className="text-white text-xs sm:text-sm font-medium rounded-xl transition-all hover:-translate-y-0.5 shadow-lg shadow-indigo-200"
+                                className="text-white text-xs sm:text-sm font-medium rounded-lg transition-all hover:-translate-y-0.5 shadow-lg shadow-indigo-500/20 h-11 px-6"
                                 style={{ backgroundColor: theme.colors.primary.main }}
                             >
                                 Upload Document

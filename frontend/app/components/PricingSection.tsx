@@ -56,7 +56,7 @@ function PlanCard({ plan }: { plan: Plan }) {
     return (
         <div
             className={[
-                "relative flex flex-col rounded-3xl border p-8 transition-shadow duration-200",
+                "relative flex flex-col rounded-xl border p-8 transition-shadow duration-200",
                 plan.popular
                     ? "shadow-2xl"
                     : "border-slate-200 bg-white shadow-sm hover:shadow-md",
@@ -65,7 +65,7 @@ function PlanCard({ plan }: { plan: Plan }) {
         >
             {/* Popular badge */}
             {plan.popular && (
-                <div className="mb-6 -mt-2 flex items-center gap-1.5 self-start rounded-full bg-amber-400 px-3 py-1">
+                <div className="mb-6 -mt-2 flex items-center gap-1.5 self-start rounded-lg bg-amber-400 px-3 py-1">
                     <HiLightningBolt className="h-3.5 w-3.5 text-amber-900" aria-hidden="true" />
                     <span className="text-xs font-semibold uppercase tracking-widest text-amber-900">
                         Most popular
@@ -104,7 +104,7 @@ function PlanCard({ plan }: { plan: Plan }) {
                 target={isExternal ? "_blank" : undefined}
                 rel={isExternal ? "noopener noreferrer" : undefined}
                 className={[
-                    "mt-auto flex items-center justify-center gap-2 rounded-xl px-6 py-3.5 text-sm font-semibold",
+                    "mt-auto flex items-center justify-center gap-2 rounded-lg px-6 py-3.5 text-sm font-semibold",
                     "transition-all duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2",
                     plan.popular
                         ? "bg-white focus-visible:outline-white"

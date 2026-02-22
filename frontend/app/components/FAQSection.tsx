@@ -18,7 +18,7 @@ export default function FAQSection() {
 
                 {/* Header */}
                 <div className="mb-14 text-center">
-                    <div className="mb-4 inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-bold uppercase tracking-widest" style={{ borderColor: `${theme.colors.primary.main}20`, backgroundColor: `${theme.colors.primary.main}10`, color: theme.colors.primary.main }}>
+                    <div className="mb-4 inline-flex items-center gap-2 rounded-lg border px-3 py-1 text-xs font-bold uppercase tracking-widest" style={{ borderColor: `${theme.colors.primary.main}20`, backgroundColor: `${theme.colors.primary.main}10`, color: theme.colors.primary.main }}>
                         <HiQuestionMarkCircle className="h-3.5 w-3.5" aria-hidden="true" />
                         FAQ
                     </div>
@@ -29,7 +29,7 @@ export default function FAQSection() {
                         Frequently asked questions
                     </h2>
                     <p className="mt-4 text-lg text-slate-500">
-                        Can't find the answer you're looking for?{" "}
+                        Can&apos;t find the answer you&apos;re looking for?{" "}
                         <a
                             href="mailto:support@deploychat.io"
                             className="font-semibold underline-offset-2 hover:underline"

@@ -21,10 +21,10 @@ export function PricingCard({
     onButtonClick
 }: PricingCardProps) {
     return (
-        <div className={`bg-white rounded-xl shadow-sm p-6 relative overflow-hidden flex flex-col ${isPopular ? 'border border-indigo-200' : 'border border-slate-200'}`}>
+        <div className={`bg-white rounded-lg shadow-sm p-6 relative overflow-hidden flex flex-col ${isPopular ? 'border border-indigo-200' : 'border border-slate-200'}`}>
             {isPopular && (
                 <div className="absolute top-0 right-0 p-3">
-                    <span className="bg-indigo-50 text-indigo-600 text-[10px] font-bold px-2 py-0.5 rounded-full border border-indigo-100 uppercase tracking-wider">Most Popular</span>
+                    <span className="bg-indigo-50 text-indigo-600 text-[10px] font-bold px-2 py-0.5 rounded-lg border border-indigo-100 uppercase tracking-wider">Most Popular</span>
                 </div>
             )}
             <h3 className="text-xl font-semibold text-slate-900">{title}</h3>
@@ -42,7 +42,7 @@ export function PricingCard({
             </ul>
             <button
                 onClick={onButtonClick}
-                className={`text-sm font-medium mt-6 w-full py-2.5 rounded-xl transition-all hover:-translate-y-0.5 ${isPopular ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-100' : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-50'}`}
+                className={`text-sm font-medium mt-6 w-full py-2.5 rounded-lg transition-all hover:-translate-y-0.5 ${isPopular ? 'text-white shadow-lg shadow-indigo-500/20' : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 shadow-sm'}`}
                 style={isPopular ? { backgroundColor: "#4667ff" } : {}}
             >
                 {buttonText}

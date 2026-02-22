@@ -1,5 +1,10 @@
 import { theme } from "../app/theme";
-import { HiGlobe, HiChartBar, HiUserGroup, HiShieldCheck, HiDatabase, HiLightningBolt, HiColorSwatch, HiCode, HiSparkles, HiDocumentText, HiCursorClick } from "react-icons/hi";
+import {
+    HiGlobe, HiChartBar, HiUserGroup, HiShieldCheck, HiDatabase,
+    HiLightningBolt, HiColorSwatch, HiCode, HiSparkles, HiDocumentText,
+    HiCursorClick, HiChatAlt2, HiHome, HiQuestionMarkCircle, HiUser,
+    HiUsers, HiCreditCard, HiKey, HiBell
+} from "react-icons/hi";
 import { FaBrain } from "react-icons/fa";
 import { MdIntegrationInstructions } from "react-icons/md";
 
@@ -303,3 +308,135 @@ export const TESTIMONIALS = [
         image: "https://i.pravatar.cc/150?u=elena",
     },
 ];
+
+// ─── Dashboard Onboarding (DashboardOverview) ────────────────────────────────
+export interface OnboardingStep {
+    id: number;
+    name: string;
+    description: string;
+    icon: React.ElementType;
+    href: string;
+    color: string;
+    bgColor: string;
+    borderColor: string;
+    gradientFrom: string;
+    btnText: string;
+}
+
+export const ONBOARDING_STEPS: OnboardingStep[] = [
+    {
+        id: 1,
+        name: "Upload Documents",
+        description: "Connect your knowledge base. Upload PDFs, CSVs, Markdown, or text files for your AI to learn from.",
+        icon: HiDocumentText,
+        href: "/dashboard/documents",
+        color: "text-indigo-600",
+        bgColor: "bg-indigo-50",
+        borderColor: "border-indigo-100",
+        gradientFrom: "from-indigo-500 to-indigo-600",
+        btnText: "Add Documents",
+    },
+    {
+        id: 2,
+        name: "Create Datasets",
+        description: "Organize nodes into logical groups to help your chatbot retrieve precise information.",
+        icon: HiDatabase,
+        href: "/dashboard/datasets",
+        color: "text-emerald-600",
+        bgColor: "bg-emerald-50",
+        borderColor: "border-emerald-100",
+        gradientFrom: "from-emerald-500 to-emerald-600",
+        btnText: "Setup Datasets",
+    },
+    {
+        id: 3,
+        name: "Build Chatbots",
+        description: "Define how your AI speaks and which datasets it should prioritize for better context.",
+        icon: HiChatAlt2,
+        href: "/dashboard/chatbots",
+        color: "text-amber-600",
+        bgColor: "bg-amber-50",
+        borderColor: "border-amber-100",
+        gradientFrom: "from-amber-400 to-amber-500",
+        btnText: "Create Assistant",
+    },
+    {
+        id: 4,
+        name: "Test & Launch",
+        description: "Perfect your responses in the playground before deploying to your users.",
+        icon: HiSparkles,
+        href: "/dashboard/playground",
+        color: "text-purple-600",
+        bgColor: "bg-purple-50",
+        borderColor: "border-purple-100",
+        gradientFrom: "from-purple-500 to-purple-600",
+        btnText: "Try Playground",
+    },
+];
+
+// ─── Dashboard Quick Actions ────────────────────────────────────────────────
+export const QUICK_ACTIONS = [
+    {
+        label: "New Chatbot",
+        description: "Deploy a new AI assistant",
+        icon: HiChatAlt2,
+        hoverBorder: "hover:border-indigo-400 hover:bg-indigo-50/50",
+        iconBg: "bg-indigo-50 text-indigo-600",
+        hoverText: "group-hover:text-indigo-700",
+        href: "/dashboard/chatbots",
+    },
+    {
+        label: "Add Knowledge Source",
+        description: "Upload PDF, CSV, Markdown or scrape URL",
+        icon: HiDatabase,
+        hoverBorder: "hover:border-emerald-400 hover:bg-emerald-50/50",
+        iconBg: "bg-emerald-50 text-emerald-600",
+        hoverText: "group-hover:text-emerald-700",
+        href: "/dashboard/documents",
+    },
+    {
+        label: "Playground",
+        description: "Test your prompts immediately",
+        icon: HiSparkles,
+        hoverBorder: "hover:border-amber-400 hover:bg-amber-50/50",
+        iconBg: "bg-amber-50 text-amber-600",
+        hoverText: "group-hover:text-amber-700",
+        href: "/dashboard/playground",
+    },
+];
+
+// ─── Sidebar Navigation (Sidebar) ───────────────────────────────────────────
+export const SIDEBAR_MAIN_NAV = [
+    { id: "home", label: "Overview", path: "/dashboard", icon: HiHome },
+    { id: "documents", label: "Documents", path: "/dashboard/documents", icon: HiDocumentText },
+    { id: "datasets", label: "Datasets", path: "/dashboard/datasets", icon: HiDatabase },
+    { id: "chatbots", label: "Chatbots", path: "/dashboard/chatbots", icon: HiChatAlt2 },
+    { id: "playground", label: "Playground", path: "/dashboard/playground", icon: HiSparkles },
+    { id: "analytics", label: "Analytics", path: "/dashboard/analytics", icon: HiChartBar },
+];
+
+export const SIDEBAR_SECONDARY_NAV = [
+    { id: "help", label: "Help & Support", path: "/dashboard/help", icon: HiQuestionMarkCircle },
+];
+
+export const SIDEBAR_SETTINGS_NAV = [
+    { id: "general", label: "Profile", path: "/dashboard/settings?tab=general", icon: HiUser },
+    { id: "team", label: "Team Members", path: "/dashboard/settings?tab=team", icon: HiUsers },
+    { id: "billing", label: "Billing & Plans", path: "/dashboard/settings?tab=billing", icon: HiCreditCard },
+    { id: "api-keys", label: "API Keys", path: "/dashboard/settings?tab=api-keys", icon: HiKey },
+    { id: "notifications", label: "Notifications", icon: HiBell },
+];
+
+// ─── Embed Colors (EmbedDrawer) ──────────────────────────────────────────────
+export const PRESET_COLORS = [
+    { label: "Indigo", value: "#4f46e5" },
+    { label: "Violet", value: "#7c3aed" },
+    { label: "Rose", value: "#e11d48" },
+    { label: "Sky", value: "#0284c7" },
+    { label: "Teal", value: "#0d9488" },
+    { label: "Amber", value: "#d97706" },
+    { label: "Slate", value: "#334155" },
+];
+// ─── Global Tooltip Styles ──────────────────────────────────────────────────
+export const TOOLTIP_STYLE_CLASSES = "bg-slate-900/90 backdrop-blur-sm text-white text-[10px] font-bold rounded-lg shadow-[0_10px_30px_-5px_rgba(0,0,0,0.3)] border border-white/10 transition-all duration-300 pointer-events-none z-50 shadow-xl whitespace-nowrap";
+export const TOOLTIP_ARROW_CLASSES = "bg-slate-900/90 border-white/10 rotate-45";

@@ -4,48 +4,23 @@ import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "../../context/AuthContext";
 import {
-    HiHome,
-    HiDatabase,
-    HiChatAlt2,
-    HiDocumentText,
-    HiSparkles,
-    HiChartBar,
     HiLogout,
-    HiQuestionMarkCircle,
     HiX,
     HiChevronLeft,
     HiChevronRight,
-    HiUser,
-    HiUsers,
-    HiCreditCard,
-    HiKey,
-    HiBell,
 } from "react-icons/hi";
 import { useState } from "react";
 import Logo from "../../components/Logo";
 import { useAppSelector } from "@/lib/store/hooks";
 import { theme } from "../../theme";
+import {
+    SIDEBAR_MAIN_NAV as mainNavItems,
+    SIDEBAR_SECONDARY_NAV as secondaryNavItems,
+    SIDEBAR_SETTINGS_NAV as settingsNavItems,
+    TOOLTIP_STYLE_CLASSES,
+    TOOLTIP_ARROW_CLASSES
+} from "@/lib/constants";
 
-const mainNavItems = [
-    { id: "home", label: "Overview", path: "/dashboard", icon: HiHome },
-    { id: "documents", label: "Documents", path: "/dashboard/documents", icon: HiDocumentText },
-    { id: "datasets", label: "Datasets", path: "/dashboard/datasets", icon: HiDatabase },
-    { id: "chatbots", label: "Chatbots", path: "/dashboard/chatbots", icon: HiChatAlt2 },
-    { id: "playground", label: "Playground", path: "/dashboard/playground", icon: HiSparkles },
-    { id: "analytics", label: "Analytics", path: "/dashboard/analytics", icon: HiChartBar },
-];
-
-const secondaryNavItems = [
-    { id: "help", label: "Help & Support", path: "/dashboard/help", icon: HiQuestionMarkCircle },
-];
-
-const settingsNavItems = [
-    { id: "general", label: "Profile", path: "/dashboard/settings?tab=general", icon: HiUser },
-    { id: "team", label: "Team Members", path: "/dashboard/settings?tab=team", icon: HiUsers },
-    { id: "billing", label: "Billing & Plans", path: "/dashboard/settings?tab=billing", icon: HiCreditCard },
-    { id: "api-keys", label: "API Keys", path: "/dashboard/settings?tab=api-keys", icon: HiKey },
-    { id: "notifications", label: "Notifications", icon: HiBell },
-];
 
 interface SidebarProps {
     isOpen?: boolean;
@@ -107,7 +82,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                     {mainNavItems.map((item) => {
                         const Icon = item.icon;
                         const isActive = pathname === item.path;
-                        const isFreePlan = userData?.billing?.current_plan === "Free" || !userData?.billing?.current_plan;
+                        const isFreePlan = !userData?.billing?.current_plan || userData?.billing?.current_plan.toLowerCase() === "free" || userData?.billing?.current_plan.toLowerCase() === "trial";
                         const isDisabled = item.id === "analytics" && isFreePlan;
 
                         return (
@@ -146,9 +121,9 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
 
                                 {/* Tooltip for collapsed state */}
                                 {isCollapsed && (
-                                    <div className="absolute left-full ml-3 px-2.5 py-1.5 bg-slate-800 text-white text-xs font-medium rounded-md opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-50 shadow-lg">
+                                    <div className={`absolute left-full ml-3 px-3 py-1.5 opacity-0 group-hover:opacity-100 transition-all ${TOOLTIP_STYLE_CLASSES} translate-x-1 group-hover:translate-x-0`}>
                                         {isDisabled ? `${item.label} (Pro)` : item.label}
-                                        <div className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1 w-2 h-2 bg-slate-800 rotate-45" />
+                                        <div className={`absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1 w-2 h-2 border-l border-b ${TOOLTIP_ARROW_CLASSES}`} />
                                     </div>
                                 )}
                             </Link>
@@ -169,7 +144,6 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                                 <Link
                                     key={item.id}
                                     href={item.path || "#"}
-                                    title={isCollapsed ? item.label : undefined}
                                     className={`
                                         relative group flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all
                                         ${isCollapsed ? "justify-center" : ""}
@@ -185,6 +159,14 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                                         style={isActive ? { color: theme.colors.primary.main } : {}}
                                     />
                                     {!isCollapsed && <span className="text-[13px]">{item.label}</span>}
+
+                                    {/* Tooltip for collapsed state */}
+                                    {isCollapsed && (
+                                        <div className={`absolute left-full ml-3 px-3 py-1.5 opacity-0 group-hover:opacity-100 transition-all ${TOOLTIP_STYLE_CLASSES} translate-x-1 group-hover:translate-x-0`}>
+                                            {item.label}
+                                            <div className={`absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1 w-2 h-2 border-l border-b ${TOOLTIP_ARROW_CLASSES}`} />
+                                        </div>
+                                    )}
                                 </Link>
                             );
                         })}
@@ -220,9 +202,9 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
 
                             {/* Tooltip for collapsed state */}
                             {isCollapsed && (
-                                <div className="absolute left-full ml-3 px-2.5 py-1.5 bg-slate-800 text-white text-xs font-medium rounded-md opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-50 shadow-lg">
+                                <div className={`absolute left-full ml-3 px-3 py-1.5 opacity-0 group-hover:opacity-100 transition-all ${TOOLTIP_STYLE_CLASSES} translate-x-1 group-hover:translate-x-0`}>
                                     {item.label}
-                                    <div className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1 w-2 h-2 bg-slate-800 rotate-45" />
+                                    <div className={`absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1 w-2 h-2 border-l border-b ${TOOLTIP_ARROW_CLASSES}`} />
                                 </div>
                             )}
                         </Link>
@@ -246,8 +228,8 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                                 <div className="text-sm font-medium text-slate-900 truncate">
                                     {userData?.profile?.username || "User"}
                                 </div>
-                                <div className="text-xs text-slate-500 truncate lowercase">
-                                    {userData?.billing?.current_plan} Plan
+                                <div className="text-xs text-slate-500 truncate capitalize">
+                                    {userData?.billing?.current_plan || "free"} Plan
                                 </div>
                             </div>
                         )}
@@ -257,10 +239,13 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                                     e.stopPropagation();
                                     logout();
                                 }}
-                                className="p-1 hover:bg-slate-200 rounded transition-colors text-slate-400 hover:text-red-500 shrink-0"
-                                title="Logout"
+                                className="relative group p-1 hover:bg-slate-200 rounded transition-colors text-slate-400 hover:text-red-500 shrink-0"
                             >
                                 <HiLogout className="w-4 h-4" />
+                                <div className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1 opacity-0 group-hover:opacity-100 transition-all ${TOOLTIP_STYLE_CLASSES} translate-y-1 group-hover:translate-y-0`}>
+                                    Logout
+                                    <div className={`absolute top-full left-1/2 -translate-x-1/2 -translate-y-1 w-2 h-2 border-r border-b ${TOOLTIP_ARROW_CLASSES}`} />
+                                </div>
                             </button>
                         )}
                     </div>

@@ -21,21 +21,30 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const [user, setUser] = useState<{ username: string; email: string; plan: string } | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [user, setUser] = useState<{ username: string; email: string; plan: string } | null>(null);
   const router = useRouter();
 
   // Check if user is already logged in on mount
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    const token = localStorage.getItem("access_token");
-    const refreshToken = localStorage.getItem("refresh_token");
-    if (storedUser && token && refreshToken) {
-      setUser(JSON.parse(storedUser));
-      setIsAuthenticated(true);
-    }
-    setIsLoading(false);
+    const initializeAuth = () => {
+      const storedUser = localStorage.getItem("user");
+      const token = localStorage.getItem("access_token");
+      const refreshToken = localStorage.getItem("refresh_token");
+
+      if (storedUser && token && refreshToken) {
+        try {
+          setUser(JSON.parse(storedUser));
+          setIsAuthenticated(true);
+        } catch (e) {
+          console.error("Failed to parse stored user", e);
+        }
+      }
+      setIsLoading(false);
+    };
+
+    initializeAuth();
   }, []);
 
   const login = async (email: string, password: string): Promise<boolean> => {
@@ -58,8 +67,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return true;
       }
       return false;
-    } catch (error: any) {
-      const errorMessage = error.response?.data?.detail || "Login failed. Please try again.";
+    } catch (error: unknown) {
+      const err = error as { response?: { data?: { detail?: string } }; message?: string };
+      const errorMessage = err.response?.data?.detail || err.message || "Login failed. Please try again.";
       showToast.error(errorMessage);
       return false;
     }
@@ -86,8 +96,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return true;
       }
       return false;
-    } catch (error: any) {
-      const errorMessage = error.response?.data?.detail || "Google login failed.";
+    } catch (error: unknown) {
+      const err = error as { response?: { data?: { detail?: string } }; message?: string };
+      const errorMessage = err.response?.data?.detail || err.message || "Google login failed.";
       showToast.error(errorMessage);
       return false;
     }
@@ -101,8 +112,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return { success: true, email: response.data.email };
       }
       return { success: false };
-    } catch (error: any) {
-      const errorMessage = error.response?.data?.detail || "Registration failed. Please try again.";
+    } catch (error: unknown) {
+      const err = error as { response?: { data?: { detail?: string } }; message?: string };
+      const errorMessage = err.response?.data?.detail || err.message || "Registration failed. Please try again.";
       showToast.error(errorMessage);
       return { success: false };
     }
@@ -128,8 +140,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return true;
       }
       return false;
-    } catch (error: any) {
-      const errorMessage = error.response?.data?.detail || "Verification failed. Invalid or expired OTP.";
+    } catch (error: unknown) {
+      const err = error as { response?: { data?: { detail?: string } }; message?: string };
+      const errorMessage = err.response?.data?.detail || err.message || "Verification failed. Invalid or expired OTP.";
       showToast.error(errorMessage);
       return false;
     }

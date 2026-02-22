@@ -79,7 +79,7 @@ export default function LoginModal({ isOpen, onClose, initialMode = 'login', ini
       onClick={handleClose}
     >
       <div
-        className="w-full max-w-md rounded-2xl bg-white p-8 relative overflow-hidden"
+        className="w-full max-w-md rounded-lg bg-white p-8 relative overflow-hidden"
         style={{ boxShadow: theme.shadows.xl }}
         onClick={(e) => e.stopPropagation()}
       >
@@ -253,7 +253,7 @@ export default function LoginModal({ isOpen, onClose, initialMode = 'login', ini
             useOneTap
             width="100%"
             theme="outline"
-            shape="pill"
+            shape="rectangular"
           />
         </div>
 

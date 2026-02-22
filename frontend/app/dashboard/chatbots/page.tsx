@@ -2,7 +2,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { HiChatAlt2, HiPlus, HiRefresh, HiSparkles, HiTrash, HiCog, HiCode, HiSearch } from "react-icons/hi";
+import { HiChatAlt2, HiPlus, HiRefresh, HiSparkles, HiTrash, HiCode, HiSearch } from "react-icons/hi";
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 import { fetchChatbots, deleteChatbot } from "@/lib/store/slices/chatbotsSlice";
 import api from "@/lib/api";
@@ -10,13 +10,11 @@ import { ENDPOINTS } from "@/lib/endpoints";
 import CreateChatbotModal from "@/app/components/CreateChatbotModal";
 import EmbedDrawer from "@/app/components/EmbedDrawer";
 import showToast from "@/lib/toast";
-import { User, Tooltip, Button, Input } from "@heroui/react";
-import { PageHeader, EmptyState, StyledTable, DateCell, StatusChip, TableSkeleton } from "@/app/components/ui";
-import type { TableColumnDef } from "@/app/components/ui";
+import { Button, Input } from "@heroui/react";
+import { PageHeader, EmptyState, DateCell, StatusChip, ChatbotCardSkeleton, Tooltip } from "@/app/components/ui";
 import type { Chatbot } from "@/lib/types";
 import { theme } from "@/app/theme";
 
-const COLUMNS: any[] = []; // Not used anymore
 
 export default function ChatbotsPage() {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -60,10 +58,10 @@ export default function ChatbotsPage() {
         const isFailed = (bot as any).status === "failed";
 
         return (
-            <div className="bg-white rounded-2xl border border-slate-200 p-5 hover:border-indigo-300 hover:shadow-xl hover:shadow-indigo-500/5 transition-all group relative animate-fade-in">
+            <div className="bg-white rounded-xl border border-slate-200 p-5 hover:border-indigo-300 hover:shadow-xl hover:shadow-indigo-500/5 transition-all group relative animate-fade-in">
                 <div className="flex justify-between items-start mb-4">
                     <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-50 to-slate-100 border border-slate-200 flex items-center justify-center text-indigo-600 shadow-sm">
+                        <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-indigo-50 to-slate-100 border border-slate-200 flex items-center justify-center text-indigo-600 shadow-sm">
                             <HiChatAlt2 className="w-5 h-5" />
                         </div>
                         <div>
@@ -83,7 +81,7 @@ export default function ChatbotsPage() {
                                 size="sm"
                                 variant="light"
                                 onPress={() => dispatch(fetchChatbots())}
-                                className="text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg h-8 w-8"
+                                className="text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-md h-8 w-8"
                             >
                                 <HiRefresh className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
                             </Button>
@@ -95,7 +93,7 @@ export default function ChatbotsPage() {
                                     size="sm"
                                     variant="light"
                                     onPress={() => handleResume(bot.id, bot.name)}
-                                    className="text-emerald-500 hover:bg-emerald-50 rounded-lg h-8 w-8"
+                                    className="text-emerald-500 hover:bg-emerald-50 rounded-md h-8 w-8"
                                 >
                                     <HiRefresh className="w-4 h-4" />
                                 </Button>
@@ -107,7 +105,7 @@ export default function ChatbotsPage() {
                                 size="sm"
                                 variant="light"
                                 onPress={() => handleDelete(bot.id, bot.name)}
-                                className="text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg h-8 w-8"
+                                className="text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-md h-8 w-8"
                             >
                                 <HiTrash className="w-4 h-4" />
                             </Button>
@@ -116,10 +114,10 @@ export default function ChatbotsPage() {
                 </div>
 
                 <div className="space-y-3 mb-6">
-                    <div className="bg-slate-50 rounded-xl p-3 border border-slate-100">
+                    <div className="bg-slate-50 rounded-lg p-3 border border-slate-100">
                         <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Welcome Message</p>
                         <p className="text-xs text-slate-600 line-clamp-2 italic">
-                            "{bot.welcome_message || 'Hi! How can I help you today?'}"
+                            &quot;{bot.welcome_message || 'Hi! How can I help you today?'}&quot;
                         </p>
                     </div>
 
@@ -136,7 +134,8 @@ export default function ChatbotsPage() {
                             window.location.href = `/dashboard/playground?chatbotId=${bot.id}`;
                         }}
                         isDisabled={isCreating}
-                        className="bg-indigo-50 text-indigo-600 text-xs font-bold rounded-xl hover:bg-indigo-600 hover:text-white transition-all shadow-none border border-indigo-100 py-5"
+                        className="text-white text-xs font-medium rounded-lg hover:-translate-y-0.5 transition-all shadow-lg shadow-indigo-500/20 py-5"
+                        style={{ backgroundColor: theme.colors.primary.main }}
                     >
                         <HiSparkles className="w-3.5 h-3.5 mr-1.5" />
                         Playground
@@ -145,7 +144,7 @@ export default function ChatbotsPage() {
                         size="sm"
                         isDisabled={isCreating}
                         onPress={() => setEmbedBot(bot)}
-                        className="bg-slate-50 text-slate-600 text-xs font-bold rounded-xl hover:bg-slate-800 hover:text-white transition-all shadow-none border border-slate-200 py-5"
+                        className="bg-white text-slate-600 text-xs font-medium rounded-lg hover:bg-slate-50 transition-all shadow-sm border border-slate-200 py-5"
                     >
                         <HiCode className="w-3.5 h-3.5 mr-1.5" />
                         Embed Code
@@ -168,14 +167,14 @@ export default function ChatbotsPage() {
                                 variant="bordered"
                                 isLoading={isLoading}
                                 startContent={<HiRefresh className={`w-4 h-4 text-slate-400 ${isLoading ? 'animate-spin' : ''}`} />}
-                                className="bg-white border-slate-200 text-slate-700 text-xs sm:text-sm font-semibold rounded-xl transition-all hover:bg-slate-50 h-11 px-6 shadow-sm"
+                                className="bg-white border-slate-200 text-slate-700 text-xs sm:text-sm font-medium rounded-lg transition-all hover:bg-slate-50 h-11 px-6 shadow-sm mr-2"
                             >
                                 Refresh Sync Status
                             </Button>
                             <Button
                                 onPress={() => setIsModalOpen(true)}
                                 startContent={<HiPlus className="w-4 h-4" />}
-                                className="text-white text-xs sm:text-sm font-bold rounded-xl transition-all hover:-translate-y-0.5 shadow-lg shadow-indigo-200 h-11 px-6"
+                                className="text-white text-xs sm:text-sm font-medium rounded-lg transition-all hover:-translate-y-0.5 shadow-lg shadow-indigo-500/20 h-11 px-6"
                                 style={{ backgroundColor: theme.colors.primary.main }}
                             >
                                 New Chatbot
@@ -186,7 +185,11 @@ export default function ChatbotsPage() {
             />
 
             {isLoading && chatbots.length === 0 ? (
-                <TableSkeleton rows={5} columns={4} />
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {Array.from({ length: 3 }).map((_, i) => (
+                        <ChatbotCardSkeleton key={i} />
+                    ))}
+                </div>
             ) : chatbots.length === 0 ? (
                 <EmptyState
                     icon={HiSparkles}
@@ -209,7 +212,7 @@ export default function ChatbotsPage() {
                             onClear={() => setFilterValue("")}
                             onValueChange={setFilterValue}
                             classNames={{
-                                inputWrapper: "rounded-xl border border-slate-200 h-11 px-4 hover:border-indigo-400 data-[focus=true]:border-indigo-500 shadow-none bg-white transition-all",
+                                inputWrapper: "rounded-lg border border-slate-200 h-11 px-4 hover:border-indigo-400 data-[focus=true]:border-indigo-500 shadow-none bg-white transition-all",
                                 input: "font-medium text-sm text-slate-800 placeholder:text-slate-400 ml-2"
                             }}
                         />

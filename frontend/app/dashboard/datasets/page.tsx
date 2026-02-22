@@ -49,7 +49,7 @@ export default function DatasetsPage() {
                         avatarProps={{
                             radius: "lg",
                             fallback: <HiDatabase className="w-4 h-4 text-emerald-600" />,
-                            className: "bg-emerald-50 border border-emerald-100",
+                            className: "bg-emerald-50 border border-emerald-100 rounded-lg",
                             size: "sm",
                         }}
                         description="Collection"
@@ -101,15 +101,16 @@ export default function DatasetsPage() {
                             <Button
                                 onPress={() => dispatch(fetchDatasets())}
                                 variant="bordered"
-                                startContent={<HiRefresh className="w-4 h-4 text-slate-400" />}
-                                className="bg-white border-slate-200 text-slate-700 text-xs sm:text-sm font-medium rounded-xl transition-all hover:-translate-y-0.5"
+                                isLoading={isLoading}
+                                startContent={<HiRefresh className={`w-4 h-4 text-slate-400 ${isLoading ? 'animate-spin' : ''}`} />}
+                                className="bg-white border-slate-200 text-slate-700 text-xs sm:text-sm font-medium rounded-lg transition-all hover:bg-slate-50 h-11 px-6 shadow-sm mr-2"
                             >
                                 Refresh
                             </Button>
                             <Button
                                 onPress={() => setIsModalOpen(true)}
                                 startContent={<HiPlus className="w-4 h-4" />}
-                                className="text-white text-xs sm:text-sm font-medium rounded-xl transition-all hover:-translate-y-0.5 shadow-lg shadow-emerald-200"
+                                className="text-white text-xs sm:text-sm font-medium rounded-lg transition-all hover:-translate-y-0.5 shadow-lg shadow-indigo-500/20 h-11 px-6"
                                 style={{ backgroundColor: theme.colors.primary.main }}
                             >
                                 New Dataset
@@ -149,7 +150,7 @@ export default function DatasetsPage() {
                                     onClear={() => setFilterValue("")}
                                     onValueChange={setFilterValue}
                                     classNames={{
-                                        inputWrapper: "rounded-xl border border-slate-200 h-11 px-4 hover:border-emerald-400 data-[focus=true]:border-emerald-500 data-[focus=true]:ring-4 data-[focus=true]:ring-emerald-500/10 shadow-none bg-slate-50 transition-all",
+                                        inputWrapper: "rounded-lg border border-slate-200 h-11 px-4 hover:border-emerald-400 data-[focus=true]:border-emerald-500 shadow-none bg-slate-50 transition-all",
                                         input: "font-medium text-sm text-slate-800 placeholder:text-slate-400 ml-2"
                                     }}
                                 />
@@ -161,10 +162,10 @@ export default function DatasetsPage() {
                     <Card
                         isPressable
                         onPress={() => setIsModalOpen(true)}
-                        className="w-full bg-slate-50 border-2 border-dashed border-slate-200 shadow-none hover:border-emerald-500 hover:bg-emerald-50/10 transition-all rounded-xl"
+                        className="w-full bg-slate-50 border-2 border-dashed border-slate-200 shadow-none hover:border-emerald-500 hover:bg-emerald-50/10 transition-all rounded-lg"
                     >
                         <CardBody className="py-8 flex flex-col items-center justify-center">
-                            <div className="w-12 h-12 rounded-full bg-white border border-slate-200 flex items-center justify-center mb-3 shadow-sm">
+                            <div className="w-12 h-12 rounded-lg bg-white border border-slate-200 flex items-center justify-center mb-3 shadow-sm">
                                 <HiPlus className="w-6 h-6 text-slate-400" />
                             </div>
                             <h3 className="text-sm font-semibold text-slate-900">Add New Dataset</h3>

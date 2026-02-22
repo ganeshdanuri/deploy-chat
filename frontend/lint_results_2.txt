@@ -1,0 +1,76 @@
+
+> deploy-chat@0.1.0 lint
+> eslint
+
+
+/Users/ganeshdanuri/Documents/open-source/docking/frontend/app/context/AuthContext.tsx
+   70:21  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   98:21  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  113:21  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  140:21  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/ganeshdanuri/Documents/open-source/docking/frontend/app/dashboard/layout.tsx
+  46:13  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+/Users/ganeshdanuri/Documents/open-source/docking/frontend/app/dashboard/layout.tsx:46:13
+  44 |     useEffect(() => {
+  45 |         if (isSidebarOpen) {
+> 46 |             setIsSidebarOpen(false);
+     |             ^^^^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  47 |         }
+  48 |     }, [pathname, isSidebarOpen]);
+  49 |  react-hooks/set-state-in-effect
+
+/Users/ganeshdanuri/Documents/open-source/docking/frontend/app/dashboard/page.tsx
+  30:3  warning  'SIDEBAR_MAIN_NAV' is defined but never used       @typescript-eslint/no-unused-vars
+  31:3  warning  'SIDEBAR_SECONDARY_NAV' is defined but never used  @typescript-eslint/no-unused-vars
+  32:3  warning  'SIDEBAR_SETTINGS_NAV' is defined but never used   @typescript-eslint/no-unused-vars
+
+/Users/ganeshdanuri/Documents/open-source/docking/frontend/app/dashboard/playground/page.tsx
+   47:13  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+/Users/ganeshdanuri/Documents/open-source/docking/frontend/app/dashboard/playground/page.tsx:47:13
+  45 |     useEffect(() => {
+  46 |         if (chatbot && chatbot.temperature !== undefined && chatbot.temperature !== temperature) {
+> 47 |             setTemperature(chatbot.temperature);
+     |             ^^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  48 |         }
+  49 |     }, [chatbot, temperature]);
+  50 |  react-hooks/set-state-in-effect
+  150:15  error  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  @typescript-eslint/no-explicit-any
+  152:14  error  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  @typescript-eslint/no-explicit-any
+  263:54  error  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  @typescript-eslint/no-explicit-any
+  335:79  error  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  @typescript-eslint/no-explicit-any
+
+/Users/ganeshdanuri/Documents/open-source/docking/frontend/app/dashboard/settings/page.tsx
+  18:13  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+/Users/ganeshdanuri/Documents/open-source/docking/frontend/app/dashboard/settings/page.tsx:18:13
+  16 |         const tab = searchParams.get("tab");
+  17 |         if (tab && tab !== activeTab) {
+> 18 |             setActiveTab(tab);
+     |             ^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  19 |         }
+  20 |     }, [searchParams, activeTab]);
+  21 |  react-hooks/set-state-in-effect
+
+✖ 14 problems (11 errors, 3 warnings)
+

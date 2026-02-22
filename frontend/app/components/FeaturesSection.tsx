@@ -42,7 +42,7 @@ export default function FeaturesSection() {
           {features.map((feature) => (
             <div
               key={feature.id}
-              className={`group relative overflow-hidden rounded-3xl p-8 transition-all duration-300 hover:shadow-xl border border-slate-100 bg-white/50 backdrop-blur-sm hover:bg-white ${feature.span}`}
+              className={`group relative overflow-hidden rounded-xl p-8 transition-all duration-300 hover:shadow-xl border border-slate-100 bg-white/50 backdrop-blur-sm hover:bg-white ${feature.span}`}
             >
               {/* Hover Gradient Background */}
               <div
@@ -53,7 +53,7 @@ export default function FeaturesSection() {
               <div className="relative z-10 h-full flex flex-col">
                 <div className="flex items-start justify-between mb-6">
                   <div
-                    className="flex h-12 w-12 items-center justify-center rounded-2xl shadow-sm transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-3"
+                    className="flex h-12 w-12 items-center justify-center rounded-lg shadow-sm transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-3"
                     style={{
                       backgroundColor: `${feature.color}15`, // 10% opacity
                       color: feature.color

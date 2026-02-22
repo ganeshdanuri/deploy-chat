@@ -143,7 +143,7 @@ function StepRow({ step, active }: { step: Step; active: boolean }) {
     return (
         <div
             className={`
-        relative flex gap-5 rounded-3xl border p-8 transition-all duration-300
+        relative flex gap-5 rounded-xl border p-8 transition-all duration-300
         ${active
                     ? "bg-white shadow-md"
                     : "border-transparent hover:border-slate-100 hover:bg-white/60"
@@ -163,7 +163,7 @@ function StepRow({ step, active }: { step: Step; active: boolean }) {
             {/* Icon */}
             <div
                 className={`
-          mt-0.5 flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl border
+          mt-0.5 flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-lg border
           transition-all duration-300
           ${active
                         ? ""
@@ -286,7 +286,7 @@ export default function IntegrationSection() {
                         <div className="lg:sticky lg:top-28">
 
                             {/* Editor card — same rounded-2xl / border / shadow-xl treatment as pricing */}
-                            <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl shadow-slate-200/50">
+                            <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-xl shadow-slate-200/50">
 
                                 {/* Title bar */}
                                 <div className="flex items-center justify-between border-b border-slate-100 bg-slate-50 px-5 py-3">
