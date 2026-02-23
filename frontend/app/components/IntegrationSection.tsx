@@ -178,20 +178,20 @@ function StepRow({ step, active }: { step: Step; active: boolean }) {
             {/* Text */}
             <div className="min-w-0">
                 <div
-                    className={`mb-1 text-[10px] font-bold uppercase tracking-widest ${active ? "" : "text-slate-400"
+                    className={`mb-1 text-xs font-bold uppercase tracking-widest ${active ? "" : "text-slate-400"
                         }`}
                     style={active ? { color: theme.colors.primary.main } : {}}
                 >
                     Step {step.id}
                 </div>
                 <h3
-                    className={`mb-1 text-base font-semibold leading-snug ${active ? "text-slate-900" : "text-slate-400"
+                    className={`mb-1 text-xl font-semibold leading-snug ${active ? "text-slate-900" : "text-slate-400"
                         }`}
                 >
                     {step.title}
                 </h3>
                 <p
-                    className={`text-sm leading-relaxed ${active ? "text-slate-500" : "text-slate-400"
+                    className={`text-base leading-relaxed ${active ? "text-slate-500" : "text-slate-400"
                         }`}
                 >
                     {step.description}
@@ -310,11 +310,15 @@ export default function IntegrationSection() {
                                 </div>
 
                                 {/* Dimmed context — above snippet */}
-                                <div className="border-b border-slate-100 bg-slate-50/80 px-5 py-3 font-mono text-xs leading-6 text-slate-300">
-                                    <div>{"<head>"}</div>
+                                <div className="border-b border-slate-100 bg-slate-50/80 px-5 py-4 font-mono text-xs leading-6 text-slate-300">
+                                    <div>{"<!DOCTYPE html>"}</div>
+                                    <div className="pl-0">{"<html lang=\"en\">"}</div>
+                                    <div className="pl-0">{"<head>"}</div>
                                     <div className="pl-4">{'<meta charset="UTF-8" />'}</div>
-                                    <div className="pl-4">{"<title>Your Website</title>"}</div>
-                                    <div className="pl-4 pt-0.5 italic">
+                                    <div className="pl-4">{'<meta name="viewport" content="width=device-width" />'}</div>
+                                    <div className="pl-4">{"<title>My Professional Website</title>"}</div>
+                                    <div className="pl-4">{"<link rel=\"stylesheet\" href=\"styles.css\">"}</div>
+                                    <div className="pl-4 pt-2 italic">
                                         {"<!-- ↓ paste your DeployChat widget ↓ -->"}
                                     </div>
                                 </div>
@@ -328,9 +332,16 @@ export default function IntegrationSection() {
                                 </div>
 
                                 {/* Dimmed context — below snippet */}
-                                <div className="border-t border-slate-100 bg-slate-50/80 px-5 py-3 font-mono text-xs leading-6 text-slate-300">
+                                <div className="border-t border-slate-100 bg-slate-50/80 px-5 py-4 font-mono text-xs leading-6 text-slate-300">
                                     <div>{"</head>"}</div>
-                                    <div>{"<body>..."}</div>
+                                    <div className="pt-1">{"<body>"}</div>
+                                    <div className="pl-4">{"<header>...</header>"}</div>
+                                    <div className="pl-4">{"<main>"}</div>
+                                    <div className="pl-8">{"<h1>Welcome to My Site</h1>"}</div>
+                                    <div className="pl-8">{"<p>Business as usual...</p>"}</div>
+                                    <div className="pl-4">{"</main>"}</div>
+                                    <div>{"</body>"}</div>
+                                    <div>{"</html>"}</div>
                                 </div>
 
                                 {/* Footer status bar */}

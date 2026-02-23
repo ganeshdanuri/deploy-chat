@@ -56,7 +56,7 @@ export default function FAQSection() {
                                         className="flex w-full items-start justify-between gap-6 text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 rounded"
                                     >
                                         <span
-                                            className={`text-base font-semibold leading-snug transition-colors duration-200 ${isOpen ? "" : "text-slate-900"
+                                            className={`text-lg font-semibold leading-snug transition-colors duration-200 ${isOpen ? "" : "text-slate-900"
                                                 }`}
                                             style={isOpen ? { color: theme.colors.primary.main } : {}}
                                         >
@@ -88,7 +88,7 @@ export default function FAQSection() {
                                         }`}
                                 >
                                     <div className="overflow-hidden">
-                                        <p className="pt-3 text-sm leading-relaxed text-slate-500">
+                                        <p className="pt-3 text-base leading-relaxed text-slate-500">
                                             {faq.answer}
                                         </p>
                                     </div>

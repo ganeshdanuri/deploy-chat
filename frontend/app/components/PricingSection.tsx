@@ -16,7 +16,7 @@ function getPlanHref(plan: Plan): string {
 function PlanPrice({ price, popular }: { price: string; popular?: boolean }) {
     if (price === "Custom") {
         return (
-            <p className={`text-3xl font-bold tracking-tight ${popular ? "text-white" : "text-slate-900"}`}>
+            <p className={`text-4xl font-bold tracking-tight ${popular ? "text-white" : "text-slate-900"}`}>
                 Custom
             </p>
         );
@@ -42,7 +42,7 @@ function FeatureItem({ feature, popular }: { feature: string; popular?: boolean 
             >
                 <HiCheck className="h-3.5 w-3.5" />
             </span>
-            <span className={`text-sm leading-relaxed ${popular ? "" : "text-slate-600"}`} style={popular ? { color: `${theme.colors.primary.lightest}` } : {}}>
+            <span className={`text-base leading-relaxed ${popular ? "" : "text-slate-600"}`} style={popular ? { color: `${theme.colors.primary.lightest}` } : {}}>
                 {feature}
             </span>
         </li>
@@ -75,7 +75,7 @@ function PlanCard({ plan }: { plan: Plan }) {
 
             {/* Plan name */}
             <h3
-                className="mb-1 text-xs font-semibold uppercase tracking-widest"
+                className="mb-1 text-sm font-semibold uppercase tracking-widest"
                 style={{ color: plan.popular ? theme.colors.primary.light : theme.colors.primary.main }}
             >
                 {plan.name}
@@ -87,7 +87,7 @@ function PlanCard({ plan }: { plan: Plan }) {
             </div>
 
             {/* Description */}
-            <p className={`mb-8 text-sm leading-relaxed ${plan.popular ? "" : "text-slate-500"}`} style={plan.popular ? { color: theme.colors.primary.lighter } : {}}>
+            <p className={`mb-8 text-base leading-relaxed ${plan.popular ? "" : "text-slate-500"}`} style={plan.popular ? { color: theme.colors.primary.lighter } : {}}>
                 {plan.description}
             </p>
 

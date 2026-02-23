@@ -363,35 +363,39 @@ function LoginContent() {
                         </form>
                     )}
 
-                    <div className="relative my-8">
-                        <div className="absolute inset-0 flex items-center">
-                            <div className="w-full border-t border-slate-200"></div>
-                        </div>
-                        <div className="relative flex justify-center text-xs">
-                            <span className="bg-white px-4 text-slate-500 font-medium tracking-wide uppercase">Or continue with</span>
-                        </div>
-                    </div>
+                    {process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID && (
+                        <>
+                            <div className="relative my-8">
+                                <div className="absolute inset-0 flex items-center">
+                                    <div className="w-full border-t border-slate-200"></div>
+                                </div>
+                                <div className="relative flex justify-center text-xs">
+                                    <span className="bg-white px-4 text-slate-500 font-medium tracking-wide uppercase">Or continue with</span>
+                                </div>
+                            </div>
 
-                    <div className="flex justify-center">
-                        <GoogleLogin
-                            onSuccess={async (credentialResponse) => {
-                                if (credentialResponse.credential) {
-                                    const success = await continueWithGoogle(credentialResponse.credential);
-                                    if (success) {
-                                        router.push("/dashboard");
-                                    }
-                                }
-                            }}
-                            onError={() => {
-                                setError("Google login failed");
-                            }}
-                            useOneTap
-                            width="320"
-                            theme="outline"
-                            shape="square"
-                            containerProps={{}}
-                        />
-                    </div>
+                            <div className="flex justify-center">
+                                <GoogleLogin
+                                    onSuccess={async (credentialResponse) => {
+                                        if (credentialResponse.credential) {
+                                            const success = await continueWithGoogle(credentialResponse.credential);
+                                            if (success) {
+                                                router.push("/dashboard");
+                                            }
+                                        }
+                                    }}
+                                    onError={() => {
+                                        setError("Google login failed");
+                                    }}
+                                    useOneTap
+                                    width="320"
+                                    theme="outline"
+                                    shape="square"
+                                    containerProps={{}}
+                                />
+                            </div>
+                        </>
+                    )}
 
                     <p className="mt-8 text-xs text-left text-slate-500">
                         By continuing, you are agreeing to our{" "}

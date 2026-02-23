@@ -227,35 +227,39 @@ export default function LoginModal({ isOpen, onClose, initialMode = 'login', ini
           </button>
         </form>
 
-        <div className="relative my-8">
-          <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-gray-200"></div>
-          </div>
-          <div className="relative flex justify-center text-sm">
-            <span className="bg-white px-2 text-gray-500 font-medium lowercase">Or continue with</span>
-          </div>
-        </div>
+        {process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID && (
+          <>
+            <div className="relative my-8">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-gray-200"></div>
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="bg-white px-2 text-gray-500 font-medium lowercase">Or continue with</span>
+              </div>
+            </div>
 
-        <div className="flex justify-center">
-          <GoogleLogin
-            onSuccess={async (credentialResponse) => {
-              if (credentialResponse.credential) {
-                const success = await continueWithGoogle(credentialResponse.credential);
-                if (success) {
-                  onClose();
-                  router.push("/dashboard");
-                }
-              }
-            }}
-            onError={() => {
-              setError("Google login failed");
-            }}
-            useOneTap
-            width="100%"
-            theme="outline"
-            shape="rectangular"
-          />
-        </div>
+            <div className="flex justify-center">
+              <GoogleLogin
+                onSuccess={async (credentialResponse) => {
+                  if (credentialResponse.credential) {
+                    const success = await continueWithGoogle(credentialResponse.credential);
+                    if (success) {
+                      onClose();
+                      router.push("/dashboard");
+                    }
+                  }
+                }}
+                onError={() => {
+                  setError("Google login failed");
+                }}
+                useOneTap
+                width="100%"
+                theme="outline"
+                shape="rectangular"
+              />
+            </div>
+          </>
+        )}
 
         <div className="mt-6 text-center">
           <p className="text-sm" style={{ color: theme.colors.neutral[600] }}>
