@@ -114,7 +114,7 @@ function tokenize(code: string): Token[][] {
 function CodeBlock({ code }: { code: string }) {
     const lines = tokenize(code);
     return (
-        <pre className="overflow-x-auto font-mono text-xs leading-6" aria-label="Embed snippet">
+        <pre className="overflow-x-auto font-mono text-[10px] leading-5" aria-label="Embed snippet">
             {lines.map((tokens, li) => (
                 <div key={li} className="table-row">
                     <span
@@ -143,7 +143,7 @@ function StepRow({ step, active }: { step: Step; active: boolean }) {
     return (
         <div
             className={`
-        relative flex gap-5 rounded-xl border p-8 transition-all duration-300
+        relative flex gap-4 rounded-xl border p-6 transition-all duration-300
         ${active
                     ? "bg-white shadow-md"
                     : "border-transparent hover:border-slate-100 hover:bg-white/60"
@@ -154,7 +154,7 @@ function StepRow({ step, active }: { step: Step; active: boolean }) {
             {/* Active indicator rule */}
             {active && (
                 <div
-                    className="absolute left-0 top-1/2 h-8 w-0.5 -translate-y-1/2 rounded-r"
+                    className="absolute left-0 top-1/2 h-6 w-0.5 -translate-y-1/2 rounded-r"
                     style={{ backgroundColor: theme.colors.primary.main }}
                     aria-hidden="true"
                 />
@@ -163,7 +163,7 @@ function StepRow({ step, active }: { step: Step; active: boolean }) {
             {/* Icon */}
             <div
                 className={`
-          mt-0.5 flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-lg border
+          mt-0.5 flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg border
           transition-all duration-300
           ${active
                         ? ""
@@ -172,26 +172,26 @@ function StepRow({ step, active }: { step: Step; active: boolean }) {
         `}
                 style={active ? { borderColor: `${theme.colors.primary.main}20`, backgroundColor: `${theme.colors.primary.main}10`, color: theme.colors.primary.main } : {}}
             >
-                <Icon className="h-5 w-5" />
+                <Icon className="h-4.5 w-4.5" />
             </div>
 
             {/* Text */}
             <div className="min-w-0">
                 <div
-                    className={`mb-1 text-xs font-bold uppercase tracking-widest ${active ? "" : "text-slate-400"
+                    className={`mb-1 text-[10px] font-bold uppercase tracking-widest ${active ? "" : "text-slate-400"
                         }`}
                     style={active ? { color: theme.colors.primary.main } : {}}
                 >
                     Step {step.id}
                 </div>
                 <h3
-                    className={`mb-1 text-xl font-semibold leading-snug ${active ? "text-slate-900" : "text-slate-400"
+                    className={`mb-1 text-lg font-semibold leading-snug ${active ? "text-slate-900" : "text-slate-400"
                         }`}
                 >
                     {step.title}
                 </h3>
                 <p
-                    className={`text-base leading-relaxed ${active ? "text-slate-500" : "text-slate-400"
+                    className={`text-sm leading-relaxed ${active ? "text-slate-500" : "text-slate-400"
                         }`}
                 >
                     {step.description}
@@ -270,7 +270,7 @@ export default function IntegrationSection() {
                 </div>
 
                 {/* Two-column body */}
-                <div className="flex flex-col gap-10 lg:flex-row lg:items-start lg:gap-16">
+                <div className="flex flex-col gap-10 lg:flex-row lg:items-stretch lg:gap-16">
 
                     {/* Left: Steps */}
                     <div ref={stepsRef} className="flex flex-col gap-2 lg:w-[44%]">
@@ -282,11 +282,11 @@ export default function IntegrationSection() {
                     </div>
 
                     {/* Right: Sticky code editor */}
-                    <div className="lg:w-[56%]">
-                        <div className="lg:sticky lg:top-28">
+                    <div className="flex flex-col lg:w-[56%]">
+                        <div className="flex flex-col flex-grow lg:sticky lg:top-28">
 
                             {/* Editor card — same rounded-2xl / border / shadow-xl treatment as pricing */}
-                            <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-xl shadow-slate-200/50">
+                            <div className="flex flex-col flex-grow overflow-hidden rounded-xl border border-slate-200 bg-white shadow-xl shadow-slate-200/50">
 
                                 {/* Title bar */}
                                 <div className="flex items-center justify-between border-b border-slate-100 bg-slate-50 px-5 py-3">
@@ -310,37 +310,28 @@ export default function IntegrationSection() {
                                 </div>
 
                                 {/* Dimmed context — above snippet */}
-                                <div className="border-b border-slate-100 bg-slate-50/80 px-5 py-4 font-mono text-xs leading-6 text-slate-300">
-                                    <div>{"<!DOCTYPE html>"}</div>
+                                <div className="border-b border-slate-100 bg-slate-50/80 px-5 py-3 font-mono text-[10px] leading-5 text-slate-300/70">
+                                    <div className="pl-0">{"<!DOCTYPE html>"}</div>
                                     <div className="pl-0">{"<html lang=\"en\">"}</div>
                                     <div className="pl-0">{"<head>"}</div>
                                     <div className="pl-4">{'<meta charset="UTF-8" />'}</div>
-                                    <div className="pl-4">{'<meta name="viewport" content="width=device-width" />'}</div>
-                                    <div className="pl-4">{"<title>My Professional Website</title>"}</div>
-                                    <div className="pl-4">{"<link rel=\"stylesheet\" href=\"styles.css\">"}</div>
-                                    <div className="pl-4 pt-2 italic">
-                                        {"<!-- ↓ paste your DeployChat widget ↓ -->"}
+                                    <div className="pl-4 pt-1.5 italic text-slate-400/60">
+                                        {"<!-- ↓ paste snippet ↓ -->"}
                                     </div>
                                 </div>
 
                                 {/* Highlighted snippet */}
-                                <div className="relative px-5 py-5" style={{ borderLeft: `2px solid ${theme.colors.primary.main}`, backgroundColor: `${theme.colors.primary.main}0a` }}>
-                                    <div className="absolute right-4 top-4">
+                                <div className="relative flex-grow px-5 py-6" style={{ borderLeft: `2px solid ${theme.colors.primary.main}`, backgroundColor: `${theme.colors.primary.main}0a` }}>
+                                    <div className="absolute right-4 top-5">
                                         <CopyButton text={EMBED_SNIPPET} />
                                     </div>
                                     <CodeBlock code={EMBED_SNIPPET} />
                                 </div>
 
                                 {/* Dimmed context — below snippet */}
-                                <div className="border-t border-slate-100 bg-slate-50/80 px-5 py-4 font-mono text-xs leading-6 text-slate-300">
+                                <div className="border-t border-slate-100 bg-slate-50/80 px-5 py-3 font-mono text-[10px] leading-5 text-slate-300/70">
                                     <div>{"</head>"}</div>
-                                    <div className="pt-1">{"<body>"}</div>
-                                    <div className="pl-4">{"<header>...</header>"}</div>
-                                    <div className="pl-4">{"<main>"}</div>
-                                    <div className="pl-8">{"<h1>Welcome to My Site</h1>"}</div>
-                                    <div className="pl-8">{"<p>Business as usual...</p>"}</div>
-                                    <div className="pl-4">{"</main>"}</div>
-                                    <div>{"</body>"}</div>
+                                    <div className="pt-1.5">{"<body>...</body>"}</div>
                                     <div>{"</html>"}</div>
                                 </div>
 
