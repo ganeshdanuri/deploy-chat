@@ -11,6 +11,8 @@ from app.core.endpoints import Endpoints
 from app.core.chunking import process_chatbot_documents
 
 from app.core.constants import CHATBOT_STATUS_ACTIVE, CHATBOT_STATUS_CREATING, CHATBOT_STATUS_FAILED, ACTIVITY_TYPE_CHATBOT_CREATED, SYSTEM_PROMPT_TEMPLATE
+import re
+from urllib.parse import urlparse
 
 router = APIRouter(prefix=Endpoints.CHATBOTS_PREFIX)
 
@@ -52,12 +54,17 @@ def create_chatbot(
         # 1. Create Chatbot record
         default_prompt = SYSTEM_PROMPT_TEMPLATE.format(name=chatbot_in.name)
 
+        # Personalize welcome message if using default
+        welcome_msg = chatbot_in.welcome_message
+        if not welcome_msg or welcome_msg.strip() == "Hi! How can I help you today?":
+            welcome_msg = f"Hi! I am {chatbot_in.name}. How can I help you today?"
+
         new_chatbot = Chatbot(
             name=chatbot_in.name,
             user_id=current_user.id,
             system_prompt=chatbot_in.system_prompt or default_prompt,
             temperature=chatbot_in.temperature,
-            welcome_message=chatbot_in.welcome_message,
+            welcome_message=welcome_msg,
         )
         session.add(new_chatbot)
         session.commit()
@@ -66,8 +73,21 @@ def create_chatbot(
         # Insert allowed domains
         if chatbot_in.allowed_domains:
             from app.schemas.models import ChatbotAllowedOrigin
+            # Validates that it's a valid host or origin (e.g. https://example.com or localhost:3000)
+            # This regex allows valid domains and IPs with optional port, but no wildcards or random garbage
+            domain_regex = re.compile(
+                r'^(?:https?:\/\/)?' # scheme
+                r'(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+[A-Z]{2,63}|' # domain
+                r'localhost|' # localhost
+                r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})' # ip
+                r'(?::\d+)?' # port
+                r'(?:\/?)$', re.IGNORECASE)
+            
             domains = [d.strip() for d in chatbot_in.allowed_domains.split(",") if d.strip()]
             for domain in domains:
+                if not domain_regex.match(domain) or domain == "*":
+                    raise HTTPException(status_code=400, detail=f"Invalid domain format: {domain}")
+                    
                 origin = ChatbotAllowedOrigin(chatbot_id=new_chatbot.id, domain=domain)
                 session.add(origin)
         

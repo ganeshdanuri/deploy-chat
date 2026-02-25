@@ -194,215 +194,197 @@ function LoginContent() {
                 </div>
             </div>
 
-            {/* Right Side - Login Form (Inspired by the image layout) */}
+            {/* Right Side - Login Form */}
             <div
                 ref={rightSideRef}
-                className="w-full lg:w-2/6 flex flex-col justify-center px-8 sm:px-16 xl:px-20 bg-white relative"
+                className="w-full lg:w-2/6 flex flex-col justify-center px-8 sm:px-16 xl:px-20 bg-white relative overflow-hidden"
             >
-                <div className="absolute top-8 left-8 lg:hidden">
-                    <div className="flex items-center gap-2 cursor-pointer" onClick={() => router.push("/")}>
+                {/* Fixed Logo Header */}
+                <div className="absolute top-0 left-0 right-0 h-24 flex items-center justify-center lg:justify-start px-8 sm:px-16 xl:px-20 z-20">
+                    <div className="flex items-center gap-2.5 cursor-pointer" onClick={() => router.push("/")}>
                         <Logo className="h-8 w-auto" />
-                        <span className="text-xl font-bold tracking-tight block leading-none text-slate-900">
+                        <span className="text-2xl font-bold tracking-tight block leading-none text-slate-900 pt-0.5">
                             DEPLOY CHAT
                         </span>
                     </div>
                 </div>
 
-                <div className="w-full max-w-sm mx-auto">
+                <div className="w-full max-w-sm mx-auto pt-16">
                     <div className="mb-10 text-center lg:text-left">
-                        <div className="hidden lg:flex items-center gap-2 mb-8 cursor-pointer" onClick={() => router.push("/")}>
-                            <Logo className="h-8 w-auto" />
-                            <span className="text-2xl font-bold tracking-tight block leading-none" style={{ color: theme.colors.neutral[900] }}>
-                                DEPLOY CHAT
-                            </span>
-                        </div>
-                        <h2 className="text-2xl font-semibold mb-2 text-slate-900 tracking-tight min-h-[1.2em]">
-                            {isVerifying ? "Verify your email" : isRegister ? "Create an account" : "Welcome back"}
-                        </h2>
-                        <p className="text-slate-500 font-medium mb-6">
-                            {isVerifying
-                                ? `We've sent a 6-digit code to ${email}`
-                                : isRegister
-                                    ? "Join Deploy Chat today. All accounts start on our Free Plan."
-                                    : "Please enter your details to continue."}
-                        </p>
-
-                        {!isVerifying && !isRegister && (
-                            <div className="bg-slate-50 border border-slate-100 rounded-xl p-3 mb-6 flex items-start gap-3 opacity-80">
-                                <span className="flex-shrink-0 w-5 h-5 rounded-full bg-slate-400 text-white flex items-center justify-center text-[10px] font-bold mt-0.5">i</span>
-                                <p className="text-xs text-slate-600 leading-relaxed">
-                                    Reminder: All accounts start on the <span className="font-bold text-slate-700">Free Plan</span>. You can manage your subscription from the dashboard settings.
-                                </p>
-                            </div>
-                        )}
-
-                        {!isVerifying && isRegister && (
-                            <div className="bg-blue-50 border border-blue-100 rounded-xl p-3 mb-6 flex items-start gap-3 animate-fade-in shadow-sm">
-                                <span className="flex-shrink-0 w-5 h-5 rounded-full bg-blue-500 text-white flex items-center justify-center text-[10px] font-bold mt-0.5 animate-pulse">i</span>
-                                <p className="text-xs text-blue-800 leading-relaxed">
-                                    New accounts are started on our <span className="font-bold text-blue-900 uppercase">Free Plan</span>. You can upgrade to Professional or Enterprise anytime from your dashboard.
-                                </p>
-                            </div>
-                        )}
-                    </div>
-
-                    {!isVerifying && (
-                        <div className="mb-8 lg:text-left text-center">
-                            <p className="text-sm font-medium" style={{ color: theme.colors.neutral[600] }}>
-                                {isRegister ? "Already have an account?" : "Don't have an account?"}{" "}
-                                <button
-                                    onClick={() => {
-                                        setIsRegister(!isRegister);
-                                        setError("");
-                                    }}
-                                    className="font-bold transition-colors text-blue-600 hover:text-blue-700 underline underline-offset-4"
-                                >
-                                    {isRegister ? "Log in" : "Create one for free"}
-                                </button>
+                        {/* Static height container to prevent layout shift */}
+                        <div className="min-h-[70px] flex flex-col justify-end pb-1">
+                            <h2 className="text-xl font-extrabold mb-1 text-slate-900 tracking-tight">
+                                {isVerifying ? "Verify email" : isRegister ? "Create account" : "Welcome back"}
+                            </h2>
+                            <p className="text-[13px] text-slate-500 font-medium leading-relaxed">
+                                {isVerifying
+                                    ? `Code sent to ${email}`
+                                    : isRegister
+                                        ? "New accounts start on our Free Plan."
+                                        : "Login to manage your chatbots."}
                             </p>
                         </div>
-                    )}
+                    </div>
 
-                    {error && (
-                        <div className="mb-4 p-3 border rounded-lg text-sm bg-red-50 text-red-600 border-red-200">
-                            {error}
+
+                </div>
+
+                {!isVerifying && (
+                    <div className="mb-8 lg:text-left text-center">
+                        <p className="text-sm font-medium" style={{ color: theme.colors.neutral[600] }}>
+                            {isRegister ? "Already have an account?" : "Don't have an account?"}{" "}
+                            <button
+                                onClick={() => {
+                                    setIsRegister(!isRegister);
+                                    setError("");
+                                }}
+                                className="font-bold transition-colors text-blue-600 hover:text-blue-700 underline underline-offset-4"
+                            >
+                                {isRegister ? "Log in" : "Create one for free"}
+                            </button>
+                        </p>
+                    </div>
+                )}
+
+                {error && (
+                    <div className="mb-4 p-3 border rounded-lg text-sm bg-red-50 text-red-600 border-red-200">
+                        {error}
+                    </div>
+                )}
+
+                {isVerifying ? (
+                    <form onSubmit={handleVerifyOtp} className="space-y-5">
+                        <div>
+                            <label className="text-sm font-medium mb-2 block text-slate-700">Verification Code</label>
+                            <input
+                                type="text"
+                                required
+                                maxLength={6}
+                                value={otp}
+                                onChange={(e) => setOtp(e.target.value.replace(/\D/g, ''))}
+                                className="w-full rounded-xl border border-slate-200 px-4 py-3 text-center text-2xl font-bold tracking-[0.5em] focus:outline-none transition-all focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 bg-white placeholder:text-slate-300"
+                                placeholder="000000"
+                            />
                         </div>
-                    )}
-
-                    {isVerifying ? (
-                        <form onSubmit={handleVerifyOtp} className="space-y-5">
+                        <button
+                            type="submit"
+                            disabled={isLoading}
+                            className="text-sm font-medium w-full rounded-xl px-8 py-4 mt-4 transition-all hover:-translate-y-0.5 hover:shadow-xl active:scale-[0.99] flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed text-white shadow-lg shadow-blue-500/25"
+                            style={{ background: theme.gradients.primaryButton }}
+                        >
+                            {isLoading ? (
+                                <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                            ) : "Verify Email"}
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => setIsVerifying(false)}
+                            className="w-full text-sm font-bold text-slate-500 hover:text-slate-700 transition-colors"
+                        >
+                            Back to Register
+                        </button>
+                    </form>
+                ) : (
+                    <form onSubmit={handleSubmit} className="space-y-5">
+                        {isRegister && (
                             <div>
-                                <label className="text-sm font-medium mb-2 block text-slate-700">Verification Code</label>
+                                <label className="text-sm font-medium mb-2 block text-slate-700">Full Name</label>
                                 <input
                                     type="text"
                                     required
-                                    maxLength={6}
-                                    value={otp}
-                                    onChange={(e) => setOtp(e.target.value.replace(/\D/g, ''))}
-                                    className="w-full rounded-xl border border-slate-200 px-4 py-3 text-center text-2xl font-bold tracking-[0.5em] focus:outline-none transition-all focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 bg-white placeholder:text-slate-300"
-                                    placeholder="000000"
-                                />
-                            </div>
-                            <button
-                                type="submit"
-                                disabled={isLoading}
-                                className="text-sm font-medium w-full rounded-xl px-8 py-4 mt-4 transition-all hover:-translate-y-0.5 hover:shadow-xl active:scale-[0.99] flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed text-white shadow-lg shadow-blue-500/25"
-                                style={{ background: theme.gradients.primaryButton }}
-                            >
-                                {isLoading ? (
-                                    <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                                ) : "Verify Email"}
-                            </button>
-                            <button
-                                type="button"
-                                onClick={() => setIsVerifying(false)}
-                                className="w-full text-sm font-bold text-slate-500 hover:text-slate-700 transition-colors"
-                            >
-                                Back to Register
-                            </button>
-                        </form>
-                    ) : (
-                        <form onSubmit={handleSubmit} className="space-y-5">
-                            {isRegister && (
-                                <div>
-                                    <label className="text-sm font-medium mb-2 block text-slate-700">Username</label>
-                                    <input
-                                        type="text"
-                                        required
-                                        value={username}
-                                        onChange={(e) => setUsername(e.target.value)}
-                                        className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm focus:outline-none transition-all focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 bg-white placeholder:text-slate-400"
-                                        placeholder="Enter username"
-                                    />
-                                </div>
-                            )}
-
-                            <div>
-                                <label className="text-sm font-medium mb-2 block text-slate-700">Email Address</label>
-                                <input
-                                    type="email"
-                                    required
-                                    value={isRegister ? email : username}
-                                    onChange={(e) => isRegister ? setEmail(e.target.value) : setUsername(e.target.value)}
+                                    value={username}
+                                    onChange={(e) => setUsername(e.target.value)}
                                     className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm focus:outline-none transition-all focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 bg-white placeholder:text-slate-400"
-                                    placeholder="name@company.com"
+                                    placeholder="Enter your full name"
                                 />
                             </div>
+                        )}
 
-                            <div>
-                                <div className="flex items-center justify-between mb-2">
-                                    <label className="text-sm font-medium block text-slate-700">Password</label>
-                                    {!isRegister && (
-                                        <button type="button" className="text-sm font-medium text-blue-600 hover:text-blue-700 transition-colors">
-                                            Forgot password?
-                                        </button>
-                                    )}
-                                </div>
-                                <input
-                                    type="password"
-                                    required
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
-                                    className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm focus:outline-none transition-all focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 bg-white"
-                                    placeholder="••••••••"
-                                />
-                            </div>
+                        <div>
+                            <label className="text-sm font-medium mb-2 block text-slate-700">Email Address</label>
+                            <input
+                                type="email"
+                                required
+                                value={isRegister ? email : username}
+                                onChange={(e) => isRegister ? setEmail(e.target.value) : setUsername(e.target.value)}
+                                className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm focus:outline-none transition-all focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 bg-white placeholder:text-slate-400"
+                                placeholder="name@company.com"
+                            />
+                        </div>
 
-                            <button
-                                type="submit"
-                                disabled={isLoading}
-                                className="text-sm font-medium w-full rounded-xl px-8 py-4 mt-4 transition-all hover:-translate-y-0.5 hover:shadow-xl active:scale-[0.99] flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed text-white shadow-lg shadow-blue-500/25"
-                                style={{ background: theme.gradients.primaryButton }}
-                            >
-                                {isLoading ? (
-                                    <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                                ) : (
-                                    isRegister ? "Create Free Account" : "Sign In"
+                        <div>
+                            <div className="flex items-center justify-between mb-2">
+                                <label className="text-sm font-medium block text-slate-700">Password</label>
+                                {!isRegister && (
+                                    <button type="button" className="text-sm font-medium text-blue-600 hover:text-blue-700 transition-colors">
+                                        Forgot password?
+                                    </button>
                                 )}
-                            </button>
-                        </form>
-                    )}
-
-                    {process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID && (
-                        <>
-                            <div className="relative my-8">
-                                <div className="absolute inset-0 flex items-center">
-                                    <div className="w-full border-t border-slate-200"></div>
-                                </div>
-                                <div className="relative flex justify-center text-xs">
-                                    <span className="bg-white px-4 text-slate-500 font-medium tracking-wide uppercase">Or continue with</span>
-                                </div>
                             </div>
+                            <input
+                                type="password"
+                                required
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm focus:outline-none transition-all focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 bg-white"
+                                placeholder="••••••••"
+                            />
+                        </div>
 
-                            <div className="flex justify-center">
-                                <GoogleLogin
-                                    onSuccess={async (credentialResponse) => {
-                                        if (credentialResponse.credential) {
-                                            const success = await continueWithGoogle(credentialResponse.credential);
-                                            if (success) {
-                                                router.push("/dashboard");
-                                            }
+                        <button
+                            type="submit"
+                            disabled={isLoading}
+                            className="text-sm font-medium w-full rounded-xl px-8 py-4 mt-4 transition-all hover:-translate-y-0.5 hover:shadow-xl active:scale-[0.99] flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed text-white shadow-lg shadow-blue-500/25"
+                            style={{ background: theme.gradients.primaryButton }}
+                        >
+                            {isLoading ? (
+                                <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                            ) : (
+                                isRegister ? "Create Free Account" : "Sign In"
+                            )}
+                        </button>
+                    </form>
+                )}
+
+                {process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID && (
+                    <>
+                        <div className="relative my-8">
+                            <div className="absolute inset-0 flex items-center">
+                                <div className="w-full border-t border-slate-200"></div>
+                            </div>
+                            <div className="relative flex justify-center text-xs">
+                                <span className="bg-white px-4 text-slate-500 font-medium tracking-wide uppercase">Or continue with</span>
+                            </div>
+                        </div>
+
+                        <div className="flex justify-center">
+                            <GoogleLogin
+                                onSuccess={async (credentialResponse) => {
+                                    if (credentialResponse.credential) {
+                                        const success = await continueWithGoogle(credentialResponse.credential);
+                                        if (success) {
+                                            router.push("/dashboard");
                                         }
-                                    }}
-                                    onError={() => {
-                                        setError("Google login failed");
-                                    }}
-                                    useOneTap
-                                    width="320"
-                                    theme="outline"
-                                    shape="square"
-                                    containerProps={{}}
-                                />
-                            </div>
-                        </>
-                    )}
+                                    }
+                                }}
+                                onError={() => {
+                                    setError("Google login failed");
+                                }}
+                                useOneTap
+                                width="320"
+                                theme="outline"
+                                shape="square"
+                                containerProps={{}}
+                            />
+                        </div>
+                    </>
+                )}
 
-                    <p className="mt-8 text-xs text-left text-slate-500">
-                        By continuing, you are agreeing to our{" "}
-                        <button className="text-sm font-medium underline hover:text-slate-700">Terms of Service</button> and{" "}
-                        <button className="text-sm font-medium underline hover:text-slate-700">Privacy Policy</button>.
-                    </p>
-                </div>
+                <p className="mt-8 text-xs text-left text-slate-500">
+                    By continuing, you are agreeing to our{" "}
+                    <button className="text-sm font-medium underline hover:text-slate-700">Terms of Service</button> and{" "}
+                    <button className="text-sm font-medium underline hover:text-slate-700">Privacy Policy</button>.
+                </p>
             </div>
         </div>
     );

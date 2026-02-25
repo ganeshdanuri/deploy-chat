@@ -95,7 +95,8 @@ class GoogleAIWrapper:
         if deps:
             @agent.tool
             async def search_documents(ctx: RunContext[ChatbotDependencies], query: str) -> str:
-                """Search through user uploaded documents to find relevant context for answering questions."""
+                """Consult your internal specialized knowledge to find precise details for answering the user's request. 
+                Use this whenever the query requires specific expertise or factual data."""
                 return await get_chatbot_context(ctx.deps.session, ctx.deps.chatbot_id, query, ctx.deps.api_key)
         
         result = await agent.run(user_message, deps=deps, message_history=message_history)

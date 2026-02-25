@@ -20,8 +20,8 @@ interface CreateChatbotModalProps {
 
 export default function CreateChatbotModal({ isOpen, onClose }: CreateChatbotModalProps) {
     const [name, setName] = useState("");
-    const [welcomeMessage, setWelcomeMessage] = useState("Hi! How can I help you today?");
-    const [allowedDomains, setAllowedDomains] = useState<string[]>(["*"]);
+    const [welcomeMessage, setWelcomeMessage] = useState("");
+    const [allowedDomains, setAllowedDomains] = useState<string[]>([""]);
     const [selectedDatasets, setSelectedDatasets] = useState<string[]>([]);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -34,16 +34,36 @@ export default function CreateChatbotModal({ isOpen, onClose }: CreateChatbotMod
         }
     }, [isOpen, dsStatus, dispatch]);
 
+    // Auto-update welcome message if name changes and welcome message is empty or default
+    useEffect(() => {
+        if (name && (!welcomeMessage || welcomeMessage.startsWith("Hi! I am "))) {
+            setWelcomeMessage(`Hi! I am ${name}. How can I help you today?`);
+        }
+    }, [name]);
+
     const toggleDataset = (id: string) => {
         setSelectedDatasets((prev) =>
             prev.includes(id) ? prev.filter((dsId) => dsId !== id) : [...prev, id]
         );
     };
 
+    const validateDomain = (domain: string) => {
+        const domainRegex = /^(?:https?:\/\/)?(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+[A-Z]{2,63}|localhost|\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})(?::\d+)?(?:\/?)$/i;
+        return domainRegex.test(domain) && domain !== "*";
+    };
+
     const handleSubmit = async () => {
         const validDomains = allowedDomains.filter(d => d.trim() !== "");
+
         if (!name || selectedDatasets.length === 0 || !welcomeMessage || validDomains.length === 0) {
             showToast.error("All fields are mandatory. Please fill out all fields.");
+            return;
+        }
+
+        // Validate formats
+        const invalidDomains = validDomains.filter(d => !validateDomain(d));
+        if (invalidDomains.length > 0) {
+            showToast.error(`Invalid domain format(s): ${invalidDomains.join(", ")}. Please use valid URLs (e.g. example.com).`);
             return;
         }
 
@@ -57,8 +77,8 @@ export default function CreateChatbotModal({ isOpen, onClose }: CreateChatbotMod
             })).unwrap();
             showToast.success(`Chatbot "${name}" created successfully!`);
             setName("");
-            setWelcomeMessage("Hi! How can I help you today?");
-            setAllowedDomains(["*"]);
+            setWelcomeMessage("");
+            setAllowedDomains([""]);
             setSelectedDatasets([]);
             onClose();
         } catch (error: any) {
@@ -190,7 +210,7 @@ export default function CreateChatbotModal({ isOpen, onClose }: CreateChatbotMod
                             + Add Domain
                         </Button>
                     </div>
-                    <p className="text-xs text-slate-400">Specify websites allowed to use this widget. Use * for all.</p>
+                    <p className="text-xs text-slate-400">Specify valid website domains or local addresses (e.g., example.com or localhost:3000) allowed to use this widget.</p>
 
                     <div className="space-y-3">
                         {allowedDomains.map((domain, index) => (
@@ -204,7 +224,7 @@ export default function CreateChatbotModal({ isOpen, onClose }: CreateChatbotMod
                                         newDomains[index] = e.target.value;
                                         setAllowedDomains(newDomains);
                                     }}
-                                    placeholder="yourdomain.com OR *"
+                                    placeholder="e.g., example.com"
                                     classNames={{
                                         inputWrapper: "rounded-lg border border-slate-300 h-11 hover:border-indigo-400 data-[focus=true]:border-indigo-500 data-[focus=true]:ring-4 data-[focus=true]:ring-indigo-500/10 shadow-none bg-slate-50 transition-all",
                                         input: "font-medium text-sm text-slate-800 placeholder:text-slate-400",

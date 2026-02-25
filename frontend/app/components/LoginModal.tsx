@@ -132,7 +132,7 @@ export default function LoginModal({ isOpen, onClose, initialMode = 'login', ini
               className="text-sm font-medium mb-1 block"
               style={{ color: theme.colors.neutral[700] }}
             >
-              Username
+              {isRegister ? "Full Name" : "Username"}
             </label>
             <div className="relative">
               <div className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: theme.colors.neutral[400] }}>
@@ -148,7 +148,7 @@ export default function LoginModal({ isOpen, onClose, initialMode = 'login', ini
                   borderColor: theme.colors.neutral[300],
                   color: theme.colors.neutral[900]
                 }}
-                placeholder="Enter username"
+                placeholder={isRegister ? "Enter your full name" : "Enter username"}
               />
             </div>
           </div>
