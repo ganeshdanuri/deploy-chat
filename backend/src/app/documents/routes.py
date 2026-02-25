@@ -75,11 +75,11 @@ async def upload_documents(
             
         except HTTPException as he:
             raise he
-        except Exception as e:
+        except Exception:
             session.rollback()
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, 
-                detail=f"Failed to process document {file.filename}: {str(e)}"
+                detail=f"Failed to process document {file.filename}. Please check the file format and try again."
             )
             
     return {

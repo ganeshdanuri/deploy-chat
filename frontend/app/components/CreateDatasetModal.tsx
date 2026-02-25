@@ -50,7 +50,7 @@ export default function CreateDatasetModal({ isOpen, onClose }: CreateDatasetMod
             onClose();
         } catch (error: any) {
             showToast.error(error?.message || "Failed to create dataset. Please try again.");
-            console.error("Failed to create dataset:", error);
+            console.error("Failed to create dataset.");
         } finally {
             setIsSubmitting(false);
         }

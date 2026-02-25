@@ -9,6 +9,7 @@ export interface PricingCardProps {
     isPopular?: boolean;
     buttonText: string;
     onButtonClick?: () => void;
+    isDisabled?: boolean;
 }
 
 export function PricingCard({
@@ -18,7 +19,8 @@ export function PricingCard({
     features,
     isPopular,
     buttonText,
-    onButtonClick
+    onButtonClick,
+    isDisabled
 }: PricingCardProps) {
     return (
         <div className={`bg-white rounded-lg shadow-sm p-6 relative overflow-hidden flex flex-col ${isPopular ? 'border border-indigo-200' : 'border border-slate-200'}`}>
@@ -42,8 +44,9 @@ export function PricingCard({
             </ul>
             <button
                 onClick={onButtonClick}
-                className={`text-sm font-medium mt-6 w-full py-2.5 rounded-lg transition-all hover:-translate-y-0.5 ${isPopular ? 'text-white shadow-lg shadow-indigo-500/20' : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 shadow-sm'}`}
-                style={isPopular ? { backgroundColor: "#4667ff" } : {}}
+                className={`text-sm font-medium mt-6 w-full py-2.5 rounded-lg transition-all ${isDisabled ? 'opacity-50 cursor-not-allowed bg-slate-100 text-slate-400 border border-slate-200' : (isPopular ? 'text-white shadow-lg shadow-indigo-500/20 hover:-translate-y-0.5' : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 shadow-sm hover:-translate-y-0.5')}`}
+                style={isPopular && !isDisabled ? { backgroundColor: "#4667ff" } : {}}
+                disabled={isDisabled}
             >
                 {buttonText}
             </button>

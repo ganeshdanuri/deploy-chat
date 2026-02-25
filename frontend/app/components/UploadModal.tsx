@@ -83,7 +83,7 @@ export default function UploadModal({ isOpen, onClose, onUploadSuccess }: Upload
                 handleClose();
             }, 1000);
         } catch (err: any) {
-            console.error("Upload failed:", err);
+            console.error("Upload failed.");
             const errorMessage = err.response?.data?.detail || "Failed to upload and convert documents";
             setError(errorMessage);
             setUploadStatus('error');

@@ -59,11 +59,11 @@ def create_dataset(
         session.commit()
         session.refresh(new_dataset)
         return new_dataset
-    except Exception as e:
+    except Exception:
         session.rollback()
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Failed to create dataset: {str(e)}"
+            detail="Failed to create dataset. Please try again later."
         )
 
 @router.delete(Endpoints.DATASETS_BY_ID)

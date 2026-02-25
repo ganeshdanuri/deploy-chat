@@ -41,6 +41,7 @@ def send_otp_email(email: str, otp_code: str):
         
         email_response = resend.Emails.send(params)
         return email_response
-    except Exception as e:
-        print(f"Error sending email: {str(e)}")
+    except Exception:
+        # Avoid logging the raw exception str(e) to prevent leaking sensitive info
+        print("Error: Failed to send OTP email.")
         return None

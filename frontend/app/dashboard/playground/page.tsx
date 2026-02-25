@@ -77,7 +77,7 @@ export default function PlaygroundPage() {
                 { id: Date.now() + 2, text: response.data.response, isBot: true },
             ]);
         } catch (error: unknown) {
-            console.error(error);
+            console.error("Failed to get AI response.");
             const err = error as { response?: { status?: number, data?: { detail?: string } }; message?: string };
             const isUsageError = err.response?.status === 403;
             const errorMessage = isUsageError

@@ -100,11 +100,11 @@ def create_chatbot(
     except HTTPException:
         session.rollback()
         raise
-    except Exception as e:
+    except Exception:
         session.rollback()
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Failed to create chatbot: {str(e)}"
+            detail="Failed to create chatbot. Please try again later."
         )
 
 @router.post(Endpoints.CHATBOTS_RESUME)
@@ -148,10 +148,10 @@ async def chatbot_chat(
         response, token_count = await get_ai_response(
             session, chatbot, request.message, history=request.history, temperature=chatbot.temperature
         )
-    except Exception as e:
+    except Exception:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"AI Agent failed: {str(e)}"
+            detail="AI Assistant encountered an error. Please try again later."
         )
     
     # 4. Increment usage

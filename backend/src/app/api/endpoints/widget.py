@@ -70,10 +70,10 @@ async def widget_chat(
         response, token_count = await get_ai_response(
             session, chatbot, body.message, history=body.history, temperature=chatbot.temperature
         )
-    except Exception as e:
+    except Exception:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"AI Agent failed: {str(e)}",
+            detail="AI Assistant is temporarily unavailable. Please try again later.",
         )
 
     # 6. Track usage against the owner

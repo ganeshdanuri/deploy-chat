@@ -40,6 +40,14 @@ export function TopNav({ onMenuClick }: TopNavProps) {
 
             {/* Right Actions */}
             <div className="flex items-center gap-1 sm:gap-2">
+                {/* Beta Version Badge */}
+                <div className="hidden lg:flex items-center px-3 py-1.5 rounded-full bg-amber-50 border border-amber-200 mr-2 animate-pulse">
+                    <span className="text-[11px] font-bold text-amber-700 uppercase tracking-tight flex items-center gap-1.5">
+                        <span className="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                        Beta Free Version • v1 will be released in 2 days
+                    </span>
+                </div>
+
                 <div className="flex items-center gap-1 border-r border-slate-200 pr-2 sm:pr-3 mr-2 sm:mr-3">
                     <div className="hidden md:flex items-center px-2 py-1 rounded-md bg-slate-100 border border-slate-200 mr-2">
                         <span className="text-[10px] font-black text-slate-500 uppercase tracking-wider">
@@ -62,9 +70,9 @@ export function TopNav({ onMenuClick }: TopNavProps) {
                 </div>
 
                 <button
-                    className="flex items-center gap-2 px-5 py-2 text-white text-sm font-medium rounded-xl transition-all hover:-translate-y-0.5 shadow-lg shadow-indigo-200"
+                    className="flex items-center gap-2 px-5 py-2 text-white text-sm font-medium rounded-xl transition-all opacity-50 cursor-not-allowed shadow-lg shadow-indigo-200"
                     style={{ backgroundColor: theme.colors.primary.main }}
-                    onClick={() => router.push("/dashboard/settings?tab=billing")}
+                    disabled
                 >
                     <span className="hidden sm:inline">Upgrade Plan</span>
                     <span className="sm:hidden">Upgrade</span>

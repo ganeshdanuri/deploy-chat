@@ -63,7 +63,7 @@ export default function CreateChatbotModal({ isOpen, onClose }: CreateChatbotMod
             onClose();
         } catch (error: any) {
             showToast.error(error?.message || "Failed to create chatbot. Please try again.");
-            console.error("Failed to create chatbot:", error);
+            console.error("Failed to create chatbot.");
         } finally {
             setIsSubmitting(false);
         }

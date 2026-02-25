@@ -183,7 +183,7 @@
         if (data.name) this.botName = data.name;
         if (data.greeting) this.greeting = data.greeting;
       } catch (err) {
-        console.error("[DeployChat Widget] Failed to load config:", err);
+        console.error("[DeployChat Widget] Failed to load configuration.");
       }
     },
 

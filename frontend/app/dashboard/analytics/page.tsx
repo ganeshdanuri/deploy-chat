@@ -34,12 +34,12 @@ export default function AnalyticsPage() {
                 <p className="text-slate-500 mb-6 max-w-sm">
                     Detailed analytics and usage metrics are only available on higher plans.
                 </p>
-                <Link
-                    href="/dashboard/settings?tab=billing"
-                    className="px-6 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg shadow-sm transition-colors"
+                <button
+                    disabled
+                    className="px-6 py-1.5 bg-slate-50 border border-slate-200 text-slate-400 text-sm font-medium rounded-lg shadow-sm cursor-not-allowed opacity-60"
                 >
                     Upgrade Plan
-                </Link>
+                </button>
             </div>
         );
     }

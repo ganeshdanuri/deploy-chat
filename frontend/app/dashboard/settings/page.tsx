@@ -117,7 +117,10 @@ export default function SettingsPage() {
                                             </div>
                                         </div>
                                         <div className="shrink-0 pt-1">
-                                            <button className="flex items-center gap-2 px-5 py-2.5 bg-white border border-slate-200 text-slate-700 text-sm font-medium rounded-lg hover:bg-slate-50 hover:border-slate-300 transition-all hover:-translate-y-0.5 shadow-sm">
+                                            <button
+                                                className="flex items-center gap-2 px-5 py-2.5 bg-slate-50 border border-slate-200 text-slate-400 text-sm font-medium rounded-lg cursor-not-allowed opacity-60 shadow-sm"
+                                                disabled
+                                            >
                                                 View Invoices
                                             </button>
                                         </div>
@@ -137,6 +140,7 @@ export default function SettingsPage() {
                                         ]}
                                         buttonText="Upgrade"
                                         onButtonClick={() => { }}
+                                        isDisabled={true}
                                     />
                                     <PricingCard
                                         title="Professional"
@@ -152,6 +156,7 @@ export default function SettingsPage() {
                                         buttonText="Get Started"
                                         isPopular={true}
                                         onButtonClick={() => { }}
+                                        isDisabled={true}
                                     />
                                     <PricingCard
                                         title="Enterprise"
@@ -165,6 +170,7 @@ export default function SettingsPage() {
                                         ]}
                                         buttonText="Contact Sales"
                                         onButtonClick={() => { }}
+                                        isDisabled={true}
                                     />
                                 </div>
                             </div>

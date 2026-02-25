@@ -24,8 +24,8 @@ async def generate_embedding(text: str, api_key: str) -> list[float]:
             response.raise_for_status()
             data = response.json()
             return data["embedding"]["values"]
-        except Exception as e:
-            logging.error(f"Error generating embedding: {e}")
+        except Exception:
+            logging.error("Failed to generate text embedding.")
             return []
 
 def get_chunks(text: str, max_length: int = CHUNK_MAX_LENGTH, overlap: int = CHUNK_OVERLAP) -> list[str]:
@@ -117,8 +117,8 @@ async def process_chatbot_documents(chatbot_id: UUID):
                 
             # Final atomic commit: either everything succeeds, or nothing is saved/activated
             session.commit()
-    except Exception as e:
-        logging.error(f"Error in process_chatbot_documents: {e}")
+    except Exception:
+        logging.error("Critical error during chatbot document processing.")
         with Session(engine) as session:
             chatbot = session.get(Chatbot, chatbot_id)
             if chatbot:
