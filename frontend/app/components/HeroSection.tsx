@@ -2,8 +2,8 @@
 
 import { theme } from "../theme";
 import { HiArrowRight, HiPlay, HiCheck } from "react-icons/hi";
-import { FaRobot, FaBolt } from "react-icons/fa";
-import { HERO_CHECKMARKS } from "../../lib/constants";
+import { FaRobot, FaBolt, FaTwitter } from "react-icons/fa";
+import { HERO_CHECKMARKS, SOCIAL_LINKS } from "../../lib/constants";
 
 
 interface Stat {
@@ -46,20 +46,33 @@ export default function HeroSection({ stats, onGetStarted }: HeroSectionProps) {
 
           {/* Left Content - Value Proposition */}
           <div className="max-w-2xl space-y-8">
-            {/* Trust Badge */}
-            <div
-              className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-sm font-medium border"
-              style={{
-                borderColor: theme.colors.neutral[200],
-                backgroundColor: theme.colors.neutral[50],
-                color: theme.colors.neutral[700]
-              }}
-            >
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 bg-green-400"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
-              </span>
-              Trusted by 500+ Engineering Teams
+            <div className="flex flex-wrap items-center gap-3">
+              {/* Trust Badge */}
+              <div
+                className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-sm font-medium border"
+                style={{
+                  borderColor: theme.colors.neutral[200],
+                  backgroundColor: theme.colors.neutral[50],
+                  color: theme.colors.neutral[700]
+                }}
+              >
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 bg-green-400"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                </span>
+                Trusted by 500+ Engineering Teams
+              </div>
+
+              {/* Twitter Badge */}
+              <a
+                href={SOCIAL_LINKS.twitter}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-sm font-medium border border-blue-100 bg-blue-50 text-blue-600 hover:bg-blue-100 transition-colors"
+              >
+                <FaTwitter size={14} className="text-[#1DA1F2]" />
+                Follow for updates
+              </a>
             </div>
 
             {/* Headline */}

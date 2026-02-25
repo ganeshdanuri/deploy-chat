@@ -8,7 +8,8 @@ import { useAuth } from "../context/AuthContext";
 
 import { theme } from "../theme";
 import Logo from "./Logo";
-import { NAV_LINKS as navLinks } from "../../lib/constants";
+import { NAV_LINKS as navLinks, SOCIAL_LINKS } from "../../lib/constants";
+import { FaTwitter } from "react-icons/fa";
 
 
 export default function Navbar() {
@@ -66,6 +67,15 @@ export default function Navbar() {
 
             {/* Right Side Actions */}
             <div className="flex items-center gap-4">
+              <a
+                href={SOCIAL_LINKS.twitter}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hidden sm:flex items-center gap-2 text-slate-500 hover:text-indigo-600 transition-colors p-2"
+                title="Follow us on Twitter"
+              >
+                <FaTwitter size={20} />
+              </a>
               <button
                 onClick={handleMainButtonClick}
                 className="text-sm font-medium hidden sm:flex items-center gap-2 text-white px-6 py-2.5 rounded-lg hover:-translate-y-0.5 transition-all shadow-lg shadow-indigo-500/20"
@@ -109,6 +119,15 @@ export default function Navbar() {
                 >
                   Get Started
                 </button>
+                <a
+                  href={SOCIAL_LINKS.twitter}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full py-2.5 bg-slate-50 text-slate-600 text-sm font-semibold rounded-lg flex items-center justify-center gap-2 hover:bg-slate-100 transition-colors"
+                >
+                  <FaTwitter className="text-[#1DA1F2]" />
+                  Follow on Twitter
+                </a>
               </div>
             </div>
           )}

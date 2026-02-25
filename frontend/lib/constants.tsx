@@ -256,6 +256,13 @@ export const FAQS = [
     },
 ];
 
+// ─── Social Links ────────────────────────────────────────────────────────────
+export const SOCIAL_LINKS = {
+    twitter: "https://x.com/deploychat",
+    github: "https://github.com/ganeshdanuri/docking",
+    linkedin: "https://linkedin.com/in/deploychat",
+};
+
 // ─── Footer Links ────────────────────────────────────────────────────────────
 export const FOOTER_LINKS = [
     {
@@ -273,7 +280,7 @@ export const FOOTER_LINKS = [
             { name: "Documentation", href: "#" },
             { name: "Help Center", href: "#" },
             { name: "API Reference", href: "#" },
-            { name: "Community", href: "#" },
+            { name: "Community", href: SOCIAL_LINKS.twitter },
         ],
     },
     {
@@ -286,6 +293,7 @@ export const FOOTER_LINKS = [
         ],
     },
 ];
+
 
 // ─── Testimonials ────────────────────────────────────────────────────────────
 export const TESTIMONIALS = [

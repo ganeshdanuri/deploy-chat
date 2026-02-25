@@ -3,7 +3,7 @@
 import { theme } from "../theme";
 import { FaTwitter, FaGithub, FaLinkedin } from "react-icons/fa";
 import Logo from "./Logo";
-import { FOOTER_LINKS as footerLinks } from "../../lib/constants";
+import { FOOTER_LINKS as footerLinks, SOCIAL_LINKS } from "../../lib/constants";
 
 export default function Footer() {
     return (
@@ -23,14 +23,20 @@ export default function Footer() {
                             Automate your support and delight your customers in minutes.
                         </p>
                         <div className="flex gap-4">
-                            {[FaTwitter, FaGithub, FaLinkedin].map((Icon, i) => (
+                            {[
+                                { Icon: FaTwitter, href: SOCIAL_LINKS.twitter },
+                                { Icon: FaGithub, href: SOCIAL_LINKS.github },
+                                { Icon: FaLinkedin, href: SOCIAL_LINKS.linkedin }
+                            ].map((social, i) => (
                                 <a
                                     key={i}
-                                    href="#"
+                                    href={social.href}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
                                     className="w-10 h-10 rounded-full border flex items-center justify-center transition-colors hover:bg-slate-50"
                                     style={{ borderColor: theme.colors.neutral[200], color: theme.colors.neutral[500] }}
                                 >
-                                    <Icon className="text-lg" />
+                                    <social.Icon className="text-lg" />
                                 </a>
                             ))}
                         </div>
