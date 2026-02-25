@@ -45,8 +45,43 @@ api.interceptors.response.use(
     async (error) => {
         const originalRequest = error.config;
 
-        // Ensure we only attempt to refresh once, and not stuck in infinite loops
-        if (error.response?.status === 401 && !originalRequest._retry && originalRequest.url !== ENDPOINTS.AUTH.REFRESH) {
+        // Function to perform logout
+        const logout = () => {
+            isRefreshing = false;
+            localStorage.removeItem('access_token');
+            localStorage.removeItem('refresh_token');
+            localStorage.removeItem('user');
+            if (typeof window !== 'undefined') {
+                window.location.href = '/login';
+            }
+        };
+
+        // Handle 401 errors
+        if (error.response?.status === 401) {
+            // If it's an auth endpoint (except refresh itself), don't try to refresh
+            const isAuthEndpoint = [
+                ENDPOINTS.AUTH.LOGIN,
+                ENDPOINTS.AUTH.REGISTER,
+                ENDPOINTS.AUTH.VERIFY_OTP,
+                ENDPOINTS.AUTH.GOOGLE
+            ].includes(originalRequest.url);
+
+            if (isAuthEndpoint) {
+                return Promise.reject(error);
+            }
+
+            // If it's the refresh token endpoint that failed with 401, logout immediately
+            if (originalRequest.url === ENDPOINTS.AUTH.REFRESH) {
+                logout();
+                return Promise.reject(error);
+            }
+
+            // If we've already tried to retry, don't try again
+            if (originalRequest._retry) {
+                logout();
+                return Promise.reject(error);
+            }
+
             if (isRefreshing) {
                 return new Promise(function (resolve, reject) {
                     failedQueue.push({ resolve, reject });
@@ -65,11 +100,7 @@ api.interceptors.response.use(
 
             const refreshToken = localStorage.getItem('refresh_token');
             if (!refreshToken) {
-                isRefreshing = false;
-                localStorage.removeItem('access_token');
-                localStorage.removeItem('refresh_token');
-                localStorage.removeItem('user');
-                window.location.href = '/login';
+                logout();
                 return Promise.reject(error);
             }
 
@@ -90,14 +121,16 @@ api.interceptors.response.use(
                 return api(originalRequest);
             } catch (_error) {
                 processQueue(_error, null);
-                localStorage.removeItem('access_token');
-                localStorage.removeItem('refresh_token');
-                localStorage.removeItem('user');
-                window.location.href = '/login';
+                logout();
                 return Promise.reject(_error);
             } finally {
                 isRefreshing = false;
             }
+        }
+
+        // Also handle "User not found" errors which might return 404
+        if (error.response?.status === 404 && error.response?.data?.detail === "User not found") {
+            logout();
         }
 
         return Promise.reject(error);
