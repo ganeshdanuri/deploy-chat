@@ -10,7 +10,7 @@ from app.core.ai import get_ai_response
 from app.core.endpoints import Endpoints
 from app.core.chunking import process_chatbot_documents
 
-from app.core.constants import CHATBOT_STATUS_ACTIVE, CHATBOT_STATUS_CREATING, CHATBOT_STATUS_FAILED, ACTIVITY_TYPE_CHATBOT_CREATED
+from app.core.constants import CHATBOT_STATUS_ACTIVE, CHATBOT_STATUS_CREATING, CHATBOT_STATUS_FAILED, ACTIVITY_TYPE_CHATBOT_CREATED, SYSTEM_PROMPT_TEMPLATE
 
 router = APIRouter(prefix=Endpoints.CHATBOTS_PREFIX)
 
@@ -50,10 +50,12 @@ def create_chatbot(
         
     try:
         # 1. Create Chatbot record
+        default_prompt = SYSTEM_PROMPT_TEMPLATE.format(name=chatbot_in.name)
+
         new_chatbot = Chatbot(
             name=chatbot_in.name,
             user_id=current_user.id,
-            system_prompt=f"You are {chatbot_in.name}, a helpful AI assistant. Be polite, concise, and professional.",
+            system_prompt=chatbot_in.system_prompt or default_prompt,
             temperature=chatbot_in.temperature,
             welcome_message=chatbot_in.welcome_message,
         )
