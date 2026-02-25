@@ -1,7 +1,6 @@
 "use client";
 
 import Navbar from "./components/Navbar";
-import AnnouncementBar from "./components/AnnouncementBar";
 import FeaturesSection from "./components/FeaturesSection";
 import HeroSection from "./components/HeroSection";
 import Banner from "./components/Banner";
