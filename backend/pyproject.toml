@@ -7,7 +7,7 @@ requires-python = ">=3.12"
 dependencies = [
     "fastapi>=0.128.2",
     "markitdown[all]>=0.1.4",
-    "psycopg2>=2.9.10",
+    "psycopg2-binary>=2.9.11",
     "pydantic-ai>=1.56.0",
     "pyjwt>=2.11.0",
     "sqlmodel>=0.0.32",
@@ -20,6 +20,10 @@ dependencies = [
     "httpx>=0.28.1",
     "slowapi>=0.1.9",
 ]
+
+[tool.uv]
+package = false
+
 [project.scripts]
 dev = "uvicorn app.main:app --reload --app-dir src"
 start = "uvicorn app.main:app --app-dir src"
