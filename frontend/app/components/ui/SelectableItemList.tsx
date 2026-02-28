@@ -60,24 +60,24 @@ interface SelectableItemListProps {
 
 const ACCENT_MAP: Record<SelectableAccentColor, SelectableColors> = {
     indigo: {
-        selectedCard: "bg-indigo-50 border-indigo-300 shadow-sm",
-        unselectedCard: "bg-slate-50/50 border-slate-200 hover:border-indigo-200 hover:bg-indigo-50/30 hover:shadow-sm",
+        selectedCard: "bg-indigo-50 border-indigo-200 shadow-sm",
+        unselectedCard: "bg-slate-50/50 border-slate-100 hover:border-indigo-100/50 hover:bg-indigo-50/30 hover:shadow-sm",
         selectedIcon: "bg-indigo-600 border-indigo-600 text-white shadow-md",
-        unselectedIcon: "bg-white border-slate-200 text-slate-400",
+        unselectedIcon: "bg-white border-slate-100 text-slate-400",
         selectedText: "text-indigo-900",
         unselectedText: "text-slate-700",
         selectedRadio: "bg-indigo-600 border-indigo-600",
-        unselectedRadio: "bg-white border-slate-300",
+        unselectedRadio: "bg-white border-slate-200",
     },
     emerald: {
-        selectedCard: "bg-emerald-50 border-emerald-300 shadow-sm",
-        unselectedCard: "bg-slate-50/50 border-slate-200 hover:border-emerald-200 hover:bg-emerald-50/30 hover:shadow-sm",
+        selectedCard: "bg-emerald-50 border-emerald-200 shadow-sm",
+        unselectedCard: "bg-slate-50/50 border-slate-100 hover:border-emerald-100/50 hover:bg-emerald-50/30 hover:shadow-sm",
         selectedIcon: "bg-emerald-600 border-emerald-600 text-white shadow-md",
-        unselectedIcon: "bg-white border-slate-200 text-slate-400",
+        unselectedIcon: "bg-white border-slate-100 text-slate-400",
         selectedText: "text-emerald-900",
         unselectedText: "text-slate-700",
         selectedRadio: "bg-emerald-600 border-emerald-600",
-        unselectedRadio: "bg-white border-slate-300",
+        unselectedRadio: "bg-white border-slate-200",
     },
     amber: {
         selectedCard: "bg-amber-50 border-amber-300 shadow-sm",

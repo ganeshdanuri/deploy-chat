@@ -39,10 +39,11 @@ export default function Drawer({
             onOpenChange={onClose}
             placement="right"
             size="md"
-            backdrop="blur"
+            backdrop="opaque"
             classNames={{
                 base: "bg-white border-l border-slate-100 h-full",
-                closeButton: "hidden"
+                closeButton: "hidden",
+                backdrop: "bg-slate-900/10 backdrop-blur-[2px]"
             }}
         >
             <DrawerContent>

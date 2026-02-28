@@ -5,32 +5,36 @@ import { useState, useEffect } from "react";
 import { HiDatabase, HiDocumentText } from "react-icons/hi";
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 import { fetchDocuments } from "@/lib/store/slices/documentsSlice";
+import { fetchConnectors } from "@/lib/store/slices/connectorsSlice";
 import { createDataset } from "@/lib/store/slices/datasetsSlice";
 import Drawer from "./Drawer";
+import { SiNotion } from "react-icons/si";
 import showToast from "@/lib/toast";
 import { Button, Input } from "@heroui/react";
 import { SelectableItemList, SelectableListSkeleton } from "./ui";
 import type { SelectableItem } from "./ui";
 import { theme } from "../theme";
 
-interface CreateDatasetModalProps {
+interface CreateKnowledgeBaseDrawerProps {
     isOpen: boolean;
     onClose: () => void;
 }
 
-export default function CreateDatasetModal({ isOpen, onClose }: CreateDatasetModalProps) {
+export default function CreateKnowledgeBaseDrawer({ isOpen, onClose }: CreateKnowledgeBaseDrawerProps) {
     const [name, setName] = useState("");
     const [selectedDocs, setSelectedDocs] = useState<string[]>([]);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const dispatch = useAppDispatch();
     const { items: documents, status: docStatus } = useAppSelector((state) => state.documents);
+    const { items: connectors, status: connStatus } = useAppSelector((state) => state.connectors);
 
     useEffect(() => {
-        if (isOpen && docStatus === "idle") {
-            dispatch(fetchDocuments());
+        if (isOpen) {
+            if (docStatus === "idle") dispatch(fetchDocuments());
+            if (connStatus === "idle") dispatch(fetchConnectors());
         }
-    }, [isOpen, docStatus, dispatch]);
+    }, [isOpen, docStatus, connStatus, dispatch]);
 
     const toggleDocument = (id: string) => {
         setSelectedDocs((prev) =>
@@ -44,30 +48,34 @@ export default function CreateDatasetModal({ isOpen, onClose }: CreateDatasetMod
         setIsSubmitting(true);
         try {
             await dispatch(createDataset({ name, document_ids: selectedDocs })).unwrap();
-            showToast.success(`Dataset "${name}" created successfully!`);
+            showToast.success(`Knowledge base "${name}" created successfully!`);
             setName("");
             setSelectedDocs([]);
             onClose();
         } catch (error: any) {
-            showToast.error(error?.message || "Failed to create dataset. Please try again.");
-            console.error("Failed to create dataset.");
+            showToast.error(error?.message || "Failed to create knowledge base. Please try again.");
+            console.error("Failed to create knowledge base.");
         } finally {
             setIsSubmitting(false);
         }
     };
 
-    const documentItems: SelectableItem[] = documents.map((doc) => ({
-        id: doc.id,
-        label: doc.name,
-        sublabel: `Source ID: ${doc.id.slice(0, 8)}`,
-    }));
+    const documentItems: SelectableItem[] = documents.map((doc) => {
+        const connector = doc.connector_id ? connectors.find((c: any) => c.id === doc.connector_id) : null;
+        return {
+            id: doc.id,
+            label: doc.name,
+            sublabel: connector ? `${connector.type}: ${connector.name}` : "Manual Upload",
+            icon: connector?.type === 'notion' ? SiNotion : HiDocumentText,
+        };
+    });
 
     const footer = (
         <div className="flex gap-4 w-full">
             <Button
                 variant="bordered"
                 onPress={onClose}
-                className="flex-1 font-medium rounded-lg h-12 transition-all hover:bg-slate-50 border border-slate-200 text-slate-600 shadow-sm"
+                className="flex-1 font-medium rounded-lg h-12 transition-all hover:bg-slate-50 border border-slate-100 text-slate-600 shadow-sm"
             >
                 Cancel
             </Button>
@@ -75,10 +83,10 @@ export default function CreateDatasetModal({ isOpen, onClose }: CreateDatasetMod
                 onPress={handleSubmit}
                 isDisabled={isSubmitting || !name || selectedDocs.length === 0}
                 isLoading={isSubmitting}
-                className="flex-[1.5] text-white text-sm font-medium rounded-lg h-12 transition-all hover:-translate-y-0.5 shadow-lg shadow-indigo-500/20"
+                className="flex-[1.5] text-white text-sm font-bold rounded-lg h-12 transition-all hover:-translate-y-0.5 shadow-lg shadow-indigo-500/20"
                 style={{ backgroundColor: theme.colors.primary.main }}
             >
-                {isSubmitting ? "Syncing..." : "Initialize Dataset"}
+                {isSubmitting ? "Initialising..." : "Create Knowledge Base"}
             </Button>
         </div>
     );
@@ -87,41 +95,41 @@ export default function CreateDatasetModal({ isOpen, onClose }: CreateDatasetMod
         <Drawer
             isOpen={isOpen}
             onClose={onClose}
-            title="Setup Global Knowledge"
+            title="New Knowledge Base"
             subtitle="Connect and organize your knowledge sources."
             icon={HiDatabase}
             iconBgColor="bg-emerald-50"
             iconColor="text-emerald-600"
             footer={footer}
         >
-            <div className="space-y-8">
-                {/* Dataset Name */}
+            <div className="space-y-8 animate-fade-in">
+                {/* Knowledge Base Name */}
                 <div className="space-y-3">
-                    <label htmlFor="dataset-name" className="text-sm font-medium block text-slate-700">
-                        Dataset Name
+                    <label htmlFor="kb-name" className="text-sm font-bold block text-slate-700">
+                        Knowledge Base Name
                     </label>
-                    <p className="text-xs text-slate-400">Identify this collection for your AI assistant.</p>
+                    <p className="text-xs text-slate-400">Identify this collection for your AI assistants.</p>
                     <Input
-                        id="dataset-name"
+                        id="kb-name"
                         type="text"
                         variant="bordered"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         placeholder="e.g. Legal Documents 2024"
                         classNames={{
-                            inputWrapper: "rounded-lg border border-slate-200 h-11 hover:border-emerald-400 data-[focus=true]:border-emerald-500 shadow-none bg-slate-50 transition-all",
+                            inputWrapper: "rounded-lg border border-slate-100 h-11 hover:border-emerald-400 data-[focus=true]:border-emerald-500 shadow-none bg-slate-50 transition-all",
                             input: "font-medium text-sm text-slate-800 placeholder:text-slate-400",
                         }}
                     />
                 </div>
 
-                {/* Document Selection */}
+                {/* Source Selection */}
                 <div className="space-y-4">
                     <div className="flex items-center justify-between">
-                        <label className="text-sm font-medium block text-slate-700">
+                        <label className="text-sm font-bold block text-slate-700">
                             Select Sources
                         </label>
-                        <span className="text-[11px] font-medium text-slate-400 uppercase bg-slate-100 px-2 py-0.5 rounded-full">
+                        <span className="text-[10px] font-black text-slate-400 uppercase bg-slate-100 px-2 py-0.5 rounded-full tracking-wider">
                             {selectedDocs.length} selected
                         </span>
                     </div>
@@ -136,7 +144,7 @@ export default function CreateDatasetModal({ isOpen, onClose }: CreateDatasetMod
                             accentColor="emerald"
                             emptyIcon={HiDocumentText}
                             emptyMessage={
-                                <>No sources available.<br />Upload documents first.</>
+                                <>No sources available.<br />Upload source files first.</>
                             }
                         />
                     )}

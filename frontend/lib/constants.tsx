@@ -3,7 +3,7 @@ import {
     HiGlobe, HiChartBar, HiUserGroup, HiShieldCheck, HiDatabase,
     HiLightningBolt, HiColorSwatch, HiCode, HiSparkles, HiDocumentText,
     HiCursorClick, HiChatAlt2, HiHome, HiQuestionMarkCircle, HiUser,
-    HiUsers, HiCreditCard, HiKey, HiBell
+    HiUsers, HiCreditCard, HiKey, HiBell, HiShare
 } from "react-icons/hi";
 import { FaBrain } from "react-icons/fa";
 import { MdIntegrationInstructions } from "react-icons/md";
@@ -346,25 +346,25 @@ export const ONBOARDING_STEPS: OnboardingStep[] = [
     },
     {
         id: 2,
-        name: "Create Datasets",
-        description: "Organize nodes into logical groups to help your chatbot retrieve precise information.",
+        name: "Create Knowledge Base",
+        description: "Organize synced data into logical collections to help your AI retrieve precise information.",
         icon: HiDatabase,
         href: "/dashboard/datasets",
         color: "text-emerald-600",
         bgColor: "bg-emerald-50",
-        borderColor: "border-emerald-100",
+        borderColor: "border-emerald-100/50",
         gradientFrom: "from-emerald-500 to-emerald-600",
-        btnText: "Setup Datasets",
+        btnText: "Setup Knowledge",
     },
     {
         id: 3,
-        name: "Build Chatbots",
-        description: "Define how your AI speaks and which datasets it should prioritize for better context.",
+        name: "Build AI Assistants",
+        description: "Define how your AI speaks and which knowledge collections it should prioritize.",
         icon: HiChatAlt2,
         href: "/dashboard/chatbots",
         color: "text-amber-600",
         bgColor: "bg-amber-50",
-        borderColor: "border-amber-100",
+        borderColor: "border-amber-100/50",
         gradientFrom: "from-amber-400 to-amber-500",
         btnText: "Create Assistant",
     },
@@ -385,10 +385,10 @@ export const ONBOARDING_STEPS: OnboardingStep[] = [
 // ─── Dashboard Quick Actions ────────────────────────────────────────────────
 export const QUICK_ACTIONS = [
     {
-        label: "New Chatbot",
-        description: "Deploy a new AI assistant",
+        label: "New AI Assistant",
+        description: "Deploy a new intelligent agent",
         icon: HiChatAlt2,
-        hoverBorder: "hover:border-indigo-400 hover:bg-indigo-50/50",
+        hoverBorder: "hover:border-indigo-400/50 hover:bg-indigo-50/50",
         iconBg: "bg-indigo-50 text-indigo-600",
         hoverText: "group-hover:text-indigo-700",
         href: "/dashboard/chatbots",
@@ -403,22 +403,23 @@ export const QUICK_ACTIONS = [
         href: "/dashboard/documents",
     },
     {
-        label: "Playground",
-        description: "Test your prompts immediately",
-        icon: HiSparkles,
-        hoverBorder: "hover:border-amber-400 hover:bg-amber-50/50",
-        iconBg: "bg-amber-50 text-amber-600",
-        hoverText: "group-hover:text-amber-700",
-        href: "/dashboard/playground",
+        label: "Connect Data",
+        description: "Fetch from Notion, Drive or Slack",
+        icon: HiShare,
+        hoverBorder: "hover:border-purple-400 hover:bg-purple-50/50",
+        iconBg: "bg-purple-50 text-purple-600",
+        hoverText: "group-hover:text-purple-700",
+        href: "/dashboard/connectors",
     },
 ];
 
 // ─── Sidebar Navigation (Sidebar) ───────────────────────────────────────────
 export const SIDEBAR_MAIN_NAV = [
     { id: "home", label: "Overview", path: "/dashboard", icon: HiHome },
-    { id: "documents", label: "Documents", path: "/dashboard/documents", icon: HiDocumentText },
-    { id: "datasets", label: "Datasets", path: "/dashboard/datasets", icon: HiDatabase },
-    { id: "chatbots", label: "Chatbots", path: "/dashboard/chatbots", icon: HiChatAlt2 },
+    { id: "documents", label: "Source Files", path: "/dashboard/documents", icon: HiDocumentText },
+    { id: "datasets", label: "Knowledge Base", path: "/dashboard/datasets", icon: HiDatabase },
+    { id: "chatbots", label: "AI Assistants", path: "/dashboard/chatbots", icon: HiChatAlt2 },
+    { id: "connectors", label: "Connectors", path: "/dashboard/connectors", icon: HiShare },
     { id: "playground", label: "Playground", path: "/dashboard/playground", icon: HiSparkles },
     { id: "analytics", label: "Analytics", path: "/dashboard/analytics", icon: HiChartBar },
 ];
@@ -433,6 +434,10 @@ export const SIDEBAR_SETTINGS_NAV = [
     { id: "billing", label: "Billing & Plans", path: "/dashboard/settings?tab=billing", icon: HiCreditCard },
     { id: "api-keys", label: "API Keys", path: "/dashboard/settings?tab=api-keys", icon: HiKey },
     { id: "notifications", label: "Notifications", icon: HiBell },
+];
+
+export const CONNECTORS_NAV = [
+    { id: "notion", label: "Notion", icon: HiDatabase },
 ];
 
 // ─── Embed Colors (EmbedDrawer) ──────────────────────────────────────────────

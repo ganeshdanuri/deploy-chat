@@ -19,6 +19,7 @@ dependencies = [
     "pgvector>=0.4.2",
     "httpx>=0.28.1",
     "slowapi>=0.1.9",
+    "notion-client>=3.0.0",
 ]
 
 [tool.uv]

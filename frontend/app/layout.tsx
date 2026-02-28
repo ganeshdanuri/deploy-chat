@@ -1,5 +1,4 @@
-import type { Metadata } from "next";
-import { Sora, JetBrains_Mono } from "next/font/google";
+import { Sora, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "./context/AuthContext";
 import ReduxProvider from "./components/ReduxProvider";
@@ -14,11 +13,14 @@ const sora = Sora({
   display: "swap",
 });
 
-const jetbrainsMono = JetBrains_Mono({
-  variable: "--font-jetbrains-mono",
+const ibmPlexMono = IBM_Plex_Mono({
+  variable: "--font-ibm-plex-mono",
   subsets: ["latin"],
+  weight: ["400", "500", "600"],
   display: "swap",
 });
+
+import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Deploy Chat - Open Source Chatbot",
@@ -31,7 +33,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${sora.variable} ${jetbrainsMono.variable}`}>
+    <html lang="en" className={`${sora.variable} ${ibmPlexMono.variable}`}>
       <head>
       </head>
       <body

@@ -206,7 +206,7 @@ export function PlaygroundConfigSkeleton() {
 // ─── Drawer / Modal Item List Skeleton ────────────────────────────────────────
 
 /**
- * Skeleton shown inside CreateChatbotModal / CreateDatasetModal while the list loads.
+ * Skeleton shown inside CreateAIAssistantDrawer / CreateKnowledgeBaseDrawer while the list loads.
  */
 export function SelectableListSkeleton({ rows = 3 }: { rows?: number }) {
     return (

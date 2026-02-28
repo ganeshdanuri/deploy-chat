@@ -4,6 +4,7 @@ import usageReducer from './slices/usageSlice';
 import datasetsReducer from './slices/datasetsSlice';
 import chatbotsReducer from './slices/chatbotsSlice';
 import userReducer from './slices/userSlice';
+import connectorsReducer from './slices/connectorsSlice';
 
 export const store = configureStore({
     reducer: {
@@ -12,6 +13,7 @@ export const store = configureStore({
         chatbots: chatbotsReducer,
         usage: usageReducer,
         user: userReducer,
+        connectors: connectorsReducer,
     },
     devTools: process.env.NODE_ENV !== 'production',
 });

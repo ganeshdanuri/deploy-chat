@@ -5,10 +5,10 @@ import { useEffect, useState } from "react";
 import { HiDatabase, HiPlus, HiRefresh, HiCollection, HiTrash, HiSearch } from "react-icons/hi";
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 import { fetchDatasets, deleteDataset } from "@/lib/store/slices/datasetsSlice";
-import CreateDatasetModal from "@/app/components/CreateDatasetModal";
+import CreateKnowledgeBaseDrawer from "@/app/components/CreateKnowledgeBaseDrawer";
 import showToast from "@/lib/toast";
 import { User, Tooltip, Button, Card, CardBody, Input } from "@heroui/react";
-import { PageHeader, EmptyState, StyledTable, DateCell, StatusChip, TableSkeleton, DeleteConfirmationModal } from "@/app/components/ui";
+import { PageHeader, EmptyState, StyledTable, DateCell, StatusChip, TableSkeleton, DeleteConfirmationDrawer } from "@/app/components/ui";
 import type { TableColumnDef } from "@/app/components/ui";
 import type { Dataset } from "@/lib/types";
 import { theme } from "@/app/theme";
@@ -21,13 +21,13 @@ const COLUMNS: TableColumnDef[] = [
 ];
 
 export default function DatasetsPage() {
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const [filterValue, setFilterValue] = useState("");
     const dispatch = useAppDispatch();
     const { items: datasets, status } = useAppSelector((state) => state.datasets);
     const isLoading = status === "loading";
 
-    const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+    const [deleteDrawerOpen, setDeleteDrawerOpen] = useState(false);
     const [itemToDelete, setItemToDelete] = useState<{ id: string; name: string } | null>(null);
     const [isDeleting, setIsDeleting] = useState(false);
 
@@ -37,7 +37,7 @@ export default function DatasetsPage() {
 
     const handleDeleteClick = (id: string, name: string) => {
         setItemToDelete({ id, name });
-        setDeleteModalOpen(true);
+        setDeleteDrawerOpen(true);
     };
 
     const handleConfirmDelete = async () => {
@@ -45,8 +45,8 @@ export default function DatasetsPage() {
         setIsDeleting(true);
         try {
             await dispatch(deleteDataset(itemToDelete.id)).unwrap();
-            showToast.success(`Dataset "${itemToDelete.name}" deleted successfully`);
-            setDeleteModalOpen(false);
+            showToast.success(`Knowledge base "${itemToDelete.name}" deleted successfully`);
+            setDeleteDrawerOpen(false);
         } catch (error: any) {
             showToast.error(error?.message || "Failed to delete dataset");
         } finally {
@@ -107,7 +107,7 @@ export default function DatasetsPage() {
     return (
         <div className="space-y-6 animate-fade-in-up">
             <PageHeader
-                title="Datasets"
+                title="Knowledge Base"
                 description="Manage your knowledge sources and integrations."
                 actions={
                     datasets.length > 0 ? (
@@ -117,17 +117,17 @@ export default function DatasetsPage() {
                                 variant="bordered"
                                 isLoading={isLoading}
                                 startContent={<HiRefresh className={`w-4 h-4 text-slate-400 ${isLoading ? 'animate-spin' : ''}`} />}
-                                className="bg-white border-slate-200 text-slate-700 text-xs sm:text-sm font-medium rounded-lg transition-all hover:bg-slate-50 h-11 px-6 shadow-sm mr-2"
+                                className="bg-white border-slate-100 text-slate-700 text-xs sm:text-sm font-medium rounded-lg transition-all hover:bg-slate-50 h-11 px-6 shadow-sm mr-2"
                             >
                                 Refresh
                             </Button>
                             <Button
-                                onPress={() => setIsModalOpen(true)}
+                                onPress={() => setIsDrawerOpen(true)}
                                 startContent={<HiPlus className="w-4 h-4" />}
-                                className="text-white text-xs sm:text-sm font-medium rounded-lg transition-all hover:-translate-y-0.5 shadow-lg shadow-indigo-500/20 h-11 px-6"
+                                className="text-white text-xs sm:text-sm font-bold rounded-lg transition-all hover:-translate-y-0.5 shadow-lg shadow-indigo-500/20 h-11 px-6"
                                 style={{ backgroundColor: theme.colors.primary.main }}
                             >
-                                New Dataset
+                                New Knowledge Base
                             </Button>
                         </>
                     ) : null
@@ -139,10 +139,10 @@ export default function DatasetsPage() {
             ) : datasets.length === 0 ? (
                 <EmptyState
                     icon={HiCollection}
-                    title="No datasets found"
-                    description="Datasets group your documents together so you can easily assign them to different chatbots."
-                    actionLabel="Create your first dataset"
-                    onAction={() => setIsModalOpen(true)}
+                    title="No knowledge bases found"
+                    description="Knowledge bases group your source files together so you can easily assign them to different AI assistants."
+                    actionLabel="Create your first knowledge base"
+                    onAction={() => setIsDrawerOpen(true)}
                     accentColor="emerald"
                 />
             ) : (
@@ -157,14 +157,14 @@ export default function DatasetsPage() {
                                 <Input
                                     isClearable
                                     className="w-full sm:max-w-[44%]"
-                                    placeholder="Search datasets..."
+                                    placeholder="Search knowledge..."
                                     startContent={<HiSearch className="text-slate-400 ml-1" />}
                                     value={filterValue}
                                     variant="bordered"
                                     onClear={() => setFilterValue("")}
                                     onValueChange={setFilterValue}
                                     classNames={{
-                                        inputWrapper: "rounded-lg border border-slate-200 h-11 px-4 hover:border-emerald-400 data-[focus=true]:border-emerald-500 shadow-none bg-slate-50 transition-all",
+                                        inputWrapper: "rounded-lg border border-slate-100 h-11 px-4 hover:border-emerald-400 data-[focus=true]:border-emerald-500 shadow-none bg-slate-50 transition-all",
                                         input: "font-medium text-sm text-slate-800 placeholder:text-slate-400 ml-2"
                                     }}
                                 />
@@ -175,32 +175,32 @@ export default function DatasetsPage() {
                     {/* Quick Add Card */}
                     <Card
                         isPressable
-                        onPress={() => setIsModalOpen(true)}
-                        className="w-full bg-slate-50 border-2 border-dashed border-slate-200 shadow-none hover:border-emerald-500 hover:bg-emerald-50/10 transition-all rounded-lg"
+                        onPress={() => setIsDrawerOpen(true)}
+                        className="w-full bg-slate-50/50 border-2 border-dashed border-slate-100 shadow-none hover:border-emerald-500/50 hover:bg-emerald-50/10 transition-all rounded-lg"
                     >
                         <CardBody className="py-8 flex flex-col items-center justify-center">
                             <div className="w-12 h-12 rounded-lg bg-white border border-slate-200 flex items-center justify-center mb-3 shadow-sm">
                                 <HiPlus className="w-6 h-6 text-slate-400" />
                             </div>
-                            <h3 className="text-sm font-semibold text-slate-900">Add New Dataset</h3>
-                            <p className="text-xs text-slate-500 mt-1">Connect more data sources</p>
+                            <h3 className="text-sm font-bold text-slate-900">Add New Knowledge</h3>
+                            <p className="text-[11px] text-slate-400 mt-1">Connect more data sources</p>
                         </CardBody>
                     </Card>
                 </div>
             )}
 
-            <CreateDatasetModal
-                isOpen={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
+            <CreateKnowledgeBaseDrawer
+                isOpen={isDrawerOpen}
+                onClose={() => setIsDrawerOpen(false)}
             />
 
-            <DeleteConfirmationModal
-                isOpen={deleteModalOpen}
-                onClose={() => setDeleteModalOpen(false)}
+            <DeleteConfirmationDrawer
+                isOpen={deleteDrawerOpen}
+                onClose={() => setDeleteDrawerOpen(false)}
                 onConfirm={handleConfirmDelete}
                 isLoading={isDeleting}
-                title="Delete Dataset"
-                description="Are you sure you want to delete this dataset? All documents linked only to this dataset will remain, but the grouping will be removed."
+                title="Delete Knowledge Base"
+                description="Are you sure you want to delete this knowledge base? All underlying source files will remain, but the collection grouping will be removed."
                 itemName={itemToDelete?.name}
             />
         </div>

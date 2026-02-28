@@ -26,5 +26,11 @@ export const ENDPOINTS = {
     DATASETS: {
         BASE: '/api/datasets/',
         BY_ID: (id: string | number) => `/api/datasets/${id}`,
+    },
+    CONNECTORS: {
+        BASE: '/api/connectors/',
+        BY_ID: (id: string | number) => `/api/connectors/${id}`,
+        SYNC: (id: string | number) => `/api/connectors/${id}/sync`,
+        NOTION_PAGES: '/api/connectors/notion/pages',
     }
 };

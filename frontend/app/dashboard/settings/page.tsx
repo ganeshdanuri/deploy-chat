@@ -35,12 +35,12 @@ export default function SettingsPage() {
 
     return (
         <div className="animate-fade-in-up max-w-5xl mx-auto">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8 pb-6 border-b border-slate-200">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8 pb-6 border-b border-slate-100">
                 <div>
                     <h1 className="text-2xl font-bold text-slate-900 tracking-tight">{currentTabLabel}</h1>
                     <p className="text-sm text-slate-500 mt-1">Manage your account preferences and system configuration.</p>
                 </div>
-                <div className="flex items-center gap-2 text-xs font-semibold text-slate-400 bg-slate-100 px-3 py-1.5 rounded-lg border border-slate-200">
+                <div className="flex items-center gap-2 text-xs font-semibold text-slate-400 bg-slate-100 px-3 py-1.5 rounded-lg border border-slate-100">
                     <HiShieldCheck className="w-4 h-4 text-indigo-500" />
                     Secure Settings
                 </div>
@@ -52,8 +52,8 @@ export default function SettingsPage() {
                 ) : (
                     <div className="w-full">
                         {activeTab === "general" && (
-                            <div className="bg-white rounded-lg border border-slate-200 shadow-sm overflow-hidden">
-                                <div className="p-6 border-b border-slate-200">
+                            <div className="bg-white rounded-lg border border-slate-100 shadow-sm overflow-hidden">
+                                <div className="p-6 border-b border-slate-100">
                                     <h2 className="text-lg font-bold text-slate-900">Profile Information</h2>
                                     <p className="text-sm text-slate-500 mt-1">Update your account&apos;s profile information and email address.</p>
                                 </div>
@@ -62,13 +62,13 @@ export default function SettingsPage() {
                                     <div className="grid grid-cols-2 gap-6">
                                         <div className="col-span-2 space-y-2">
                                             <label className="text-sm font-medium text-slate-700">Username</label>
-                                            <input type="text" className="py-1.5 w-full border-slate-200 rounded-lg text-sm bg-slate-50 cursor-not-allowed" value={userData?.profile?.username || ""} readOnly />
+                                            <input type="text" className="py-1.5 w-full border-slate-100 rounded-lg text-sm bg-slate-50 cursor-not-allowed" value={userData?.profile?.username || ""} readOnly />
                                         </div>
                                         <div className="col-span-2 space-y-2">
                                             <label className="text-sm font-medium text-slate-700">Email Address</label>
                                             <div className="relative">
                                                 <HiUser className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4" />
-                                                <input type="email" className="py-1.5 w-full pl-9 border-slate-200 rounded-lg text-sm bg-slate-50 cursor-not-allowed" value={userData?.profile?.email || authUser?.email || ""} readOnly />
+                                                <input type="email" className="py-1.5 w-full pl-9 border-slate-100 rounded-lg text-sm bg-slate-50 cursor-not-allowed" value={userData?.profile?.email || authUser?.email || ""} readOnly />
                                             </div>
                                         </div>
                                     </div>
@@ -79,7 +79,7 @@ export default function SettingsPage() {
 
                         {activeTab === "billing" && (
                             <div className="space-y-4">
-                                <div className="bg-white rounded-lg border border-slate-200 shadow-sm overflow-hidden">
+                                <div className="bg-white rounded-lg border border-slate-100 shadow-sm overflow-hidden">
                                     <div className="p-5 sm:p-6 flex flex-col md:flex-row md:items-start justify-between gap-6">
                                         <div className="flex-1 space-y-4">
                                             <div className="flex items-center gap-3">
@@ -118,7 +118,7 @@ export default function SettingsPage() {
                                         </div>
                                         <div className="shrink-0 pt-1">
                                             <button
-                                                className="flex items-center gap-2 px-5 py-2.5 bg-slate-50 border border-slate-200 text-slate-400 text-sm font-medium rounded-lg cursor-not-allowed opacity-60 shadow-sm"
+                                                className="flex items-center gap-2 px-5 py-2.5 bg-slate-50 border border-slate-100 text-slate-400 text-sm font-medium rounded-lg cursor-not-allowed opacity-60 shadow-sm"
                                                 disabled
                                             >
                                                 View Invoices
@@ -178,7 +178,7 @@ export default function SettingsPage() {
 
                         {/* Other tabs placeholder */}
                         {(activeTab !== "general" && activeTab !== "billing") && (
-                            <div className="flex flex-col items-center justify-center p-12 bg-white rounded-xl border border-slate-200 border-dashed">
+                            <div className="flex flex-col items-center justify-center p-12 bg-white rounded-xl border border-slate-100 border-dashed">
                                 <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mb-4">
                                     <HiShieldCheck className="w-8 h-8 text-slate-300" />
                                 </div>

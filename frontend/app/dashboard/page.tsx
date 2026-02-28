@@ -133,12 +133,11 @@ function DashboardSummary({
 }: DashboardSummaryProps) {
   const limit = userData?.billing?.monthly_limit || 100;
   const usagePercentage = Math.min((message_count / limit) * 100, 100);
-  const isFreePlan = !userData?.billing?.current_plan || ["free", "trial"].includes(userData?.billing?.current_plan.toLowerCase());
 
   return (
     <div className="w-full max-w-7xl animate-fade-in-up">
       {/* Page Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 pb-6 mb-8">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-100 pb-6 mb-8">
         <div>
           <div className="flex items-center gap-3">
             <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Dashboard Overview</h1>
@@ -164,7 +163,7 @@ function DashboardSummary({
         <div className="flex gap-2">
           <button
             disabled
-            className="px-5 py-2 bg-slate-50 border border-slate-200 text-slate-400 text-sm font-medium rounded-lg shadow-sm opacity-60 cursor-not-allowed flex items-center gap-2"
+            className="px-5 py-2 bg-slate-50 border border-slate-100 text-slate-400 text-sm font-medium rounded-lg shadow-sm opacity-60 cursor-not-allowed flex items-center gap-2"
           >
             <HiCreditCard className="w-4 h-4 text-slate-300" />
             Billing & Plans
@@ -197,9 +196,9 @@ function DashboardSummary({
         />
         <MetricCard
           icon={HiDatabase}
-          label="Active Datasets"
+          label="Knowledge Bases"
           value={String(datasets.length)}
-          trend="Total Collections"
+          trend="Active Collections"
           accentClass="text-emerald-600"
           accentBg="bg-emerald-50"
           ringClass="ring-emerald-100"
@@ -256,7 +255,7 @@ function MetricCard({ icon: Icon, label, value, trend, accentClass, accentBg, ri
     <Link
       href={href}
       onClick={onClick}
-      className={`p-6 bg-white rounded-lg border border-slate-200 shadow-sm transition-all group relative overflow-hidden block ${isDisabled ? "opacity-75 cursor-default" : "hover:shadow-md cursor-pointer"}`}
+      className={`p-6 bg-white rounded-lg border border-slate-100 shadow-sm transition-all group relative overflow-hidden block ${isDisabled ? "opacity-75 cursor-default" : "hover:shadow-md cursor-pointer"}`}
     >
       <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
         <Icon className={`w-24 h-24 ${accentClass} transform translate-x-4 -translate-y-4`} />
@@ -291,10 +290,10 @@ function MetricCard({ icon: Icon, label, value, trend, accentClass, accentBg, ri
 
 function QuickActionsPanel() {
   return (
-    <div className="bg-white rounded-lg border border-slate-200 shadow-sm p-6 lg:col-span-1 h-full flex flex-col">
+    <div className="bg-white rounded-xl border border-slate-100 shadow-sm p-6 lg:col-span-1 h-full flex flex-col">
       <div className="flex items-center justify-between mb-6">
-        <h3 className="text-base font-bold text-slate-800">Quick Actions</h3>
-        <Link href="/dashboard/chatbots" className="text-xs text-indigo-600 font-medium hover:underline">View All</Link>
+        <h3 className="text-base font-bold text-slate-800">Knowledge Base</h3>
+        <Link href="/dashboard/datasets" className="text-xs text-indigo-600 font-medium hover:underline">Manage KBs</Link>
       </div>
       <div className="space-y-3 flex-1">
         {QUICK_ACTIONS.map((action) => (
@@ -328,8 +327,8 @@ function RecentActivityPanel() {
       try {
         const res = await api.get(ENDPOINTS.USERS.RECENT_ACTIVITY);
         setActivities(res.data);
-      } catch (err) {
-        console.error("Failed to fetch recent activities.");
+      } catch {
+        showToast.error("Failed to fetch recent activities.");
       } finally {
         setLoading(false);
       }
@@ -349,16 +348,16 @@ function RecentActivityPanel() {
 
   const getActivityTitle = (type: string) => {
     switch (type) {
-      case 'document_added': return 'New document uploaded';
-      case 'dataset_created': return 'New dataset created';
-      case 'chatbot_created': return 'Chatbot deployed';
-      case 'message_limit_warning': return 'Token usage limit alert';
+      case 'document_added': return 'New source file uploaded';
+      case 'dataset_created': return 'New knowledge base created';
+      case 'chatbot_created': return 'AI assistant deployed';
+      case 'message_limit_warning': return 'Usage limit alert';
       default: return 'Activity';
     }
   };
 
   return (
-    <div className="bg-white rounded-lg border border-slate-200 shadow-sm p-6 lg:col-span-2">
+    <div className="bg-white rounded-xl border border-slate-100 shadow-sm p-6 lg:col-span-2">
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
           <h3 className="text-base font-bold text-slate-800">Recent Activity</h3>
@@ -452,7 +451,7 @@ function OnboardingView({ cardsRef }: { cardsRef: React.RefObject<HTMLDivElement
 
         {ONBOARDING_STEPS.map((step) => (
           <div key={step.id} className="step-card group relative z-10">
-            <div className="bg-white p-6 md:p-8 rounded-xl border border-slate-200 shadow-sm hover:shadow-2xl hover:border-indigo-100 transition-all duration-500 flex flex-col h-full relative overflow-hidden">
+            <div className="bg-white p-6 md:p-8 rounded-xl border border-slate-100 shadow-sm hover:shadow-2xl hover:border-indigo-100 transition-all duration-500 flex flex-col h-full relative overflow-hidden">
               <div className={`absolute top-0 left-0 w-full h-1 bg-gradient-to-r ${step.gradientFrom} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
               <div className={`w-12 h-12 ${step.bgColor} ${step.color} rounded-lg flex items-center justify-center mb-6 shadow-sm ring-1 ring-inset ${step.borderColor} group-hover:scale-110 group-hover:rotate-3 transition-all duration-500`}>
                 <step.icon className="w-6 h-6" />

@@ -3,8 +3,21 @@
 export interface Document {
     id: string;
     name: string;
+    connector_id?: string | null;
+    external_id?: string | null;
     created_at: string;
     user_id: string;
+}
+
+export interface Connector {
+    id: string;
+    name: string;
+    type: string;
+    config: any;
+    status: string;
+    last_sync_at: string | null;
+    created_at: string;
+    updated_at: string;
 }
 
 export interface Dataset {

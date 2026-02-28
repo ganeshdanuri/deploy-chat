@@ -1,6 +1,6 @@
-from typing import Optional, List, Any
+from typing import Optional, List, Any, Dict
 from uuid import UUID, uuid4
-from sqlalchemy import Column
+from sqlalchemy import Column, JSON
 from pgvector.sqlalchemy import Vector
 from sqlmodel import Field, SQLModel
 from datetime import datetime, timedelta
@@ -71,6 +71,20 @@ class DocumentBase(SQLModel):
 class Document(DocumentBase, table=True):
     __tablename__ = "documents"
     id: UUID = Field(default_factory=uuid4, primary_key=True)
+    connector_id: Optional[UUID] = Field(default=None, foreign_key="connectors.id", ondelete="SET NULL")
+    external_id: Optional[str] = Field(default=None, index=True)
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
+
+class Connector(SQLModel, table=True):
+    __tablename__ = "connectors"
+    id: UUID = Field(default_factory=uuid4, primary_key=True)
+    user_id: UUID = Field(foreign_key="users.id")
+    name: str = Field(index=True)
+    type: str = Field(index=True)  # 'notion', 'google_drive', etc.
+    config: dict = Field(default_factory=dict, sa_column=Column(JSON))
+    status: str = Field(default="active")
+    last_sync_at: Optional[datetime] = Field(default=None)
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
 

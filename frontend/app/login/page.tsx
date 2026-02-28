@@ -186,10 +186,9 @@ function LoginContent() {
                     </div>
                 </div>
 
-                {/* Help label similar to image at bottom left */}
-                <div className="absolute bottom-8 left-16 gsap-text">
-                    <p className="text-sm text-indigo-200/80">
-                        For additional graphical assets, check <a href="https://storyset.com" target="_blank" rel="noreferrer" className="text-white hover:underline">Storyset</a> or <a href="https://undraw.co" target="_blank" rel="noreferrer" className="text-white hover:underline">unDraw</a>.
+                <div className="absolute bottom-10 left-16 gsap-text">
+                    <p className="text-xs text-indigo-200/50 font-medium tracking-wider uppercase">
+                        Building the autonomous future with <span className="text-white font-bold ml-1">Deploy Chat</span>.
                     </p>
                 </div>
             </div>
@@ -220,7 +219,11 @@ function LoginContent() {
                                 {isVerifying
                                     ? `Code sent to ${email}`
                                     : isRegister
-                                        ? "New accounts start on our Free Plan."
+                                        ? (
+                                            <>
+                                                New accounts start on our <span className="font-bold text-[#4667ff] px-1.5 py-0.5 rounded-lg bg-[#4667ff]/10 border border-[#4667ff]/20 inline-flex items-center mx-1">Free</span> Plan.
+                                            </>
+                                        )
                                         : "Login to manage your chatbots."}
                             </p>
                         </div>
@@ -238,7 +241,7 @@ function LoginContent() {
                                     setIsRegister(!isRegister);
                                     setError("");
                                 }}
-                                className="font-bold transition-colors text-blue-600 hover:text-blue-700 underline underline-offset-4"
+                                className="font-bold transition-colors text-[#4667ff] hover:text-[#3b5ae6] underline underline-offset-4"
                             >
                                 {isRegister ? "Log in" : "Create one for free"}
                             </button>
@@ -340,7 +343,11 @@ function LoginContent() {
                             {isLoading ? (
                                 <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                             ) : (
-                                isRegister ? "Create Free Account" : "Sign In"
+                                isRegister ? (
+                                    <>
+                                        Create <span className="font-bold text-white px-2 py-0.5 rounded bg-white/20 border border-white/30 mx-1">Free</span> Account
+                                    </>
+                                ) : "Sign In"
                             )}
                         </button>
                     </form>
