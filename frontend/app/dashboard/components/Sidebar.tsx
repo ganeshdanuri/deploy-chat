@@ -39,14 +39,14 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
     return (
         <aside
             className={`
-                fixed lg:static inset-y-0 left-0 z-50 bg-slate-50 border-r border-slate-100 flex flex-col transition-all duration-300 transform
+                fixed lg:static inset-y-0 left-0 z-50 bg-white border-r border-slate-200/60 flex flex-col transition-all duration-300 transform
                 ${isOpen ? "translate-x-0 shadow-2xl" : "-translate-x-full lg:translate-x-0"}
                 ${isCollapsed ? "lg:w-[72px]" : "lg:w-64"}
                 w-64
             `}
         >
             {/* Workspace Selector / Brand */}
-            <div className="h-16 flex items-center px-3 border-b border-slate-100 justify-between shrink-0">
+            <div className="h-16 flex items-center px-3 border-b border-slate-200/60 justify-between shrink-0">
                 <div
                     className={`flex items-center gap-3 p-1.5 hover:bg-slate-100 rounded-lg cursor-pointer transition-colors group ${isCollapsed ? "justify-center w-full" : "flex-1 min-w-0"}`}
                     onClick={() => !isCollapsed && router.push("/dashboard")}
@@ -97,7 +97,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                                         ${isDisabled
                                         ? "opacity-50 cursor-not-allowed text-slate-400"
                                         : isActive
-                                            ? "bg-white shadow-sm ring-1 ring-slate-100"
+                                            ? "bg-slate-50 shadow-sm ring-1 ring-slate-200/50"
                                             : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
                                     }
                                     `}
@@ -148,7 +148,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                                         relative group flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all
                                         ${isCollapsed ? "justify-center" : ""}
                                         ${isActive
-                                            ? "bg-white shadow-sm ring-1 ring-slate-100"
+                                            ? "bg-slate-50 shadow-sm ring-1 ring-slate-200/50"
                                             : "text-slate-500 hover:text-slate-900 hover:bg-slate-100"
                                         }
                                     `}
@@ -175,7 +175,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
             </div>
 
             {/* Footer Navigation */}
-            <div className="p-2 border-t border-slate-100 space-y-0.5 shrink-0">
+            <div className="p-2 border-t border-slate-200/60 space-y-0.5 shrink-0">
                 {secondaryNavItems.map((item) => {
                     const Icon = item.icon;
                     const isActive = pathname === item.path;
@@ -188,7 +188,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                                     relative group flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all
                                     ${isCollapsed ? "justify-center" : ""}
                                     ${isActive
-                                    ? "bg-white shadow-sm ring-1 ring-slate-100"
+                                    ? "bg-slate-50 shadow-sm ring-1 ring-slate-200/50"
                                     : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
                                 }
                                 `}
@@ -212,7 +212,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                 })}
 
                 {/* User Profile Mini */}
-                <div className="mt-2 pt-2 border-t border-slate-100">
+                <div className="mt-2 pt-2 border-t border-slate-200/60">
                     <div
                         className={`flex items-center gap-3 px-2 py-2 rounded-lg hover:bg-slate-100 cursor-pointer transition-colors ${isCollapsed ? "justify-center" : ""}`}
                         onClick={() => router.push("/dashboard/settings")}

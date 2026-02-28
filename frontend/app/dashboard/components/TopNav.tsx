@@ -15,7 +15,7 @@ export function TopNav({ onMenuClick }: TopNavProps) {
     const { data: userData } = useAppSelector((state) => state.user);
 
     return (
-        <header className="h-16 bg-white border-b border-slate-100 flex items-center justify-between px-4 sm:px-6 sticky top-0 z-30">
+        <header className="h-16 bg-white border-b border-slate-200/60 flex items-center justify-between px-4 sm:px-6 sticky top-0 z-30">
             {/* Search / Command Palette Trigger */}
             <div className="flex-1 max-w-2xl flex items-center gap-2 sm:gap-4">
                 <button

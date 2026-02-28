@@ -416,10 +416,10 @@ export const QUICK_ACTIONS = [
 // ─── Sidebar Navigation (Sidebar) ───────────────────────────────────────────
 export const SIDEBAR_MAIN_NAV = [
     { id: "home", label: "Overview", path: "/dashboard", icon: HiHome },
+    { id: "connectors", label: "Connectors", path: "/dashboard/connectors", icon: HiShare },
     { id: "documents", label: "Source Files", path: "/dashboard/documents", icon: HiDocumentText },
     { id: "datasets", label: "Knowledge Base", path: "/dashboard/datasets", icon: HiDatabase },
     { id: "chatbots", label: "AI Assistants", path: "/dashboard/chatbots", icon: HiChatAlt2 },
-    { id: "connectors", label: "Connectors", path: "/dashboard/connectors", icon: HiShare },
     { id: "playground", label: "Playground", path: "/dashboard/playground", icon: HiSparkles },
     { id: "analytics", label: "Analytics", path: "/dashboard/analytics", icon: HiChartBar },
 ];
