@@ -11,14 +11,14 @@ import {
     HiRefresh,
     HiSearch,
 } from "react-icons/hi";
-import UploadSourceFilesDrawer from "@/app/components/UploadSourceFilesDrawer";
+import UploadSourceFilesDrawer from "../../components/UploadSourceFilesDrawer";
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 import { fetchDocuments, deleteDocument } from "@/lib/store/slices/documentsSlice";
 import { fetchConnectors } from "@/lib/store/slices/connectorsSlice";
 import { SiNotion } from "react-icons/si";
 import showToast from "@/lib/toast";
 import { User, Button, Input } from "@heroui/react";
-import { PageHeader, EmptyState, StyledTable, DateCell, TableSkeleton, Tooltip, DeleteConfirmationDrawer } from "@/app/components/ui";
+import { PageHeader, EmptyState, StyledTable, DateCell, TableSkeleton, Tooltip, DeleteConfirmationModal } from "@/app/components/ui";
 import type { TableColumnDef } from "@/app/components/ui";
 import type { Document } from "@/lib/types";
 import { theme } from "@/app/theme";
@@ -30,14 +30,14 @@ const COLUMNS: TableColumnDef[] = [
 ];
 
 export default function DocumentsPage() {
-    const [isUploadDrawerOpen, setIsUploadDrawerOpen] = useState(false);
+    const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
     const [filterValue, setFilterValue] = useState("");
     const dispatch = useAppDispatch();
     const { items: documents, status } = useAppSelector((state) => state.documents);
     const { items: connectors, status: connStatus } = useAppSelector((state) => state.connectors);
     const isLoading = status === "loading";
 
-    const [deleteDrawerOpen, setDeleteDrawerOpen] = useState(false);
+    const [deleteModalOpen, setDeleteModalOpen] = useState(false);
     const [itemToDelete, setItemToDelete] = useState<{ id: string; name: string } | null>(null);
     const [isDeleting, setIsDeleting] = useState(false);
 
@@ -57,7 +57,7 @@ export default function DocumentsPage() {
 
     const handleDeleteClick = (id: string, name: string) => {
         setItemToDelete({ id, name });
-        setDeleteDrawerOpen(true);
+        setDeleteModalOpen(true);
     };
 
     const handleConfirmDelete = async () => {
@@ -66,7 +66,7 @@ export default function DocumentsPage() {
         try {
             await dispatch(deleteDocument(itemToDelete.id)).unwrap();
             showToast.success(`Source file "${itemToDelete.name}" deleted successfully`);
-            setDeleteDrawerOpen(false);
+            setDeleteModalOpen(false);
         } catch (error: any) {
             showToast.error(error?.message || "Failed to delete document");
         } finally {
@@ -168,7 +168,7 @@ export default function DocumentsPage() {
                                 Refresh
                             </Button>
                             <Button
-                                onPress={() => setIsUploadDrawerOpen(true)}
+                                onPress={() => setIsUploadModalOpen(true)}
                                 startContent={<HiPlus className="w-4 h-4" />}
                                 className="text-white text-xs sm:text-sm font-bold rounded-lg transition-all hover:-translate-y-0.5 shadow-lg shadow-indigo-500/20 h-11 px-6"
                                 style={{ backgroundColor: theme.colors.primary.main }}
@@ -188,7 +188,7 @@ export default function DocumentsPage() {
                     title="No source files yet"
                     description="The first step is to upload some files. We'll convert them to markdown automatically or sync from cloud sources."
                     actionLabel="Upload your first file"
-                    onAction={() => setIsUploadDrawerOpen(true)}
+                    onAction={() => setIsUploadModalOpen(true)}
                     accentColor="indigo"
                 />
             ) : (
@@ -203,14 +203,14 @@ export default function DocumentsPage() {
             )}
 
             <UploadSourceFilesDrawer
-                isOpen={isUploadDrawerOpen}
-                onClose={() => setIsUploadDrawerOpen(false)}
+                isOpen={isUploadModalOpen}
+                onClose={() => setIsUploadModalOpen(false)}
                 onUploadSuccess={() => dispatch(fetchDocuments())}
             />
 
-            <DeleteConfirmationDrawer
-                isOpen={deleteDrawerOpen}
-                onClose={() => setDeleteDrawerOpen(false)}
+            <DeleteConfirmationModal
+                isOpen={deleteModalOpen}
+                onClose={() => setDeleteModalOpen(false)}
                 onConfirm={handleConfirmDelete}
                 isLoading={isDeleting}
                 title="Delete Source File"

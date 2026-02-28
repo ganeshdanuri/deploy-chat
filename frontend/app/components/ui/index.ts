@@ -11,7 +11,8 @@ export { StyledTable } from "./StyledTable";
 export type { TableColumnDef } from "./StyledTable";
 export { DateCell } from "./DateCell";
 export { StatusChip } from "./StatusChip";
-export { default as DeleteConfirmationDrawer } from "./DeleteConfirmationDrawer";
+export { default as DeleteConfirmationModal } from "./DeleteConfirmationModal";
+
 export {
     Skeleton,
     TableSkeleton,

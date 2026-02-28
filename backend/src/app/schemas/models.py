@@ -43,6 +43,10 @@ class UserCreate(UserBase):
     password: str
     plan: Optional[str] = Field(default=DEFAULT_PLAN_NAME)
 
+class UserUpdate(SQLModel):
+    username: Optional[str] = None
+    email: Optional[str] = None
+
 class UserLogin(SQLModel):
     email: str
     password: str
@@ -130,6 +134,10 @@ class DatasetCreate(SQLModel):
     name: str
     document_ids: List[UUID]
 
+class DatasetUpdate(SQLModel):
+    name: Optional[str] = None
+    document_ids: Optional[List[UUID]] = None
+
 class DatasetRead(DatasetBase):
     id: UUID
     created_at: datetime
@@ -170,6 +178,14 @@ class ChatbotCreate(SQLModel):
     temperature: Optional[float] = 0.7
     welcome_message: str
     allowed_domains: str
+
+class ChatbotUpdate(SQLModel):
+    name: Optional[str] = None
+    dataset_ids: Optional[List[UUID]] = None
+    system_prompt: Optional[str] = None
+    temperature: Optional[float] = None
+    welcome_message: Optional[str] = None
+    allowed_domains: Optional[str] = None
 
 class ChatbotRead(ChatbotBase):
     id: UUID

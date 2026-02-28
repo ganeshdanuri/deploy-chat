@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { HiTrash, HiExclamation, HiX } from "react-icons/hi";
-import Drawer from "../Drawer";
+import { HiTrash, HiExclamation } from "react-icons/hi";
+import Modal from "../Modal";
 import { Button } from "@heroui/react";
 
-interface DeleteConfirmationDrawerProps {
+interface DeleteConfirmationModalProps {
     isOpen: boolean;
     onClose: () => void;
     onConfirm: () => void;
@@ -15,7 +15,7 @@ interface DeleteConfirmationDrawerProps {
     isLoading?: boolean;
 }
 
-export default function DeleteConfirmationDrawer({
+export default function DeleteConfirmationModal({
     isOpen,
     onClose,
     onConfirm,
@@ -23,13 +23,13 @@ export default function DeleteConfirmationDrawer({
     description,
     itemName,
     isLoading = false,
-}: DeleteConfirmationDrawerProps) {
+}: DeleteConfirmationModalProps) {
     const footer = (
-        <div className="flex gap-3 w-full">
+        <div className="flex gap-3 justify-end w-full">
             <Button
                 onPress={onClose}
                 variant="bordered"
-                className="flex-1 border-slate-100 text-slate-600 text-xs sm:text-sm font-bold h-12 rounded-lg hover:bg-slate-50 transition-all shadow-sm"
+                className="border-slate-100 text-slate-600 text-xs sm:text-sm font-bold h-10 px-6 rounded-lg hover:bg-slate-50 transition-all shadow-sm"
                 disabled={isLoading}
             >
                 Cancel
@@ -37,7 +37,7 @@ export default function DeleteConfirmationDrawer({
             <Button
                 onPress={onConfirm}
                 isLoading={isLoading}
-                className="flex-[1.5] bg-red-600 text-white text-xs sm:text-sm font-bold h-12 rounded-lg shadow-lg shadow-red-500/10 hover:bg-red-700 hover:-translate-y-0.5 active:translate-y-0 transition-all"
+                className="bg-red-600 text-white text-xs sm:text-sm font-bold h-10 px-8 rounded-lg shadow-lg shadow-red-500/10 hover:bg-red-700 hover:-translate-y-0.5 active:translate-y-0 transition-all"
             >
                 Confirm Removal
             </Button>
@@ -45,7 +45,7 @@ export default function DeleteConfirmationDrawer({
     );
 
     return (
-        <Drawer
+        <Modal
             isOpen={isOpen}
             onClose={onClose}
             title={title}
@@ -54,6 +54,7 @@ export default function DeleteConfirmationDrawer({
             iconColor="text-red-600"
             iconBgColor="bg-red-50"
             footer={footer}
+            size="md"
         >
             <div className="space-y-6 animate-fade-in">
                 <div className="flex flex-col gap-4 p-6 bg-red-50/50 rounded-2xl border border-red-100">
@@ -92,6 +93,6 @@ export default function DeleteConfirmationDrawer({
                     Type confirmed in your mind before clicking the red button.
                 </p>
             </div>
-        </Drawer>
+        </Modal>
     );
 }

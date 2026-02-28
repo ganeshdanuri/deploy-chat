@@ -2,31 +2,32 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { HiChatAlt2, HiPlus, HiRefresh, HiSparkles, HiTrash, HiCode, HiSearch } from "react-icons/hi";
+import { HiChatAlt2, HiPlus, HiRefresh, HiSparkles, HiTrash, HiCode, HiSearch, HiPencil } from "react-icons/hi";
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 import { fetchChatbots, deleteChatbot } from "@/lib/store/slices/chatbotsSlice";
 import api from "@/lib/api";
 import { ENDPOINTS } from "@/lib/endpoints";
-import CreateAIAssistantDrawer from "@/app/components/CreateAIAssistantDrawer";
-import EmbedDrawer from "@/app/components/EmbedDrawer";
+import CreateAIAssistantDrawer from "../../components/CreateAIAssistantDrawer";
+import EmbedDrawer from "../../components/EmbedDrawer";
 import showToast from "@/lib/toast";
 import { Button, Input } from "@heroui/react";
-import { PageHeader, EmptyState, DateCell, StatusChip, ChatbotCardSkeleton, Tooltip, DeleteConfirmationDrawer } from "@/app/components/ui";
+import { PageHeader, EmptyState, DateCell, StatusChip, ChatbotCardSkeleton, Tooltip, DeleteConfirmationModal } from "@/app/components/ui";
 import type { Chatbot } from "@/lib/types";
 import { theme } from "@/app/theme";
 import { STATUS } from "@/lib/constants";
 
 
 export default function ChatbotsPage() {
-    const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const [filterValue, setFilterValue] = useState("");
     const [embedBot, setEmbedBot] = useState<Chatbot | null>(null);
+    const [editBot, setEditBot] = useState<Chatbot | null>(null);
 
     const dispatch = useAppDispatch();
     const { items: chatbots, status } = useAppSelector((state) => state.chatbots);
     const isLoading = status === "loading";
 
-    const [deleteDrawerOpen, setDeleteDrawerOpen] = useState(false);
+    const [deleteModalOpen, setDeleteModalOpen] = useState(false);
     const [itemToDelete, setItemToDelete] = useState<{ id: string; name: string } | null>(null);
     const [isDeleting, setIsDeleting] = useState(false);
 
@@ -36,7 +37,12 @@ export default function ChatbotsPage() {
 
     const handleDeleteClick = (id: string, name: string) => {
         setItemToDelete({ id, name });
-        setDeleteDrawerOpen(true);
+        setDeleteModalOpen(true);
+    };
+
+    const handleEditClick = (bot: Chatbot) => {
+        setEditBot(bot);
+        setIsModalOpen(true);
     };
 
     const handleConfirmDelete = async () => {
@@ -45,7 +51,7 @@ export default function ChatbotsPage() {
         try {
             await dispatch(deleteChatbot(itemToDelete.id)).unwrap();
             showToast.success(`AI Assistant "${itemToDelete.name}" deleted successfully`);
-            setDeleteDrawerOpen(false);
+            setDeleteModalOpen(false);
         } catch (error: any) {
             showToast.error(error?.message || "Failed to delete chatbot");
         } finally {
@@ -90,6 +96,17 @@ export default function ChatbotsPage() {
                         </div>
                     </div>
                     <div className="flex gap-1">
+                        <Tooltip content="Edit">
+                            <Button
+                                isIconOnly
+                                size="sm"
+                                variant="light"
+                                onPress={() => handleEditClick(bot)}
+                                className="text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-md h-8 w-8"
+                            >
+                                <HiPencil className="w-4 h-4" />
+                            </Button>
+                        </Tooltip>
                         <Tooltip content="Refresh Status">
                             <Button
                                 isIconOnly
@@ -187,7 +204,10 @@ export default function ChatbotsPage() {
                                 Refresh Status
                             </Button>
                             <Button
-                                onPress={() => setIsDrawerOpen(true)}
+                                onPress={() => {
+                                    setEditBot(null);
+                                    setIsModalOpen(true);
+                                }}
                                 startContent={<HiPlus className="w-4 h-4" />}
                                 className="text-white text-xs sm:text-sm font-bold rounded-lg transition-all hover:-translate-y-0.5 shadow-lg shadow-indigo-500/20 h-11 px-6"
                                 style={{ backgroundColor: theme.colors.primary.main }}
@@ -211,7 +231,10 @@ export default function ChatbotsPage() {
                     title="No chatbots active"
                     description="Once you've uploaded source files and created knowledge bases, you can build your first AI assistant."
                     actionLabel="Create your first assistant"
-                    onAction={() => setIsDrawerOpen(true)}
+                    onAction={() => {
+                        setEditBot(null);
+                        setIsModalOpen(true);
+                    }}
                     accentColor="indigo"
                 />
             ) : (
@@ -242,8 +265,12 @@ export default function ChatbotsPage() {
             )}
 
             <CreateAIAssistantDrawer
-                isOpen={isDrawerOpen}
-                onClose={() => setIsDrawerOpen(false)}
+                isOpen={isModalOpen}
+                onClose={() => {
+                    setIsModalOpen(false);
+                    setEditBot(null);
+                }}
+                editBot={editBot}
             />
 
             {embedBot && (
@@ -254,9 +281,9 @@ export default function ChatbotsPage() {
                 />
             )}
 
-            <DeleteConfirmationDrawer
-                isOpen={deleteDrawerOpen}
-                onClose={() => setDeleteDrawerOpen(false)}
+            <DeleteConfirmationModal
+                isOpen={deleteModalOpen}
+                onClose={() => setDeleteModalOpen(false)}
                 onConfirm={handleConfirmDelete}
                 isLoading={isDeleting}
                 title="Delete AI Assistant"

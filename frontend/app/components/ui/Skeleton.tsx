@@ -203,10 +203,10 @@ export function PlaygroundConfigSkeleton() {
     );
 }
 
-// ─── Drawer / Modal Item List Skeleton ────────────────────────────────────────
+// ─── Modal Item List Skeleton ────────────────────────────────────────
 
 /**
- * Skeleton shown inside CreateAIAssistantDrawer / CreateKnowledgeBaseDrawer while the list loads.
+ * Skeleton shown inside CreateAIAssistantModal / CreateKnowledgeBaseModal while the list loads.
  */
 export function SelectableListSkeleton({ rows = 3 }: { rows?: number }) {
     return (

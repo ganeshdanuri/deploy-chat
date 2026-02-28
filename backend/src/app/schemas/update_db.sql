@@ -148,3 +148,23 @@ CREATE TABLE IF NOT EXISTS chat_messages (
 
 -- Add status column to chatbots
 ALTER TABLE chatbots ADD COLUMN IF NOT EXISTS status VARCHAR DEFAULT 'creating';
+
+-- Add connectors table if it doesn't exist
+CREATE TABLE IF NOT EXISTS connectors (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    name VARCHAR NOT NULL,
+    type VARCHAR NOT NULL,
+    config JSON,
+    status VARCHAR NOT NULL DEFAULT 'active',
+    last_sync_at TIMESTAMP,
+    created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMP NOT NULL DEFAULT NOW()
+);
+CREATE INDEX IF NOT EXISTS idx_connectors_name ON connectors(name);
+CREATE INDEX IF NOT EXISTS idx_connectors_type ON connectors(type);
+
+-- Update documents table with new columns for connectors
+ALTER TABLE documents ADD COLUMN IF NOT EXISTS connector_id UUID REFERENCES connectors(id) ON DELETE SET NULL;
+ALTER TABLE documents ADD COLUMN IF NOT EXISTS external_id VARCHAR;
+CREATE INDEX IF NOT EXISTS idx_documents_external_id ON documents(external_id);

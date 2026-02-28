@@ -440,7 +440,7 @@ export const CONNECTORS_NAV = [
     { id: "notion", label: "Notion", icon: HiDatabase },
 ];
 
-// ─── Embed Colors (EmbedDrawer) ──────────────────────────────────────────────
+// ─── Embed Colors (EmbedModal) ──────────────────────────────────────────────
 export const PRESET_COLORS = [
     { label: "Indigo", value: "#4f46e5" },
     { label: "Violet", value: "#7c3aed" },
@@ -450,7 +450,7 @@ export const PRESET_COLORS = [
     { label: "Amber", value: "#d97706" },
     { label: "Slate", value: "#334155" },
 ];
-// ─── Global Tooltip Styles ──────────────────────────────────────────────────
+// ─── Drawer Item List Skeleton ──────────────────────────────────────────────────
 export const TOOLTIP_STYLE_CLASSES = "bg-slate-900 text-white text-[10px] font-bold rounded-lg shadow-xl border border-white/10 transition-all duration-300 pointer-events-none z-50 whitespace-nowrap";
 export const TOOLTIP_ARROW_CLASSES = "bg-slate-900 border-white/10 rotate-45";
 

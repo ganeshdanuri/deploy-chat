@@ -8,7 +8,7 @@ import { SiNotion, SiGoogledrive, SiSlack, SiGithub, SiIntercom } from "react-ic
 import { NotionConnectionDrawer } from "./components/NotionConnectionDrawer";
 import showToast from "@/lib/toast";
 
-import { PageHeader, EmptyState, DateCell, StatusChip, Tooltip, DeleteConfirmationDrawer } from "@/app/components/ui";
+import { PageHeader, EmptyState, DateCell, StatusChip, Tooltip, DeleteConfirmationModal } from "@/app/components/ui";
 
 const AVAILABLE_CONNECTORS = [
     {
@@ -63,10 +63,10 @@ export default function ConnectorsPage() {
     const { items: connectors, status } = useAppSelector((state) => state.connectors);
     const [activeTab, setActiveTab] = useState<'active' | 'catalog'>('active');
 
-    const [isNotionDrawerOpen, setIsNotionDrawerOpen] = useState(false);
+    const [isNotionModalOpen, setIsNotionModalOpen] = useState(false);
     const [isSyncing, setIsSyncing] = useState<string | null>(null);
 
-    const [deleteDrawerOpen, setDeleteDrawerOpen] = useState(false);
+    const [deleteModalOpen, setDeleteModalOpen] = useState(false);
     const [itemToDelete, setItemToDelete] = useState<{ id: string; name: string } | null>(null);
     const [isDeleting, setIsDeleting] = useState(false);
 
@@ -111,7 +111,7 @@ export default function ConnectorsPage() {
 
     const handleDeleteClick = (id: string, name: string) => {
         setItemToDelete({ id, name });
-        setDeleteDrawerOpen(true);
+        setDeleteModalOpen(true);
     };
 
     const handleConfirmDelete = async () => {
@@ -120,7 +120,7 @@ export default function ConnectorsPage() {
         try {
             await dispatch(deleteConnector(itemToDelete.id)).unwrap();
             showToast.success("Integration deleted successfully");
-            setDeleteDrawerOpen(false);
+            setDeleteModalOpen(false);
         } catch (err) {
             showToast.error("Delete failed");
         } finally {
@@ -131,7 +131,7 @@ export default function ConnectorsPage() {
 
     const handleOptionClick = (id: string) => {
         if (id === 'notion') {
-            setIsNotionDrawerOpen(true);
+            setIsNotionModalOpen(true);
         } else {
             showToast.info(`${id.replace('-', ' ')} connector is coming soon!`);
         }
@@ -308,14 +308,17 @@ export default function ConnectorsPage() {
             </div>
 
             <NotionConnectionDrawer
-                isOpen={isNotionDrawerOpen}
-                onClose={() => setIsNotionDrawerOpen(false)}
-                onConnected={() => dispatch(fetchConnectors())}
+                isOpen={isNotionModalOpen}
+                onClose={() => setIsNotionModalOpen(false)}
+                onConnected={(newConn) => {
+                    dispatch(fetchConnectors());
+                    setIsNotionModalOpen(false);
+                }}
             />
 
-            <DeleteConfirmationDrawer
-                isOpen={deleteDrawerOpen}
-                onClose={() => setDeleteDrawerOpen(false)}
+            <DeleteConfirmationModal
+                isOpen={deleteModalOpen}
+                onClose={() => setDeleteModalOpen(false)}
                 onConfirm={handleConfirmDelete}
                 isLoading={isDeleting}
                 title="Remove Integration"

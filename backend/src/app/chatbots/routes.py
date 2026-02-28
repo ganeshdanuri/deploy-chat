@@ -4,7 +4,7 @@ from typing import List
 from uuid import UUID
 from app.core.db import get_session
 from app.api.deps import get_current_user
-from app.schemas.models import Chatbot, ChatbotCreate, ChatbotRead, ChatbotDatasets, User, Dataset, DatasetDocuments, DocumentChunk, ChatRequest
+from app.schemas.models import Chatbot, ChatbotCreate, ChatbotUpdate, ChatbotRead, ChatbotDatasets, User, Dataset, DatasetDocuments, DocumentChunk, ChatRequest
 from app.core.billing import verify_plan_limits, increment_usage
 from app.core.ai import get_ai_response
 from app.core.endpoints import Endpoints
@@ -181,7 +181,96 @@ async def chatbot_chat(
     
     return {"response": response, "usage_count": usage.message_count, "token_usage": token_count}
 
+@router.patch(Endpoints.CHATBOTS_BY_ID, response_model=ChatbotRead)
+def update_chatbot(
+    chatbot_id: UUID,
+    chatbot_in: ChatbotUpdate,
+    session: Session = Depends(get_session),
+    current_user: User = Depends(get_current_user)
+):
+    chatbot = session.get(Chatbot, chatbot_id)
+    if not chatbot or chatbot.user_id != current_user.id:
+        raise HTTPException(status_code=404, detail="Chatbot not found")
+        
+    update_data = chatbot_in.model_dump(exclude_unset=True)
+    
+    # Handle datasets update
+    if "dataset_ids" in update_data:
+        dataset_ids = update_data.pop("dataset_ids")
+        # Clear existing links
+        stmt = select(ChatbotDatasets).where(ChatbotDatasets.chatbot_id == chatbot.id)
+        existing_links = session.exec(stmt).all()
+        for link in existing_links:
+            session.delete(link)
+        
+        # Add new links
+        for ds_id in dataset_ids:
+            ds = session.get(Dataset, ds_id)
+            if not ds or ds.user_id != current_user.id:
+                continue
+            link = ChatbotDatasets(chatbot_id=chatbot.id, dataset_id=ds_id)
+            session.add(link)
+            
+    # Handle allowed domains update
+    if "allowed_domains" in update_data:
+        allowed_domains_str = update_data.pop("allowed_domains")
+        # Clear existing domains
+        from app.schemas.models import ChatbotAllowedOrigin
+        stmt = select(ChatbotAllowedOrigin).where(ChatbotAllowedOrigin.chatbot_id == chatbot.id)
+        existing_origins = session.exec(stmt).all()
+        for origin in existing_origins:
+            session.delete(origin)
+            
+        # Add new domains
+        domain_regex = re.compile(
+            r'^(?:https?:\/\/)?' # scheme
+            r'(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+[A-Z]{2,63}|' # domain
+            r'localhost|' # localhost
+            r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})' # ip
+            r'(?::\d+)?' # port
+            r'(?:\/?)$', re.IGNORECASE)
+            
+        domains = [d.strip() for d in allowed_domains_str.split(",") if d.strip()]
+        for domain in domains:
+            if not domain_regex.match(domain) or domain == "*":
+                raise HTTPException(status_code=400, detail=f"Invalid domain format: {domain}")
+            origin = ChatbotAllowedOrigin(chatbot_id=chatbot.id, domain=domain)
+            session.add(origin)
+
+    # Update other fields
+    for key, value in update_data.items():
+        setattr(chatbot, key, value)
+        
+    chatbot.updated_at = datetime.utcnow()
+    session.add(chatbot)
+    session.commit()
+    session.refresh(chatbot)
+    
+    # Add activity
+    from app.schemas.models import RecentActivity, ACTIVITY_TYPE_CHATBOT_CREATED
+    activity = RecentActivity(
+        user_id=current_user.id,
+        activity_type=ACTIVITY_TYPE_CHATBOT_CREATED, # Using this for now
+        details=f"Updated chatbot: {chatbot.name}"
+    )
+    session.add(activity)
+    session.commit()
+    
+    # Return with chunk count
+    count_stmt = (
+        select(func.count(DocumentChunk.id))
+        .join(DatasetDocuments, DocumentChunk.document_id == DatasetDocuments.document_id)
+        .join(ChatbotDatasets, DatasetDocuments.dataset_id == ChatbotDatasets.dataset_id)
+        .where(ChatbotDatasets.chatbot_id == chatbot.id)
+    )
+    chunk_count = session.exec(count_stmt).one_or_none() or 0
+    
+    cb_dict = chatbot.model_dump()
+    cb_dict["chunk_count"] = chunk_count
+    return ChatbotRead(**cb_dict)
+
 @router.delete(Endpoints.CHATBOTS_BY_ID)
+
 def delete_chatbot(
     chatbot_id: UUID,
     session: Session = Depends(get_session),

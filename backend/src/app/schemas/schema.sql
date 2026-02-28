@@ -103,12 +103,29 @@ CREATE TABLE chatbot_datasets (
     PRIMARY KEY(chatbot_id, dataset_id)
 );
 
+-- Connectors
+CREATE TABLE connectors (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    name VARCHAR NOT NULL,
+    type VARCHAR NOT NULL,
+    config JSON,
+    status VARCHAR NOT NULL DEFAULT 'active',
+    last_sync_at TIMESTAMP,
+    created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMP NOT NULL DEFAULT NOW()
+);
+CREATE INDEX idx_connectors_name ON connectors(name);
+CREATE INDEX idx_connectors_type ON connectors(type);
+
 -- Documents
 CREATE TABLE documents (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     name VARCHAR NOT NULL,
     location_url VARCHAR,
     user_id UUID NOT NULL REFERENCES users(id),
+    connector_id UUID REFERENCES connectors(id) ON DELETE SET NULL,
+    external_id VARCHAR,
     created_at TIMESTAMP DEFAULT NOW(),
     updated_at TIMESTAMP DEFAULT NOW()
 );
@@ -174,6 +191,7 @@ CREATE TABLE usage_tracking (
 
 -- Indexes for fast queries
 CREATE INDEX idx_documents_user_id ON documents(user_id);
+CREATE INDEX idx_documents_external_id ON documents(external_id);
 CREATE INDEX idx_datasets_user_id ON datasets(user_id);
 CREATE INDEX idx_chatbots_user_id ON chatbots(user_id);
 CREATE INDEX idx_chatbot_embed_token ON chatbots(embed_token);

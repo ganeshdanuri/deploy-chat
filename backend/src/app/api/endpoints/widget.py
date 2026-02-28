@@ -12,7 +12,39 @@ router = APIRouter(prefix=Endpoints.WIDGET_PREFIX)
 
 
 from typing import List
-from app.schemas.models import ChatMessageItem
+from urllib.parse import urlparse
+from app.schemas.models import ChatMessageItem, ChatbotAllowedOrigin
+
+def verify_widget_origin(session: Session, chatbot: Chatbot, request: Request):
+    """
+    Validates that the request origin/referer matches one of the chatbot's allowed domains.
+    If no domains are allowed, or '*' is allowed, skips validation.
+    """
+    allowed_db = session.exec(select(ChatbotAllowedOrigin).where(ChatbotAllowedOrigin.chatbot_id == chatbot.id)).all()
+    if not allowed_db:
+        return
+
+    allowed = [d.domain.strip().lower() for d in allowed_db]
+    if "*" in allowed:
+        return
+        
+    origin = request.headers.get("origin") or request.headers.get("referer")
+    if not origin:
+        raise HTTPException(status_code=403, detail="Origin not provided or allowed")
+        
+    parsed_origin = urlparse(origin).netloc.lower() or origin.lower()
+    
+    # Remove port if present
+    if ":" in parsed_origin:
+        parsed_origin = parsed_origin.split(":")[0]
+    
+    for domain in allowed:
+        # Check exact block, subdomain, or prefix matching depending on logic
+        domain_clean = domain.split("://")[-1].split("/")[0].split(":")[0] # Remove http:// and paths/ports
+        if parsed_origin == domain_clean or parsed_origin.endswith(f".{domain_clean}"):
+            return
+            
+    raise HTTPException(status_code=403, detail="Origin not allowed")
 
 class WidgetChatRequest(BaseModel):
     message: str
@@ -39,23 +71,7 @@ async def widget_chat(
         raise HTTPException(status_code=404, detail="Chatbot not found")
 
     # 2. Check Domain Whitelisting
-    origin = request.headers.get("origin") or request.headers.get("referer")
-    
-    from app.schemas.models import ChatbotAllowedOrigin
-    allowed_db = session.exec(select(ChatbotAllowedOrigin).where(ChatbotAllowedOrigin.chatbot_id == chatbot.id)).all()
-    
-    if allowed_db:
-        allowed = [d.domain.strip() for d in allowed_db]
-        if "*" not in allowed:
-            parsed_origin = ""
-            if origin:
-                from urllib.parse import urlparse
-                # urlparse("http://example.com").netloc -> "example.com"
-                parsed_origin = urlparse(origin).netloc or origin
-            
-            # very basic check
-            if parsed_origin not in allowed and origin not in allowed:
-                raise HTTPException(status_code=403, detail="Origin not allowed")
+    verify_widget_origin(session, chatbot, request)
 
     # 3. Load the owner user for billing/usage purposes
     owner = session.get(User, chatbot.user_id)
@@ -104,6 +120,7 @@ async def widget_chat(
 
 @router.get(Endpoints.WIDGET_INFO)
 def widget_info(
+    request: Request,
     embed_token: str,
     session: Session = Depends(get_session),
 ):
@@ -112,6 +129,8 @@ def widget_info(
     chatbot = session.exec(statement).first()
     if not chatbot:
         raise HTTPException(status_code=404, detail="Chatbot not found")
+
+    verify_widget_origin(session, chatbot, request)
 
     return {
         "name": chatbot.name,

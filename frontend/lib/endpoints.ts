@@ -32,5 +32,9 @@ export const ENDPOINTS = {
         BY_ID: (id: string | number) => `/api/connectors/${id}`,
         SYNC: (id: string | number) => `/api/connectors/${id}/sync`,
         NOTION_PAGES: '/api/connectors/notion/pages',
+    },
+    API_KEYS: {
+        BASE: '/api/api-keys/',
+        BY_ID: (id: string | number) => `/api/api-keys/${id}`,
     }
 };

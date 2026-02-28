@@ -1,8 +1,8 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session, select
 from app.api.deps import get_current_user
 from app.core.db import get_session
-from app.schemas.models import User, UsageTracking, UserPricingPlan, RecentActivity, RecentActivityRead
+from app.schemas.models import User, UsageTracking, UserPricingPlan, RecentActivity, RecentActivityRead, UserUpdate
 from app.core.constants import STATUS_ACTIVE
 from typing import List
 from app.core.endpoints import Endpoints
@@ -62,6 +62,34 @@ async def get_user_me(
             "reset_date": usage_info.reset_date if usage_info else None
         }
     }
+@router.patch(Endpoints.USERS_ME)
+async def update_user_me(
+    user_in: UserUpdate,
+    current_user: User = Depends(get_current_user),
+    session: Session = Depends(get_session)
+):
+    """
+    Update current user's profile.
+    """
+    if user_in.username:
+        # Check if username exists
+        stmt = select(User).where(User.username == user_in.username, User.id != current_user.id)
+        if session.exec(stmt).first():
+            raise HTTPException(status_code=400, detail="Username already taken")
+        current_user.username = user_in.username
+    
+    if user_in.email:
+        # Check if email exists
+        stmt = select(User).where(User.email == user_in.email, User.id != current_user.id)
+        if session.exec(stmt).first():
+            raise HTTPException(status_code=400, detail="Email already taken")
+        current_user.email = user_in.email
+    
+    session.add(current_user)
+    session.commit()
+    session.refresh(current_user)
+    return {"status": "success"}
+
 
 @router.get(Endpoints.USERS_RECENT_ACTIVITY, response_model=List[RecentActivityRead])
 async def get_recent_activity(

@@ -2,13 +2,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { HiDatabase, HiPlus, HiRefresh, HiCollection, HiTrash, HiSearch } from "react-icons/hi";
+import { HiDatabase, HiPlus, HiRefresh, HiCollection, HiTrash, HiSearch, HiPencil } from "react-icons/hi";
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 import { fetchDatasets, deleteDataset } from "@/lib/store/slices/datasetsSlice";
-import CreateKnowledgeBaseDrawer from "@/app/components/CreateKnowledgeBaseDrawer";
+import CreateKnowledgeBaseDrawer from "../../components/CreateKnowledgeBaseDrawer";
 import showToast from "@/lib/toast";
 import { User, Tooltip, Button, Card, CardBody, Input } from "@heroui/react";
-import { PageHeader, EmptyState, StyledTable, DateCell, StatusChip, TableSkeleton, DeleteConfirmationDrawer } from "@/app/components/ui";
+import { PageHeader, EmptyState, StyledTable, DateCell, StatusChip, TableSkeleton, DeleteConfirmationModal } from "@/app/components/ui";
 import type { TableColumnDef } from "@/app/components/ui";
 import type { Dataset } from "@/lib/types";
 import { theme } from "@/app/theme";
@@ -21,13 +21,14 @@ const COLUMNS: TableColumnDef[] = [
 ];
 
 export default function DatasetsPage() {
-    const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const [filterValue, setFilterValue] = useState("");
+    const [editDataset, setEditDataset] = useState<Dataset | null>(null);
     const dispatch = useAppDispatch();
     const { items: datasets, status } = useAppSelector((state) => state.datasets);
     const isLoading = status === "loading";
 
-    const [deleteDrawerOpen, setDeleteDrawerOpen] = useState(false);
+    const [deleteModalOpen, setDeleteModalOpen] = useState(false);
     const [itemToDelete, setItemToDelete] = useState<{ id: string; name: string } | null>(null);
     const [isDeleting, setIsDeleting] = useState(false);
 
@@ -37,7 +38,12 @@ export default function DatasetsPage() {
 
     const handleDeleteClick = (id: string, name: string) => {
         setItemToDelete({ id, name });
-        setDeleteDrawerOpen(true);
+        setDeleteModalOpen(true);
+    };
+
+    const handleEditClick = (ds: Dataset) => {
+        setEditDataset(ds);
+        setIsModalOpen(true);
     };
 
     const handleConfirmDelete = async () => {
@@ -46,7 +52,7 @@ export default function DatasetsPage() {
         try {
             await dispatch(deleteDataset(itemToDelete.id)).unwrap();
             showToast.success(`Knowledge base "${itemToDelete.name}" deleted successfully`);
-            setDeleteDrawerOpen(false);
+            setDeleteModalOpen(false);
         } catch (error: any) {
             showToast.error(error?.message || "Failed to delete dataset");
         } finally {
@@ -82,8 +88,14 @@ export default function DatasetsPage() {
                 return (
                     <div className="relative flex items-center justify-end gap-2">
                         <Tooltip content="Edit Knowledge">
-                            <Button isIconOnly size="sm" variant="light" className="text-slate-400 hover:text-emerald-600">
-                                <HiCollection className="w-3.5 h-3.5" />
+                            <Button
+                                isIconOnly
+                                size="sm"
+                                variant="light"
+                                onPress={() => handleEditClick(ds)}
+                                className="text-slate-400 hover:text-emerald-600"
+                            >
+                                <HiPencil className="w-3.5 h-3.5" />
                             </Button>
                         </Tooltip>
                         <Tooltip content="Delete">
@@ -122,7 +134,10 @@ export default function DatasetsPage() {
                                 Refresh
                             </Button>
                             <Button
-                                onPress={() => setIsDrawerOpen(true)}
+                                onPress={() => {
+                                    setEditDataset(null);
+                                    setIsModalOpen(true);
+                                }}
                                 startContent={<HiPlus className="w-4 h-4" />}
                                 className="text-white text-xs sm:text-sm font-bold rounded-lg transition-all hover:-translate-y-0.5 shadow-lg shadow-indigo-500/20 h-11 px-6"
                                 style={{ backgroundColor: theme.colors.primary.main }}
@@ -142,7 +157,10 @@ export default function DatasetsPage() {
                     title="No knowledge bases found"
                     description="Knowledge bases group your source files together so you can easily assign them to different AI assistants."
                     actionLabel="Create your first knowledge base"
-                    onAction={() => setIsDrawerOpen(true)}
+                    onAction={() => {
+                        setEditDataset(null);
+                        setIsModalOpen(true);
+                    }}
                     accentColor="emerald"
                 />
             ) : (
@@ -175,7 +193,10 @@ export default function DatasetsPage() {
                     {/* Quick Add Card */}
                     <Card
                         isPressable
-                        onPress={() => setIsDrawerOpen(true)}
+                        onPress={() => {
+                            setEditDataset(null);
+                            setIsModalOpen(true);
+                        }}
                         className="w-full bg-slate-50/50 border-2 border-dashed border-slate-100 shadow-none hover:border-emerald-500/50 hover:bg-emerald-50/10 transition-all rounded-lg"
                     >
                         <CardBody className="py-8 flex flex-col items-center justify-center">
@@ -190,13 +211,17 @@ export default function DatasetsPage() {
             )}
 
             <CreateKnowledgeBaseDrawer
-                isOpen={isDrawerOpen}
-                onClose={() => setIsDrawerOpen(false)}
+                isOpen={isModalOpen}
+                onClose={() => {
+                    setIsModalOpen(false);
+                    setEditDataset(null);
+                }}
+                editDataset={editDataset}
             />
 
-            <DeleteConfirmationDrawer
-                isOpen={deleteDrawerOpen}
-                onClose={() => setDeleteDrawerOpen(false)}
+            <DeleteConfirmationModal
+                isOpen={deleteModalOpen}
+                onClose={() => setDeleteModalOpen(false)}
                 onConfirm={handleConfirmDelete}
                 isLoading={isDeleting}
                 title="Delete Knowledge Base"

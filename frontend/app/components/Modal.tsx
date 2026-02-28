@@ -1,16 +1,16 @@
 "use client";
 
 import {
-    Drawer as HeroDrawer,
-    DrawerContent,
-    DrawerHeader,
-    DrawerBody,
-    DrawerFooter,
+    Modal as HeroModal,
+    ModalContent,
+    ModalHeader,
+    ModalBody,
+    ModalFooter,
     Button
 } from "@heroui/react";
 import { HiX } from "react-icons/hi";
 
-interface DrawerProps {
+interface ModalProps {
     isOpen: boolean;
     onClose: () => void;
     title: string;
@@ -23,7 +23,7 @@ interface DrawerProps {
     size?: "xs" | "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "4xl" | "5xl" | "full";
 }
 
-export default function Drawer({
+export default function Modal({
     isOpen,
     onClose,
     title,
@@ -34,23 +34,43 @@ export default function Drawer({
     iconBgColor = "bg-indigo-50",
     footer,
     size = "md"
-}: DrawerProps) {
+}: ModalProps) {
     return (
-        <HeroDrawer
+        <HeroModal
             isOpen={isOpen}
             onOpenChange={onClose}
             size={size}
             backdrop="opaque"
             classNames={{
-                base: "bg-white border-l border-slate-100 shadow-2xl",
+                base: "bg-white border border-slate-100 rounded-2xl shadow-2xl",
                 closeButton: "hidden",
                 backdrop: "bg-slate-900/40 backdrop-blur-md"
             }}
+            motionProps={{
+                variants: {
+                    enter: {
+                        y: 0,
+                        opacity: 1,
+                        transition: {
+                            duration: 0.3,
+                            ease: "easeOut",
+                        },
+                    },
+                    exit: {
+                        y: -20,
+                        opacity: 0,
+                        transition: {
+                            duration: 0.2,
+                            ease: "easeIn",
+                        },
+                    },
+                }
+            }}
         >
-            <DrawerContent>
+            <ModalContent>
                 {(onCloseAction) => (
                     <>
-                        <DrawerHeader className="px-8 py-6 border-b border-slate-100 flex items-center justify-between bg-slate-50/30 shrink-0">
+                        <ModalHeader className="px-8 py-6 border-b border-slate-100 flex items-center justify-between bg-slate-50/30 shrink-0">
                             <div className="flex items-center gap-4">
                                 {Icon && (
                                     <div className={`w-10 h-10 rounded-xl ${iconBgColor} ${iconColor} flex items-center justify-center shadow-sm`}>
@@ -70,20 +90,20 @@ export default function Drawer({
                             >
                                 <HiX className="w-5 h-5" />
                             </Button>
-                        </DrawerHeader>
+                        </ModalHeader>
 
-                        <DrawerBody className="p-8 overflow-y-auto">
+                        <ModalBody className="p-8 overflow-y-auto">
                             {children}
-                        </DrawerBody>
+                        </ModalBody>
 
                         {footer && (
-                            <DrawerFooter className="px-8 py-6 border-t border-slate-100 bg-slate-50/50 flex flex-row justify-end items-center gap-3 shrink-0">
+                            <ModalFooter className="p-8 border-t border-slate-100 bg-slate-50/50">
                                 {footer}
-                            </DrawerFooter>
+                            </ModalFooter>
                         )}
                     </>
                 )}
-            </DrawerContent>
-        </HeroDrawer>
+            </ModalContent>
+        </HeroModal>
     );
 }

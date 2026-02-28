@@ -6,7 +6,7 @@ import { HiDatabase, HiDocumentText } from "react-icons/hi";
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 import { fetchDocuments } from "@/lib/store/slices/documentsSlice";
 import { fetchConnectors } from "@/lib/store/slices/connectorsSlice";
-import { createDataset } from "@/lib/store/slices/datasetsSlice";
+import { createDataset, fetchDatasets } from "@/lib/store/slices/datasetsSlice";
 import Drawer from "./Drawer";
 import { SiNotion } from "react-icons/si";
 import showToast from "@/lib/toast";
@@ -14,13 +14,16 @@ import { Button, Input } from "@heroui/react";
 import { SelectableItemList, SelectableListSkeleton } from "./ui";
 import type { SelectableItem } from "./ui";
 import { theme } from "../theme";
+import api from "@/lib/api";
+import { ENDPOINTS } from "@/lib/endpoints";
 
 interface CreateKnowledgeBaseDrawerProps {
     isOpen: boolean;
     onClose: () => void;
+    editDataset?: any;
 }
 
-export default function CreateKnowledgeBaseDrawer({ isOpen, onClose }: CreateKnowledgeBaseDrawerProps) {
+export default function CreateKnowledgeBaseDrawer({ isOpen, onClose, editDataset }: CreateKnowledgeBaseDrawerProps) {
     const [name, setName] = useState("");
     const [selectedDocs, setSelectedDocs] = useState<string[]>([]);
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -36,6 +39,15 @@ export default function CreateKnowledgeBaseDrawer({ isOpen, onClose }: CreateKno
         }
     }, [isOpen, docStatus, connStatus, dispatch]);
 
+    useEffect(() => {
+        if (editDataset && isOpen) {
+            setName(editDataset.name || "");
+        } else if (!editDataset && isOpen) {
+            setName("");
+            setSelectedDocs([]);
+        }
+    }, [editDataset, isOpen]);
+
     const toggleDocument = (id: string) => {
         setSelectedDocs((prev) =>
             prev.includes(id) ? prev.filter((docId) => docId !== id) : [...prev, id]
@@ -43,18 +55,23 @@ export default function CreateKnowledgeBaseDrawer({ isOpen, onClose }: CreateKno
     };
 
     const handleSubmit = async () => {
-        if (!name || selectedDocs.length === 0) return;
+        if (!name || (!editDataset && selectedDocs.length === 0)) return;
 
         setIsSubmitting(true);
         try {
-            await dispatch(createDataset({ name, document_ids: selectedDocs })).unwrap();
-            showToast.success(`Knowledge base "${name}" created successfully!`);
-            setName("");
-            setSelectedDocs([]);
+            if (editDataset) {
+                await api.patch(ENDPOINTS.DATASETS.BY_ID(editDataset.id), {
+                    name,
+                });
+                showToast.success(`Knowledge base "${name}" updated successfully!`);
+                dispatch(fetchDatasets());
+            } else {
+                await dispatch(createDataset({ name, document_ids: selectedDocs })).unwrap();
+                showToast.success(`Knowledge base "${name}" created successfully!`);
+            }
             onClose();
         } catch (error: any) {
-            showToast.error(error?.message || "Failed to create knowledge base. Please try again.");
-            console.error("Failed to create knowledge base.");
+            showToast.error(error?.message || `Failed to ${editDataset ? 'update' : 'create'} knowledge base.`);
         } finally {
             setIsSubmitting(false);
         }
@@ -71,84 +88,77 @@ export default function CreateKnowledgeBaseDrawer({ isOpen, onClose }: CreateKno
     });
 
     const footer = (
-        <div className="flex gap-4 w-full">
+        <>
             <Button
                 variant="bordered"
                 onPress={onClose}
-                className="flex-1 font-medium rounded-lg h-12 transition-all hover:bg-slate-50 border border-slate-100 text-slate-600 shadow-sm"
+                className="font-medium rounded-lg h-10 px-6 transition-all hover:bg-slate-50 border border-slate-100 text-slate-600 shadow-sm whitespace-nowrap"
             >
                 Cancel
             </Button>
             <Button
                 onPress={handleSubmit}
-                isDisabled={isSubmitting || !name || selectedDocs.length === 0}
+                isDisabled={isSubmitting || !name || (!editDataset && selectedDocs.length === 0)}
                 isLoading={isSubmitting}
-                className="flex-[1.5] text-white text-sm font-bold rounded-lg h-12 transition-all hover:-translate-y-0.5 shadow-lg shadow-indigo-500/20"
+                className="text-white text-sm font-bold rounded-lg h-10 px-8 shadow-lg shadow-indigo-500/20 transition-all hover:-translate-y-0.5 whitespace-nowrap"
                 style={{ backgroundColor: theme.colors.primary.main }}
             >
-                {isSubmitting ? "Initialising..." : "Create Knowledge Base"}
+                {isSubmitting ? "Processing..." : editDataset ? "Save Changes" : "Create Knowledge Base"}
             </Button>
-        </div>
+        </>
     );
 
     return (
         <Drawer
             isOpen={isOpen}
             onClose={onClose}
-            title="New Knowledge Base"
-            subtitle="Connect and organize your knowledge sources."
+            title={editDataset ? "Edit Knowledge Base" : "New Knowledge Base"}
+            subtitle={editDataset ? "Update your knowledge collection details." : "Connect and organize your knowledge sources."}
             icon={HiDatabase}
             iconBgColor="bg-emerald-50"
             iconColor="text-emerald-600"
             footer={footer}
+            size="2xl"
         >
             <div className="space-y-8 animate-fade-in">
-                {/* Knowledge Base Name */}
                 <div className="space-y-3">
-                    <label htmlFor="kb-name" className="text-sm font-bold block text-slate-700">
-                        Knowledge Base Name
-                    </label>
+                    <label className="text-sm font-bold block text-slate-700">Knowledge Base Name</label>
                     <p className="text-xs text-slate-400">Identify this collection for your AI assistants.</p>
                     <Input
-                        id="kb-name"
-                        type="text"
                         variant="bordered"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         placeholder="e.g. Legal Documents 2024"
                         classNames={{
-                            inputWrapper: "rounded-lg border border-slate-100 h-11 hover:border-emerald-400 data-[focus=true]:border-emerald-500 shadow-none bg-slate-50 transition-all",
-                            input: "font-medium text-sm text-slate-800 placeholder:text-slate-400",
+                            inputWrapper: "rounded-lg border border-slate-100 h-11 hover:border-emerald-400 bg-slate-50 transition-all shadow-none",
+                            input: "font-medium text-sm text-slate-800",
                         }}
                     />
                 </div>
 
-                {/* Source Selection */}
-                <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                        <label className="text-sm font-bold block text-slate-700">
-                            Select Sources
-                        </label>
-                        <span className="text-[10px] font-black text-slate-400 uppercase bg-slate-100 px-2 py-0.5 rounded-full tracking-wider">
-                            {selectedDocs.length} selected
-                        </span>
+                {!editDataset && (
+                    <div className="space-y-4">
+                        <div className="flex items-center justify-between">
+                            <label className="text-sm font-bold block text-slate-700">Select Sources</label>
+                            <span className="text-[10px] font-black text-slate-400 uppercase bg-slate-100 px-2 py-0.5 rounded-full tracking-wider">
+                                {selectedDocs.length} selected
+                            </span>
+                        </div>
+                        {docStatus === "loading" ? (
+                            <SelectableListSkeleton rows={3} />
+                        ) : (
+                            <SelectableItemList
+                                items={documentItems}
+                                selectedIds={selectedDocs}
+                                onToggle={toggleDocument}
+                                defaultIcon={HiDocumentText}
+                                accentColor="emerald"
+                                emptyIcon={HiDocumentText}
+                                emptyMessage={<>No sources available.</>}
+                            />
+                        )}
                     </div>
-                    {docStatus === "loading" ? (
-                        <SelectableListSkeleton rows={3} />
-                    ) : (
-                        <SelectableItemList
-                            items={documentItems}
-                            selectedIds={selectedDocs}
-                            onToggle={toggleDocument}
-                            defaultIcon={HiDocumentText}
-                            accentColor="emerald"
-                            emptyIcon={HiDocumentText}
-                            emptyMessage={
-                                <>No sources available.<br />Upload source files first.</>
-                            }
-                        />
-                    )}
-                </div>
+                )}
             </div>
         </Drawer>
     );

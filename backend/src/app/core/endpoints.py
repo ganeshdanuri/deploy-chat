@@ -41,3 +41,8 @@ class Endpoints:
     DOCUMENTS_PREFIX = "/documents"
     DOCUMENTS_BASE = "/"
     DOCUMENTS_BY_ID = "/{document_id}"
+
+    # API Keys Endpoints
+    API_KEYS_PREFIX = "/api-keys"
+    API_KEYS_BASE = "/"
+    API_KEYS_BY_ID = "/{key_id}"
