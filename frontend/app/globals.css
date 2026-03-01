@@ -15,6 +15,7 @@
   box-sizing: border-box;
 }
 
+
 body {
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
@@ -238,7 +239,8 @@ input:disabled {
 }
 
 :root {
-  --radius: 0.625rem;
+  --app-border-radius: 0;
+  --radius: 0;
   --background: #f3f3f9;
   --foreground: #4d5564;
   --card: #ffffff;
@@ -314,4 +316,17 @@ input:disabled {
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/*
+ * Global Border Radius Control
+ * Change --app-border-radius in :root to apply border-radius across the entire app.
+ * Current value: 0 (no border radius anywhere)
+ * To restore: set --app-border-radius to e.g. 0.625rem
+ * To override on individual elements: use a more specific selector with !important
+ */
+*,
+*::before,
+*::after {
+  border-radius: var(--app-border-radius) !important;
 }

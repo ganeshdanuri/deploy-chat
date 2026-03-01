@@ -176,7 +176,7 @@ function StepRow({ step, active }: { step: Step; active: boolean }) {
                     Step {step.id}
                 </div>
                 <h3
-                    className={`mb-1 text-lg font-medium leading-snug ${active ? "text-[#000000]" : "text-[#a1a1a1]"
+                    className={`mb-1 text-lg font-medium leading-snug ${active ? "text-[#201F3B]" : "text-[#a1a1a1]"
                         }`}
                 >
                     {step.title}
@@ -249,7 +249,7 @@ export default function IntegrationSection() {
                     </div>
                     <h2
                         id="integration-heading"
-                        className="text-[44px] font-semibold tracking-tight text-[#000000] leading-tight"
+                        className="text-[44px] font-semibold tracking-tight text-[#201F3B] leading-tight"
                     >
                         Live on your site in{" "}
                         <span className="text-[#262ef2]">four steps</span>

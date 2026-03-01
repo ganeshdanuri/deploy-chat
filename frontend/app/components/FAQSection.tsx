@@ -24,7 +24,7 @@ export default function FAQSection() {
                     </div>
                     <h2
                         id="faq-heading"
-                        className="text-[44px] font-semibold tracking-tight text-[#000000] leading-tight"
+                        className="text-[44px] font-semibold tracking-tight text-[#201F3B] leading-tight"
                     >
                         Frequently asked questions
                     </h2>
@@ -55,7 +55,7 @@ export default function FAQSection() {
                                         className="flex w-full items-start justify-between gap-6 text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 rounded"
                                     >
                                         <span
-                                            className={`text-lg font-medium leading-snug transition-colors duration-200 ${isOpen ? "text-[#262ef2]" : "text-[#000000]"
+                                            className={`text-lg font-medium leading-snug transition-colors duration-200 ${isOpen ? "text-[#262ef2]" : "text-[#201F3B]"
                                                 }`}
                                         >
                                             {faq.question}

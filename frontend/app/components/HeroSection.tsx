@@ -64,7 +64,7 @@ export default function HeroSection({ stats, onGetStarted }: HeroSectionProps) {
             {/* Headline */}
             <div className="space-y-4">
               <h1
-                className="text-[44px] font-semibold tracking-tight leading-[1.1] text-[#000000]"
+                className="text-[44px] font-semibold tracking-tight leading-[1.1] text-[#201F3B]"
               >
                 Build Intelligent <br />
                 <span className="text-[#262ef2]">
@@ -90,12 +90,6 @@ export default function HeroSection({ stats, onGetStarted }: HeroSectionProps) {
                 <HiArrowRight className="text-lg" />
               </button>
 
-              <button
-                className="text-sm font-medium flex items-center justify-center gap-2 px-8 py-4 rounded-lg bg-[#f3f3f9] transition-all hover:bg-[#e3e3e3] text-[#201F3B]"
-              >
-                <HiPlay className="text-lg" />
-                View Demo
-              </button>
             </div>
 
             {/* Feature Checkmarks (Mini) */}
@@ -188,7 +182,7 @@ export default function HeroSection({ stats, onGetStarted }: HeroSectionProps) {
                 <FaBolt className="text-xl text-[#262ef2]" />
               </div>
               <div>
-                <div className="text-2xl font-semibold text-[#000000]">{stats[0].value}</div>
+                <div className="text-2xl font-semibold text-[#201F3B]">{stats[0].value}</div>
                 <div className="text-xs font-medium text-[#a1a1a1] uppercase tracking-wider">{stats[0].label}</div>
               </div>
             </div>
@@ -203,7 +197,7 @@ export default function HeroSection({ stats, onGetStarted }: HeroSectionProps) {
                     <div key={i} className="w-8 h-8 rounded-full border-2 border-white bg-[#f3f3f9]" />
                   ))}
                 </div>
-                <div className="text-sm font-semibold font-mono text-[#000000]">+10K</div>
+                <div className="text-sm font-semibold font-mono text-[#201F3B]">+10K</div>
               </div>
               <div className="text-xs font-normal text-[#a1a1a1]">Active Developers</div>
             </div>

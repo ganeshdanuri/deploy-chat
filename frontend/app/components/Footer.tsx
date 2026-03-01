@@ -44,7 +44,7 @@ export default function Footer() {
                     {/* Links */}
                     {footerLinks.map((column) => (
                         <div key={column.title} className="col-span-1 space-y-6">
-                            <h4 className="text-sm font-semibold uppercase tracking-widest text-[#000000]">
+                            <h4 className="text-sm font-semibold uppercase tracking-widest text-[#201F3B]">
                                 {column.title}
                             </h4>
                             <ul className="space-y-4">
@@ -64,7 +64,7 @@ export default function Footer() {
 
                     {/* Newsletter */}
                     <div className="col-span-2 lg:col-span-2 space-y-6">
-                        <h4 className="text-sm font-semibold uppercase tracking-widest text-[#000000]">
+                        <h4 className="text-sm font-semibold uppercase tracking-widest text-[#201F3B]">
                             Stay Updated
                         </h4>
                         <p className="text-sm text-[#4d5564]">

@@ -16,14 +16,14 @@ function getPlanHref(plan: Plan): string {
 function PlanPrice({ price, popular }: { price: string; popular?: boolean }) {
     if (price === "Custom") {
         return (
-            <p className={`text-4xl font-semibold tracking-tight ${popular ? "text-white" : "text-[#000000]"}`}>
+            <p className={`text-4xl font-semibold tracking-tight ${popular ? "text-white" : "text-[#201F3B]"}`}>
                 Custom
             </p>
         );
     }
     return (
         <div className="flex items-baseline gap-1">
-            <span className={`text-4xl font-semibold tabular-nums tracking-tight ${popular ? "text-white" : "text-[#000000]"}`}>
+            <span className={`text-4xl font-semibold tabular-nums tracking-tight ${popular ? "text-white" : "text-[#201F3B]"}`}>
                 ${price}
             </span>
             <span className={`text-sm font-normal ${popular ? "text-white/70" : "text-[#a1a1a1]"}`}>/mo</span>
@@ -135,7 +135,7 @@ export default function PricingSection() {
 
                     <h2
                         id="pricing-heading"
-                        className="text-[44px] font-semibold tracking-tight text-[#000000] leading-tight"
+                        className="text-[44px] font-semibold tracking-tight text-[#201F3B] leading-tight"
                     >
                         Simple pricing that scales with you
                     </h2>
