@@ -101,7 +101,7 @@ export default function SettingsPage() {
         <div className="animate-fade-in-up max-w-5xl mx-auto">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8 pb-6 border-b border-[#e3e3e3]">
                 <div>
-                    <h1 className="text-2xl font-bold text-[#201F3B] tracking-tight">{currentTabLabel}</h1>
+                    <h1 className="text-2xl font-bold text-[#201f32] tracking-tight">{currentTabLabel}</h1>
                     <p className="text-sm text-[#4d5564] mt-1">Manage your account preferences and system configuration.</p>
                 </div>
                 <div className="flex items-center gap-2 text-xs font-semibold text-[#a1a1a1] bg-[#f3f3f9] px-3 py-1.5 rounded-lg border border-[#e3e3e3]">
@@ -120,14 +120,14 @@ export default function SettingsPage() {
                                 <div className="bg-white rounded-2xl border border-[#e3e3e3] shadow-sm overflow-hidden animate-fade-in">
                                     <div className="p-6 border-b border-[#e3e3e3] flex items-center justify-between font-bold">
                                         <div>
-                                            <h2 className="text-lg font-bold text-[#201F3B]">Profile Information</h2>
+                                            <h2 className="text-lg font-bold text-[#201f32]">Profile Information</h2>
                                             <p className="text-sm text-[#4d5564] mt-1">Update your account&apos;s profile information and email address.</p>
                                         </div>
                                         <Button
                                             size="sm"
                                             variant="secondary"
                                             onClick={() => setIsEditProfileModalOpen(true)}
-                                            className="bg-[#f3f3f9] text-[#201F3B] font-bold rounded-xl hover:bg-[#e3e3e3]"
+                                            className="bg-[#f3f3f9] text-[#201f32] font-bold rounded-xl hover:bg-[#e3e3e3]"
                                         >
                                             <HiPencil className="w-3.5 h-3.5 mr-2" />
                                             Edit Profile
@@ -165,7 +165,7 @@ export default function SettingsPage() {
                                                         <HiCreditCard className="w-5 h-5 text-[#262ef2]" />
                                                     </div>
                                                     <div>
-                                                        <h2 className="text-lg font-bold text-[#201F3B] flex items-center gap-2">
+                                                        <h2 className="text-lg font-bold text-[#201f32] flex items-center gap-2">
                                                             {userData?.billing?.current_plan ? userData.billing.current_plan.charAt(0).toUpperCase() + userData.billing.current_plan.slice(1) : 'Free'} plan
                                                             <span className="bg-[#10b981]/10 text-[#10b981] border border-[#10b981]/20 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">Active</span>
                                                         </h2>
@@ -179,7 +179,7 @@ export default function SettingsPage() {
 
                                                 <div className="mt-2 text-[#4d5564] max-w-sm">
                                                     <div className="flex justify-between items-end mb-1.5">
-                                                        <span className="text-sm font-semibold text-[#201F3B]">
+                                                        <span className="text-sm font-semibold text-[#201f32]">
                                                             {userData?.usage?.messages_sent || 0} <span className="text-[#a1a1a1] font-medium">/ {userData?.billing?.monthly_limit || 100} msgs</span>
                                                         </span>
                                                         <span className="text-xs font-medium text-[#a1a1a1]">
@@ -258,12 +258,12 @@ export default function SettingsPage() {
                                 <div className="space-y-6 animate-fade-in">
                                     <div className="flex items-center justify-between">
                                         <div>
-                                            <h2 className="text-lg font-bold text-[#201F3B]">API Keys</h2>
+                                            <h2 className="text-lg font-bold text-[#201f32]">API Keys</h2>
                                             <p className="text-sm text-[#4d5564] mt-1">Manage platform keys for model providers.</p>
                                         </div>
                                         <Button
                                             onClick={() => setIsAddKeyModalOpen(true)}
-                                            className="bg-[#201F3B] text-white font-bold rounded-xl hover:bg-[#201F3B]/90 shadow-lg shadow-[#201F3B]/10"
+                                            className="bg-[#201f32] text-white font-bold rounded-xl hover:bg-[#201f32]/90 shadow-lg shadow-[#201f32]/10"
                                         >
                                             <HiPlus className="w-4 h-4 mr-2" />
                                             Add Key
@@ -289,10 +289,10 @@ export default function SettingsPage() {
                                                         <CardContent className="flex flex-row items-center justify-between p-6">
                                                             <div className="flex items-center gap-6">
                                                                 <div className="w-10 h-10 rounded-xl bg-[#f3f3f9] flex items-center justify-center border border-[#e3e3e3]">
-                                                                    <Icon className="w-5 h-5 text-[#201F3B]" />
+                                                                    <Icon className="w-5 h-5 text-[#201f32]" />
                                                                 </div>
                                                                 <div>
-                                                                    <h4 className="text-sm font-bold text-[#201F3B] uppercase tracking-tight">{key.provider}</h4>
+                                                                    <h4 className="text-sm font-bold text-[#201f32] uppercase tracking-tight">{key.provider}</h4>
                                                                     <p className="text-xs text-[#a1a1a1] font-mono">••••••••••••••••</p>
                                                                 </div>
                                                             </div>
@@ -321,7 +321,7 @@ export default function SettingsPage() {
                                     <div className="w-16 h-16 bg-[#f3f3f9] rounded-full flex items-center justify-center mb-4">
                                         <HiShieldCheck className="w-8 h-8 text-[#a1a1a1]/40" />
                                     </div>
-                                    <h3 className="text-[#201F3B] font-bold">Coming Soon</h3>
+                                    <h3 className="text-[#201f32] font-bold">Coming Soon</h3>
                                     <p className="text-[#4d5564] text-sm mt-1 font-medium">This settings panel is under construction.</p>
                                 </div>
                             )}

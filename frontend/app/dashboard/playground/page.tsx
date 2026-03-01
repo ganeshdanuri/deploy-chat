@@ -176,7 +176,7 @@ function ConfigurationPanel({
                 <div className="w-8 h-8 rounded-lg bg-[#262ef2]/5 flex items-center justify-center text-[#262ef2]">
                     <HiCog className="w-5 h-5" />
                 </div>
-                <h3 className="text-lg font-bold text-[#201F3B]">Configuration</h3>
+                <h3 className="text-lg font-bold text-[#201f32]">Configuration</h3>
             </div>
 
             <div className="space-y-8 flex-1">
@@ -192,7 +192,7 @@ function ConfigurationPanel({
                         }}
                         aria-label="Select chatbot"
                     >
-                        <SelectTrigger className="border-[#e3e3e3] bg-[#f3f3f9]/50 hover:bg-white hover:border-[#262ef2]/30 h-11 shadow-none transition-all rounded-lg text-sm font-medium text-[#201F3B] outline-none focus:ring-0">
+                        <SelectTrigger className="border-[#e3e3e3] bg-[#f3f3f9]/50 hover:bg-white hover:border-[#262ef2]/30 h-11 shadow-none transition-all rounded-lg text-sm font-medium text-[#201f32] outline-none focus:ring-0">
                             <SelectValue placeholder="Select a chatbot..." />
                         </SelectTrigger>
                         <SelectContent className="rounded-xl bg-white border border-[#e3e3e3] shadow-lg p-1">
@@ -216,7 +216,7 @@ function ConfigurationPanel({
                         <div className="p-4 bg-[#f3f3f9]/50 rounded-lg border border-[#e3e3e3] space-y-2.5">
                             <div className="flex justify-between">
                                 <span className="text-[10px] font-bold text-[#a1a1a1] uppercase">Provider</span>
-                                <span className="text-[10px] font-bold text-[#201F3B] bg-white px-2 py-0.5 rounded border border-[#e3e3e3] uppercase tracking-wider">
+                                <span className="text-[10px] font-bold text-[#201f32] bg-white px-2 py-0.5 rounded border border-[#e3e3e3] uppercase tracking-wider">
                                     Gemini 2.5 Flash
                                 </span>
                             </div>
@@ -264,13 +264,13 @@ function ChatHeader({ chatbot, onReset }: { chatbot: Chatbot | undefined; onRese
     return (
         <div className="px-6 py-4 border-b border-[#e3e3e3] flex justify-between items-center bg-white/80 backdrop-blur-md z-10 sticky top-0">
             <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-[#262ef2] to-[#201F3B] p-[1px] shadow-lg shadow-[#262ef2]/10">
+                <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-[#262ef2] to-[#201f32] p-[1px] shadow-lg shadow-[#262ef2]/10">
                     <div className="w-full h-full bg-white rounded-md flex items-center justify-center text-[#262ef2]">
                         <HiSparkles className="w-6 h-6" />
                     </div>
                 </div>
                 <div>
-                    <h2 className="text-lg font-bold text-[#201F3B] tracking-tight">
+                    <h2 className="text-lg font-bold text-[#201f32] tracking-tight">
                         {chatbot ? chatbot.name : "Select a Chatbot"}
                     </h2>
                     <div className="flex items-center gap-1.5">
@@ -314,7 +314,7 @@ function MessageBubble({ message: msg }: { message: ChatMessage }) {
 
             <div className={`max-w-[75%] space-y-2 ${!msg.isBot ? "items-end flex flex-col" : ""}`}>
                 <div className={`px-4 py-2.5 rounded-lg text-[14px] leading-relaxed shadow-sm transition-all ${msg.isBot
-                    ? "bg-white border border-[#e3e3e3] text-[#201F3B] rounded-tl-none font-medium"
+                    ? "bg-white border border-[#e3e3e3] text-[#201f32] rounded-tl-none font-medium"
                     : "bg-[#262ef2] text-white rounded-tr-none font-medium"
                     }`}>
                     {msg.isThinking ? (
@@ -324,7 +324,7 @@ function MessageBubble({ message: msg }: { message: ChatMessage }) {
                             <div className="w-2 h-2 bg-[#262ef2]/60 rounded-full animate-bounce [animation-delay:-.5s]" />
                         </div>
                     ) : (
-                        <div className={`prose prose-sm max-w-none ${msg.isBot ? "prose-[#201F3B]" : "prose-invert"}`}>
+                        <div className={`prose prose-sm max-w-none ${msg.isBot ? "prose-[#201f32]" : "prose-invert"}`}>
                             <ReactMarkdown
                                 remarkPlugins={[remarkGfm]}
                                 components={{
@@ -339,7 +339,7 @@ function MessageBubble({ message: msg }: { message: ChatMessage }) {
                                                 {children}
                                             </code>
                                         ) : (
-                                            <pre className="bg-[#201F3B] text-white p-4 rounded-xl overflow-x-auto my-4 font-mono text-[13px]">
+                                            <pre className="bg-[#201f32] text-white p-4 rounded-xl overflow-x-auto my-4 font-mono text-[13px]">
                                                 <code className={className} {...props}>{children}</code>
                                             </pre>
                                         );
@@ -378,7 +378,7 @@ function NoChatbotSelected() {
                 <div className="w-20 h-20 bg-[#262ef2]/5 rounded-lg flex items-center justify-center mx-auto mb-6 border border-[#262ef2]/10">
                     <HiChatAlt2 className="w-10 h-10 text-[#262ef2]/40" />
                 </div>
-                <h3 className="text-xl font-bold text-[#201F3B] mb-2">Select a Chatbot</h3>
+                <h3 className="text-xl font-bold text-[#201f32] mb-2">Select a Chatbot</h3>
                 <p className="text-sm text-[#4d5564] leading-relaxed">
                     Choose a chatbot from the configuration panel on the left to start testing your AI assistant.
                 </p>
@@ -401,7 +401,7 @@ function ChatInput({ input, chatbotName, onChange, onSend }: ChatInputProps) {
         <div className="p-4 bg-white border-t border-[#f3f3f9]">
             <div className="flex items-center gap-3 w-full border border-[#e3e3e3] rounded-xl px-2 py-1 bg-white hover:border-[#a1a1a1]/40 transition-all focus-within:border-[#262ef2] focus-within:ring-4 focus-within:ring-[#262ef2]/5">
                 <textarea
-                    className="flex-1 max-h-40 bg-transparent border-none focus:outline-none focus:ring-0 p-3 text-[14px] font-medium text-[#201F3B] placeholder:text-[#a1a1a1] resize-none leading-relaxed"
+                    className="flex-1 max-h-40 bg-transparent border-none focus:outline-none focus:ring-0 p-3 text-[14px] font-medium text-[#201f32] placeholder:text-[#a1a1a1] resize-none leading-relaxed"
                     placeholder={`Ask ${chatbotName} anything...`}
                     rows={1}
                     value={input}
@@ -416,7 +416,7 @@ function ChatInput({ input, chatbotName, onChange, onSend }: ChatInputProps) {
                 <button
                     onClick={onSend}
                     disabled={!input.trim()}
-                    className="bg-[#262ef2] text-white p-2.5 rounded-lg hover:bg-[#201F3B] shadow-md shadow-[#262ef2]/10 disabled:opacity-30 disabled:cursor-not-allowed transition-all hover:scale-105 active:scale-95 shrink-0"
+                    className="bg-[#262ef2] text-white p-2.5 rounded-lg hover:bg-[#201f32] shadow-md shadow-[#262ef2]/10 disabled:opacity-30 disabled:cursor-not-allowed transition-all hover:scale-105 active:scale-95 shrink-0"
                 >
                     <HiPaperAirplane className="w-5 h-5 transform rotate-90" />
                 </button>

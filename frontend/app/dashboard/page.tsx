@@ -140,7 +140,7 @@ function DashboardSummary({
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#e3e3e3] pb-6 mb-8">
         <div>
           <div className="flex items-center gap-3">
-            <h1 className="text-2xl font-bold text-[#201F3B] tracking-tight">Dashboard Overview</h1>
+            <h1 className="text-2xl font-bold text-[#201f32] tracking-tight">Dashboard Overview</h1>
             <Tooltip content="Refresh Dashboard Data">
               <button
                 onClick={onRefresh}
@@ -163,9 +163,9 @@ function DashboardSummary({
         <div className="flex gap-2">
           <button
             disabled
-            className="px-5 py-2 bg-[#f3f3f9] border border-[#e3e3e3] text-[#a1a1a1] text-sm font-medium rounded-lg shadow-sm opacity-60 cursor-not-allowed flex items-center gap-2"
+            className="px-5 py-2 bg-[#201f32] text-white/50 text-sm font-medium rounded-lg shadow-sm opacity-60 cursor-not-allowed flex items-center gap-2"
           >
-            <HiCreditCard className="w-4 h-4 text-[#a1a1a1]" />
+            <HiCreditCard className="w-4 h-4 text-white/50" />
             Billing & Plans
           </button>
         </div>
@@ -274,7 +274,7 @@ function MetricCard({ icon: Icon, label, value, trend, accentClass, accentBg, ri
           )}
         </div>
       </div>
-      <div className="text-3xl font-bold text-[#201F3B] mb-1 relative z-10 font-mono">{value}</div>
+      <div className="text-3xl font-bold text-[#201f32] mb-1 relative z-10 font-mono">{value}</div>
       <div className={`flex items-center gap-1.5 text-xs font-bold w-fit px-2 py-0.5 rounded-lg relative z-10 ${trendNeutral ? "text-[#a1a1a1] bg-[#f3f3f9]" : "text-[#10b981] bg-[#10b981]/5"
         }`}>
         {trendPositive && <HiTrendingUp className="w-3.5 h-3.5" />}
@@ -292,7 +292,7 @@ function QuickActionsPanel() {
   return (
     <div className="bg-white rounded-xl border border-[#e3e3e3] shadow-sm p-6 lg:col-span-1 h-full flex flex-col">
       <div className="flex items-center justify-between mb-6">
-        <h3 className="text-base font-bold text-[#201F3B]">Knowledge Base</h3>
+        <h3 className="text-base font-bold text-[#201f32]">Knowledge Base</h3>
         <Link href="/dashboard/datasets" className="text-xs text-[#262ef2] font-medium hover:underline">Manage KBs</Link>
       </div>
       <div className="space-y-3 flex-1">
@@ -306,7 +306,7 @@ function QuickActionsPanel() {
               <action.icon className="w-5 h-5" />
             </div>
             <div>
-              <h4 className={`text-sm font-semibold text-[#201F3B] ${action.hoverText}`}>{action.label}</h4>
+              <h4 className={`text-sm font-semibold text-[#201f32] ${action.hoverText}`}>{action.label}</h4>
               <p className="text-xs text-[#a1a1a1] mt-0.5">{action.description}</p>
             </div>
           </Link>
@@ -360,7 +360,7 @@ function RecentActivityPanel() {
     <div className="bg-white rounded-xl border border-[#e3e3e3] shadow-sm p-6 lg:col-span-2">
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
-          <h3 className="text-base font-bold text-[#201F3B]">Recent Activity</h3>
+          <h3 className="text-base font-bold text-[#201f32]">Recent Activity</h3>
           <span className="bg-[#262ef2]/10 text-[#262ef2] text-xs font-bold px-2 py-0.5 rounded-lg">New</span>
         </div>
         <button className="p-1.5 hover:bg-[#f3f3f9] rounded text-[#a1a1a1] hover:text-[#4d5564]">
@@ -406,7 +406,7 @@ function RecentActivityPanel() {
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
-                  <p className="text-sm font-semibold text-[#201F3B] truncate">{getActivityTitle(item.activity_type)}</p>
+                  <p className="text-sm font-semibold text-[#201f32] truncate">{getActivityTitle(item.activity_type)}</p>
                   <span className="text-[10px] sm:text-xs text-[#a1a1a1] font-medium whitespace-nowrap font-mono italic">
                     {new Date(item.created_at).toLocaleDateString()}
                   </span>
@@ -433,7 +433,7 @@ function OnboardingView({ cardsRef }: { cardsRef: React.RefObject<HTMLDivElement
           <HiLightningBolt className="w-3 h-3" />
           <span>Getting Started</span>
         </div>
-        <h2 className="text-2xl md:text-3xl font-extrabold text-[#201F3B] mb-4 tracking-tight">
+        <h2 className="text-2xl md:text-3xl font-extrabold text-[#201f32] mb-4 tracking-tight">
           Build your AI assistant in 4 simple steps
         </h2>
         <p className="text-base text-[#4d5564] max-w-xl mx-auto leading-relaxed">
@@ -459,7 +459,7 @@ function OnboardingView({ cardsRef }: { cardsRef: React.RefObject<HTMLDivElement
               <div className="flex items-center gap-2 mb-2">
                 <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#a1a1a1] font-mono">Step 0{step.id}</span>
               </div>
-              <h3 className="text-lg font-bold text-[#201F3B] mb-2 group-hover:text-[#262ef2] transition-colors">
+              <h3 className="text-lg font-bold text-[#201f32] mb-2 group-hover:text-[#262ef2] transition-colors">
                 {step.name}
               </h3>
               <p className="text-[#4d5564] text-xs md:text-sm leading-relaxed mb-8 flex-1">
@@ -467,7 +467,7 @@ function OnboardingView({ cardsRef }: { cardsRef: React.RefObject<HTMLDivElement
               </p>
               <Link
                 href={step.href}
-                className="flex items-center justify-between w-full px-5 py-2.5 rounded-lg bg-[#f3f3f9] text-[#4d5564] border border-[#e3e3e3] text-[13px] font-medium transition-all duration-300 group/btn hover:bg-[#201F3B] hover:text-white hover:border-[#201F3B] shadow-sm"
+                className="flex items-center justify-between w-full px-5 py-2.5 rounded-lg bg-[#201f32] text-white border border-[#201f32] text-[13px] font-medium transition-all duration-300 group/btn shadow-sm hover:shadow-md hover:-translate-y-0.5"
               >
                 <span>{step.btnText}</span>
                 <HiArrowRight className="w-4 h-4 transform group-hover/btn:translate-x-1 transition-transform" />

@@ -16,14 +16,14 @@ function getPlanHref(plan: Plan): string {
 function PlanPrice({ price, popular }: { price: string; popular?: boolean }) {
     if (price === "Custom") {
         return (
-            <p className={`text-4xl font-semibold tracking-tight ${popular ? "text-white" : "text-[#201F3B]"}`}>
+            <p className={`text-4xl font-semibold tracking-tight ${popular ? "text-white" : "text-[#201f32]"}`}>
                 Custom
             </p>
         );
     }
     return (
         <div className="flex items-baseline gap-1">
-            <span className={`text-4xl font-semibold tabular-nums tracking-tight ${popular ? "text-white" : "text-[#201F3B]"}`}>
+            <span className={`text-4xl font-semibold tabular-nums tracking-tight ${popular ? "text-white" : "text-[#201f32]"}`}>
                 ${price}
             </span>
             <span className={`text-sm font-normal ${popular ? "text-white/70" : "text-[#a1a1a1]"}`}>/mo</span>
@@ -106,7 +106,7 @@ function PlanCard({ plan }: { plan: Plan }) {
                     "transition-all duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2",
                     plan.popular
                         ? "bg-white text-[#262ef2] hover:bg-white/90 focus-visible:outline-white"
-                        : "bg-[#f3f3f9] text-[#201F3B] hover:bg-[#e3e3e3] focus-visible:outline-indigo-600",
+                        : "bg-[#f3f3f9] text-[#201f32] hover:bg-[#e3e3e3] focus-visible:outline-indigo-600",
                 ].join(" ")}
             >
                 {plan.cta}
@@ -135,7 +135,7 @@ export default function PricingSection() {
 
                     <h2
                         id="pricing-heading"
-                        className="text-[44px] font-semibold tracking-tight text-[#201F3B] leading-tight"
+                        className="text-[44px] font-semibold tracking-tight text-[#201f32] leading-tight"
                     >
                         Simple pricing that scales with you
                     </h2>

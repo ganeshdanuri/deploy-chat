@@ -22,7 +22,7 @@ export default function FeaturesSection() {
           </div>
           <h2
             className="text-[44px] font-semibold mb-6 tracking-tight leading-tight"
-            style={{ color: "#201F3B" }}
+            style={{ color: "#201f32" }}
           >
             Everything you need to build <br className="hidden md:block" />
             <span style={{ color: theme.colors.primary.main }}>
@@ -69,7 +69,7 @@ export default function FeaturesSection() {
 
                 <h3
                   className="text-xl font-medium mb-3"
-                  style={{ color: "#201F3B" }}
+                  style={{ color: "#201f32" }}
                 >
                   {feature.title}
                 </h3>

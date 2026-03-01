@@ -29,7 +29,7 @@ export default function HeroSection({ stats, onGetStarted }: HeroSectionProps) {
       />
       <div
         className="absolute bottom-0 left-0 -z-10 h-[400px] w-[400px] opacity-10 blur-3xl rounded-full"
-        style={{ background: `radial-gradient(circle, #201F3B 0%, transparent 70%)` }}
+        style={{ background: `radial-gradient(circle, #201f32 0%, transparent 70%)` }}
       />
 
       <div className="mx-auto max-w-7xl px-6 py-8 lg:py-14">
@@ -40,7 +40,7 @@ export default function HeroSection({ stats, onGetStarted }: HeroSectionProps) {
             <div className="flex flex-wrap items-center gap-3">
               {/* Trust Badge */}
               <div
-                className="inline-flex items-center gap-2 rounded-lg px-4 py-1.5 text-sm font-normal bg-[#f3f3f9] text-[#201F3B]"
+                className="inline-flex items-center gap-2 rounded-lg px-4 py-1.5 text-sm font-normal bg-[#f3f3f9] text-[#201f32]"
               >
                 <span className="relative flex h-2 w-2">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 bg-green-400"></span>
@@ -54,9 +54,9 @@ export default function HeroSection({ stats, onGetStarted }: HeroSectionProps) {
                 href={SOCIAL_LINKS.twitter}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-lg px-4 py-1.5 text-sm font-normal bg-[#201F3B]/5 text-[#201F3B] hover:bg-[#201F3B]/10 transition-colors"
+                className="inline-flex items-center gap-2 rounded-lg px-4 py-1.5 text-sm font-normal bg-[#201f32]/5 text-[#201f32] hover:bg-[#201f32]/10 transition-colors"
               >
-                <FaTwitter size={14} className="text-[#201F3B]" />
+                <FaTwitter size={14} className="text-[#201f32]" />
                 Follow for updates
               </a>
             </div>
@@ -64,7 +64,7 @@ export default function HeroSection({ stats, onGetStarted }: HeroSectionProps) {
             {/* Headline */}
             <div className="space-y-4">
               <h1
-                className="text-[44px] font-semibold tracking-tight leading-[1.1] text-[#201F3B]"
+                className="text-[44px] font-semibold tracking-tight leading-[1.1] text-[#201f32]"
               >
                 Build Intelligent <br />
                 <span className="text-[#262ef2]">
@@ -84,7 +84,7 @@ export default function HeroSection({ stats, onGetStarted }: HeroSectionProps) {
             <div className="flex flex-col sm:flex-row gap-4">
               <button
                 onClick={onGetStarted}
-                className="text-sm font-medium flex items-center justify-center gap-2 px-8 py-4 rounded-lg text-white shadow-lg shadow-[#262ef2]/20 transition-all hover:-translate-y-1 hover:shadow-xl bg-[#262ef2]"
+                className="text-sm font-medium flex items-center justify-center gap-2 px-8 py-4 rounded-lg text-white shadow-lg shadow-[#201f32]/20 transition-all hover:-translate-y-1 hover:shadow-xl bg-[#201f32]"
               >
                 Start Building Free
                 <HiArrowRight className="text-lg" />
@@ -125,7 +125,7 @@ export default function HeroSection({ stats, onGetStarted }: HeroSectionProps) {
                 <div className="flex items-center justify-between">
                   <div>
                     <div className="h-2 w-24 bg-[#f3f3f9] rounded mb-2" />
-                    <div className="h-4 w-40 bg-[#201F3B] rounded opacity-10" />
+                    <div className="h-4 w-40 bg-[#201f32] rounded opacity-10" />
                   </div>
                   <div
                     className="h-8 w-8 rounded-lg flex items-center justify-center bg-[#262ef2]/5"
@@ -182,7 +182,7 @@ export default function HeroSection({ stats, onGetStarted }: HeroSectionProps) {
                 <FaBolt className="text-xl text-[#262ef2]" />
               </div>
               <div>
-                <div className="text-2xl font-semibold text-[#201F3B]">{stats[0].value}</div>
+                <div className="text-2xl font-semibold text-[#201f32]">{stats[0].value}</div>
                 <div className="text-xs font-medium text-[#a1a1a1] uppercase tracking-wider">{stats[0].label}</div>
               </div>
             </div>
@@ -197,7 +197,7 @@ export default function HeroSection({ stats, onGetStarted }: HeroSectionProps) {
                     <div key={i} className="w-8 h-8 rounded-full border-2 border-white bg-[#f3f3f9]" />
                   ))}
                 </div>
-                <div className="text-sm font-semibold font-mono text-[#201F3B]">+10K</div>
+                <div className="text-sm font-semibold font-mono text-[#201f32]">+10K</div>
               </div>
               <div className="text-xs font-normal text-[#a1a1a1]">Active Developers</div>
             </div>

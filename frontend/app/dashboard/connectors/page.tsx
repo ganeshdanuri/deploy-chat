@@ -16,7 +16,7 @@ const AVAILABLE_CONNECTORS = [
         name: "Notion",
         description: "Sync pages and databases",
         icon: SiNotion,
-        color: "text-[#201F3B]",
+        color: "text-[#201f32]",
         bgColor: "bg-[#f3f3f9]",
         status: "active"
     },
@@ -43,7 +43,7 @@ const AVAILABLE_CONNECTORS = [
         name: "GitHub",
         description: "Sync repos and READMEs",
         icon: SiGithub,
-        color: "text-[#201F3B]",
+        color: "text-[#201f32]",
         bgColor: "bg-[#f3f3f9]",
         status: "coming-soon"
     },
@@ -87,10 +87,10 @@ export default function ConnectorsPage() {
 
     const getConnectorColor = (type: string) => {
         switch (type.toLowerCase()) {
-            case 'notion': return 'bg-[#201F3B]';
+            case 'notion': return 'bg-[#201f32]';
             case 'google-drive': return 'bg-[#262ef2]';
             case 'slack': return 'bg-[#262ef2]';
-            case 'github': return 'bg-[#201F3B]';
+            case 'github': return 'bg-[#201f32]';
             case 'intercom': return 'bg-[#262ef2]';
             default: return 'bg-[#262ef2]';
         }
@@ -142,7 +142,7 @@ export default function ConnectorsPage() {
             {/* Page Header */}
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
                 <div className="max-w-xl">
-                    <h1 className="text-3xl font-black text-[#201F3B] tracking-tight">Integrations</h1>
+                    <h1 className="text-3xl font-black text-[#201f32] tracking-tight">Integrations</h1>
                     <p className="text-base text-[#4d5564] mt-2 font-medium leading-relaxed">
                         Connect your tools to automatically build your AI knowledge base.
                         Sync documents and conversations in real-time.
@@ -158,7 +158,7 @@ export default function ConnectorsPage() {
                         px-6 py-2.5 rounded-xl text-sm font-bold transition-all
                         ${activeTab === 'active'
                             ? "bg-white text-[#262ef2] shadow-sm"
-                            : "text-[#4d5564] hover:text-[#201F3B] hover:bg-white/50"}
+                            : "text-[#4d5564] hover:text-[#201f32] hover:bg-white/50"}
                     `}
                 >
                     My Connections
@@ -172,7 +172,7 @@ export default function ConnectorsPage() {
                         px-6 py-2.5 rounded-xl text-sm font-bold transition-all
                         ${activeTab === 'catalog'
                             ? "bg-white text-[#262ef2] shadow-sm"
-                            : "text-[#4d5564] hover:text-[#201F3B] hover:bg-white/50"}
+                            : "text-[#4d5564] hover:text-[#201f32] hover:bg-white/50"}
                     `}
                 >
                     Browse Catalog
@@ -194,7 +194,7 @@ export default function ConnectorsPage() {
                                 <div className="w-16 h-16 rounded-3xl bg-[#f3f3f9] flex items-center justify-center text-[#a1a1a1] mb-6">
                                     <HiShare className="w-8 h-8" />
                                 </div>
-                                <h3 className="text-xl font-bold text-[#201F3B] mb-2">No active integrations</h3>
+                                <h3 className="text-xl font-bold text-[#201f32] mb-2">No active integrations</h3>
                                 <p className="text-sm text-[#4d5564] mb-8 font-medium">Connect your workspace tools to automatically sync your content and keep your AI knowledge updated.</p>
                                 <button
                                     onClick={() => setActiveTab('catalog')}
@@ -217,7 +217,7 @@ export default function ConnectorsPage() {
                                                 </div>
                                                 <div className="flex-1 min-w-0">
                                                     <div className="flex items-center gap-3 mb-1.5 flex-wrap">
-                                                        <h3 className="font-bold text-[#201F3B] text-lg truncate max-w-[200px]">{connector.name}</h3>
+                                                        <h3 className="font-bold text-[#201f32] text-lg truncate max-w-[200px]">{connector.name}</h3>
                                                         <span className={`text-[10px] font-black px-2 py-0.5 rounded-lg uppercase tracking-widest ${connector.status === 'active' ? 'bg-[#10b981]/10 text-[#10b981]' : 'bg-[#ef4444]/10 text-[#ef4444]'}`}>
                                                             {connector.status}
                                                         </span>
@@ -240,7 +240,7 @@ export default function ConnectorsPage() {
                                                 <button
                                                     onClick={() => handleSync(connector.id)}
                                                     disabled={isSyncing === connector.id}
-                                                    className="p-2.5 rounded-xl bg-[#f3f3f9] text-[#201F3B] hover:bg-[#e3e3e3] transition-all border border-[#e3e3e3]/50 disabled:opacity-50"
+                                                    className="p-2.5 rounded-xl bg-[#f3f3f9] text-[#201f32] hover:bg-[#e3e3e3] transition-all border border-[#e3e3e3]/50 disabled:opacity-50"
                                                     title="Sync Now"
                                                 >
                                                     <HiRefresh className={`w-4 h-4 ${isSyncing === connector.id ? "animate-spin" : ""}`} />
@@ -277,13 +277,13 @@ export default function ConnectorsPage() {
                                 <div className={`
                                     w-16 h-16 rounded-2xl flex items-center justify-center mb-5 transition-all duration-500 shadow-sm
                                     ${option.status === 'active'
-                                        ? "bg-[#201F3B] text-white group-hover:bg-[#262ef2] group-hover:scale-110 group-hover:-translate-y-1"
+                                        ? "bg-[#201f32] text-white group-hover:bg-[#262ef2] group-hover:scale-110 group-hover:-translate-y-1"
                                         : "bg-[#f3f3f9] text-[#a1a1a1]"
                                     }
                                 `}>
                                     <option.icon className="w-7 h-7" />
                                 </div>
-                                <h3 className="font-bold text-[#201F3B] mb-1 text-base">{option.name}</h3>
+                                <h3 className="font-bold text-[#201f32] mb-1 text-base">{option.name}</h3>
                                 <p className="text-xs font-semibold text-[#a1a1a1] leading-tight px-2">{option.description}</p>
 
                                 {option.status === 'coming-soon' && (

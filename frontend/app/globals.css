@@ -249,8 +249,8 @@ input:disabled {
   --popover-foreground: #4d5564;
   --primary: #262ef2;
   --primary-foreground: #ffffff;
-  --secondary: #e3e3e3;
-  --secondary-foreground: #201F3B;
+  --secondary: #201f32;
+  --secondary-foreground: #ffffff;
   --muted: #f3f3f9;
   --muted-foreground: #a1a1a1;
   --accent: #f3f3f9;
@@ -260,17 +260,17 @@ input:disabled {
   --input: #e3e3e3;
   --ring: #262ef2;
   --chart-1: #262ef2;
-  --chart-2: #201F3B;
+  --chart-2: #201f32;
   --chart-3: #a1a1a1;
   --chart-4: #4d5564;
   --chart-5: #e3e3e3;
-  --sidebar: #201F3B;
-  --sidebar-foreground: #ffffff;
+  --sidebar: transparent;
+  --sidebar-foreground: #4d5564;
   --sidebar-primary: #262ef2;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: rgba(255, 255, 255, 0.1);
-  --sidebar-accent-foreground: #ffffff;
-  --sidebar-border: #201F3B;
+  --sidebar-accent: rgba(38, 46, 242, 0.06);
+  --sidebar-accent-foreground: #262ef2;
+  --sidebar-border: #e3e3e3;
   --sidebar-ring: #262ef2;
 }
 
@@ -329,4 +329,16 @@ input:disabled {
 *::before,
 *::after {
   border-radius: var(--app-border-radius) !important;
+}
+
+/*
+ * Apply minimal border radius for interactive elements
+ * as per user request
+ */
+button,
+input,
+textarea,
+select,
+[role="button"] {
+  border-radius: 4px !important;
 }

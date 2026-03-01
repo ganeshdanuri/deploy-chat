@@ -19,7 +19,7 @@ export function TopNav({ onMenuClick }: TopNavProps) {
             {/* Search / Command Palette Trigger */}
             <div className="flex-1 max-w-2xl flex items-center gap-2 sm:gap-4">
                 <button
-                    className="lg:hidden p-2 -ml-2 text-[#4d5564] hover:text-[#201F3B] hover:bg-[#f3f3f9] rounded-lg transition-colors"
+                    className="lg:hidden p-2 -ml-2 text-[#4d5564] hover:text-[#201f32] hover:bg-[#f3f3f9] rounded-lg transition-colors"
                     onClick={onMenuClick}
                 >
                     <HiMenuAlt2 className="w-6 h-6" />

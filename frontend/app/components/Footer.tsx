@@ -14,7 +14,7 @@ export default function Footer() {
                     <div className="col-span-2 space-y-6">
                         <div className="flex items-center gap-2">
                             <Logo className="h-10 w-auto" />
-                            <span className="text-2xl font-bold tracking-tight text-[#201F3B]">
+                            <span className="text-2xl font-bold tracking-tight text-[#201f32]">
                                 DEPLOY <span className="text-[#262ef2]">CHAT</span>
                             </span>
                         </div>
@@ -44,7 +44,7 @@ export default function Footer() {
                     {/* Links */}
                     {footerLinks.map((column) => (
                         <div key={column.title} className="col-span-1 space-y-6">
-                            <h4 className="text-sm font-semibold uppercase tracking-widest text-[#201F3B]">
+                            <h4 className="text-sm font-semibold uppercase tracking-widest text-[#201f32]">
                                 {column.title}
                             </h4>
                             <ul className="space-y-4">
@@ -64,7 +64,7 @@ export default function Footer() {
 
                     {/* Newsletter */}
                     <div className="col-span-2 lg:col-span-2 space-y-6">
-                        <h4 className="text-sm font-semibold uppercase tracking-widest text-[#201F3B]">
+                        <h4 className="text-sm font-semibold uppercase tracking-widest text-[#201f32]">
                             Stay Updated
                         </h4>
                         <p className="text-sm text-[#4d5564]">
@@ -74,7 +74,7 @@ export default function Footer() {
                             <input
                                 type="email"
                                 placeholder="Email address"
-                                className="text-sm flex-1 px-4 py-2.5 rounded-xl bg-[#f3f3f9] focus:outline-none focus:ring-2 focus:ring-[#262ef2]/20 text-[#201F3B] placeholder-[#a1a1a1]"
+                                className="text-sm flex-1 px-4 py-2.5 rounded-xl bg-[#f3f3f9] focus:outline-none focus:ring-2 focus:ring-[#262ef2]/20 text-[#201f32] placeholder-[#a1a1a1]"
                             />
                             <button
                                 className="text-sm font-medium px-6 py-2.5 rounded-xl text-white transition-all hover:-translate-y-0.5 bg-[#262ef2]"

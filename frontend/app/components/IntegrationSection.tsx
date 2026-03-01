@@ -71,7 +71,7 @@ type Token = { type: "tag" | "attr" | "string" | "plain"; text: string };
 
 const TOKEN_COLORS: Record<Token["type"], string> = {
     tag: "#262ef2",
-    attr: "#201F3B",
+    attr: "#201f32",
     string: "#10b981",
     plain: "#4d5564",
 };
@@ -176,7 +176,7 @@ function StepRow({ step, active }: { step: Step; active: boolean }) {
                     Step {step.id}
                 </div>
                 <h3
-                    className={`mb-1 text-lg font-medium leading-snug ${active ? "text-[#201F3B]" : "text-[#a1a1a1]"
+                    className={`mb-1 text-lg font-medium leading-snug ${active ? "text-[#201f32]" : "text-[#a1a1a1]"
                         }`}
                 >
                     {step.title}
@@ -230,7 +230,7 @@ export default function IntegrationSection() {
                 <div
                     className="relative left-[calc(50%+11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] opacity-10 sm:w-[72.1875rem]"
                     style={{
-                        background: `linear-gradient(to top right, #262ef2, #201F3B)`,
+                        background: `linear-gradient(to top right, #262ef2, #201f32)`,
                         clipPath:
                             "polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)",
                     }}
@@ -249,7 +249,7 @@ export default function IntegrationSection() {
                     </div>
                     <h2
                         id="integration-heading"
-                        className="text-[44px] font-semibold tracking-tight text-[#201F3B] leading-tight"
+                        className="text-[44px] font-semibold tracking-tight text-[#201f32] leading-tight"
                     >
                         Live on your site in{" "}
                         <span className="text-[#262ef2]">four steps</span>
@@ -276,7 +276,7 @@ export default function IntegrationSection() {
                         <div className="flex flex-col flex-grow lg:sticky lg:top-28">
 
                             {/* Editor card — solid rectangle, no border */}
-                            <div className="flex flex-col flex-grow overflow-hidden rounded-xl bg-white shadow-xl shadow-[#201F3B]/5">
+                            <div className="flex flex-col flex-grow overflow-hidden rounded-xl bg-white shadow-xl shadow-[#201f32]/5">
 
                                 {/* Title bar */}
                                 <div className="flex items-center justify-between bg-[#f3f3f9] px-5 py-3">

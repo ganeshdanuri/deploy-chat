@@ -76,7 +76,7 @@ export function NotionConnectionDrawer({ isOpen, onClose, onConnected }: NotionC
                 <div className="space-y-6">
                     <div className="bg-[#262ef2]/5 border border-[#262ef2]/10 p-5 rounded-2xl flex gap-4">
                         <HiInformationCircle className="w-5 h-5 text-[#262ef2] shrink-0 mt-0.5" />
-                        <div className="text-sm text-[#201F3B] leading-relaxed">
+                        <div className="text-sm text-[#201f32] leading-relaxed">
                             Create an <strong>Internal Integration Token</strong> in Notion and share pages with it.
                         </div>
                     </div>
@@ -89,7 +89,7 @@ export function NotionConnectionDrawer({ isOpen, onClose, onConnected }: NotionC
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
                                 placeholder="e.g. Marketing Docs"
-                                className="w-full px-4 py-3 bg-[#f3f3f9] border border-[#e3e3e3] rounded-xl text-sm text-[#201F3B] outline-none focus:border-[#262ef2] transition-colors"
+                                className="w-full px-4 py-3 bg-[#f3f3f9] border border-[#e3e3e3] rounded-xl text-sm text-[#201f32] outline-none focus:border-[#262ef2] transition-colors"
                             />
                         </div>
                         <div className="space-y-2">
@@ -99,7 +99,7 @@ export function NotionConnectionDrawer({ isOpen, onClose, onConnected }: NotionC
                                 value={token}
                                 onChange={(e) => setToken(e.target.value)}
                                 placeholder="secret_..."
-                                className="w-full px-4 py-3 bg-[#f3f3f9] border border-[#e3e3e3] rounded-xl text-sm font-mono text-[#201F3B] outline-none focus:border-[#262ef2] transition-colors"
+                                className="w-full px-4 py-3 bg-[#f3f3f9] border border-[#e3e3e3] rounded-xl text-sm font-mono text-[#201f32] outline-none focus:border-[#262ef2] transition-colors"
                             />
                         </div>
                     </div>
@@ -108,7 +108,7 @@ export function NotionConnectionDrawer({ isOpen, onClose, onConnected }: NotionC
             ) : (
                 <div className="space-y-6">
                     <div className="flex items-center justify-between">
-                        <h4 className="text-sm font-bold text-[#201F3B]">Select Pages ({selectedPages.length})</h4>
+                        <h4 className="text-sm font-bold text-[#201f32]">Select Pages ({selectedPages.length})</h4>
                         <button onClick={() => setStep(1)} className="text-xs text-[#262ef2] font-bold">Change Token</button>
                     </div>
 
@@ -123,7 +123,7 @@ export function NotionConnectionDrawer({ isOpen, onClose, onConnected }: NotionC
                                     className={`p-4 rounded-2xl border transition-all cursor-pointer flex items-center justify-between ${selectedPages.includes(page.id) ? "border-[#262ef2] bg-[#262ef2]/5 ring-1 ring-[#262ef2] shadow-sm" : "border-[#e3e3e3] hover:bg-[#f3f3f9]"}`}
                                 >
                                     <div className="flex-1 min-w-0 mr-4">
-                                        <div className="text-sm font-bold text-[#201F3B] truncate">{page.title}</div>
+                                        <div className="text-sm font-bold text-[#201f32] truncate">{page.title}</div>
                                         <div className="text-[10px] text-[#a1a1a1] truncate font-mono mt-0.5">{page.url}</div>
                                     </div>
                                     {selectedPages.includes(page.id) && <HiCheckCircle className="w-6 h-6 text-[#262ef2] shrink-0" />}
@@ -150,7 +150,7 @@ export function NotionConnectionDrawer({ isOpen, onClose, onConnected }: NotionC
                 <Button
                     onClick={handleFetchPages}
                     disabled={isLoading || !token}
-                    className="py-4 bg-[#201F3B] text-white rounded-lg h-10 px-8 text-sm font-bold hover:bg-[#201F3B]/90 disabled:opacity-50 transition-all shadow-xl"
+                    className="py-4 bg-[#201f32] text-white rounded-lg h-10 px-8 text-sm font-bold hover:bg-[#201f32]/90 disabled:opacity-50 transition-all shadow-xl"
                 >
                     {isLoading ? "Fetching..." : "Continue"}
                 </Button>

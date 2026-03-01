@@ -86,7 +86,7 @@ export default function ChatbotsPage() {
                             <HiChatAlt2 className="w-5 h-5" />
                         </div>
                         <div>
-                            <h3 className="font-semibold text-[#201F3B] text-base">{bot.name}</h3>
+                            <h3 className="font-semibold text-[#201f32] text-base">{bot.name}</h3>
                             <div className="flex items-center gap-2">
                                 <StatusChip status={(bot as any).status} />
                                 <span className="text-[10px] text-[#a1a1a1] font-medium uppercase tracking-wider">
@@ -151,7 +151,7 @@ export default function ChatbotsPage() {
 
                     <div className="flex justify-between items-center text-[11px]">
                         <span className="text-[#a1a1a1] font-medium">Created</span>
-                        <DateCell isoString={bot.created_at} className="text-[#201F3B] font-semibold" />
+                        <DateCell isoString={bot.created_at} className="text-[#201f32] font-semibold" />
                     </div>
                 </div>
 

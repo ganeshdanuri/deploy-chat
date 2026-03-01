@@ -341,7 +341,7 @@ export const ONBOARDING_STEPS: OnboardingStep[] = [
         color: "text-[#262ef2]",
         bgColor: "bg-[#262ef2]/5",
         borderColor: "border-[#262ef2]/10",
-        gradientFrom: "from-[#262ef2] to-[#201F3B]",
+        gradientFrom: "from-[#262ef2] to-[#201f32]",
         btnText: "Add Documents",
     },
     {
@@ -353,7 +353,7 @@ export const ONBOARDING_STEPS: OnboardingStep[] = [
         color: "text-[#262ef2]",
         bgColor: "bg-[#262ef2]/5",
         borderColor: "border-[#262ef2]/10",
-        gradientFrom: "from-[#262ef2] to-[#201F3B]",
+        gradientFrom: "from-[#262ef2] to-[#201f32]",
         btnText: "Setup Knowledge",
     },
     {
@@ -365,7 +365,7 @@ export const ONBOARDING_STEPS: OnboardingStep[] = [
         color: "text-[#262ef2]",
         bgColor: "bg-[#262ef2]/5",
         borderColor: "border-[#262ef2]/10",
-        gradientFrom: "from-[#262ef2] to-[#201F3B]",
+        gradientFrom: "from-[#262ef2] to-[#201f32]",
         btnText: "Create Assistant",
     },
     {
@@ -377,7 +377,7 @@ export const ONBOARDING_STEPS: OnboardingStep[] = [
         color: "text-[#262ef2]",
         bgColor: "bg-[#262ef2]/5",
         borderColor: "border-[#262ef2]/10",
-        gradientFrom: "from-[#262ef2] to-[#201F3B]",
+        gradientFrom: "from-[#262ef2] to-[#201f32]",
         btnText: "Try Playground",
     },
 ];
@@ -443,13 +443,13 @@ export const CONNECTORS_NAV = [
 // ─── Embed Colors (EmbedModal) ──────────────────────────────────────────────
 export const PRESET_COLORS = [
     { label: "Primary", value: "#262ef2" },
-    { label: "Dark", value: "#201F3B" },
+    { label: "Dark", value: "#201f32" },
     { label: "Muted", value: "#a1a1a1" },
     { label: "Border", value: "#e3e3e3" },
 ];
 // ─── Drawer Item List Skeleton ──────────────────────────────────────────────────
-export const TOOLTIP_STYLE_CLASSES = "bg-[#201F3B] text-white text-[10px] font-bold rounded-lg shadow-xl border border-white/10 transition-all duration-300 pointer-events-none z-50 whitespace-nowrap";
-export const TOOLTIP_ARROW_CLASSES = "bg-[#201F3B] border-white/10 rotate-45";
+export const TOOLTIP_STYLE_CLASSES = "bg-[#201f32] text-white text-[10px] font-bold rounded-lg shadow-xl border border-white/10 transition-all duration-300 pointer-events-none z-50 whitespace-nowrap";
+export const TOOLTIP_ARROW_CLASSES = "bg-[#201f32] border-white/10 rotate-45";
 
 // ─── Plan Names ─────────────────────────────────────────────────────────────
 export const PLANS = {

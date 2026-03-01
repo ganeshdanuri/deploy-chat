@@ -29,9 +29,9 @@ export function PricingCard({
                     <span className="bg-[#262ef2]/10 text-[#262ef2] text-[10px] font-bold px-2 py-0.5 rounded-lg border border-[#262ef2]/10 uppercase tracking-wider">Most Popular</span>
                 </div>
             )}
-            <h3 className="text-xl font-semibold text-[#201F3B]">{title}</h3>
+            <h3 className="text-xl font-semibold text-[#201f32]">{title}</h3>
             <div className="mt-1 flex items-baseline gap-1">
-                <span className="text-3xl font-black text-[#201F3B]">{typeof price === 'string' && price === 'Custom' ? price : `$${price}`}</span>
+                <span className="text-3xl font-black text-[#201f32]">{typeof price === 'string' && price === 'Custom' ? price : `$${price}`}</span>
                 {interval && <span className="text-sm text-[#4d5564]">{interval}</span>}
             </div>
             <ul className="mt-5 space-y-3 flex-1">

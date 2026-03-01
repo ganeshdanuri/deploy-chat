@@ -55,7 +55,7 @@ export function EmptyState({
             <div className={`w-16 h-16 ${colors.bg} ${colors.text} rounded-xl flex items-center justify-center mb-4`}>
                 <Icon className="w-8 h-8" />
             </div>
-            <h2 className="text-2xl font-semibold text-[#201F3B] mb-2">{title}</h2>
+            <h2 className="text-2xl font-semibold text-[#201f32] mb-2">{title}</h2>
             <p className="text-[#4d5564] max-w-sm text-center mb-8 text-sm">{description}</p>
             {actionLabel && onAction && (
                 <Button

@@ -6,7 +6,7 @@ export default function CTASection({ onGetStarted }: { onGetStarted: () => void 
     return (
         <section className="py-20 px-6">
             <div
-                className="max-w-7xl mx-auto rounded-xl p-12 md:p-20 text-center relative overflow-hidden shadow-2xl bg-[#201F3B]"
+                className="max-w-7xl mx-auto rounded-xl p-12 md:p-20 text-center relative overflow-hidden shadow-2xl bg-[#201f32]"
             >
                 {/* Decorative Gradients */}
                 <div
@@ -31,7 +31,7 @@ export default function CTASection({ onGetStarted }: { onGetStarted: () => void 
                     <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
                         <button
                             onClick={onGetStarted}
-                            className="text-sm font-medium px-10 py-5 rounded-lg bg-white text-[#201F3B] hover:-translate-y-1 transition-all shadow-xl shadow-white/10"
+                            className="text-sm font-medium px-10 py-5 rounded-lg bg-white text-[#201f32] hover:-translate-y-1 transition-all shadow-xl shadow-white/10"
                         >
                             Get Started for Free
                         </button>

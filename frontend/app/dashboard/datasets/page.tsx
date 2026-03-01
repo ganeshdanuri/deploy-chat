@@ -74,7 +74,7 @@ export default function DatasetsPage() {
                         description="Collection"
                         name={ds.name}
                         classNames={{
-                            name: "font-medium text-sm text-[#201F3B]",
+                            name: "font-medium text-sm text-[#201f32]",
                             description: "text-xs text-[#a1a1a1]",
                         }}
                     />
@@ -194,7 +194,7 @@ export default function DatasetsPage() {
                             <div className="w-12 h-12 rounded-lg bg-white border border-[#e3e3e3] flex items-center justify-center mb-3 shadow-sm">
                                 <HiPlus className="w-6 h-6 text-[#a1a1a1]" />
                             </div>
-                            <h3 className="text-sm font-bold text-[#201F3B]">Add New Knowledge</h3>
+                            <h3 className="text-sm font-bold text-[#201f32]">Add New Knowledge</h3>
                             <p className="text-[11px] text-[#a1a1a1] mt-1">Connect more data sources</p>
                         </CardContent>
                     </Card>

@@ -30,7 +30,7 @@ export default function AnalyticsPage() {
                 <div className="w-16 h-16 bg-[#262ef2]/5 rounded-2xl flex items-center justify-center mb-6 shadow-sm border border-[#262ef2]/10">
                     <HiLockClosed className="w-8 h-8 text-[#262ef2]" />
                 </div>
-                <h1 className="text-2xl font-bold text-[#201F3B] mb-2">Analytics Pro</h1>
+                <h1 className="text-2xl font-bold text-[#201f32] mb-2">Analytics Pro</h1>
                 <p className="text-[#4d5564] mb-6 max-w-sm">
                     Detailed analytics and usage metrics are only available on higher plans.
                 </p>
@@ -48,11 +48,11 @@ export default function AnalyticsPage() {
         <div className="space-y-6 animate-fade-in-up">
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-2xl font-bold text-[#201F3B] tracking-tight">Analytics</h1>
+                    <h1 className="text-2xl font-bold text-[#201f32] tracking-tight">Analytics</h1>
                     <p className="text-sm text-[#4d5564] mt-1">Usage trends and performance metrics.</p>
                 </div>
                 <div className="flex bg-white rounded-lg p-1 border border-[#e3e3e3] shadow-sm">
-                    <button className="px-3 py-1.5 bg-[#f3f3f9] text-[#201F3B] text-xs font-semibold rounded shadow-sm">7 Days</button>
+                    <button className="px-3 py-1.5 bg-[#f3f3f9] text-[#201f32] text-xs font-semibold rounded shadow-sm">7 Days</button>
                     <button className="px-3 py-1.5 text-[#a1a1a1] hover:bg-[#f3f3f9] text-xs font-semibold rounded">30 Days</button>
                     <button className="px-3 py-1.5 text-[#a1a1a1] hover:bg-[#f3f3f9] text-xs font-semibold rounded">90 Days</button>
                 </div>
@@ -63,7 +63,7 @@ export default function AnalyticsPage() {
                 {/* Card 1 */}
                 <div className="bg-white p-4 rounded-xl border border-[#e3e3e3] shadow-sm">
                     <div className="text-sm font-medium text-[#a1a1a1] mb-1">Total Conversations</div>
-                    <div className="text-2xl font-bold text-[#201F3B]">12,405</div>
+                    <div className="text-2xl font-bold text-[#201f32]">12,405</div>
                     <div className="flex items-center gap-1 text-[#10b981] text-xs font-bold mt-2">
                         <HiTrendingUp className="w-3 h-3" />
                         12.5%
@@ -72,7 +72,7 @@ export default function AnalyticsPage() {
                 {/* Card 2 */}
                 <div className="bg-white p-4 rounded-xl border border-[#e3e3e3] shadow-sm">
                     <div className="text-sm font-medium text-[#a1a1a1] mb-1">Avg. Response Time</div>
-                    <div className="text-2xl font-bold text-[#201F3B]">1.2s</div>
+                    <div className="text-2xl font-bold text-[#201f32]">1.2s</div>
                     <div className="flex items-center gap-1 text-[#10b981] text-xs font-bold mt-2">
                         <HiTrendingUp className="w-3 h-3 rotate-180" />
                         -0.3s
@@ -81,7 +81,7 @@ export default function AnalyticsPage() {
                 {/* Card 3 */}
                 <div className="bg-white p-4 rounded-xl border border-[#e3e3e3] shadow-sm">
                     <div className="text-sm font-medium text-[#a1a1a1] mb-1">User Satisfaction</div>
-                    <div className="text-2xl font-bold text-[#201F3B]">4.8/5</div>
+                    <div className="text-2xl font-bold text-[#201f32]">4.8/5</div>
                     <div className="flex items-center gap-1 text-[#10b981] text-xs font-bold mt-2">
                         <HiTrendingUp className="w-3 h-3" />
                         +0.2
@@ -90,7 +90,7 @@ export default function AnalyticsPage() {
                 {/* Card 4 */}
                 <div className="bg-white p-4 rounded-xl border border-[#e3e3e3] shadow-sm">
                     <div className="text-sm font-medium text-[#a1a1a1] mb-1">Tokens Consumed</div>
-                    <div className="text-2xl font-bold text-[#201F3B]">8.4M</div>
+                    <div className="text-2xl font-bold text-[#201f32]">8.4M</div>
                     <div className="flex items-center gap-1 text-[#f59e0b] text-xs font-bold mt-2">
                         <HiTrendingUp className="w-3 h-3" />
                         High Usage
@@ -102,12 +102,12 @@ export default function AnalyticsPage() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Usage Chart */}
                 <div className="bg-white p-6 rounded-xl border border-[#e3e3e3] shadow-sm h-80 flex flex-col">
-                    <h3 className="text-sm font-bold text-[#201F3B] mb-6">Daily Conversations</h3>
+                    <h3 className="text-sm font-bold text-[#201f32] mb-6">Daily Conversations</h3>
                     <div className="flex-1 flex items-end justify-between gap-2 px-2">
                         {[40, 65, 45, 80, 55, 90, 70, 85, 60, 75, 50, 95].map((h, i) => (
                             <div key={i} className="w-full bg-[#262ef2]/5 rounded-t-sm relative group">
                                 <div
-                                    className="absolute bottom-0 left-0 w-full bg-[#262ef2] rounded-t-sm transition-all duration-500 hover:bg-[#201F3B]"
+                                    className="absolute bottom-0 left-0 w-full bg-[#262ef2] rounded-t-sm transition-all duration-500 hover:bg-[#201f32]"
                                     style={{ height: `${h}%` }}
                                 ></div>
                                 {/* Tooltip */}
@@ -131,7 +131,7 @@ export default function AnalyticsPage() {
 
                 {/* Token Usage Chart */}
                 <div className="bg-white p-6 rounded-xl border border-[#e3e3e3] shadow-sm h-80 flex flex-col">
-                    <h3 className="text-sm font-bold text-[#201F3B] mb-6">Cost Estimation ($)</h3>
+                    <h3 className="text-sm font-bold text-[#201f32] mb-6">Cost Estimation ($)</h3>
                     <div className="flex-1 flex items-end justify-between gap-4 px-4 border-l border-[#e3e3e3] relative">
                         {/* Grid Lines */}
                         <div className="absolute w-full h-full top-0 left-0 flex flex-col justify-between pointer-events-none">

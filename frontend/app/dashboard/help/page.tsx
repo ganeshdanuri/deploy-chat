@@ -34,7 +34,7 @@ export default function HelpPage() {
                     <HiQuestionMarkCircle className="w-8 h-8" />
                 </div>
                 <div>
-                    <h1 className="text-3xl font-extrabold text-[#201F3B] tracking-tight">Help Center</h1>
+                    <h1 className="text-3xl font-extrabold text-[#201f32] tracking-tight">Help Center</h1>
                     <p className="text-[#4d5564] font-medium">How can we help you today?</p>
                 </div>
             </div>
@@ -47,7 +47,7 @@ export default function HelpPage() {
                             <div className={`w-14 h-14 ${section.bgColor} ${section.color} rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform`}>
                                 <Icon className="w-7 h-7" />
                             </div>
-                            <h3 className="text-xl font-bold text-[#201F3B] mb-3">{section.title}</h3>
+                            <h3 className="text-xl font-bold text-[#201f32] mb-3">{section.title}</h3>
                             <p className="text-[#4d5564] leading-relaxed text-sm">
                                 {section.description}
                             </p>
@@ -60,13 +60,13 @@ export default function HelpPage() {
                 })}
             </div>
 
-            <div className="mt-12 p-8 bg-[#201F3B] rounded-[2.5rem] text-white overflow-hidden relative">
+            <div className="mt-12 p-8 bg-[#201f32] rounded-[2.5rem] text-white overflow-hidden relative">
                 <div className="relative z-10">
                     <h2 className="text-2xl font-bold mb-4">Enterprise Support</h2>
                     <p className="text-[#a1a1a1] max-w-xl mb-8 leading-relaxed">
                         Looking for dedicated support, custom integrations, or on-premise deployment? Our enterprise team is here to help.
                     </p>
-                    <button className="px-6 py-1.5 bg-white text-[#201F3B] font-bold rounded-xl hover:bg-[#f3f3f9] transition-colors shadow-lg">
+                    <button className="px-6 py-1.5 bg-white text-[#201f32] font-bold rounded-xl hover:bg-[#f3f3f9] transition-colors shadow-lg">
                         Contact Sales
                     </button>
                 </div>

@@ -41,7 +41,7 @@ export default function Navbar() {
             <div className="flex items-center gap-3 cursor-pointer" onClick={() => router.push("/")}>
               <Logo className="h-10 w-auto" />
               <div className="flex items-center">
-                <span className="text-2xl font-bold tracking-tight block leading-none text-[#201F3B]">
+                <span className="text-2xl font-bold tracking-tight block leading-none text-[#201f32]">
                   DEPLOY <span style={{ color: "#262ef2" }}>CHAT</span>
                 </span>
               </div>
@@ -54,7 +54,7 @@ export default function Navbar() {
                   key={link.label}
                   href={link.href}
                   className="text-sm font-normal px-5 py-2 rounded-md transition-all hover:bg-[#f3f3f9] hover:text-[#262ef2]"
-                  style={{ color: "#201F3B" }}
+                  style={{ color: "#201f32" }}
                 >
                   {link.label}
                 </a>
@@ -65,7 +65,7 @@ export default function Navbar() {
             <div className="flex items-center gap-4">
               <button
                 onClick={handleMainButtonClick}
-                className="text-sm font-medium hidden sm:flex items-center gap-2 text-[#201F3B] px-6 py-2.5 rounded-lg hover:bg-[#f3f3f9] transition-all"
+                className="text-sm font-medium hidden sm:flex items-center gap-2 text-[#201f32] px-6 py-2.5 rounded-lg hover:bg-[#f3f3f9] transition-all"
               >
                 <LogIn size={18} strokeWidth={2} className="opacity-60" />
                 Login
@@ -74,7 +74,7 @@ export default function Navbar() {
               {/* Mobile Menu Button */}
               <button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className="md:hidden p-2 text-[#201F3B] hover:bg-[#f3f3f9] rounded-lg transition-colors"
+                className="md:hidden p-2 text-[#201f32] hover:bg-[#f3f3f9] rounded-lg transition-colors"
               >
                 {isMobileMenuOpen ? <HiX size={24} /> : <HiMenu size={24} />}
               </button>
@@ -88,7 +88,7 @@ export default function Navbar() {
                 <a
                   key={link.label}
                   href={link.href}
-                  className="block py-3 px-4 text-sm font-normal text-[#201F3B] hover:bg-[#f3f3f9] hover:text-[#262ef2] rounded-lg transition-colors"
+                  className="block py-3 px-4 text-sm font-normal text-[#201f32] hover:bg-[#f3f3f9] hover:text-[#262ef2] rounded-lg transition-colors"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   {link.label}
@@ -100,7 +100,7 @@ export default function Navbar() {
                     handleMainButtonClick();
                     setIsMobileMenuOpen(false);
                   }}
-                  className="w-full py-2.5 text-[#201F3B] text-sm font-medium rounded-lg bg-[#f3f3f9]"
+                  className="w-full py-2.5 text-[#201f32] text-sm font-medium rounded-lg bg-[#f3f3f9]"
                 >
                   Get Started
                 </button>
