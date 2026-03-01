@@ -1,14 +1,15 @@
 "use client";
 
 import {
-    Drawer as HeroDrawer,
-    DrawerContent,
-    DrawerHeader,
-    DrawerBody,
-    DrawerFooter,
-    Button
-} from "@heroui/react";
+    Sheet,
+    SheetContent,
+    SheetHeader,
+    SheetTitle,
+    SheetFooter,
+} from "@/components/ui/sheet";
+import { Button } from "@/components/ui/button";
 import { HiX } from "react-icons/hi";
+import { cn } from "@/lib/utils";
 
 interface DrawerProps {
     isOpen: boolean;
@@ -35,55 +36,46 @@ export default function Drawer({
     footer,
     size = "md"
 }: DrawerProps) {
+    const sizeClasses = {
+        xs: "sm:max-w-xs",
+        sm: "sm:max-w-sm",
+        md: "sm:max-w-md",
+        lg: "sm:max-w-lg",
+        xl: "sm:max-w-xl",
+        "2xl": "sm:max-w-2xl",
+        "3xl": "sm:max-w-3xl",
+        "4xl": "sm:max-w-4xl",
+        "5xl": "sm:max-w-5xl",
+        full: "sm:max-w-full",
+    };
+
     return (
-        <HeroDrawer
-            isOpen={isOpen}
-            onOpenChange={onClose}
-            size={size}
-            backdrop="opaque"
-            classNames={{
-                base: "bg-white border-l border-slate-100 shadow-2xl",
-                closeButton: "hidden",
-                backdrop: "bg-slate-900/40 backdrop-blur-md"
-            }}
-        >
-            <DrawerContent>
-                {(onCloseAction) => (
-                    <>
-                        <DrawerHeader className="px-8 py-6 border-b border-slate-100 flex items-center justify-between bg-slate-50/30 shrink-0">
-                            <div className="flex items-center gap-4">
-                                {Icon && (
-                                    <div className={`w-10 h-10 rounded-xl ${iconBgColor} ${iconColor} flex items-center justify-center shadow-sm`}>
-                                        <Icon className="w-5 h-5" />
-                                    </div>
-                                )}
-                                <div>
-                                    <h2 className="text-xl font-bold text-slate-800 leading-tight">{title}</h2>
-                                    {subtitle && <p className="text-xs text-slate-500 mt-0.5 font-medium">{subtitle}</p>}
-                                </div>
+        <Sheet open={isOpen} onOpenChange={(open) => !open && onClose()}>
+            <SheetContent className={cn("p-0 flex flex-col bg-white border-l border-slate-100 shadow-2xl outline-none", sizeClasses[size])}>
+                <SheetHeader className="px-8 py-6 border-b border-slate-100 flex flex-row items-center justify-between bg-slate-50/30 shrink-0">
+                    <div className="flex items-center gap-4">
+                        {Icon && (
+                            <div className={`w-10 h-10 rounded-xl ${iconBgColor} ${iconColor} flex items-center justify-center shadow-sm`}>
+                                <Icon className="w-5 h-5" />
                             </div>
-                            <Button
-                                isIconOnly
-                                variant="light"
-                                onPress={onCloseAction}
-                                className="text-slate-400 hover:text-slate-600 hover:bg-white rounded-lg transition-all border border-transparent hover:border-slate-200"
-                            >
-                                <HiX className="w-5 h-5" />
-                            </Button>
-                        </DrawerHeader>
-
-                        <DrawerBody className="p-8 overflow-y-auto">
-                            {children}
-                        </DrawerBody>
-
-                        {footer && (
-                            <DrawerFooter className="px-8 py-6 border-t border-slate-100 bg-slate-50/50 flex flex-row justify-end items-center gap-3 shrink-0">
-                                {footer}
-                            </DrawerFooter>
                         )}
-                    </>
+                        <div>
+                            <SheetTitle className="text-xl font-bold text-slate-800 leading-tight">{title}</SheetTitle>
+                            {subtitle && <p className="text-xs text-slate-500 mt-0.5 font-medium">{subtitle}</p>}
+                        </div>
+                    </div>
+                </SheetHeader>
+
+                <div className="flex-1 overflow-y-auto p-8">
+                    {children}
+                </div>
+
+                {footer && (
+                    <SheetFooter className="px-8 py-6 border-t border-slate-100 bg-slate-50/50 flex flex-row justify-end items-center gap-3 shrink-0">
+                        {footer}
+                    </SheetFooter>
                 )}
-            </DrawerContent>
-        </HeroDrawer>
+            </SheetContent>
+        </Sheet>
     );
 }

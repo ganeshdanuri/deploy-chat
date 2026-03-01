@@ -1,14 +1,14 @@
-import { Sora, IBM_Plex_Mono } from "next/font/google";
+import { Space_Grotesk, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "./context/AuthContext";
 import ReduxProvider from "./components/ReduxProvider";
 import ToastProvider from "./components/ToastProvider";
-import HeroUIProviderWrapper from "./components/HeroUIProvider";
 import GoogleOAuthWrapper from "./components/GoogleOAuthWrapper";
 import { Analytics } from "@vercel/analytics/next"
+import { TooltipProvider } from "@/components/ui/tooltip";
 
-const sora = Sora({
-  variable: "--font-sora",
+const spaceGrotesk = Space_Grotesk({
+  variable: "--font-space-grotesk",
   subsets: ["latin"],
   display: "swap",
 });
@@ -33,7 +33,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${sora.variable} ${ibmPlexMono.variable}`}>
+    <html lang="en" className={`${spaceGrotesk.variable} ${ibmPlexMono.variable}`}>
       <head>
       </head>
       <body
@@ -41,7 +41,7 @@ export default function RootLayout({
       >
         <div className="mesh-gradient" />
         <ReduxProvider>
-          <HeroUIProviderWrapper>
+          <TooltipProvider>
             <GoogleOAuthWrapper>
               <AuthProvider>
                 <ToastProvider>
@@ -50,7 +50,7 @@ export default function RootLayout({
                 </ToastProvider>
               </AuthProvider>
             </GoogleOAuthWrapper>
-          </HeroUIProviderWrapper>
+          </TooltipProvider>
         </ReduxProvider>
       </body>
     </html>

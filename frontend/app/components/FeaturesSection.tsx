@@ -17,12 +17,12 @@ export default function FeaturesSection() {
       <div className="mx-auto max-w-7xl px-6">
         {/* Section Header */}
         <div className="mb-16 text-center max-w-3xl mx-auto">
-          <div className="inline-flex items-center justify-center px-3 py-1 mb-4 rounded-full border border-blue-100 bg-blue-50 text-blue-700 text-xs font-bold tracking-widest uppercase">
+          <div className="inline-flex items-center justify-center px-3 py-1 mb-4 rounded-lg bg-[#262ef2]/10 text-[#262ef2] text-xs font-semibold tracking-widest uppercase">
             Powerful Features
           </div>
           <h2
-            className="text-3xl font-bold mb-6 tracking-tight sm:text-4xl"
-            style={{ color: theme.colors.neutral[900] }}
+            className="text-[44px] font-semibold mb-6 tracking-tight leading-tight"
+            style={{ color: "#000000" }}
           >
             Everything you need to build <br className="hidden md:block" />
             <span style={{ color: theme.colors.primary.main }}>
@@ -42,7 +42,7 @@ export default function FeaturesSection() {
           {features.map((feature) => (
             <div
               key={feature.id}
-              className={`group relative overflow-hidden rounded-xl p-8 transition-all duration-300 hover:shadow-xl border border-slate-100 bg-white/50 backdrop-blur-sm hover:bg-white ${feature.span}`}
+              className={`group relative overflow-hidden rounded-xl p-8 transition-all duration-300 hover:shadow-xl bg-[#f3f3f9] hover:bg-white ${feature.span}`}
             >
               {/* Hover Gradient Background */}
               <div
@@ -55,7 +55,7 @@ export default function FeaturesSection() {
                   <div
                     className="flex h-12 w-12 items-center justify-center rounded-lg shadow-sm transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-3"
                     style={{
-                      backgroundColor: `${feature.color}15`, // 10% opacity
+                      backgroundColor: `${feature.color}15`,
                       color: feature.color
                     }}
                   >
@@ -68,8 +68,8 @@ export default function FeaturesSection() {
                 </div>
 
                 <h3
-                  className="text-xl font-semibold mb-3"
-                  style={{ color: theme.colors.neutral[900] }}
+                  className="text-xl font-medium mb-3"
+                  style={{ color: "#000000" }}
                 >
                   {feature.title}
                 </h3>

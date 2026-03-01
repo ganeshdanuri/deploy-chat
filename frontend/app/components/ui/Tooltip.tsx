@@ -1,24 +1,30 @@
 "use client";
 
-import { Tooltip as HeroTooltip, TooltipProps } from "@heroui/react";
+import { Tooltip as ShadcnTooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { TOOLTIP_STYLE_CLASSES } from "@/lib/constants";
+import { cn } from "@/lib/utils";
 
-export const Tooltip = ({ children, classNames, ...props }: TooltipProps) => {
+interface TooltipProps {
+    children: React.ReactNode;
+    content: React.ReactNode;
+    className?: string;
+}
+
+export const Tooltip = ({ children, content, className }: TooltipProps) => {
     return (
-        <HeroTooltip
-            showArrow
-            classNames={{
-                ...classNames,
-                content: [
+        <ShadcnTooltip>
+            <TooltipTrigger asChild>
+                {children}
+            </TooltipTrigger>
+            <TooltipContent
+                className={cn(
                     TOOLTIP_STYLE_CLASSES,
-                    "py-1.5 px-3",
-                    classNames?.content,
-                ].filter(Boolean).join(" "),
-                arrow: "bg-slate-900",
-            }}
-            {...props}
-        >
-            {children}
-        </HeroTooltip>
+                    "py-1.5 px-3 bg-slate-900 text-white border-none",
+                    className
+                )}
+            >
+                {content}
+            </TooltipContent>
+        </ShadcnTooltip>
     );
 };

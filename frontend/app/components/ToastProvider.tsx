@@ -25,7 +25,7 @@ export default function ToastProvider({ children }: { children: React.ReactNode 
             <style jsx global>{`
                 /* Base toast styles */
                 .Toastify__toast {
-                    font-family: var(--font-sora), sans-serif;
+                    font-family: var(--font-space-grotesk), sans-serif;
                     border-radius: 12px;
                     padding: 12px 16px;
                     box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.1);

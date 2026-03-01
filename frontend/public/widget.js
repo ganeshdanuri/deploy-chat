@@ -194,12 +194,12 @@
       const style = document.createElement("style");
       style.id = "dm-styles";
       style.textContent = `
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&display=swap');
         :root { 
           --dm-primary: ${CONFIG.primaryColor}; 
           --dm-secondary: ${CONFIG.secondaryColor};
         }
-        #dm-widget-root * { box-sizing:border-box; margin:0; font-family: 'Inter', ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+        #dm-widget-root * { box-sizing:border-box; margin:0; font-family: 'Space Grotesk', ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
         #dm-widget-root { position:fixed; ${posRight ? "right:24px;" : "left:24px;"} ${posBottom ? "bottom:24px;" : "top:24px;"} z-index:99999; display:flex; flex-direction:column; align-items:${posRight ? "flex-end" : "flex-start"}; gap:12px; }
         #dm-bubble { width:56px; height:56px; border-radius:50%; background:var(--dm-primary, #10a37f); border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; box-shadow:0 8px 20px rgba(0,0,0,.15); color:white; transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         #dm-bubble svg { width:32px; height:32px; fill:currentColor; }

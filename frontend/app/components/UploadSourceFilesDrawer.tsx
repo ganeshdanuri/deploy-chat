@@ -6,7 +6,7 @@ import { HiCloudUpload, HiCheckCircle, HiExclamationCircle, HiLightningBolt, HiX
 import api from "@/lib/api";
 import Drawer from "./Drawer";
 import showToast from "@/lib/toast";
-import { Button, Card, CardBody } from "@heroui/react";
+import { Button } from "@/components/ui/button";
 import { ENDPOINTS } from "@/lib/endpoints";
 import { theme } from "../theme";
 
@@ -84,13 +84,12 @@ export default function UploadSourceFilesDrawer({ isOpen, onClose, onUploadSucce
 
     const footer = (
         <>
-            <Button variant="bordered" onPress={handleClose} className="font-medium bg-white rounded-lg h-10 px-6 border border-slate-100 text-slate-600 shadow-sm transition-all hover:bg-slate-50">
+            <Button variant="outline" onClick={handleClose} className="font-medium bg-white rounded-lg h-10 px-6 border border-slate-100 text-slate-600 shadow-sm transition-all hover:bg-slate-50">
                 Cancel
             </Button>
             <Button
-                onPress={handleSubmit}
-                isDisabled={files.length === 0 || isUploading}
-                isLoading={isUploading}
+                onClick={handleSubmit}
+                disabled={files.length === 0 || isUploading}
                 className="text-white font-bold rounded-lg h-10 px-8 shadow-lg shadow-indigo-500/20 transition-all hover:-translate-y-0.5"
                 style={{ backgroundColor: theme.colors.primary.main }}
             >

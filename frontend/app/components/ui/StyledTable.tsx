@@ -3,11 +3,11 @@
 import {
     Table,
     TableHeader,
-    TableColumn,
-    TableBody,
     TableRow,
+    TableHead,
+    TableBody,
     TableCell,
-} from "@heroui/react";
+} from "@/components/ui/table";
 
 export interface TableColumnDef {
     key: string;
@@ -25,7 +25,7 @@ interface StyledTableProps<T extends { id: string }> {
 }
 
 /**
- * Pre-styled HeroUI Table wrapper with the consistent design used across all
+ * Pre-styled shadcn Table wrapper with the consistent design used across all
  * dashboard list pages. Eliminates the repeated classNames boilerplate.
  */
 export function StyledTable<T extends { id: string }>({
@@ -37,30 +37,53 @@ export function StyledTable<T extends { id: string }>({
     emptyContent,
 }: StyledTableProps<T>) {
     return (
-        <Table
-            aria-label={ariaLabel}
-            topContent={topContent && <div className="p-4 pb-2">{topContent}</div>}
-            classNames={{
-                base: "bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden",
-                thead: "bg-slate-50 border-b border-slate-200 text-slate-500 font-medium",
-                wrapper: "shadow-none p-0",
-                th: "bg-slate-50/50 text-slate-500",
-            }}
-        >
-            <TableHeader>
-                {columns.map((col) => (
-                    <TableColumn key={col.key} align={col.align}>
-                        {col.label}
-                    </TableColumn>
-                ))}
-            </TableHeader>
-            <TableBody items={items} emptyContent={emptyContent}>
-                {(item) => (
-                    <TableRow key={item.id} className="cursor-pointer hover:bg-slate-50/80 transition-colors">
-                        {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
+        <div className="bg-white border border-[#e3e3e3] rounded-xl shadow-sm overflow-hidden">
+            {topContent && (
+                <div className="px-6 py-5 border-b border-[#e3e3e3] bg-white">
+                    {topContent}
+                </div>
+            )}
+            <Table aria-label={ariaLabel}>
+                <TableHeader className="bg-[#f3f3f9] border-b border-[#e3e3e3]">
+                    <TableRow className="border-b-0 hover:bg-transparent">
+                        {columns.map((col) => (
+                            <TableHead
+                                key={col.key}
+                                className={`text-[#a1a1a1] font-bold text-[10px] uppercase tracking-[0.15em] py-5 px-6 ${col.align === "end" ? "text-right" :
+                                    col.align === "center" ? "text-center" : "text-left"
+                                    }`}
+                            >
+                                {col.label}
+                            </TableHead>
+                        ))}
                     </TableRow>
-                )}
-            </TableBody>
-        </Table>
+                </TableHeader>
+                <TableBody>
+                    {items.length === 0 ? (
+                        <TableRow>
+                            <TableCell
+                                colSpan={columns.length}
+                                className="text-center py-12 text-[#a1a1a1] text-sm"
+                            >
+                                {emptyContent || "No items found."}
+                            </TableCell>
+                        </TableRow>
+                    ) : (
+                        items.map((item) => (
+                            <TableRow key={item.id} className="cursor-pointer hover:bg-[#f3f3f9] transition-colors border-b border-[#f3f3f9] last:border-0 group">
+                                {columns.map((col) => (
+                                    <TableCell
+                                        key={col.key}
+                                        className={`py-5 px-6 text-[#4d5564] text-sm ${col.align === "end" ? "text-right" : col.align === "center" ? "text-center" : ""}`}
+                                    >
+                                        {renderCell(item, col.key as React.Key)}
+                                    </TableCell>
+                                ))}
+                            </TableRow>
+                        ))
+                    )}
+                </TableBody>
+            </Table>
+        </div>
     );
 }

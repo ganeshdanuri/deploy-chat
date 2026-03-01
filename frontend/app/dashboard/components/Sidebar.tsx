@@ -39,27 +39,27 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
     return (
         <aside
             className={`
-                fixed lg:static inset-y-0 left-0 z-50 bg-white border-r border-slate-200/60 flex flex-col transition-all duration-300 transform
+                fixed lg:static inset-y-0 left-0 z-50 bg-[#201F3B] border-r border-[#e3e3e3]/10 flex flex-col transition-all duration-300 transform
                 ${isOpen ? "translate-x-0 shadow-2xl" : "-translate-x-full lg:translate-x-0"}
                 ${isCollapsed ? "lg:w-[72px]" : "lg:w-64"}
                 w-64
             `}
         >
             {/* Workspace Selector / Brand */}
-            <div className="h-16 flex items-center px-3 border-b border-slate-200/60 justify-between shrink-0">
+            <div className="h-16 flex items-center px-3 border-b border-[#e3e3e3]/10 justify-between shrink-0">
                 <div
-                    className={`flex items-center gap-3 p-1.5 hover:bg-slate-100 rounded-lg cursor-pointer transition-colors group ${isCollapsed ? "justify-center w-full" : "flex-1 min-w-0"}`}
+                    className={`flex items-center gap-3 p-1.5 hover:bg-white/5 rounded-lg cursor-pointer transition-colors group ${isCollapsed ? "justify-center w-full" : "flex-1 min-w-0"}`}
                     onClick={() => !isCollapsed && router.push("/dashboard")}
                 >
                     <div className="shrink-0">
                         <Logo className="h-8 w-auto" />
                     </div>
                     {!isCollapsed && (
-                        <div className="flex-1 min-w-0">
-                            <h2 className="text-sm font-black tracking-tight truncate text-slate-900">
-                                D<span style={{ color: "#4667ff" }}>E</span>PLOY C<span style={{ color: "#4667ff" }}>H</span>AT
+                        <div className="flex-1 min-w-0 text-white">
+                            <h2 className="text-sm font-black tracking-tight truncate">
+                                DEPLOY <span className="text-[#262ef2]">CHAT</span>
                             </h2>
-                            <p className="text-[10px] font-bold uppercase tracking-tighter" style={{ color: theme.colors.primary.main }}>
+                            <p className="text-[10px] font-bold uppercase tracking-tighter text-[#262ef2]">
                                 {userData?.billing?.current_plan || "Free"}
                             </p>
                         </div>
@@ -68,7 +68,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
 
                 {/* Mobile Close Button */}
                 <button
-                    className="lg:hidden p-2 text-slate-500 hover:text-slate-700 hover:bg-slate-100 rounded-lg shrink-0"
+                    className="lg:hidden p-2 text-[#a1a1a1] hover:text-white hover:bg-white/10 rounded-lg shrink-0"
                     onClick={onClose}
                 >
                     <HiX className="w-5 h-5" />
@@ -95,28 +95,27 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                                         relative group flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all
                                         ${isCollapsed ? "justify-center" : ""}
                                         ${isDisabled
-                                        ? "opacity-50 cursor-not-allowed text-slate-400"
+                                        ? "opacity-50 cursor-not-allowed text-white/40"
                                         : isActive
-                                            ? "bg-slate-50 shadow-sm ring-1 ring-slate-200/50"
-                                            : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+                                            ? "bg-[#262ef2]/10 text-[#262ef2] shadow-sm ring-1 ring-[#262ef2]/20"
+                                            : "text-white/60 hover:text-white hover:bg-white/5"
                                     }
                                     `}
-                                style={isActive && !isDisabled ? { color: theme.colors.primary.main } : {}}
+                                style={isActive && !isDisabled ? { color: "#262ef2" } : {}}
                             >
                                 <Icon
-                                    className={`w-5 h-5 shrink-0 transition-colors ${isActive && !isDisabled ? "" : "text-slate-400 group-hover:text-slate-600"}`}
-                                    style={isActive && !isDisabled ? { color: theme.colors.primary.main } : {}}
+                                    className={`w-5 h-5 shrink-0 transition-colors ${isActive && !isDisabled ? "text-[#262ef2]" : "text-white/40 group-hover:text-white/70"}`}
                                 />
                                 {!isCollapsed && (
                                     <div className="flex flex-1 items-center justify-between">
                                         <span>{item.label}</span>
                                         {isDisabled && (
-                                            <span className="text-[9px] font-bold bg-slate-200 text-slate-500 px-1.5 py-0.5 rounded uppercase tracking-wider">Pro</span>
+                                            <span className="text-[9px] font-bold bg-white/10 text-white/50 px-1.5 py-0.5 rounded uppercase tracking-wider">Pro</span>
                                         )}
                                     </div>
                                 )}
                                 {isActive && !isCollapsed && !isDisabled && (
-                                    <div className="absolute right-2 w-1.5 h-1.5 rounded-full" style={{ backgroundColor: theme.colors.primary.main }}></div>
+                                    <div className="absolute right-2 w-1.5 h-1.5 rounded-full" style={{ backgroundColor: "#262ef2" }}></div>
                                 )}
 
                                 {/* Tooltip for collapsed state */}
@@ -133,7 +132,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
 
                 {/* Settings Section */}
                 <div className={`${isCollapsed ? "px-2" : "px-3"}`}>
-                    {!isCollapsed && <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-2">Settings</div>}
+                    {!isCollapsed && <div className="text-[10px] font-bold uppercase tracking-wider text-white/40 mb-2">Settings</div>}
                     <nav className="space-y-0.5">
                         {settingsNavItems.map((item) => {
                             const Icon = item.icon;
@@ -148,15 +147,14 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                                         relative group flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all
                                         ${isCollapsed ? "justify-center" : ""}
                                         ${isActive
-                                            ? "bg-slate-50 shadow-sm ring-1 ring-slate-200/50"
-                                            : "text-slate-500 hover:text-slate-900 hover:bg-slate-100"
+                                            ? "bg-[#262ef2]/10 text-[#262ef2] shadow-sm ring-1 ring-[#262ef2]/20"
+                                            : "text-white/60 hover:text-white hover:bg-white/5"
                                         }
                                     `}
-                                    style={isActive ? { color: theme.colors.primary.main } : {}}
+                                    style={isActive ? { color: "#262ef2" } : {}}
                                 >
                                     <Icon
-                                        className={`w-4 h-4 shrink-0 transition-colors ${isActive ? "" : "text-slate-400 group-hover:text-slate-500"}`}
-                                        style={isActive ? { color: theme.colors.primary.main } : {}}
+                                        className={`w-4 h-4 shrink-0 transition-colors ${isActive ? "text-[#262ef2]" : "text-white/40 group-hover:text-white/60"}`}
                                     />
                                     {!isCollapsed && <span className="text-[13px]">{item.label}</span>}
 
@@ -175,7 +173,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
             </div>
 
             {/* Footer Navigation */}
-            <div className="p-2 border-t border-slate-200/60 space-y-0.5 shrink-0">
+            <div className="p-2 border-t border-[#e3e3e3]/10 space-y-0.5 shrink-0">
                 {secondaryNavItems.map((item) => {
                     const Icon = item.icon;
                     const isActive = pathname === item.path;
@@ -188,15 +186,14 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                                     relative group flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all
                                     ${isCollapsed ? "justify-center" : ""}
                                     ${isActive
-                                    ? "bg-slate-50 shadow-sm ring-1 ring-slate-200/50"
-                                    : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+                                    ? "bg-[#262ef2]/10 text-[#262ef2] shadow-sm ring-1 ring-[#262ef2]/20"
+                                    : "text-white/60 hover:text-white hover:bg-white/5"
                                 }
                                 `}
-                            style={isActive ? { color: theme.colors.primary.main } : {}}
+                            style={isActive ? { color: "#262ef2" } : {}}
                         >
                             <Icon
-                                className={`w-5 h-5 shrink-0 ${isActive ? "" : "text-slate-400"}`}
-                                style={isActive ? { color: theme.colors.primary.main } : {}}
+                                className={`w-5 h-5 shrink-0 transition-colors ${isActive ? "text-[#262ef2]" : "text-white/40"}`}
                             />
                             {!isCollapsed && <span>{item.label}</span>}
 
@@ -212,23 +209,23 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                 })}
 
                 {/* User Profile Mini */}
-                <div className="mt-2 pt-2 border-t border-slate-200/60">
+                <div className="mt-2 pt-2 border-t border-[#e3e3e3]/10">
                     <div
-                        className={`flex items-center gap-3 px-2 py-2 rounded-lg hover:bg-slate-100 cursor-pointer transition-colors ${isCollapsed ? "justify-center" : ""}`}
+                        className={`flex items-center gap-3 px-2 py-2 rounded-lg hover:bg-white/5 cursor-pointer transition-colors ${isCollapsed ? "justify-center" : ""}`}
                         onClick={() => router.push("/dashboard/settings")}
                     >
                         <div className="relative shrink-0">
-                            <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-indigo-500 to-purple-500 flex items-center justify-center text-xs font-bold text-white shadow-sm ring-2 ring-white">
+                            <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-[#262ef2] to-[#201F3B] flex items-center justify-center text-xs font-bold text-white shadow-sm ring-2 ring-[#201F3B]">
                                 {userData?.profile?.username?.substring(0, 2).toUpperCase() || "??"}
                             </div>
-                            <div className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-green-500 border-2 border-white rounded-full"></div>
+                            <div className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-green-500 border-2 border-[#201F3B] rounded-full"></div>
                         </div>
                         {!isCollapsed && (
                             <div className="flex-1 min-w-0">
-                                <div className="text-sm font-medium text-slate-900 truncate">
+                                <div className="text-sm font-medium text-white truncate">
                                     {userData?.profile?.username || "User"}
                                 </div>
-                                <div className="text-xs text-slate-500 truncate capitalize">
+                                <div className="text-xs text-white/40 truncate capitalize">
                                     {userData?.billing?.current_plan || "free"} Plan
                                 </div>
                             </div>
@@ -239,7 +236,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                                     e.stopPropagation();
                                     logout();
                                 }}
-                                className="relative group p-1 hover:bg-slate-200 rounded transition-colors text-slate-400 hover:text-red-500 shrink-0"
+                                className="relative group p-1 hover:bg-white/10 rounded transition-colors text-white/40 hover:text-red-400 shrink-0"
                             >
                                 <HiLogout className="w-4 h-4" />
                                 <div className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1 opacity-0 group-hover:opacity-100 transition-all ${TOOLTIP_STYLE_CLASSES} translate-y-1 group-hover:translate-y-0`}>
@@ -254,7 +251,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
 
             {/* Desktop Collapse Toggle — fixed arrow tab on the right edge */}
             <button
-                className="hidden lg:flex absolute -right-3.5 top-1/2 -translate-y-1/2 w-7 h-7 items-center justify-center bg-white border border-slate-100 rounded-full shadow-md text-slate-500 hover:text-indigo-600 hover:border-indigo-300 hover:shadow-indigo-100 transition-all z-10"
+                className="hidden lg:flex absolute -right-3.5 top-1/2 -translate-y-1/2 w-7 h-7 items-center justify-center bg-[#201F3B] border border-[#e3e3e3]/10 rounded-full shadow-md text-white/40 hover:text-[#262ef2] hover:border-[#262ef2]/30 transition-all z-10"
                 onClick={() => setIsCollapsed(!isCollapsed)}
                 title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
             >

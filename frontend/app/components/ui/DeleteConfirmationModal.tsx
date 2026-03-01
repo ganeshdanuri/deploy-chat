@@ -3,7 +3,7 @@
 
 import { HiTrash, HiExclamation } from "react-icons/hi";
 import Modal from "../Modal";
-import { Button } from "@heroui/react";
+import { Button } from "@/components/ui/button";
 
 interface DeleteConfirmationModalProps {
     isOpen: boolean;
@@ -27,19 +27,19 @@ export default function DeleteConfirmationModal({
     const footer = (
         <div className="flex gap-3 justify-end w-full">
             <Button
-                onPress={onClose}
-                variant="bordered"
+                onClick={onClose}
+                variant="outline"
                 className="border-slate-100 text-slate-600 text-xs sm:text-sm font-bold h-10 px-6 rounded-lg hover:bg-slate-50 transition-all shadow-sm"
                 disabled={isLoading}
             >
                 Cancel
             </Button>
             <Button
-                onPress={onConfirm}
-                isLoading={isLoading}
+                onClick={onConfirm}
                 className="bg-red-600 text-white text-xs sm:text-sm font-bold h-10 px-8 rounded-lg shadow-lg shadow-red-500/10 hover:bg-red-700 hover:-translate-y-0.5 active:translate-y-0 transition-all"
+                disabled={isLoading}
             >
-                Confirm Removal
+                {isLoading ? "Deleting..." : "Confirm Removal"}
             </Button>
         </div>
     );

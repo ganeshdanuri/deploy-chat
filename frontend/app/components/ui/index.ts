@@ -24,3 +24,5 @@ export {
     SelectableListSkeleton,
 } from "./Skeleton";
 export { Tooltip } from "./Tooltip";
+export { User } from "./User";
+export { Input } from "./Input";

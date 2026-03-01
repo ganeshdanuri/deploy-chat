@@ -13,8 +13,9 @@ import { ENDPOINTS } from "@/lib/endpoints";
 import showToast from "@/lib/toast";
 import AddAPIKeyDrawer from "@/app/components/AddAPIKeyDrawer";
 import EditProfileDrawer from "@/app/components/EditProfileDrawer";
-import { EmptyState, DateCell, DeleteConfirmationModal } from "@/app/components/ui";
-import { Button, Card, CardBody } from "@heroui/react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { EmptyState, DateCell, DeleteConfirmationModal, Input } from "@/app/components/ui";
 
 export default function SettingsPage() {
     const searchParams = useSearchParams();
@@ -98,251 +99,234 @@ export default function SettingsPage() {
 
     return (
         <div className="animate-fade-in-up max-w-5xl mx-auto">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8 pb-6 border-b border-slate-100">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8 pb-6 border-b border-[#e3e3e3]">
                 <div>
-                    <h1 className="text-2xl font-bold text-slate-900 tracking-tight">{currentTabLabel}</h1>
-                    <p className="text-sm text-slate-500 mt-1">Manage your account preferences and system configuration.</p>
+                    <h1 className="text-2xl font-bold text-[#201F3B] tracking-tight">{currentTabLabel}</h1>
+                    <p className="text-sm text-[#4d5564] mt-1">Manage your account preferences and system configuration.</p>
                 </div>
-                <div className="flex items-center gap-2 text-xs font-semibold text-slate-400 bg-slate-100 px-3 py-1.5 rounded-lg border border-slate-100">
-                    <HiShieldCheck className="w-4 h-4 text-indigo-500" />
+                <div className="flex items-center gap-2 text-xs font-semibold text-[#a1a1a1] bg-[#f3f3f9] px-3 py-1.5 rounded-lg border border-[#e3e3e3]">
+                    <HiShieldCheck className="w-4 h-4 text-[#262ef2]" />
                     Secure Settings
                 </div>
             </div>
 
             <div className="space-y-6">
-                <div className="flex flex-col md:flex-row gap-8">
-                    {/* Sidebar Tabs */}
-                    <div className="w-full md:w-64 space-y-1">
-                        {tabs.map((tab) => (
-                            <button
-                                key={tab.id}
-                                onClick={() => setActiveTab(tab.id)}
-                                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all ${activeTab === tab.id
-                                    ? "bg-indigo-600 text-white shadow-lg shadow-indigo-100"
-                                    : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
-                                    }`}
-                            >
-                                <tab.icon className={`w-4 h-4 ${activeTab === tab.id ? "text-white" : "text-slate-400"}`} />
-                                {tab.label}
-                            </button>
-                        ))}
-                    </div>
-
-                    {/* Content Area */}
-                    <div className="flex-1">
-                        {isLoading ? (
-                            <SettingsSkeleton />
-                        ) : (
-                            <div className="w-full">
-                                {activeTab === "general" && (
-                                    <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden animate-fade-in">
-                                        <div className="p-6 border-b border-slate-100 flex items-center justify-between font-bold">
-                                            <div>
-                                                <h2 className="text-lg font-bold text-slate-900">Profile Information</h2>
-                                                <p className="text-sm text-slate-500 mt-1">Update your account&apos;s profile information and email address.</p>
-                                            </div>
-                                            <Button
-                                                size="sm"
-                                                variant="flat"
-                                                onPress={() => setIsEditProfileModalOpen(true)}
-                                                startContent={<HiPencil className="w-3.5 h-3.5" />}
-                                                className="bg-slate-100 text-slate-700 font-bold rounded-xl"
-                                            >
-                                                Edit Profile
-                                            </Button>
+                <div className="w-full">
+                    {isLoading ? (
+                        <SettingsSkeleton />
+                    ) : (
+                        <div className="w-full">
+                            {activeTab === "general" && (
+                                <div className="bg-white rounded-2xl border border-[#e3e3e3] shadow-sm overflow-hidden animate-fade-in">
+                                    <div className="p-6 border-b border-[#e3e3e3] flex items-center justify-between font-bold">
+                                        <div>
+                                            <h2 className="text-lg font-bold text-[#201F3B]">Profile Information</h2>
+                                            <p className="text-sm text-[#4d5564] mt-1">Update your account&apos;s profile information and email address.</p>
                                         </div>
-                                        <div className="p-6 space-y-6">
-                                            <div className="grid grid-cols-2 gap-6">
-                                                <div className="col-span-2 space-y-2">
-                                                    <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">Username</label>
-                                                    <input type="text" className="px-4 py-3 w-full border border-slate-100 rounded-xl text-sm bg-slate-50 cursor-not-allowed font-medium text-slate-700" value={userData?.profile?.username || ""} readOnly />
-                                                </div>
-                                                <div className="col-span-2 space-y-2">
-                                                    <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">Email Address</label>
-                                                    <div className="relative">
-                                                        <HiUser className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4" />
-                                                        <input type="email" className="px-4 py-3 w-full pl-11 border border-slate-100 rounded-xl text-sm bg-slate-50 cursor-not-allowed font-medium text-slate-700" value={userData?.profile?.email || authUser?.email || ""} readOnly />
-                                                    </div>
-                                                </div>
+                                        <Button
+                                            size="sm"
+                                            variant="secondary"
+                                            onClick={() => setIsEditProfileModalOpen(true)}
+                                            className="bg-[#f3f3f9] text-[#201F3B] font-bold rounded-xl hover:bg-[#e3e3e3]"
+                                        >
+                                            <HiPencil className="w-3.5 h-3.5 mr-2" />
+                                            Edit Profile
+                                        </Button>
+                                    </div>
+                                    <div className="p-6 space-y-6">
+                                        <div className="grid grid-cols-2 gap-6">
+                                            <div className="col-span-2 space-y-2">
+                                                <label className="text-[11px] font-black text-[#a1a1a1] uppercase tracking-widest ml-1">Username</label>
+                                                <Input type="text" value={userData?.profile?.username || ""} readOnly disabled className="bg-[#f3f3f9] border-[#e3e3e3] opacity-60" />
+                                            </div>
+                                            <div className="col-span-2 space-y-2">
+                                                <label className="text-[11px] font-black text-[#a1a1a1] uppercase tracking-widest ml-1">Email Address</label>
+                                                <Input
+                                                    type="email"
+                                                    startContent={<HiUser className="w-4 h-4 text-[#a1a1a1]" />}
+                                                    value={userData?.profile?.email || authUser?.email || ""}
+                                                    readOnly
+                                                    disabled
+                                                    className="bg-[#f3f3f9] border-[#e3e3e3] opacity-60"
+                                                />
                                             </div>
                                         </div>
                                     </div>
-                                )}
+                                </div>
+                            )}
 
-                                {activeTab === "billing" && (
-                                    <div className="space-y-4 animate-fade-in">
-                                        <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
-                                            <div className="p-5 sm:p-6 flex flex-col md:flex-row md:items-start justify-between gap-6">
-                                                <div className="flex-1 space-y-4">
-                                                    <div className="flex items-center gap-3">
-                                                        <div className="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center border border-indigo-100 shrink-0">
-                                                            <HiCreditCard className="w-5 h-5 text-indigo-600" />
-                                                        </div>
-                                                        <div>
-                                                            <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
-                                                                {userData?.billing?.current_plan ? userData.billing.current_plan.charAt(0).toUpperCase() + userData.billing.current_plan.slice(1) : 'Free'} plan
-                                                                <span className="bg-emerald-50 text-emerald-600 border border-emerald-200 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">Active</span>
-                                                            </h2>
-                                                            <p className="text-sm text-slate-500 mt-0.5">
-                                                                {userData?.billing?.expires_at
-                                                                    ? `Your plan will renew on ${new Date(userData.billing.expires_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}.`
-                                                                    : 'You are currently on the free tier.'}
-                                                            </p>
-                                                        </div>
+                            {activeTab === "billing" && (
+                                <div className="space-y-4 animate-fade-in">
+                                    <div className="bg-white rounded-2xl border border-[#e3e3e3] shadow-sm overflow-hidden">
+                                        <div className="p-5 sm:p-6 flex flex-col md:flex-row md:items-start justify-between gap-6">
+                                            <div className="flex-1 space-y-4">
+                                                <div className="flex items-center gap-3">
+                                                    <div className="w-10 h-10 rounded-xl bg-[#262ef2]/5 flex items-center justify-center border border-[#262ef2]/10 shrink-0">
+                                                        <HiCreditCard className="w-5 h-5 text-[#262ef2]" />
                                                     </div>
-
-                                                    <div className="mt-2 text-slate-700 max-w-sm">
-                                                        <div className="flex justify-between items-end mb-1.5">
-                                                            <span className="text-sm font-semibold text-slate-900">
-                                                                {userData?.usage?.messages_sent || 0} <span className="text-slate-500 font-medium">/ {userData?.billing?.monthly_limit || 100} msgs</span>
-                                                            </span>
-                                                            <span className="text-xs font-medium text-slate-500">
-                                                                Resets on {userData?.usage?.reset_date ? new Date(userData.usage.reset_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '1st of month'}
-                                                            </span>
-                                                        </div>
-                                                        <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
-                                                            <div
-                                                                className={`h-full rounded-full transition-all duration-1000 ${((userData?.usage?.messages_sent || 0) / (userData?.billing?.monthly_limit || 100)) > 0.9 ? 'bg-red-500' : 'bg-indigo-600'}`}
-                                                                style={{ width: `${Math.min(((userData?.usage?.messages_sent || 0) / (userData?.billing?.monthly_limit || 100)) * 100, 100)}%` }}
-                                                            />
-                                                        </div>
+                                                    <div>
+                                                        <h2 className="text-lg font-bold text-[#201F3B] flex items-center gap-2">
+                                                            {userData?.billing?.current_plan ? userData.billing.current_plan.charAt(0).toUpperCase() + userData.billing.current_plan.slice(1) : 'Free'} plan
+                                                            <span className="bg-[#10b981]/10 text-[#10b981] border border-[#10b981]/20 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">Active</span>
+                                                        </h2>
+                                                        <p className="text-sm text-[#4d5564] mt-0.5">
+                                                            {userData?.billing?.expires_at
+                                                                ? `Your plan will renew on ${new Date(userData.billing.expires_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}.`
+                                                                : 'You are currently on the free tier.'}
+                                                        </p>
                                                     </div>
                                                 </div>
-                                                <div className="shrink-0 pt-1">
-                                                    <button
-                                                        className="flex items-center gap-2 px-5 py-2.5 bg-slate-50 border border-slate-100 text-slate-400 text-sm font-medium rounded-lg cursor-not-allowed opacity-60 shadow-sm"
-                                                        disabled
-                                                    >
-                                                        View Invoices
-                                                    </button>
+
+                                                <div className="mt-2 text-[#4d5564] max-w-sm">
+                                                    <div className="flex justify-between items-end mb-1.5">
+                                                        <span className="text-sm font-semibold text-[#201F3B]">
+                                                            {userData?.usage?.messages_sent || 0} <span className="text-[#a1a1a1] font-medium">/ {userData?.billing?.monthly_limit || 100} msgs</span>
+                                                        </span>
+                                                        <span className="text-xs font-medium text-[#a1a1a1]">
+                                                            Resets on {userData?.usage?.reset_date ? new Date(userData.usage.reset_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '1st of month'}
+                                                        </span>
+                                                    </div>
+                                                    <div className="h-1.5 w-full bg-[#f3f3f9] rounded-full overflow-hidden">
+                                                        <div
+                                                            className={`h-full rounded-full transition-all duration-1000 ${((userData?.usage?.messages_sent || 0) / (userData?.billing?.monthly_limit || 100)) > 0.9 ? 'bg-[#ef4444]' : 'bg-[#262ef2]'}`}
+                                                            style={{ width: `${Math.min(((userData?.usage?.messages_sent || 0) / (userData?.billing?.monthly_limit || 100)) * 100, 100)}%` }}
+                                                        />
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-
-                                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mt-6">
-                                            <PricingCard
-                                                title="Starter"
-                                                price="19"
-                                                interval="/month"
-                                                features={[
-                                                    "1,000 Messages / month",
-                                                    "1 AI Chatbot",
-                                                    "Standard Analytics",
-                                                    "Email Support"
-                                                ]}
-                                                buttonText="Upgrade"
-                                                onButtonClick={() => { }}
-                                                isDisabled={true}
-                                            />
-                                            <PricingCard
-                                                title="Professional"
-                                                price="49"
-                                                interval="/month"
-                                                features={[
-                                                    "10,000 Messages / month",
-                                                    "5 AI Chatbots",
-                                                    "Advanced Analytics",
-                                                    "Priority Support",
-                                                    "Remove Branding"
-                                                ]}
-                                                buttonText="Get Started"
-                                                isPopular={true}
-                                                onButtonClick={() => { }}
-                                                isDisabled={true}
-                                            />
-                                            <PricingCard
-                                                title="Enterprise"
-                                                price="Custom"
-                                                features={[
-                                                    "Unlimited everything",
-                                                    "Dedicated Azure Server",
-                                                    "SLA Guarantees",
-                                                    "Custom Integrations",
-                                                    "Single Sign-On (SSO)"
-                                                ]}
-                                                buttonText="Contact Sales"
-                                                onButtonClick={() => { }}
-                                                isDisabled={true}
-                                            />
+                                            <div className="shrink-0 pt-1">
+                                                <button
+                                                    className="flex items-center gap-2 px-5 py-2.5 bg-[#f3f3f9] border border-[#e3e3e3] text-[#a1a1a1] text-sm font-medium rounded-lg cursor-not-allowed opacity-60 shadow-sm"
+                                                    disabled
+                                                >
+                                                    View Invoices
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
-                                )}
 
-                                {activeTab === "api-keys" && (
-                                    <div className="space-y-6 animate-fade-in">
-                                        <div className="flex items-center justify-between">
-                                            <div>
-                                                <h2 className="text-lg font-bold text-slate-900">API Keys</h2>
-                                                <p className="text-sm text-slate-500 mt-1">Manage platform keys for model providers.</p>
-                                            </div>
-                                            <Button
-                                                onPress={() => setIsAddKeyModalOpen(true)}
-                                                startContent={<HiPlus className="w-4 h-4" />}
-                                                className="bg-slate-900 text-white font-bold rounded-xl"
-                                            >
-                                                Add Key
-                                            </Button>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mt-6">
+                                        <PricingCard
+                                            title="Starter"
+                                            price="19"
+                                            interval="/month"
+                                            features={[
+                                                "1,000 Messages / month",
+                                                "1 AI Chatbot",
+                                                "Standard Analytics",
+                                                "Email Support"
+                                            ]}
+                                            buttonText="Upgrade"
+                                            onButtonClick={() => { }}
+                                            isDisabled={true}
+                                        />
+                                        <PricingCard
+                                            title="Professional"
+                                            price="49"
+                                            interval="/month"
+                                            features={[
+                                                "10,000 Messages / month",
+                                                "5 AI Chatbots",
+                                                "Advanced Analytics",
+                                                "Priority Support",
+                                                "Remove Branding"
+                                            ]}
+                                            buttonText="Get Started"
+                                            isPopular={true}
+                                            onButtonClick={() => { }}
+                                            isDisabled={true}
+                                        />
+                                        <PricingCard
+                                            title="Enterprise"
+                                            price="Custom"
+                                            features={[
+                                                "Unlimited everything",
+                                                "Dedicated Azure Server",
+                                                "SLA Guarantees",
+                                                "Custom Integrations",
+                                                "Single Sign-On (SSO)"
+                                            ]}
+                                            buttonText="Contact Sales"
+                                            onButtonClick={() => { }}
+                                            isDisabled={true}
+                                        />
+                                    </div>
+                                </div>
+                            )}
+
+                            {activeTab === "api-keys" && (
+                                <div className="space-y-6 animate-fade-in">
+                                    <div className="flex items-center justify-between">
+                                        <div>
+                                            <h2 className="text-lg font-bold text-[#201F3B]">API Keys</h2>
+                                            <p className="text-sm text-[#4d5564] mt-1">Manage platform keys for model providers.</p>
                                         </div>
+                                        <Button
+                                            onClick={() => setIsAddKeyModalOpen(true)}
+                                            className="bg-[#201F3B] text-white font-bold rounded-xl hover:bg-[#201F3B]/90 shadow-lg shadow-[#201F3B]/10"
+                                        >
+                                            <HiPlus className="w-4 h-4 mr-2" />
+                                            Add Key
+                                        </Button>
+                                    </div>
 
-                                        {isApiKeysLoading ? (
-                                            <TableSkeleton rows={3} columns={3} />
-                                        ) : apiKeys.length === 0 ? (
-                                            <EmptyState
-                                                icon={HiPlus}
-                                                title="No API keys yet"
-                                                description="Add your OpenAI or Anthropic key to use your own model quotas."
-                                                actionLabel="Add your first key"
-                                                onAction={() => setIsAddKeyModalOpen(true)}
-                                            />
-                                        ) : (
-                                            <div className="grid grid-cols-1 gap-4">
-                                                {apiKeys.map((key) => {
-                                                    const Icon = getProviderIcon(key.provider);
-                                                    return (
-                                                        <Card key={key.id} className="border-slate-100 shadow-sm rounded-2xl">
-                                                            <CardBody className="flex flex-row items-center justify-between p-5">
-                                                                <div className="flex items-center gap-4">
-                                                                    <div className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center border border-slate-100">
-                                                                        <Icon className="w-5 h-5 text-slate-900" />
-                                                                    </div>
-                                                                    <div>
-                                                                        <h4 className="text-sm font-bold text-slate-900 uppercase tracking-tight">{key.provider}</h4>
-                                                                        <p className="text-xs text-slate-400 font-mono">••••••••••••••••</p>
-                                                                    </div>
+                                    {isApiKeysLoading ? (
+                                        <TableSkeleton rows={3} columns={3} />
+                                    ) : apiKeys.length === 0 ? (
+                                        <EmptyState
+                                            icon={HiPlus}
+                                            title="No API keys yet"
+                                            description="Add your OpenAI or Anthropic key to use your own model quotas."
+                                            actionLabel="Add your first key"
+                                            onAction={() => setIsAddKeyModalOpen(true)}
+                                        />
+                                    ) : (
+                                        <div className="grid grid-cols-1 gap-4">
+                                            {apiKeys.map((key) => {
+                                                const Icon = getProviderIcon(key.provider);
+                                                return (
+                                                    <Card key={key.id} className="border-[#e3e3e3] shadow-sm rounded-2xl">
+                                                        <CardContent className="flex flex-row items-center justify-between p-6">
+                                                            <div className="flex items-center gap-6">
+                                                                <div className="w-10 h-10 rounded-xl bg-[#f3f3f9] flex items-center justify-center border border-[#e3e3e3]">
+                                                                    <Icon className="w-5 h-5 text-[#201F3B]" />
                                                                 </div>
-                                                                <div className="flex items-center gap-2">
-                                                                    <DateCell isoString={key.created_at} />
-                                                                    <Button
-                                                                        isIconOnly
-                                                                        variant="light"
-                                                                        onPress={() => handleDeleteClick(key.id, key.provider)}
-                                                                        className="text-slate-400 hover:text-red-500"
-                                                                    >
-                                                                        <HiTrash className="w-4 h-4" />
-                                                                    </Button>
+                                                                <div>
+                                                                    <h4 className="text-sm font-bold text-[#201F3B] uppercase tracking-tight">{key.provider}</h4>
+                                                                    <p className="text-xs text-[#a1a1a1] font-mono">••••••••••••••••</p>
                                                                 </div>
-                                                            </CardBody>
-                                                        </Card>
-                                                    );
-                                                })}
-                                            </div>
-                                        )}
-                                    </div>
-                                )}
-
-                                {/* Other tabs placeholder */}
-                                {(activeTab !== "general" && activeTab !== "billing" && activeTab !== "api-keys") && (
-                                    <div className="flex flex-col items-center justify-center p-12 bg-white rounded-2xl border border-slate-100 border-dashed animate-fade-in">
-                                        <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mb-4">
-                                            <HiShieldCheck className="w-8 h-8 text-slate-300" />
+                                                            </div>
+                                                            <div className="flex items-center gap-2">
+                                                                <DateCell isoString={key.created_at} />
+                                                                <Button
+                                                                    variant="ghost"
+                                                                    onClick={() => handleDeleteClick(key.id, key.provider)}
+                                                                    className="text-[#a1a1a1] hover:text-[#ef4444] h-8 w-8 p-0"
+                                                                >
+                                                                    <HiTrash className="w-4 h-4" />
+                                                                </Button>
+                                                            </div>
+                                                        </CardContent>
+                                                    </Card>
+                                                );
+                                            })}
                                         </div>
-                                        <h3 className="text-slate-900 font-bold">Coming Soon</h3>
-                                        <p className="text-slate-500 text-sm mt-1 font-medium">This settings panel is under construction.</p>
+                                    )}
+                                </div>
+                            )}
+
+                            {/* Other tabs placeholder */}
+                            {(activeTab !== "general" && activeTab !== "billing" && activeTab !== "api-keys") && (
+                                <div className="flex flex-col items-center justify-center p-12 bg-white rounded-2xl border border-[#e3e3e3] border-dashed animate-fade-in">
+                                    <div className="w-16 h-16 bg-[#f3f3f9] rounded-full flex items-center justify-center mb-4">
+                                        <HiShieldCheck className="w-8 h-8 text-[#a1a1a1]/40" />
                                     </div>
-                                )}
-                            </div>
-                        )}
-                    </div>
+                                    <h3 className="text-[#201F3B] font-bold">Coming Soon</h3>
+                                    <p className="text-[#4d5564] text-sm mt-1 font-medium">This settings panel is under construction.</p>
+                                </div>
+                            )}
+                        </div>
+                    )}
                 </div>
             </div>
 
@@ -371,6 +355,6 @@ export default function SettingsPage() {
                 description={`Are you sure you want to remove your ${itemToDelete?.name} API key?`}
                 itemName={itemToDelete?.name}
             />
-        </div>
+        </div >
     );
 }

@@ -8,34 +8,34 @@ export default function HelpPage() {
             title: "Documentation",
             description: "Detailed guides and API references to help you build faster.",
             icon: HiBookOpen,
-            color: "text-blue-600",
-            bgColor: "bg-blue-50"
+            color: "text-[#262ef2]",
+            bgColor: "bg-[#262ef2]/5"
         },
         {
             title: "Support Tickets",
             description: "Need technical help? Open a ticket and our team will assist you.",
             icon: HiSupport,
-            color: "text-purple-600",
-            bgColor: "bg-purple-50"
+            color: "text-[#262ef2]",
+            bgColor: "bg-[#262ef2]/5"
         },
         {
             title: "Community Discord",
             description: "Join our community to share ideas and get help from other builders.",
             icon: HiChatAlt,
-            color: "text-indigo-600",
-            bgColor: "bg-indigo-50"
+            color: "text-[#262ef2]",
+            bgColor: "bg-[#262ef2]/5"
         }
     ];
 
     return (
         <div className="animate-fade-in-up">
             <div className="flex items-center gap-3 mb-8">
-                <div className="p-3 bg-indigo-50 text-indigo-600 rounded-2xl ring-1 ring-indigo-100">
+                <div className="p-3 bg-[#262ef2]/5 text-[#262ef2] rounded-2xl ring-1 ring-[#262ef2]/10">
                     <HiQuestionMarkCircle className="w-8 h-8" />
                 </div>
                 <div>
-                    <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">Help Center</h1>
-                    <p className="text-slate-500 font-medium">How can we help you today?</p>
+                    <h1 className="text-3xl font-extrabold text-[#201F3B] tracking-tight">Help Center</h1>
+                    <p className="text-[#4d5564] font-medium">How can we help you today?</p>
                 </div>
             </div>
 
@@ -43,15 +43,15 @@ export default function HelpPage() {
                 {helpSections.map((section, idx) => {
                     const Icon = section.icon;
                     return (
-                        <div key={idx} className="p-8 bg-white rounded-[2rem] border border-slate-200 shadow-sm hover:shadow-xl transition-all group cursor-pointer">
+                        <div key={idx} className="p-8 bg-white rounded-[2rem] border border-[#e3e3e3] shadow-sm hover:shadow-xl transition-all group cursor-pointer">
                             <div className={`w-14 h-14 ${section.bgColor} ${section.color} rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform`}>
                                 <Icon className="w-7 h-7" />
                             </div>
-                            <h3 className="text-xl font-bold text-slate-900 mb-3">{section.title}</h3>
-                            <p className="text-slate-500 leading-relaxed text-sm">
+                            <h3 className="text-xl font-bold text-[#201F3B] mb-3">{section.title}</h3>
+                            <p className="text-[#4d5564] leading-relaxed text-sm">
                                 {section.description}
                             </p>
-                            <button className="mt-8 text-sm font-bold text-indigo-600 hover:text-indigo-700 flex items-center gap-2">
+                            <button className="mt-8 text-sm font-bold text-[#262ef2] hover:underline flex items-center gap-2">
                                 Get Started
                                 <span className="group-hover:translate-x-1 transition-transform">→</span>
                             </button>
@@ -60,13 +60,13 @@ export default function HelpPage() {
                 })}
             </div>
 
-            <div className="mt-12 p-8 bg-slate-900 rounded-[2.5rem] text-white overflow-hidden relative">
+            <div className="mt-12 p-8 bg-[#201F3B] rounded-[2.5rem] text-white overflow-hidden relative">
                 <div className="relative z-10">
                     <h2 className="text-2xl font-bold mb-4">Enterprise Support</h2>
-                    <p className="text-slate-400 max-w-xl mb-8 leading-relaxed">
+                    <p className="text-[#a1a1a1] max-w-xl mb-8 leading-relaxed">
                         Looking for dedicated support, custom integrations, or on-premise deployment? Our enterprise team is here to help.
                     </p>
-                    <button className="px-6 py-1.5 bg-white text-slate-900 font-bold rounded-xl hover:bg-slate-100 transition-colors shadow-lg">
+                    <button className="px-6 py-1.5 bg-white text-[#201F3B] font-bold rounded-xl hover:bg-[#f3f3f9] transition-colors shadow-lg">
                         Contact Sales
                     </button>
                 </div>

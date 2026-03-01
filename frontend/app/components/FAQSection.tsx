@@ -18,22 +18,21 @@ export default function FAQSection() {
 
                 {/* Header */}
                 <div className="mb-14 text-center">
-                    <div className="mb-4 inline-flex items-center gap-2 rounded-lg border px-3 py-1 text-xs font-bold uppercase tracking-widest" style={{ borderColor: `${theme.colors.primary.main}20`, backgroundColor: `${theme.colors.primary.main}10`, color: theme.colors.primary.main }}>
+                    <div className="mb-4 inline-flex items-center gap-2 rounded-lg bg-[#262ef2]/10 text-[#262ef2] px-3 py-1 text-xs font-semibold uppercase tracking-widest">
                         <HiQuestionMarkCircle className="h-3.5 w-3.5" aria-hidden="true" />
                         FAQ
                     </div>
                     <h2
                         id="faq-heading"
-                        className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl"
+                        className="text-[44px] font-semibold tracking-tight text-[#000000] leading-tight"
                     >
                         Frequently asked questions
                     </h2>
-                    <p className="mt-4 text-lg text-slate-500">
+                    <p className="mt-4 text-lg text-[#a1a1a1]">
                         Can&apos;t find the answer you&apos;re looking for?{" "}
                         <a
                             href="mailto:support@deploychat.io"
-                            className="font-semibold underline-offset-2 hover:underline"
-                            style={{ color: theme.colors.primary.main }}
+                            className="font-medium underline-offset-2 hover:underline text-[#262ef2]"
                         >
                             Ask our team
                         </a>
@@ -42,7 +41,7 @@ export default function FAQSection() {
                 </div>
 
                 {/* Accordion */}
-                <dl className="divide-y divide-slate-100">
+                <dl className="space-y-2">
                     {faqs.map((faq, i) => {
                         const isOpen = openIndex === i;
                         return (
@@ -56,21 +55,19 @@ export default function FAQSection() {
                                         className="flex w-full items-start justify-between gap-6 text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 rounded"
                                     >
                                         <span
-                                            className={`text-lg font-semibold leading-snug transition-colors duration-200 ${isOpen ? "" : "text-slate-900"
+                                            className={`text-lg font-medium leading-snug transition-colors duration-200 ${isOpen ? "text-[#262ef2]" : "text-[#000000]"
                                                 }`}
-                                            style={isOpen ? { color: theme.colors.primary.main } : {}}
                                         >
                                             {faq.question}
                                         </span>
                                         <span
                                             className={`
-                        mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full border transition-all duration-200
+                        mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full transition-all duration-200
                         ${isOpen
-                                                    ? ""
-                                                    : "border-slate-200 bg-slate-50 text-slate-400"
+                                                    ? "bg-[#262ef2]/10 text-[#262ef2]"
+                                                    : "bg-[#f3f3f9] text-[#a1a1a1]"
                                                 }
                       `}
-                                            style={isOpen ? { borderColor: `${theme.colors.primary.main}30`, backgroundColor: `${theme.colors.primary.main}10`, color: theme.colors.primary.main } : {}}
                                             aria-hidden="true"
                                         >
                                             {isOpen
@@ -88,7 +85,7 @@ export default function FAQSection() {
                                         }`}
                                 >
                                     <div className="overflow-hidden">
-                                        <p className="pt-3 text-base leading-relaxed text-slate-500">
+                                        <p className="pt-3 text-base leading-relaxed text-[#4d5564]">
                                             {faq.answer}
                                         </p>
                                     </div>

@@ -14,7 +14,13 @@ import api from "@/lib/api";
 import showToast from "@/lib/toast";
 import type { ChatMessage, Chatbot } from "@/lib/types";
 import { PlaygroundConfigSkeleton } from "@/app/components/ui";
-import { Select, SelectItem } from "@heroui/react";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
 import { ENDPOINTS } from "@/lib/endpoints";
 import { STATUS, ROLES } from "@/lib/constants";
 
@@ -123,7 +129,7 @@ export default function PlaygroundPage() {
             )}
 
             {/* Main Chat Area */}
-            <div className="flex-1 flex flex-col bg-white rounded-lg border border-slate-200 shadow-sm overflow-hidden relative">
+            <div className="flex-1 flex flex-col bg-white rounded-lg border border-[#e3e3e3] shadow-sm overflow-hidden relative">
                 <ChatHeader chatbot={chatbot} onReset={handleResetChat} />
 
                 {chatbotId ? (
@@ -165,75 +171,68 @@ function ConfigurationPanel({
     onTemperatureChange,
 }: ConfigurationPanelProps) {
     return (
-        <div className="w-80 bg-white rounded-lg border border-slate-200 shadow-sm p-6 flex flex-col h-full overflow-y-auto">
+        <div className="w-80 bg-white rounded-lg border border-[#e3e3e3] shadow-sm p-6 flex flex-col h-full overflow-y-auto">
             <div className="flex items-center gap-2 mb-8">
-                <div className="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center text-indigo-600">
+                <div className="w-8 h-8 rounded-lg bg-[#262ef2]/5 flex items-center justify-center text-[#262ef2]">
                     <HiCog className="w-5 h-5" />
                 </div>
-                <h3 className="text-lg font-bold text-slate-900">Configuration</h3>
+                <h3 className="text-lg font-bold text-[#201F3B]">Configuration</h3>
             </div>
 
             <div className="space-y-8 flex-1">
                 {/* Chatbot Selector */}
                 <div className="space-y-3">
-                    <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+                    <label className="text-xs font-bold text-[#a1a1a1] uppercase tracking-wider">
                         Select Chatbot
                     </label>
                     <Select
-                        placeholder="Select a chatbot..."
-                        selectedKeys={chatbotId ? new Set([chatbotId]) : new Set()}
-                        onSelectionChange={(keys) => {
-                            const selected = Array.from(keys)[0] as string;
-                            if (selected) onChatbotChange(selected);
+                        value={chatbotId || ""}
+                        onValueChange={(value) => {
+                            if (value) onChatbotChange(value);
                         }}
                         aria-label="Select chatbot"
-                        variant="bordered"
-                        radius="lg"
-                        classNames={{
-                            trigger: "border-slate-200 bg-slate-50/50 hover:bg-white hover:border-indigo-300 data-[open=true]:border-indigo-500 h-11 shadow-none transition-all",
-                            value: "text-sm font-medium text-slate-700",
-                            selectorIcon: "text-slate-400",
-                            popoverContent: "rounded-xl bg-white border border-slate-200 shadow-lg p-1",
-                        }}
                     >
-                        {chatbots.map((bot) => (
-                            <SelectItem
-                                key={bot.id}
-                                classNames={{
-                                    base: "rounded-lg data-[hover=true]:bg-indigo-50 data-[selected=true]:bg-indigo-100 data-[selected=true]:text-indigo-900",
-                                    title: "text-sm font-medium",
-                                }}
-                            >
-                                {bot.name}
-                            </SelectItem>
-                        ))}
+                        <SelectTrigger className="border-[#e3e3e3] bg-[#f3f3f9]/50 hover:bg-white hover:border-[#262ef2]/30 h-11 shadow-none transition-all rounded-lg text-sm font-medium text-[#201F3B] outline-none focus:ring-0">
+                            <SelectValue placeholder="Select a chatbot..." />
+                        </SelectTrigger>
+                        <SelectContent className="rounded-xl bg-white border border-[#e3e3e3] shadow-lg p-1">
+                            {chatbots.map((bot) => (
+                                <SelectItem
+                                    key={bot.id}
+                                    value={bot.id}
+                                    className="rounded-lg hover:bg-[#262ef2]/5 data-[state=selected]:bg-[#262ef2]/10 data-[state=selected]:text-[#262ef2] text-sm font-medium cursor-pointer"
+                                >
+                                    {bot.name}
+                                </SelectItem>
+                            ))}
+                        </SelectContent>
                     </Select>
                 </div>
 
                 {/* Model Stats */}
                 {chatbot && (
                     <div className="space-y-4">
-                        <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Model Stats</label>
-                        <div className="p-4 bg-slate-50/50 rounded-lg border border-slate-100 space-y-2.5">
+                        <label className="text-xs font-bold text-[#a1a1a1] uppercase tracking-wider">Model Stats</label>
+                        <div className="p-4 bg-[#f3f3f9]/50 rounded-lg border border-[#e3e3e3] space-y-2.5">
                             <div className="flex justify-between">
-                                <span className="text-[10px] font-bold text-slate-400 uppercase">Provider</span>
-                                <span className="text-[10px] font-bold text-slate-700 bg-white px-2 py-0.5 rounded border uppercase tracking-wider">
+                                <span className="text-[10px] font-bold text-[#a1a1a1] uppercase">Provider</span>
+                                <span className="text-[10px] font-bold text-[#201F3B] bg-white px-2 py-0.5 rounded border border-[#e3e3e3] uppercase tracking-wider">
                                     Gemini 2.5 Flash
                                 </span>
                             </div>
                             <div className="flex justify-between">
-                                <span className="text-[10px] font-bold text-slate-400 uppercase">Knowledge</span>
-                                <span className="text-[10px] font-bold text-indigo-600">Document Context</span>
+                                <span className="text-[10px] font-bold text-[#a1a1a1] uppercase">Knowledge</span>
+                                <span className="text-[10px] font-bold text-[#262ef2]">Document Context</span>
                             </div>
                         </div>
                     </div>
                 )}
 
                 {/* Temperature Slider */}
-                <div className="space-y-5 pt-8 border-t border-slate-100">
+                <div className="space-y-5 pt-8 border-t border-[#e3e3e3]">
                     <div className="flex items-center justify-between">
-                        <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Creativity (Temp)</label>
-                        <span className="text-sm font-mono font-bold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-lg border border-indigo-100">
+                        <label className="text-xs font-bold text-[#a1a1a1] uppercase tracking-wider">Creativity (Temp)</label>
+                        <span className="text-sm font-mono font-bold text-[#262ef2] bg-[#262ef2]/5 px-2 py-0.5 rounded-lg border border-[#262ef2]/10">
                             {temperature}
                         </span>
                     </div>
@@ -245,9 +244,9 @@ function ConfigurationPanel({
                             step="0.1"
                             value={temperature}
                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => onTemperatureChange(parseFloat(e.target.value))}
-                            className="w-full accent-indigo-600 h-1.5 bg-slate-100 rounded-lg appearance-none cursor-pointer hover:bg-slate-200 transition-colors"
+                            className="w-full accent-[#262ef2] h-1.5 bg-[#f3f3f9] rounded-lg appearance-none cursor-pointer hover:bg-[#e3e3e3] transition-colors"
                         />
-                        <div className="flex justify-between text-[10px] font-bold text-slate-400 mt-2 uppercase tracking-tighter">
+                        <div className="flex justify-between text-[10px] font-bold text-[#a1a1a1] mt-2 uppercase tracking-tighter">
                             <span>Precise</span>
                             <span>Balanced</span>
                             <span>Creative</span>
@@ -263,20 +262,20 @@ function ConfigurationPanel({
 
 function ChatHeader({ chatbot, onReset }: { chatbot: Chatbot | undefined; onReset: () => void }) {
     return (
-        <div className="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-white/80 backdrop-blur-md z-10 sticky top-0">
+        <div className="px-6 py-4 border-b border-[#e3e3e3] flex justify-between items-center bg-white/80 backdrop-blur-md z-10 sticky top-0">
             <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-indigo-500 to-violet-600 p-[1px] shadow-lg shadow-indigo-100">
-                    <div className="w-full h-full bg-white rounded-md flex items-center justify-center text-indigo-600">
+                <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-[#262ef2] to-[#201F3B] p-[1px] shadow-lg shadow-[#262ef2]/10">
+                    <div className="w-full h-full bg-white rounded-md flex items-center justify-center text-[#262ef2]">
                         <HiSparkles className="w-6 h-6" />
                     </div>
                 </div>
                 <div>
-                    <h2 className="text-lg font-bold text-slate-900 tracking-tight">
+                    <h2 className="text-lg font-bold text-[#201F3B] tracking-tight">
                         {chatbot ? chatbot.name : "Select a Chatbot"}
                     </h2>
                     <div className="flex items-center gap-1.5">
-                        <span className={`w-2 h-2 rounded-full ${chatbot ? "bg-emerald-500 animate-pulse" : "bg-slate-300"}`} />
-                        <span className="text-[11px] text-slate-500 font-bold uppercase tracking-wider">
+                        <span className={`w-2 h-2 rounded-full ${chatbot ? "bg-emerald-500 animate-pulse" : "bg-[#a1a1a1]/30"}`} />
+                        <span className="text-[11px] text-[#a1a1a1] font-bold uppercase tracking-wider">
                             {chatbot ? "Online • Intelligent Mode" : "Select from left to start"}
                         </span>
                     </div>
@@ -284,7 +283,7 @@ function ChatHeader({ chatbot, onReset }: { chatbot: Chatbot | undefined; onRese
             </div>
             <button
                 onClick={onReset}
-                className="p-2.5 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all"
+                className="p-2.5 text-[#a1a1a1] hover:text-[#262ef2] hover:bg-[#262ef2]/5 rounded-lg transition-all"
                 title="Reset Chat"
             >
                 <HiRefresh className="w-5 h-5" />
@@ -297,7 +296,7 @@ function ChatHeader({ chatbot, onReset }: { chatbot: Chatbot | undefined; onRese
 
 function ChatMessages({ messages }: { messages: ChatMessage[] }) {
     return (
-        <div className="flex-1 p-6 bg-slate-50/30 space-y-4 overflow-y-auto scroll-smooth">
+        <div className="flex-1 p-6 bg-[#f3f3f9]/30 space-y-4 overflow-y-auto scroll-smooth">
             {messages.map((msg) => (
                 <MessageBubble key={msg.id} message={msg} />
             ))}
@@ -308,24 +307,24 @@ function ChatMessages({ messages }: { messages: ChatMessage[] }) {
 function MessageBubble({ message: msg }: { message: ChatMessage }) {
     return (
         <div className={`flex gap-3 ${!msg.isBot ? "flex-row-reverse" : ""}`}>
-            <div className={`w-10 h-10 rounded-lg flex items-center justify-center shrink-0 border shadow-sm transition-transform hover:scale-105 ${msg.isBot ? "bg-white border-slate-200 text-indigo-600" : "bg-indigo-600 border-indigo-700 text-white"
+            <div className={`w-10 h-10 rounded-lg flex items-center justify-center shrink-0 border shadow-sm transition-transform hover:scale-105 ${msg.isBot ? "bg-white border-[#e3e3e3] text-[#262ef2]" : "bg-[#262ef2] border-[#262ef2] text-white"
                 }`}>
                 {msg.isBot ? <HiChatAlt2 className="w-5 h-5" /> : <HiUser className="w-5 h-5" />}
             </div>
 
             <div className={`max-w-[75%] space-y-2 ${!msg.isBot ? "items-end flex flex-col" : ""}`}>
                 <div className={`px-4 py-2.5 rounded-lg text-[14px] leading-relaxed shadow-sm transition-all ${msg.isBot
-                    ? "bg-white border border-slate-200 text-slate-700 rounded-tl-none font-medium"
-                    : "bg-indigo-600 text-white rounded-tr-none font-medium"
+                    ? "bg-white border border-[#e3e3e3] text-[#201F3B] rounded-tl-none font-medium"
+                    : "bg-[#262ef2] text-white rounded-tr-none font-medium"
                     }`}>
                     {msg.isThinking ? (
                         <div className="flex gap-2 py-2">
-                            <div className="w-2 h-2 bg-indigo-200 rounded-full animate-bounce" />
-                            <div className="w-2 h-2 bg-indigo-300 rounded-full animate-bounce [animation-delay:-.3s]" />
-                            <div className="w-2 h-2 bg-indigo-400 rounded-full animate-bounce [animation-delay:-.5s]" />
+                            <div className="w-2 h-2 bg-[#262ef2]/20 rounded-full animate-bounce" />
+                            <div className="w-2 h-2 bg-[#262ef2]/40 rounded-full animate-bounce [animation-delay:-.3s]" />
+                            <div className="w-2 h-2 bg-[#262ef2]/60 rounded-full animate-bounce [animation-delay:-.5s]" />
                         </div>
                     ) : (
-                        <div className={`prose prose-sm max-w-none ${msg.isBot ? "prose-slate" : "prose-invert"}`}>
+                        <div className={`prose prose-sm max-w-none ${msg.isBot ? "prose-[#201F3B]" : "prose-invert"}`}>
                             <ReactMarkdown
                                 remarkPlugins={[remarkGfm]}
                                 components={{
@@ -336,17 +335,17 @@ function MessageBubble({ message: msg }: { message: ChatMessage }) {
                                     code: ({ className, children, ...props }: React.HTMLAttributes<HTMLElement>) => {
                                         const match = /language-(\w+)/.exec(className || "");
                                         return !match ? (
-                                            <code className="bg-slate-100 dark:bg-slate-800 px-1 rounded text-pink-600 font-mono text-[13px]" {...props}>
+                                            <code className="bg-[#f3f3f9] px-1 rounded text-pink-600 font-mono text-[13px]" {...props}>
                                                 {children}
                                             </code>
                                         ) : (
-                                            <pre className="bg-slate-900 text-slate-100 p-4 rounded-xl overflow-x-auto my-4 font-mono text-[13px]">
+                                            <pre className="bg-[#201F3B] text-white p-4 rounded-xl overflow-x-auto my-4 font-mono text-[13px]">
                                                 <code className={className} {...props}>{children}</code>
                                             </pre>
                                         );
                                     },
                                     a: ({ href, children }) => (
-                                        <a href={href} target="_blank" rel="noopener noreferrer" className="text-indigo-400 hover:underline">
+                                        <a href={href} target="_blank" rel="noopener noreferrer" className="text-[#262ef2] hover:underline">
                                             {children}
                                         </a>
                                     ),
@@ -361,7 +360,7 @@ function MessageBubble({ message: msg }: { message: ChatMessage }) {
                     )}
                 </div>
                 {!msg.isThinking && (
-                    <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest px-1">
+                    <span className="text-[10px] text-[#a1a1a1] font-bold uppercase tracking-widest px-1">
                         {new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                     </span>
                 )}
@@ -374,13 +373,13 @@ function MessageBubble({ message: msg }: { message: ChatMessage }) {
 
 function NoChatbotSelected() {
     return (
-        <div className="flex-1 flex items-center justify-center bg-slate-50/30">
+        <div className="flex-1 flex items-center justify-center bg-[#f3f3f9]/30">
             <div className="text-center max-w-md px-8">
-                <div className="w-20 h-20 bg-indigo-50 rounded-lg flex items-center justify-center mx-auto mb-6 border border-indigo-100">
-                    <HiChatAlt2 className="w-10 h-10 text-indigo-400" />
+                <div className="w-20 h-20 bg-[#262ef2]/5 rounded-lg flex items-center justify-center mx-auto mb-6 border border-[#262ef2]/10">
+                    <HiChatAlt2 className="w-10 h-10 text-[#262ef2]/40" />
                 </div>
-                <h3 className="text-xl font-bold text-slate-800 mb-2">Select a Chatbot</h3>
-                <p className="text-sm text-slate-500 leading-relaxed">
+                <h3 className="text-xl font-bold text-[#201F3B] mb-2">Select a Chatbot</h3>
+                <p className="text-sm text-[#4d5564] leading-relaxed">
                     Choose a chatbot from the configuration panel on the left to start testing your AI assistant.
                 </p>
             </div>
@@ -399,10 +398,10 @@ interface ChatInputProps {
 
 function ChatInput({ input, chatbotName, onChange, onSend }: ChatInputProps) {
     return (
-        <div className="p-4 bg-white border-t border-slate-100 backdrop-blur-sm">
-            <div className="relative flex items-center gap-3 max-w-5xl mx-auto border border-slate-200 rounded-lg px-4 py-2 bg-slate-50/50 hover:bg-white hover:border-slate-300 transition-all">
+        <div className="p-4 bg-white border-t border-[#f3f3f9]">
+            <div className="flex items-center gap-3 w-full border border-[#e3e3e3] rounded-xl px-2 py-1 bg-white hover:border-[#a1a1a1]/40 transition-all focus-within:border-[#262ef2] focus-within:ring-4 focus-within:ring-[#262ef2]/5">
                 <textarea
-                    className="flex-1 max-h-40 bg-transparent border-none focus:outline-none focus:ring-0 p-2 text-[14px] font-medium text-slate-700 placeholder:text-slate-400 resize-none leading-relaxed"
+                    className="flex-1 max-h-40 bg-transparent border-none focus:outline-none focus:ring-0 p-3 text-[14px] font-medium text-[#201F3B] placeholder:text-[#a1a1a1] resize-none leading-relaxed"
                     placeholder={`Ask ${chatbotName} anything...`}
                     rows={1}
                     value={input}
@@ -417,13 +416,13 @@ function ChatInput({ input, chatbotName, onChange, onSend }: ChatInputProps) {
                 <button
                     onClick={onSend}
                     disabled={!input.trim()}
-                    className="bg-indigo-600 text-white p-2.5 rounded-lg hover:bg-indigo-700 shadow-md shadow-indigo-200 disabled:opacity-30 disabled:cursor-not-allowed transition-all hover:scale-105 active:scale-95 shrink-0"
+                    className="bg-[#262ef2] text-white p-2.5 rounded-lg hover:bg-[#201F3B] shadow-md shadow-[#262ef2]/10 disabled:opacity-30 disabled:cursor-not-allowed transition-all hover:scale-105 active:scale-95 shrink-0"
                 >
                     <HiPaperAirplane className="w-5 h-5 transform rotate-90" />
                 </button>
             </div>
             <div className="text-center mt-2.5">
-                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">
+                <p className="text-[10px] font-bold text-[#a1a1a1] uppercase tracking-tighter">
                     Powered by Gemini 2.5 Flash • Context: Documents
                 </p>
             </div>

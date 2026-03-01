@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Button } from "@heroui/react";
+import { Button } from "@/components/ui/button";
 import Drawer from "@/app/components/Drawer";
 import {
     HiCode,
@@ -76,7 +76,8 @@ export default function EmbedDrawer({ isOpen, onClose, chatbot }: EmbedDrawerPro
             size="3xl"
             footer={
                 <Button
-                    onPress={onClose}
+                    onClick={onClose}
+                    variant="outline"
                     className="font-medium bg-white rounded-lg h-10 px-8 border border-slate-100 text-slate-600 shadow-sm transition-all hover:bg-slate-50"
                 >
                     Close
@@ -100,9 +101,9 @@ export default function EmbedDrawer({ isOpen, onClose, chatbot }: EmbedDrawerPro
                                 </div>
                                 <Button
                                     size="sm"
-                                    isIconOnly
-                                    onPress={copyToken}
-                                    className="bg-white border border-slate-200 text-slate-500 rounded-lg hover:border-indigo-300 transition-all"
+                                    variant="outline"
+                                    onClick={copyToken}
+                                    className="bg-white border border-slate-200 text-slate-500 rounded-lg hover:border-indigo-300 transition-all h-8 w-8 p-0"
                                 >
                                     {copiedToken ? <HiCheck className="w-4 h-4 text-green-500" /> : <HiClipboardCopy className="w-4 h-4" />}
                                 </Button>
@@ -194,10 +195,11 @@ export default function EmbedDrawer({ isOpen, onClose, chatbot }: EmbedDrawerPro
                         </div>
                         <Button
                             size="sm"
-                            onPress={copySnippet}
-                            startContent={copiedSnippet ? <HiCheck className="w-3.5 h-3.5" /> : <HiClipboardCopy className="w-3.5 h-3.5" />}
-                            className={`text-xs font-bold rounded-lg transition-all ${copiedSnippet ? "bg-green-50 text-green-700" : "bg-indigo-50 text-indigo-700"}`}
+                            onClick={copySnippet}
+                            variant="secondary"
+                            className={`text-xs font-bold rounded-lg transition-all ${copiedSnippet ? "bg-green-50 text-green-700 hover:bg-green-100" : "bg-indigo-50 text-indigo-700 hover:bg-indigo-100"}`}
                         >
+                            {copiedSnippet ? <HiCheck className="w-3.5 h-3.5 mr-2" /> : <HiClipboardCopy className="w-3.5 h-3.5 mr-2" />}
                             {copiedSnippet ? "Copied!" : "Copy Code"}
                         </Button>
                     </div>

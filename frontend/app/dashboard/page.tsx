@@ -137,35 +137,35 @@ function DashboardSummary({
   return (
     <div className="w-full max-w-7xl animate-fade-in-up">
       {/* Page Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-100 pb-6 mb-8">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#e3e3e3] pb-6 mb-8">
         <div>
           <div className="flex items-center gap-3">
-            <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Dashboard Overview</h1>
+            <h1 className="text-2xl font-bold text-[#201F3B] tracking-tight">Dashboard Overview</h1>
             <Tooltip content="Refresh Dashboard Data">
               <button
                 onClick={onRefresh}
                 disabled={isRefreshing}
-                className={`p-1.5 rounded-full hover:bg-slate-100 text-slate-400 hover:text-indigo-600 transition-all focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-1 ${isRefreshing ? "animate-spin text-indigo-600" : ""
+                className={`p-1.5 rounded-full hover:bg-[#f3f3f9] text-[#a1a1a1] hover:text-[#262ef2] transition-all focus:outline-none focus:ring-2 focus:ring-[#262ef2] focus:ring-offset-1 ${isRefreshing ? "animate-spin text-[#262ef2]" : ""
                   }`}
               >
                 <HiRefresh className="w-5 h-5" />
               </button>
             </Tooltip>
-            <span className="bg-indigo-50 text-indigo-700 text-[10px] font-bold px-2 py-0.5 rounded-lg border border-indigo-100 uppercase tracking-widest">
+            <span className="bg-[#262ef2]/5 text-[#262ef2] text-[10px] font-bold px-2 py-0.5 rounded-lg border border-[#262ef2]/10 uppercase tracking-widest">
               {(userData?.billing?.current_plan || 'free').toUpperCase()} plan
             </span>
           </div>
-          <p className="text-sm text-slate-500 mt-1 font-medium">
+          <p className="text-sm text-[#a1a1a1] mt-1 font-medium">
             Platform performance and activity summary for{" "}
-            <span className="text-indigo-600 font-semibold">Workspace A</span>
+            <span className="text-[#262ef2] font-semibold">Workspace A</span>
           </p>
         </div>
         <div className="flex gap-2">
           <button
             disabled
-            className="px-5 py-2 bg-slate-50 border border-slate-100 text-slate-400 text-sm font-medium rounded-lg shadow-sm opacity-60 cursor-not-allowed flex items-center gap-2"
+            className="px-5 py-2 bg-[#f3f3f9] border border-[#e3e3e3] text-[#a1a1a1] text-sm font-medium rounded-lg shadow-sm opacity-60 cursor-not-allowed flex items-center gap-2"
           >
-            <HiCreditCard className="w-4 h-4 text-slate-300" />
+            <HiCreditCard className="w-4 h-4 text-[#a1a1a1]" />
             Billing & Plans
           </button>
         </div>
@@ -178,17 +178,17 @@ function DashboardSummary({
           label="Message Usage"
           value={`${message_count.toLocaleString()} / ${limit.toLocaleString()}`}
           trend={`${usagePercentage.toFixed(1)}% of limit used`}
-          accentClass="text-indigo-600"
-          accentBg="bg-indigo-50"
-          ringClass="ring-indigo-100"
+          accentClass="text-[#262ef2]"
+          accentBg="bg-[#262ef2]/5"
+          ringClass="ring-[#262ef2]/10"
           trendPositive={usagePercentage < 80}
           href={"#"}
           onClick={(e: any) => e.preventDefault()}
           isDisabled={true}
           details={
-            <div className="mt-4 h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
+            <div className="mt-4 h-1.5 w-full bg-[#f3f3f9] rounded-full overflow-hidden">
               <div
-                className={`h-full transition-all duration-1000 ${usagePercentage > 90 ? 'bg-red-500' : 'bg-indigo-600'}`}
+                className={`h-full transition-all duration-1000 ${usagePercentage > 90 ? 'bg-red-500' : 'bg-[#262ef2]'}`}
                 style={{ width: `${usagePercentage}%` }}
               />
             </div>
@@ -199,9 +199,9 @@ function DashboardSummary({
           label="Knowledge Bases"
           value={String(datasets.length)}
           trend="Active Collections"
-          accentClass="text-emerald-600"
-          accentBg="bg-emerald-50"
-          ringClass="ring-emerald-100"
+          accentClass="text-[#10b981]"
+          accentBg="bg-[#10b981]/5"
+          ringClass="ring-[#10b981]/10"
           trendPositive={false}
           trendNeutral
           href="/dashboard/datasets"
@@ -211,9 +211,9 @@ function DashboardSummary({
           label="AI Tokens Used"
           value={token_count >= 1000 ? `${(token_count / 1000).toFixed(1)}K` : String(token_count)}
           trend="Across all chatbots"
-          accentClass="text-amber-600"
-          accentBg="bg-amber-50"
-          ringClass="ring-amber-100"
+          accentClass="text-[#f59e0b]"
+          accentBg="bg-[#f59e0b]/5"
+          ringClass="ring-[#f59e0b]/10"
           trendPositive={false}
           trendNeutral
           href={"#"}
@@ -255,7 +255,7 @@ function MetricCard({ icon: Icon, label, value, trend, accentClass, accentBg, ri
     <Link
       href={href}
       onClick={onClick}
-      className={`p-6 bg-white rounded-lg border border-slate-100 shadow-sm transition-all group relative overflow-hidden block ${isDisabled ? "opacity-75 cursor-default" : "hover:shadow-md cursor-pointer"}`}
+      className={`p-6 bg-white rounded-lg border border-[#e3e3e3] shadow-sm transition-all group relative overflow-hidden block ${isDisabled ? "opacity-75 cursor-default" : "hover:shadow-md cursor-pointer"}`}
     >
       <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
         <Icon className={`w-24 h-24 ${accentClass} transform translate-x-4 -translate-y-4`} />
@@ -265,17 +265,17 @@ function MetricCard({ icon: Icon, label, value, trend, accentClass, accentBg, ri
           <Icon className="w-5 h-5" />
         </div>
         <div className="flex flex-1 items-center justify-between">
-          <span className="text-sm font-semibold text-slate-600">{label}</span>
+          <span className="text-sm font-semibold text-[#4d5564]">{label}</span>
           {(isLocked || isDisabled) && (
-            <div className="flex items-center gap-1 text-[10px] font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded border border-amber-100">
+            <div className="flex items-center gap-1 text-[10px] font-bold text-[#f59e0b] bg-[#f59e0b]/5 px-2 py-0.5 rounded border border-[#f59e0b]/10">
               <HiLightningBolt className="w-3 h-3" />
               PRO
             </div>
           )}
         </div>
       </div>
-      <div className="text-3xl font-bold text-slate-900 mb-1 relative z-10 font-mono">{value}</div>
-      <div className={`flex items-center gap-1.5 text-xs font-bold w-fit px-2 py-0.5 rounded-lg relative z-10 ${trendNeutral ? "text-slate-500 bg-slate-50" : "text-emerald-600 bg-emerald-50"
+      <div className="text-3xl font-bold text-[#201F3B] mb-1 relative z-10 font-mono">{value}</div>
+      <div className={`flex items-center gap-1.5 text-xs font-bold w-fit px-2 py-0.5 rounded-lg relative z-10 ${trendNeutral ? "text-[#a1a1a1] bg-[#f3f3f9]" : "text-[#10b981] bg-[#10b981]/5"
         }`}>
         {trendPositive && <HiTrendingUp className="w-3.5 h-3.5" />}
         <span className={trendPositive ? "font-mono" : ""}>{trend}</span>
@@ -290,24 +290,24 @@ function MetricCard({ icon: Icon, label, value, trend, accentClass, accentBg, ri
 
 function QuickActionsPanel() {
   return (
-    <div className="bg-white rounded-xl border border-slate-100 shadow-sm p-6 lg:col-span-1 h-full flex flex-col">
+    <div className="bg-white rounded-xl border border-[#e3e3e3] shadow-sm p-6 lg:col-span-1 h-full flex flex-col">
       <div className="flex items-center justify-between mb-6">
-        <h3 className="text-base font-bold text-slate-800">Knowledge Base</h3>
-        <Link href="/dashboard/datasets" className="text-xs text-indigo-600 font-medium hover:underline">Manage KBs</Link>
+        <h3 className="text-base font-bold text-[#201F3B]">Knowledge Base</h3>
+        <Link href="/dashboard/datasets" className="text-xs text-[#262ef2] font-medium hover:underline">Manage KBs</Link>
       </div>
       <div className="space-y-3 flex-1">
         {QUICK_ACTIONS.map((action) => (
           <Link
             key={action.label}
             href={action.href}
-            className={`w-full flex items-center gap-4 p-3 rounded-lg border border-dashed border-slate-300 ${action.hoverBorder} transition-all group text-left block`}
+            className={`w-full flex items-center gap-4 p-3 rounded-lg border border-dashed border-[#e3e3e3] ${action.hoverBorder} transition-all group text-left block`}
           >
             <div className={`w-10 h-10 rounded-lg ${action.iconBg} flex items-center justify-center group-hover:scale-110 transition-transform shadow-sm`}>
               <action.icon className="w-5 h-5" />
             </div>
             <div>
-              <h4 className={`text-sm font-semibold text-slate-900 ${action.hoverText}`}>{action.label}</h4>
-              <p className="text-xs text-slate-500 mt-0.5">{action.description}</p>
+              <h4 className={`text-sm font-semibold text-[#201F3B] ${action.hoverText}`}>{action.label}</h4>
+              <p className="text-xs text-[#a1a1a1] mt-0.5">{action.description}</p>
             </div>
           </Link>
         ))}
@@ -338,11 +338,11 @@ function RecentActivityPanel() {
 
   const getActivityColor = (type: string) => {
     switch (type) {
-      case 'document_added': return 'bg-indigo-500';
-      case 'dataset_created': return 'bg-emerald-500';
-      case 'chatbot_created': return 'bg-teal-500';
-      case 'message_limit_warning': return 'bg-amber-500';
-      default: return 'bg-slate-500';
+      case 'document_added': return 'bg-[#262ef2]';
+      case 'dataset_created': return 'bg-[#10b981]';
+      case 'chatbot_created': return 'bg-[#0ea5e9]';
+      case 'message_limit_warning': return 'bg-[#f59e0b]';
+      default: return 'bg-[#a1a1a1]';
     }
   };
 
@@ -357,23 +357,23 @@ function RecentActivityPanel() {
   };
 
   return (
-    <div className="bg-white rounded-xl border border-slate-100 shadow-sm p-6 lg:col-span-2">
+    <div className="bg-white rounded-xl border border-[#e3e3e3] shadow-sm p-6 lg:col-span-2">
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
-          <h3 className="text-base font-bold text-slate-800">Recent Activity</h3>
-          <span className="bg-indigo-100 text-indigo-700 text-xs font-bold px-2 py-0.5 rounded-lg">New</span>
+          <h3 className="text-base font-bold text-[#201F3B]">Recent Activity</h3>
+          <span className="bg-[#262ef2]/10 text-[#262ef2] text-xs font-bold px-2 py-0.5 rounded-lg">New</span>
         </div>
-        <button className="p-1.5 hover:bg-slate-100 rounded text-slate-400 hover:text-slate-600">
+        <button className="p-1.5 hover:bg-[#f3f3f9] rounded text-[#a1a1a1] hover:text-[#4d5564]">
           <HiDotsVertical className="w-4 h-4" />
         </button>
       </div>
-      <div className="space-y-0 divide-y divide-slate-100">
+      <div className="space-y-0 divide-y divide-[#f3f3f9]">
         {loading ? (
           <div className="space-y-4 py-4">
             {Array.from({ length: 3 }).map((_, i) => (
               <div key={i} className="flex gap-4 py-3">
-                <div className="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center border border-slate-200 shadow-sm shrink-0">
-                  <div className="w-2.5 h-2.5 bg-slate-300 rounded-full" />
+                <div className="w-9 h-9 rounded-full bg-[#f3f3f9] flex items-center justify-center border border-[#e3e3e3] shadow-sm shrink-0">
+                  <div className="w-2.5 h-2.5 bg-[#e3e3e3] rounded-full" />
                 </div>
                 <div className="flex-1 space-y-2">
                   <div className="flex justify-between">
@@ -392,26 +392,26 @@ function RecentActivityPanel() {
             ))}
           </div>
         ) : activities.length === 0 ? (
-          <div className="text-center py-6 text-slate-500 text-sm italic">No recent activity</div>
+          <div className="text-center py-6 text-[#a1a1a1] text-sm italic">No recent activity</div>
         ) : (
           activities.map((item, idx) => (
-            <div key={item.id} className="flex gap-4 py-4 group hover:bg-slate-50 transition-colors -mx-4 px-4 rounded-lg cursor-pointer">
+            <div key={item.id} className="flex gap-4 py-4 group hover:bg-[#f3f3f9] transition-colors -mx-4 px-4 rounded-lg cursor-pointer">
               <div className="relative mt-1">
-                <div className="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center border border-slate-200 shadow-sm z-10 relative">
+                <div className="w-9 h-9 rounded-full bg-[#f3f3f9] flex items-center justify-center border border-[#e3e3e3] shadow-sm z-10 relative">
                   <div className={`w-2.5 h-2.5 ${getActivityColor(item.activity_type)} rounded-full`} />
                 </div>
                 {idx < activities.length - 1 && (
-                  <div className="absolute top-9 left-1/2 -translate-x-1/2 w-0.5 h-full bg-slate-200 -z-0" />
+                  <div className="absolute top-9 left-1/2 -translate-x-1/2 w-0.5 h-full bg-[#e3e3e3] -z-0" />
                 )}
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
-                  <p className="text-sm font-semibold text-slate-900 truncate">{getActivityTitle(item.activity_type)}</p>
-                  <span className="text-[10px] sm:text-xs text-slate-500 font-medium whitespace-nowrap font-mono italic">
+                  <p className="text-sm font-semibold text-[#201F3B] truncate">{getActivityTitle(item.activity_type)}</p>
+                  <span className="text-[10px] sm:text-xs text-[#a1a1a1] font-medium whitespace-nowrap font-mono italic">
                     {new Date(item.created_at).toLocaleDateString()}
                   </span>
                 </div>
-                <p className="text-xs sm:text-sm text-slate-600 mt-0.5 leading-relaxed">
+                <p className="text-xs sm:text-sm text-[#4d5564] mt-0.5 leading-relaxed">
                   {item.details}
                 </p>
               </div>
@@ -429,14 +429,14 @@ function OnboardingView({ cardsRef }: { cardsRef: React.RefObject<HTMLDivElement
   return (
     <div className="w-full max-w-6xl mx-auto flex flex-col items-center">
       <div className="hero-content text-center mb-16 px-4">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 text-indigo-700 text-[10px] font-bold border border-indigo-100 mb-6 uppercase tracking-widest">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#262ef2]/5 text-[#262ef2] text-[10px] font-bold border border-[#262ef2]/10 mb-6 uppercase tracking-widest">
           <HiLightningBolt className="w-3 h-3" />
           <span>Getting Started</span>
         </div>
-        <h2 className="text-2xl md:text-3xl font-extrabold text-slate-900 mb-4 tracking-tight">
+        <h2 className="text-2xl md:text-3xl font-extrabold text-[#201F3B] mb-4 tracking-tight">
           Build your AI assistant in 4 simple steps
         </h2>
-        <p className="text-base text-slate-500 max-w-xl mx-auto leading-relaxed">
+        <p className="text-base text-[#4d5564] max-w-xl mx-auto leading-relaxed">
           Connect your data, organize your knowledge, and deploy a chatbot that actually understands your business.
         </p>
       </div>
@@ -444,30 +444,30 @@ function OnboardingView({ cardsRef }: { cardsRef: React.RefObject<HTMLDivElement
       <div ref={cardsRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 w-full px-4 relative">
         {/* Flow Lines */}
         <div className="hidden lg:block absolute top-[68px] left-[15%] right-[15%] h-[2px] z-0 overflow-hidden">
-          <div className="flow-line w-full h-full bg-slate-200 relative">
-            <div className="absolute top-0 left-0 h-full w-[40%] bg-indigo-500 shadow-[0_0_10px_rgba(99,102,241,0.5)] animate-shimmer" />
+          <div className="flow-line w-full h-full bg-[#e3e3e3] relative">
+            <div className="absolute top-0 left-0 h-full w-[40%] bg-[#262ef2] shadow-[0_0_10px_rgba(38,46,242,0.5)] animate-shimmer" />
           </div>
         </div>
 
         {ONBOARDING_STEPS.map((step) => (
           <div key={step.id} className="step-card group relative z-10">
-            <div className="bg-white p-6 md:p-8 rounded-xl border border-slate-100 shadow-sm hover:shadow-2xl hover:border-indigo-100 transition-all duration-500 flex flex-col h-full relative overflow-hidden">
+            <div className="bg-white p-6 md:p-8 rounded-xl border border-[#e3e3e3] shadow-sm hover:shadow-2xl hover:border-[#262ef2]/20 transition-all duration-500 flex flex-col h-full relative overflow-hidden">
               <div className={`absolute top-0 left-0 w-full h-1 bg-gradient-to-r ${step.gradientFrom} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
               <div className={`w-12 h-12 ${step.bgColor} ${step.color} rounded-lg flex items-center justify-center mb-6 shadow-sm ring-1 ring-inset ${step.borderColor} group-hover:scale-110 group-hover:rotate-3 transition-all duration-500`}>
                 <step.icon className="w-6 h-6" />
               </div>
               <div className="flex items-center gap-2 mb-2">
-                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 font-mono">Step 0{step.id}</span>
+                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#a1a1a1] font-mono">Step 0{step.id}</span>
               </div>
-              <h3 className="text-lg font-bold text-slate-900 mb-2 group-hover:text-indigo-600 transition-colors">
+              <h3 className="text-lg font-bold text-[#201F3B] mb-2 group-hover:text-[#262ef2] transition-colors">
                 {step.name}
               </h3>
-              <p className="text-slate-500 text-xs md:text-sm leading-relaxed mb-8 flex-1">
+              <p className="text-[#4d5564] text-xs md:text-sm leading-relaxed mb-8 flex-1">
                 {step.description}
               </p>
               <Link
                 href={step.href}
-                className="flex items-center justify-between w-full px-5 py-2.5 rounded-lg bg-slate-50 text-slate-700 border border-slate-200 text-[13px] font-medium transition-all duration-300 group/btn hover:bg-slate-800 hover:text-white hover:border-slate-800 shadow-sm"
+                className="flex items-center justify-between w-full px-5 py-2.5 rounded-lg bg-[#f3f3f9] text-[#4d5564] border border-[#e3e3e3] text-[13px] font-medium transition-all duration-300 group/btn hover:bg-[#201F3B] hover:text-white hover:border-[#201F3B] shadow-sm"
               >
                 <span>{step.btnText}</span>
                 <HiArrowRight className="w-4 h-4 transform group-hover/btn:translate-x-1 transition-transform" />
@@ -478,11 +478,11 @@ function OnboardingView({ cardsRef }: { cardsRef: React.RefObject<HTMLDivElement
       </div>
 
       <div className="hero-content mt-16 text-center">
-        <p className="text-[13px] text-slate-400">
+        <p className="text-[13px] text-[#a1a1a1]">
           New to Deploy Chat?{" "}
-          <Link href="/dashboard/help" className="font-bold text-indigo-500 hover:underline">Watch a 2-minute intro</Link>{" "}
+          <Link href="/dashboard/help" className="font-bold text-[#262ef2] hover:underline">Watch a 2-minute intro</Link>{" "}
           or{" "}
-          <Link href="/dashboard/help" className="font-bold text-indigo-500 hover:underline">read documentation</Link>
+          <Link href="/dashboard/help" className="font-bold text-[#262ef2] hover:underline">read documentation</Link>
         </p>
       </div>
     </div>

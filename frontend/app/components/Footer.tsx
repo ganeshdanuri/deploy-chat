@@ -7,18 +7,18 @@ import { FOOTER_LINKS as footerLinks, SOCIAL_LINKS } from "../../lib/constants";
 
 export default function Footer() {
     return (
-        <footer className="bg-white border-t" style={{ borderColor: theme.colors.neutral[200] }}>
+        <footer className="bg-white">
             <div className="max-w-7xl mx-auto px-6 py-12 lg:py-20">
                 <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-12 lg:gap-8">
                     {/* Logo and Tagline */}
                     <div className="col-span-2 space-y-6">
                         <div className="flex items-center gap-2">
                             <Logo className="h-10 w-auto" />
-                            <span className="text-2xl font-black tracking-tight text-slate-900">
-                                DEPLOY <span style={{ color: theme.colors.primary.main }}>CHAT</span>
+                            <span className="text-2xl font-bold tracking-tight text-[#201F3B]">
+                                DEPLOY <span className="text-[#262ef2]">CHAT</span>
                             </span>
                         </div>
-                        <p className="max-w-xs text-sm leading-relaxed" style={{ color: theme.colors.neutral[600] }}>
+                        <p className="max-w-xs text-sm leading-relaxed text-[#4d5564]">
                             Enterprise-grade AI chatbots for modern teams.
                             Automate your support and delight your customers in minutes.
                         </p>
@@ -33,8 +33,7 @@ export default function Footer() {
                                     href={social.href}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="w-10 h-10 rounded-full border flex items-center justify-center transition-colors hover:bg-slate-50"
-                                    style={{ borderColor: theme.colors.neutral[200], color: theme.colors.neutral[500] }}
+                                    className="w-10 h-10 rounded-full bg-[#f3f3f9] flex items-center justify-center transition-colors hover:bg-[#e3e3e3] text-[#a1a1a1]"
                                 >
                                     <social.Icon className="text-lg" />
                                 </a>
@@ -45,7 +44,7 @@ export default function Footer() {
                     {/* Links */}
                     {footerLinks.map((column) => (
                         <div key={column.title} className="col-span-1 space-y-6">
-                            <h4 className="text-lg font-medium uppercase tracking-wider" style={{ color: theme.colors.neutral[900] }}>
+                            <h4 className="text-sm font-semibold uppercase tracking-widest text-[#000000]">
                                 {column.title}
                             </h4>
                             <ul className="space-y-4">
@@ -53,8 +52,7 @@ export default function Footer() {
                                     <li key={link.name}>
                                         <a
                                             href={link.href}
-                                            className="text-sm transition-colors hover:text-blue-600"
-                                            style={{ color: theme.colors.neutral[600] }}
+                                            className="text-sm transition-colors hover:text-[#262ef2] text-[#4d5564]"
                                         >
                                             {link.name}
                                         </a>
@@ -66,22 +64,20 @@ export default function Footer() {
 
                     {/* Newsletter */}
                     <div className="col-span-2 lg:col-span-2 space-y-6">
-                        <h4 className="text-lg font-medium uppercase tracking-wider" style={{ color: theme.colors.neutral[900] }}>
+                        <h4 className="text-sm font-semibold uppercase tracking-widest text-[#000000]">
                             Stay Updated
                         </h4>
-                        <p className="text-sm" style={{ color: theme.colors.neutral[600] }}>
+                        <p className="text-sm text-[#4d5564]">
                             Get the latest product updates and AI tips.
                         </p>
                         <div className="flex gap-2">
                             <input
                                 type="email"
                                 placeholder="Email address"
-                                className="text-sm flex-1 px-4 py-2.5 rounded-xl border focus:outline-none focus:ring-2 focus:ring-blue-500/20"
-                                style={{ borderColor: theme.colors.neutral[300], backgroundColor: theme.colors.neutral[50] }}
+                                className="text-sm flex-1 px-4 py-2.5 rounded-xl bg-[#f3f3f9] focus:outline-none focus:ring-2 focus:ring-[#262ef2]/20 text-[#201F3B] placeholder-[#a1a1a1]"
                             />
                             <button
-                                className="text-sm font-medium px-6 py-2.5 rounded-xl text-white transition-all hover:-translate-y-0.5"
-                                style={{ backgroundColor: theme.colors.primary.main }}
+                                className="text-sm font-medium px-6 py-2.5 rounded-xl text-white transition-all hover:-translate-y-0.5 bg-[#262ef2]"
                             >
                                 Join
                             </button>
@@ -89,14 +85,14 @@ export default function Footer() {
                     </div>
                 </div>
 
-                <div className="mt-14 pt-8 border-t flex flex-col md:flex-row justify-between items-center gap-6" style={{ borderColor: theme.colors.neutral[100] }}>
-                    <p className="text-xs" style={{ color: theme.colors.neutral[500] }}>
+                <div className="mt-14 pt-8 flex flex-col md:flex-row justify-between items-center gap-6">
+                    <p className="text-xs text-[#a1a1a1]">
                         © {new Date().getFullYear()} Deploy Chat Inc. All rights reserved.
                     </p>
                     <div className="flex gap-8">
-                        <a href="#" className="text-xs transition-colors hover:text-blue-600" style={{ color: theme.colors.neutral[500] }}>Status</a>
-                        <a href="#" className="text-xs transition-colors hover:text-blue-600" style={{ color: theme.colors.neutral[500] }}>Security</a>
-                        <a href="#" className="text-xs transition-colors hover:text-blue-600" style={{ color: theme.colors.neutral[500] }}>GDPR</a>
+                        <a href="#" className="text-xs transition-colors hover:text-[#262ef2] text-[#a1a1a1]">Status</a>
+                        <a href="#" className="text-xs transition-colors hover:text-[#262ef2] text-[#a1a1a1]">Security</a>
+                        <a href="#" className="text-xs transition-colors hover:text-[#262ef2] text-[#a1a1a1]">GDPR</a>
                     </div>
                 </div>
             </div>

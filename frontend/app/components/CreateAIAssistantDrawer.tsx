@@ -8,7 +8,8 @@ import { fetchDatasets } from "@/lib/store/slices/datasetsSlice";
 import { createChatbot, fetchChatbots } from "@/lib/store/slices/chatbotsSlice";
 import Drawer from "./Drawer";
 import showToast from "@/lib/toast";
-import { Button, Input } from "@heroui/react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/app/components/ui";
 import { SelectableItemList, SelectableListSkeleton } from "./ui";
 import type { SelectableItem } from "./ui";
 import { theme } from "../theme";
@@ -117,16 +118,15 @@ export default function CreateAIAssistantDrawer({ isOpen, onClose, editBot }: Cr
     const footer = (
         <>
             <Button
-                variant="bordered"
-                onPress={onClose}
+                variant="outline"
+                onClick={onClose}
                 className="font-medium rounded-lg h-10 px-6 transition-all hover:bg-slate-50 border border-slate-100 text-slate-600 shadow-sm whitespace-nowrap"
             >
                 Cancel
             </Button>
             <Button
-                onPress={handleSubmit}
-                isDisabled={isSubmitting}
-                isLoading={isSubmitting}
+                onClick={handleSubmit}
+                disabled={isSubmitting}
                 className="text-white text-sm font-bold rounded-lg h-10 px-8 shadow-lg shadow-indigo-500/20 transition-all hover:-translate-y-0.5 whitespace-nowrap"
                 style={{ backgroundColor: theme.colors.primary.main }}
             >
@@ -205,8 +205,8 @@ export default function CreateAIAssistantDrawer({ isOpen, onClose, editBot }: Cr
                             <label className="text-sm font-bold block text-slate-700">Allowed Domains</label>
                             <Button
                                 size="sm"
-                                variant="light"
-                                onPress={() => setAllowedDomains([...allowedDomains, ""])}
+                                variant="ghost"
+                                onClick={() => setAllowedDomains([...allowedDomains, ""])}
                                 className="text-indigo-600 font-bold text-xs"
                             >
                                 + ADD DOMAIN
@@ -230,14 +230,13 @@ export default function CreateAIAssistantDrawer({ isOpen, onClose, editBot }: Cr
                                         }}
                                     />
                                     <Button
-                                        isIconOnly
                                         size="sm"
-                                        variant="light"
-                                        onPress={() => {
+                                        variant="ghost"
+                                        onClick={() => {
                                             const newDomains = allowedDomains.filter((_, i) => i !== index);
                                             setAllowedDomains(newDomains.length === 0 ? [""] : newDomains);
                                         }}
-                                        className="text-slate-400 hover:text-red-500"
+                                        className="text-slate-400 hover:text-red-500 p-0 h-8 w-8"
                                     >
                                         <HiTrash className="w-5 h-5" />
                                     </Button>

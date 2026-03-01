@@ -7,6 +7,7 @@ import { GoogleLogin } from "@react-oauth/google";
 import { theme } from "../theme";
 import Logo from "../components/Logo";
 import gsap from "gsap";
+import { Input } from "../components/ui";
 
 function LoginContent() {
     const router = useRouter();
@@ -127,15 +128,15 @@ function LoginContent() {
     };
 
     return (
-        <div className="min-h-screen flex text-slate-900 bg-white">
+        <div className="min-h-screen flex text-[#201F3B] bg-[#f3f3f9]">
             {/* Left Side - Illustrations & Information */}
             <div
                 ref={leftSideRef}
                 className="hidden lg:flex lg:w-4/6 relative overflow-hidden flex-col justify-center items-start p-16"
-                style={{ backgroundColor: theme.colors.neutral[900] }}
+                style={{ backgroundColor: "#201F3B" }}
             >
                 <div className="absolute inset-0 opacity-10" style={{
-                    backgroundImage: `radial-gradient(circle at 50% 50%, ${theme.colors.primary.main} 0%, transparent 60%)`,
+                    backgroundImage: `radial-gradient(circle at 50% 50%, #262ef2 0%, transparent 60%)`,
                 }} />
 
                 {/* Subtle Grid Pattern */}
@@ -145,33 +146,33 @@ function LoginContent() {
                 }} />
 
                 <div className="relative z-10 max-w-2xl px-8">
-                    <div className="gsap-text inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary-main/10 border border-primary-main/20 mb-8 backdrop-blur-md">
+                    <div className="gsap-text inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#262ef2]/10 border border-[#262ef2]/20 mb-8 backdrop-blur-md">
                         <span className="relative flex h-2 w-2">
-                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-                            <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#262ef2] opacity-75"></span>
+                            <span className="relative inline-flex rounded-full h-2 w-2 bg-[#262ef2]"></span>
                         </span>
-                        <span className="text-xs font-bold tracking-wider text-blue-400 uppercase">Next-Generation Platform</span>
+                        <span className="text-xs font-bold tracking-wider text-[#262ef2] uppercase">Next-Generation Platform</span>
                     </div>
 
                     <h1 className="text-4xl font-bold mb-8 gsap-text leading-[1.1] tracking-tight text-white">
                         Powering the <br />
-                        <span style={{ color: theme.colors.primary.main }}>
+                        <span style={{ color: "#262ef2" }}>
                             Autonomous Future
                         </span>
                     </h1>
 
-                    <p className="text-xl mb-12 text-slate-200 gsap-text leading-relaxed font-normal max-w-lg">
+                    <p className="text-xl mb-12 text-[#e3e3e3] gsap-text leading-relaxed font-normal max-w-lg">
                         Deploy Chat enables teams to build, scale, and monitor intelligent AI agents with production-grade RAG and native dataset connectors.
                     </p>
 
                     <div className="grid grid-cols-2 gap-8 gsap-text mb-12">
                         <div className="flex flex-col gap-2">
                             <span className="text-3xl font-bold text-white">99.9%</span>
-                            <span className="text-sm text-slate-400 font-medium">Uptime Guarantee</span>
+                            <span className="text-sm text-[#a1a1a1] font-medium">Uptime Guarantee</span>
                         </div>
                         <div className="flex flex-col gap-2">
                             <span className="text-3xl font-bold text-white">250ms</span>
-                            <span className="text-sm text-slate-400 font-medium">Avg. Latency</span>
+                            <span className="text-sm text-[#a1a1a1] font-medium">Avg. Latency</span>
                         </div>
                     </div>
 
@@ -187,7 +188,7 @@ function LoginContent() {
                 </div>
 
                 <div className="absolute bottom-10 left-16 gsap-text">
-                    <p className="text-xs text-indigo-200/50 font-medium tracking-wider uppercase">
+                    <p className="text-xs text-[#262ef2]/50 font-medium tracking-wider uppercase">
                         Building the autonomous future with <span className="text-white font-bold ml-1">Deploy Chat</span>.
                     </p>
                 </div>
@@ -202,7 +203,7 @@ function LoginContent() {
                 <div className="absolute top-0 left-0 right-0 h-24 flex items-center justify-center lg:justify-start px-8 sm:px-16 xl:px-20 z-20">
                     <div className="flex items-center gap-2.5 cursor-pointer" onClick={() => router.push("/")}>
                         <Logo className="h-8 w-auto" />
-                        <span className="text-2xl font-bold tracking-tight block leading-none text-slate-900 pt-0.5">
+                        <span className="text-2xl font-bold tracking-tight block leading-none text-[#201F3B] pt-0.5">
                             DEPLOY CHAT
                         </span>
                     </div>
@@ -212,16 +213,16 @@ function LoginContent() {
                     <div className="mb-10 text-center lg:text-left">
                         {/* Static height container to prevent layout shift */}
                         <div className="min-h-[70px] flex flex-col justify-end pb-1">
-                            <h2 className="text-xl font-extrabold mb-1 text-slate-900 tracking-tight">
+                            <h2 className="text-xl font-extrabold mb-1 text-[#201F3B] tracking-tight">
                                 {isVerifying ? "Verify email" : isRegister ? "Create account" : "Welcome back"}
                             </h2>
-                            <p className="text-[13px] text-slate-500 font-medium leading-relaxed">
+                            <p className="text-[13px] text-[#4d5564] font-medium leading-relaxed">
                                 {isVerifying
                                     ? `Code sent to ${email}`
                                     : isRegister
                                         ? (
                                             <>
-                                                New accounts start on our <span className="font-bold text-[#4667ff] px-1.5 py-0.5 rounded-lg bg-[#4667ff]/10 border border-[#4667ff]/20 inline-flex items-center mx-1">Free</span> Plan.
+                                                New accounts start on our <span className="font-bold text-[#262ef2] px-1.5 py-0.5 rounded-lg bg-[#262ef2]/10 border border-[#262ef2]/20 inline-flex items-center mx-1">Free</span> Plan.
                                             </>
                                         )
                                         : "Login to manage your chatbots."}
@@ -234,14 +235,14 @@ function LoginContent() {
 
                 {!isVerifying && (
                     <div className="mb-8 lg:text-left text-center">
-                        <p className="text-sm font-medium" style={{ color: theme.colors.neutral[600] }}>
+                        <p className="text-sm font-medium text-[#4d5564]">
                             {isRegister ? "Already have an account?" : "Don't have an account?"}{" "}
                             <button
                                 onClick={() => {
                                     setIsRegister(!isRegister);
                                     setError("");
                                 }}
-                                className="font-bold transition-colors text-[#4667ff] hover:text-[#3b5ae6] underline underline-offset-4"
+                                className="font-bold transition-colors text-[#262ef2] hover:text-[#262ef2]/80 underline underline-offset-4"
                             >
                                 {isRegister ? "Log in" : "Create one for free"}
                             </button>
@@ -258,14 +259,14 @@ function LoginContent() {
                 {isVerifying ? (
                     <form onSubmit={handleVerifyOtp} className="space-y-5">
                         <div>
-                            <label className="text-sm font-medium mb-2 block text-slate-700">Verification Code</label>
+                            <label className="text-sm font-medium mb-2 block text-[#201F3B]">Verification Code</label>
                             <input
                                 type="text"
                                 required
                                 maxLength={6}
                                 value={otp}
                                 onChange={(e) => setOtp(e.target.value.replace(/\D/g, ''))}
-                                className="w-full rounded-xl border border-slate-200 px-4 py-3 text-center text-2xl font-bold tracking-[0.5em] focus:outline-none transition-all focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 bg-white placeholder:text-slate-300"
+                                className="w-full rounded-xl border border-[#e3e3e3] px-4 py-3 text-center text-2xl font-bold tracking-[0.5em] focus:outline-none transition-all focus:ring-4 focus:ring-[#262ef2]/10 focus:border-[#262ef2] bg-white placeholder:text-[#a1a1a1]"
                                 placeholder="000000"
                             />
                         </div>
@@ -282,7 +283,7 @@ function LoginContent() {
                         <button
                             type="button"
                             onClick={() => setIsVerifying(false)}
-                            className="w-full text-sm font-bold text-slate-500 hover:text-slate-700 transition-colors"
+                            className="w-full text-sm font-bold text-[#4d5564] hover:text-[#201F3B] transition-colors"
                         >
                             Back to Register
                         </button>
@@ -291,45 +292,42 @@ function LoginContent() {
                     <form onSubmit={handleSubmit} className="space-y-5">
                         {isRegister && (
                             <div>
-                                <label className="text-sm font-medium mb-2 block text-slate-700">Full Name</label>
-                                <input
+                                <label className="text-sm font-medium mb-2 block text-[#201F3B]">Full Name</label>
+                                <Input
                                     type="text"
                                     required
                                     value={username}
                                     onChange={(e) => setUsername(e.target.value)}
-                                    className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm focus:outline-none transition-all focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 bg-white placeholder:text-slate-400"
                                     placeholder="Enter your full name"
                                 />
                             </div>
                         )}
 
                         <div>
-                            <label className="text-sm font-medium mb-2 block text-slate-700">Email Address</label>
-                            <input
+                            <label className="text-sm font-medium mb-2 block text-[#201F3B]">Email Address</label>
+                            <Input
                                 type="email"
                                 required
                                 value={isRegister ? email : username}
                                 onChange={(e) => isRegister ? setEmail(e.target.value) : setUsername(e.target.value)}
-                                className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm focus:outline-none transition-all focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 bg-white placeholder:text-slate-400"
                                 placeholder="name@company.com"
                             />
                         </div>
 
                         <div>
                             <div className="flex items-center justify-between mb-2">
-                                <label className="text-sm font-medium block text-slate-700">Password</label>
+                                <label className="text-sm font-medium block text-[#201F3B]">Password</label>
                                 {!isRegister && (
-                                    <button type="button" className="text-sm font-medium text-blue-600 hover:text-blue-700 transition-colors">
+                                    <button type="button" className="text-sm font-medium text-[#262ef2] hover:text-[#262ef2]/80 transition-colors">
                                         Forgot password?
                                     </button>
                                 )}
                             </div>
-                            <input
+                            <Input
                                 type="password"
                                 required
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
-                                className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm focus:outline-none transition-all focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 bg-white"
                                 placeholder="••••••••"
                             />
                         </div>
@@ -337,8 +335,8 @@ function LoginContent() {
                         <button
                             type="submit"
                             disabled={isLoading}
-                            className="text-sm font-medium w-full rounded-xl px-8 py-4 mt-4 transition-all hover:-translate-y-0.5 hover:shadow-xl active:scale-[0.99] flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed text-white shadow-lg shadow-blue-500/25"
-                            style={{ background: theme.gradients.primaryButton }}
+                            className="text-sm font-medium w-full rounded-xl px-8 py-4 mt-4 transition-all hover:-translate-y-0.5 hover:shadow-xl active:scale-[0.99] flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed text-white shadow-lg shadow-[#262ef2]/25"
+                            style={{ background: "#262ef2" }}
                         >
                             {isLoading ? (
                                 <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -357,10 +355,10 @@ function LoginContent() {
                     <>
                         <div className="relative my-8">
                             <div className="absolute inset-0 flex items-center">
-                                <div className="w-full border-t border-slate-200"></div>
+                                <div className="w-full border-t border-[#e3e3e3]"></div>
                             </div>
                             <div className="relative flex justify-center text-xs">
-                                <span className="bg-white px-4 text-slate-500 font-medium tracking-wide uppercase">Or continue with</span>
+                                <span className="bg-white px-4 text-[#a1a1a1] font-medium tracking-wide uppercase">Or continue with</span>
                             </div>
                         </div>
 
@@ -387,10 +385,10 @@ function LoginContent() {
                     </>
                 )}
 
-                <p className="mt-8 text-xs text-left text-slate-500">
+                <p className="mt-8 text-xs text-left text-[#4d5564]">
                     By continuing, you are agreeing to our{" "}
-                    <button className="text-sm font-medium underline hover:text-slate-700">Terms of Service</button> and{" "}
-                    <button className="text-sm font-medium underline hover:text-slate-700">Privacy Policy</button>.
+                    <button className="text-sm font-medium underline hover:text-[#201F3B]">Terms of Service</button> and{" "}
+                    <button className="text-sm font-medium underline hover:text-[#201F3B]">Privacy Policy</button>.
                 </p>
             </div>
         </div>

@@ -10,7 +10,8 @@ import { createDataset, fetchDatasets } from "@/lib/store/slices/datasetsSlice";
 import Drawer from "./Drawer";
 import { SiNotion } from "react-icons/si";
 import showToast from "@/lib/toast";
-import { Button, Input } from "@heroui/react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/app/components/ui";
 import { SelectableItemList, SelectableListSkeleton } from "./ui";
 import type { SelectableItem } from "./ui";
 import { theme } from "../theme";
@@ -90,16 +91,15 @@ export default function CreateKnowledgeBaseDrawer({ isOpen, onClose, editDataset
     const footer = (
         <>
             <Button
-                variant="bordered"
-                onPress={onClose}
+                variant="outline"
+                onClick={onClose}
                 className="font-medium rounded-lg h-10 px-6 transition-all hover:bg-slate-50 border border-slate-100 text-slate-600 shadow-sm whitespace-nowrap"
             >
                 Cancel
             </Button>
             <Button
-                onPress={handleSubmit}
-                isDisabled={isSubmitting || !name || (!editDataset && selectedDocs.length === 0)}
-                isLoading={isSubmitting}
+                onClick={handleSubmit}
+                disabled={isSubmitting || !name || (!editDataset && selectedDocs.length === 0)}
                 className="text-white text-sm font-bold rounded-lg h-10 px-8 shadow-lg shadow-indigo-500/20 transition-all hover:-translate-y-0.5 whitespace-nowrap"
                 style={{ backgroundColor: theme.colors.primary.main }}
             >

@@ -6,7 +6,15 @@ import api from "@/lib/api";
 import { ENDPOINTS } from "@/lib/endpoints";
 import showToast from "@/lib/toast";
 import Drawer from "./Drawer";
-import { Button, Input, Select, SelectItem } from "@heroui/react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/app/components/ui/Input";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
 import { theme } from "../theme";
 
 interface AddAPIKeyDrawerProps {
@@ -56,19 +64,19 @@ export default function AddAPIKeyDrawer({ isOpen, onClose, onSuccess }: AddAPIKe
     const footer = (
         <>
             <Button
-                variant="bordered"
-                onPress={handleClose}
+                variant="outline"
+                onClick={handleClose}
                 className="font-medium bg-white rounded-lg h-10 px-6 border border-slate-100 text-slate-600 shadow-sm transition-all hover:bg-slate-50"
             >
                 Cancel
             </Button>
             <Button
-                onPress={handleSubmit}
-                isLoading={isLoading}
+                onClick={handleSubmit}
+                disabled={isLoading}
                 className="text-white font-bold rounded-lg h-10 px-8 shadow-lg shadow-indigo-500/20 transition-all hover:-translate-y-0.5"
                 style={{ backgroundColor: theme.colors.primary.main }}
             >
-                Add Key
+                {isLoading ? "Processing..." : "Add Key"}
             </Button>
         </>
     );
@@ -86,18 +94,19 @@ export default function AddAPIKeyDrawer({ isOpen, onClose, onSuccess }: AddAPIKe
                 <div className="space-y-2">
                     <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">Provider</label>
                     <Select
-                        selectedKeys={[provider]}
-                        onChange={(e) => setProvider(e.target.value)}
-                        variant="bordered"
-                        classNames={{
-                            trigger: "rounded-xl border border-slate-100 bg-slate-50/50 h-12 shadow-none",
-                        }}
+                        value={provider}
+                        onValueChange={setProvider}
                     >
-                        {PROVIDERS.map((p) => (
-                            <SelectItem key={p.value}>
-                                {p.label}
-                            </SelectItem>
-                        ))}
+                        <SelectTrigger className="rounded-xl border border-slate-200 bg-white h-11 transition-all focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/5 outline-none">
+                            <SelectValue placeholder="Select provider" />
+                        </SelectTrigger>
+                        <SelectContent className="rounded-xl border border-slate-200 bg-white">
+                            {PROVIDERS.map((p) => (
+                                <SelectItem key={p.value} value={p.value}>
+                                    {p.label}
+                                </SelectItem>
+                            ))}
+                        </SelectContent>
                     </Select>
                 </div>
 
@@ -106,12 +115,8 @@ export default function AddAPIKeyDrawer({ isOpen, onClose, onSuccess }: AddAPIKe
                     <Input
                         type="password"
                         placeholder="sk-..."
-                        variant="bordered"
                         value={apiKey}
                         onValueChange={setApiKey}
-                        classNames={{
-                            inputWrapper: "rounded-xl border border-slate-100 bg-slate-50/50 h-12 shadow-none",
-                        }}
                     />
                     <p className="text-[10px] text-slate-400 font-medium px-1">
                         Your keys are encrypted at rest.

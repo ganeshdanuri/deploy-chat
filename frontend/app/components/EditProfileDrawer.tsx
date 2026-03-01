@@ -6,7 +6,8 @@ import api from "@/lib/api";
 import { ENDPOINTS } from "@/lib/endpoints";
 import showToast from "@/lib/toast";
 import Drawer from "./Drawer";
-import { Button, Input } from "@heroui/react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/app/components/ui";
 import { theme } from "../theme";
 
 interface EditProfileDrawerProps {
@@ -42,19 +43,19 @@ export default function EditProfileDrawer({ isOpen, onClose, currentUsername, cu
     const footer = (
         <>
             <Button
-                variant="bordered"
-                onPress={onClose}
+                variant="outline"
+                onClick={onClose}
                 className="font-medium bg-white rounded-lg h-10 px-6 border border-slate-100 text-slate-600 shadow-sm transition-all hover:bg-slate-50"
             >
                 Cancel
             </Button>
             <Button
-                onPress={handleSubmit}
-                isLoading={isLoading}
+                onClick={handleSubmit}
+                disabled={isLoading}
                 className="text-white font-bold rounded-lg h-10 px-8 shadow-lg shadow-indigo-500/20 transition-all hover:-translate-y-0.5"
                 style={{ backgroundColor: theme.colors.primary.main }}
             >
-                Save Changes
+                {isLoading ? "Saving..." : "Save Changes"}
             </Button>
         </>
     );
@@ -72,12 +73,8 @@ export default function EditProfileDrawer({ isOpen, onClose, currentUsername, cu
                 <div className="space-y-2">
                     <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">Username</label>
                     <Input
-                        variant="bordered"
                         value={username}
                         onValueChange={setUsername}
-                        classNames={{
-                            inputWrapper: "rounded-xl border border-slate-100 bg-slate-50/50 h-12 shadow-none",
-                        }}
                     />
                 </div>
 
@@ -85,12 +82,8 @@ export default function EditProfileDrawer({ isOpen, onClose, currentUsername, cu
                     <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">Email Address</label>
                     <Input
                         type="email"
-                        variant="bordered"
                         value={email}
                         onValueChange={setEmail}
-                        classNames={{
-                            inputWrapper: "rounded-xl border border-slate-100 bg-slate-50/50 h-12 shadow-none",
-                        }}
                     />
                 </div>
             </div>

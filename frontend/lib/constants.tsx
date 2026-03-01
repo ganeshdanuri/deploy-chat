@@ -14,22 +14,22 @@ export const LANDING_STATS = [
         id: 1,
         value: "98%",
         label: "Accuracy Rate",
-        color: theme.colors.accent.green,
-        bgColor: theme.colors.accent.greenLight,
+        color: "#262ef2",
+        bgColor: "#262ef215",
     },
     {
         id: 2,
         value: "24/7",
         label: "Always Available",
-        color: theme.colors.accent.yellow,
-        bgColor: theme.colors.accent.yellowLight,
+        color: "#262ef2",
+        bgColor: "#262ef215",
     },
     {
         id: 3,
         value: "10K+",
         label: "Active Users",
-        color: theme.colors.accent.purple,
-        bgColor: theme.colors.accent.purpleLight,
+        color: "#262ef2",
+        bgColor: "#262ef215",
     },
 ];
 
@@ -68,7 +68,7 @@ export const PLATFORM_FEATURES = [
         title: "Easy Integration",
         description: "Add AI chatbots to your website with just a few lines of code. No complex setup required.",
         icon: MdIntegrationInstructions,
-        color: theme.colors.primary.main,
+        color: "#262ef2",
         span: "col-span-1 md:col-span-2 lg:col-span-1",
     },
     {
@@ -76,7 +76,7 @@ export const PLATFORM_FEATURES = [
         title: "Custom Training",
         description: "Train your chatbot on your own content, documentation, and knowledge base for accurate responses.",
         icon: FaBrain,
-        color: theme.colors.accent.purple,
+        color: "#262ef2",
         span: "col-span-1 md:col-span-2 lg:col-span-2",
     },
     {
@@ -84,7 +84,7 @@ export const PLATFORM_FEATURES = [
         title: "24/7 Support",
         description: "Your AI chatbot works around the clock to provide instant answers.",
         icon: HiGlobe,
-        color: theme.colors.accent.green,
+        color: "#262ef2",
         span: "col-span-1",
     },
     {
@@ -92,7 +92,7 @@ export const PLATFORM_FEATURES = [
         title: "Analytics Dashboard",
         description: "Track conversations, user satisfaction, and chatbot performance.",
         icon: HiChartBar,
-        color: theme.colors.accent.blue,
+        color: "#262ef2",
         span: "col-span-1",
     },
     {
@@ -100,7 +100,7 @@ export const PLATFORM_FEATURES = [
         title: "Multi-language",
         description: "Support customers in multiple languages with AI-powered translation.",
         icon: HiUserGroup,
-        color: theme.colors.accent.yellow,
+        color: "#262ef2",
         span: "col-span-1 md:col-span-2 lg:col-span-1",
     },
     {
@@ -108,7 +108,7 @@ export const PLATFORM_FEATURES = [
         title: "Enterprise Security",
         description: "Bank-grade encryption and GDPR compliance out of the box.",
         icon: HiShieldCheck,
-        color: theme.colors.accent.teal,
+        color: "#262ef2",
         span: "col-span-1 md:col-span-3 lg:col-span-3",
     },
 ];
@@ -260,7 +260,7 @@ export const FAQS = [
 export const SOCIAL_LINKS = {
     twitter: "https://x.com/deploychat",
     github: "https://github.com/ganeshdanuri/docking",
-    linkedin: "https://linkedin.com/in/deploychat",
+    linkedin: "https://linkedin.com/company/deploychat",
 };
 
 // ─── Footer Links ────────────────────────────────────────────────────────────
@@ -338,10 +338,10 @@ export const ONBOARDING_STEPS: OnboardingStep[] = [
         description: "Connect your knowledge base. Upload PDFs, CSVs, Markdown, or text files for your AI to learn from.",
         icon: HiDocumentText,
         href: "/dashboard/documents",
-        color: "text-indigo-600",
-        bgColor: "bg-indigo-50",
-        borderColor: "border-indigo-100",
-        gradientFrom: "from-indigo-500 to-indigo-600",
+        color: "text-[#262ef2]",
+        bgColor: "bg-[#262ef2]/5",
+        borderColor: "border-[#262ef2]/10",
+        gradientFrom: "from-[#262ef2] to-[#201F3B]",
         btnText: "Add Documents",
     },
     {
@@ -350,10 +350,10 @@ export const ONBOARDING_STEPS: OnboardingStep[] = [
         description: "Organize synced data into logical collections to help your AI retrieve precise information.",
         icon: HiDatabase,
         href: "/dashboard/datasets",
-        color: "text-emerald-600",
-        bgColor: "bg-emerald-50",
-        borderColor: "border-emerald-100/50",
-        gradientFrom: "from-emerald-500 to-emerald-600",
+        color: "text-[#262ef2]",
+        bgColor: "bg-[#262ef2]/5",
+        borderColor: "border-[#262ef2]/10",
+        gradientFrom: "from-[#262ef2] to-[#201F3B]",
         btnText: "Setup Knowledge",
     },
     {
@@ -362,10 +362,10 @@ export const ONBOARDING_STEPS: OnboardingStep[] = [
         description: "Define how your AI speaks and which knowledge collections it should prioritize.",
         icon: HiChatAlt2,
         href: "/dashboard/chatbots",
-        color: "text-amber-600",
-        bgColor: "bg-amber-50",
-        borderColor: "border-amber-100/50",
-        gradientFrom: "from-amber-400 to-amber-500",
+        color: "text-[#262ef2]",
+        bgColor: "bg-[#262ef2]/5",
+        borderColor: "border-[#262ef2]/10",
+        gradientFrom: "from-[#262ef2] to-[#201F3B]",
         btnText: "Create Assistant",
     },
     {
@@ -374,10 +374,10 @@ export const ONBOARDING_STEPS: OnboardingStep[] = [
         description: "Perfect your responses in the playground before deploying to your users.",
         icon: HiSparkles,
         href: "/dashboard/playground",
-        color: "text-purple-600",
-        bgColor: "bg-purple-50",
-        borderColor: "border-purple-100",
-        gradientFrom: "from-purple-500 to-purple-600",
+        color: "text-[#262ef2]",
+        bgColor: "bg-[#262ef2]/5",
+        borderColor: "border-[#262ef2]/10",
+        gradientFrom: "from-[#262ef2] to-[#201F3B]",
         btnText: "Try Playground",
     },
 ];
@@ -388,27 +388,27 @@ export const QUICK_ACTIONS = [
         label: "New AI Assistant",
         description: "Deploy a new intelligent agent",
         icon: HiChatAlt2,
-        hoverBorder: "hover:border-indigo-400/50 hover:bg-indigo-50/50",
-        iconBg: "bg-indigo-50 text-indigo-600",
-        hoverText: "group-hover:text-indigo-700",
+        hoverBorder: "hover:border-[#262ef2]/50 hover:bg-[#262ef2]/5",
+        iconBg: "bg-[#262ef2]/5 text-[#262ef2]",
+        hoverText: "group-hover:text-[#262ef2]",
         href: "/dashboard/chatbots",
     },
     {
         label: "Add Knowledge Source",
         description: "Upload PDF, CSV, Markdown or scrape URL",
         icon: HiDatabase,
-        hoverBorder: "hover:border-emerald-400 hover:bg-emerald-50/50",
-        iconBg: "bg-emerald-50 text-emerald-600",
-        hoverText: "group-hover:text-emerald-700",
+        hoverBorder: "hover:border-[#262ef2]/50 hover:bg-[#262ef2]/5",
+        iconBg: "bg-[#262ef2]/5 text-[#262ef2]",
+        hoverText: "group-hover:text-[#262ef2]",
         href: "/dashboard/documents",
     },
     {
         label: "Connect Data",
         description: "Fetch from Notion, Drive or Slack",
         icon: HiShare,
-        hoverBorder: "hover:border-purple-400 hover:bg-purple-50/50",
-        iconBg: "bg-purple-50 text-purple-600",
-        hoverText: "group-hover:text-purple-700",
+        hoverBorder: "hover:border-[#262ef2]/50 hover:bg-[#262ef2]/5",
+        iconBg: "bg-[#262ef2]/5 text-[#262ef2]",
+        hoverText: "group-hover:text-[#262ef2]",
         href: "/dashboard/connectors",
     },
 ];
@@ -442,17 +442,14 @@ export const CONNECTORS_NAV = [
 
 // ─── Embed Colors (EmbedModal) ──────────────────────────────────────────────
 export const PRESET_COLORS = [
-    { label: "Indigo", value: "#4f46e5" },
-    { label: "Violet", value: "#7c3aed" },
-    { label: "Rose", value: "#e11d48" },
-    { label: "Sky", value: "#0284c7" },
-    { label: "Teal", value: "#0d9488" },
-    { label: "Amber", value: "#d97706" },
-    { label: "Slate", value: "#334155" },
+    { label: "Primary", value: "#262ef2" },
+    { label: "Dark", value: "#201F3B" },
+    { label: "Muted", value: "#a1a1a1" },
+    { label: "Border", value: "#e3e3e3" },
 ];
 // ─── Drawer Item List Skeleton ──────────────────────────────────────────────────
-export const TOOLTIP_STYLE_CLASSES = "bg-slate-900 text-white text-[10px] font-bold rounded-lg shadow-xl border border-white/10 transition-all duration-300 pointer-events-none z-50 whitespace-nowrap";
-export const TOOLTIP_ARROW_CLASSES = "bg-slate-900 border-white/10 rotate-45";
+export const TOOLTIP_STYLE_CLASSES = "bg-[#201F3B] text-white text-[10px] font-bold rounded-lg shadow-xl border border-white/10 transition-all duration-300 pointer-events-none z-50 whitespace-nowrap";
+export const TOOLTIP_ARROW_CLASSES = "bg-[#201F3B] border-white/10 rotate-45";
 
 // ─── Plan Names ─────────────────────────────────────────────────────────────
 export const PLANS = {

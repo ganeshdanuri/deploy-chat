@@ -9,7 +9,7 @@ const ITEMS = [...KEYWORDS, ...KEYWORDS, ...KEYWORDS];
 
 export default function Banner() {
   return (
-    <div className="relative w-full overflow-hidden border-y border-slate-100 bg-white py-5">
+    <div className="relative w-full overflow-hidden bg-white py-5">
       {/* Edge fade masks */}
       <div
         className="pointer-events-none absolute inset-y-0 left-0 z-10 w-24"
@@ -31,9 +31,9 @@ export default function Banner() {
         {ITEMS.map((item, idx) => (
           <div key={idx} className="flex items-center gap-3 px-10">
             {/* Icon */}
-            {item.icon && <item.icon className="h-4 w-4 text-indigo-400" />}
+            {item.icon && <item.icon className="h-4 w-4 text-[#a1a1a1]" />}
             {/* Keyword */}
-            <span className="whitespace-nowrap text-sm font-semibold tracking-wide text-slate-500">
+            <span className="whitespace-nowrap text-sm font-medium tracking-wide text-[#a1a1a1]">
               {item.label}
             </span>
           </div>
@@ -49,7 +49,8 @@ export default function Banner() {
         .animate-marquee {
           animation: marquee 40s linear infinite;
         }
-      `}</style>
+      `}
+      </style>
     </div>
   );
 }
