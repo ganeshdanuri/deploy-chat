@@ -13,7 +13,7 @@ export const theme = {
     accent: {
       dark: "#201f32",
       muted: "#a1a1a1",
-      border: "#e3e3e3",
+      border: "#e3e2e5",
       bg: "#f3f3f9",
       body: "#4d5564",
       white: "#ffffff",
@@ -32,7 +32,7 @@ export const theme = {
       600: "#666666",
       500: "#a1a1a1",
       400: "#cccccc",
-      300: "#e3e3e3",
+      300: "#e3e2e5",
       200: "#eeeeee",
       100: "#f3f3f9",
       50: "#ffffff",

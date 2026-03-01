@@ -37,14 +37,14 @@ export function StyledTable<T extends { id: string }>({
     emptyContent,
 }: StyledTableProps<T>) {
     return (
-        <div className="bg-white border border-[#e3e3e3] rounded-xl shadow-sm overflow-hidden">
+        <div className="bg-white border border-[#e3e2e5] rounded-xl shadow-sm overflow-hidden">
             {topContent && (
-                <div className="px-6 py-5 border-b border-[#e3e3e3] bg-white">
+                <div className="px-6 py-5 border-b border-[#e3e2e5] bg-white">
                     {topContent}
                 </div>
             )}
             <Table aria-label={ariaLabel}>
-                <TableHeader className="bg-[#f3f3f9] border-b border-[#e3e3e3]">
+                <TableHeader className="bg-[#f3f3f9] border-b border-[#e3e2e5]">
                     <TableRow className="border-b-0 hover:bg-transparent">
                         {columns.map((col) => (
                             <TableHead

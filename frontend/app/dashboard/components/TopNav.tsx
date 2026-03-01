@@ -15,7 +15,7 @@ export function TopNav({ onMenuClick }: TopNavProps) {
     const { data: userData } = useAppSelector((state) => state.user);
 
     return (
-        <header className="h-16 bg-white border-b border-[#e3e3e3]/60 flex items-center justify-between px-4 sm:px-6 sticky top-0 z-30">
+        <header className="h-16 bg-white border-b border-[#e3e2e5]/60 flex items-center justify-between px-4 sm:px-6 sticky top-0 z-30">
             {/* Search / Command Palette Trigger */}
             <div className="flex-1 max-w-2xl flex items-center gap-2 sm:gap-4">
                 <button
@@ -29,11 +29,11 @@ export function TopNav({ onMenuClick }: TopNavProps) {
                     <input
                         type="text"
                         placeholder="Search documents, chatbots, or commands... (Cmd+K)"
-                        className="w-full pl-10 pr-4 py-2 bg-[#f3f3f9] border border-[#e3e3e3] rounded-xl text-sm text-[#4d5564] placeholder:text-[#a1a1a1] focus:outline-none focus:ring-4 focus:ring-[#262ef2]/10 focus:border-[#262ef2] transition-all font-medium"
+                        className="w-full pl-10 pr-4 py-2 bg-[#f3f3f9] border border-[#e3e2e5] rounded-xl text-sm text-[#4d5564] placeholder:text-[#a1a1a1] focus:outline-none focus:ring-4 focus:ring-[#262ef2]/10 focus:border-[#262ef2] transition-all font-medium"
                     />
                     <div className="absolute right-3 top-1/2 -translate-y-1/2 flex gap-1">
-                        <span className="text-[10px] font-bold text-[#a1a1a1] bg-white border border-[#e3e3e3] rounded px-1.5 py-0.5 shadow-sm">⌘</span>
-                        <span className="text-[10px] font-bold text-[#a1a1a1] bg-white border border-[#e3e3e3] rounded px-1.5 py-0.5 shadow-sm">K</span>
+                        <span className="text-[10px] font-bold text-[#a1a1a1] bg-white border border-[#e3e2e5] rounded px-1.5 py-0.5 shadow-sm">⌘</span>
+                        <span className="text-[10px] font-bold text-[#a1a1a1] bg-white border border-[#e3e2e5] rounded px-1.5 py-0.5 shadow-sm">K</span>
                     </div>
                 </div>
             </div>
@@ -48,8 +48,8 @@ export function TopNav({ onMenuClick }: TopNavProps) {
                     </span>
                 </div>
 
-                <div className="flex items-center gap-1 border-r border-[#e3e3e3] pr-2 sm:pr-3 mr-2 sm:mr-3">
-                    <div className="hidden md:flex items-center px-2 py-1 rounded-md bg-[#f3f3f9] border border-[#e3e3e3] mr-2">
+                <div className="flex items-center gap-1 border-r border-[#e3e2e5] pr-2 sm:pr-3 mr-2 sm:mr-3">
+                    <div className="hidden md:flex items-center px-2 py-1 rounded-md bg-[#f3f3f9] border border-[#e3e2e5] mr-2">
                         <span className="text-[10px] font-black text-[#a1a1a1] uppercase tracking-wider">
                             {userData?.billing?.current_plan || 'Free'}
                         </span>

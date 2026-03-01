@@ -39,14 +39,14 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
     return (
         <aside
             className={`
-                fixed lg:static inset-y-0 left-0 z-50 bg-white border-r border-[#e3e3e3] flex flex-col transition-all duration-300 transform
+                fixed lg:static inset-y-0 left-0 z-50 bg-white border-r border-[#e3e2e5] flex flex-col transition-all duration-300 transform
                 ${isOpen ? "translate-x-0 shadow-2xl" : "-translate-x-full lg:translate-x-0"}
                 ${isCollapsed ? "lg:w-[72px]" : "lg:w-64"}
                 w-64
             `}
         >
             {/* Workspace Selector / Brand */}
-            <div className="h-16 flex items-center px-3 border-b border-[#e3e3e3] justify-between shrink-0">
+            <div className="h-16 flex items-center px-3 border-b border-[#e3e2e5] justify-between shrink-0">
                 <div
                     className={`flex items-center gap-3 p-1.5 hover:bg-[#f3f3f9] rounded-lg cursor-pointer transition-colors group ${isCollapsed ? "justify-center w-full" : "flex-1 min-w-0"}`}
                     onClick={() => !isCollapsed && router.push("/dashboard")}
@@ -171,7 +171,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
             </div>
 
             {/* Footer Navigation */}
-            <div className="p-2 border-t border-[#e3e3e3] space-y-0.5 shrink-0">
+            <div className="p-2 border-t border-[#e3e2e5] space-y-0.5 shrink-0">
                 {secondaryNavItems.map((item) => {
                     const Icon = item.icon;
                     const isActive = pathname === item.path;
@@ -207,7 +207,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                 })}
 
                 {/* User Profile Mini */}
-                <div className="mt-2 pt-2 border-t border-[#e3e3e3]">
+                <div className="mt-2 pt-2 border-t border-[#e3e2e5]">
                     <div
                         className={`flex items-center gap-3 px-2 py-2 rounded-lg hover:bg-[#f3f3f9] cursor-pointer transition-colors ${isCollapsed ? "justify-center" : ""}`}
                         onClick={() => router.push("/dashboard/settings")}
@@ -249,7 +249,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
 
             {/* Desktop Collapse Toggle — fixed arrow tab on the right edge */}
             <button
-                className="hidden lg:flex absolute -right-3.5 top-1/2 -translate-y-1/2 w-7 h-7 items-center justify-center bg-white border border-[#e3e3e3] rounded-full shadow-md text-[#a1a1a1] hover:text-[#262ef2] hover:border-[#262ef2]/30 transition-all z-10"
+                className="hidden lg:flex absolute -right-3.5 top-1/2 -translate-y-1/2 w-7 h-7 items-center justify-center bg-white border border-[#e3e2e5] rounded-full shadow-md text-[#a1a1a1] hover:text-[#262ef2] hover:border-[#262ef2]/30 transition-all z-10"
                 onClick={() => setIsCollapsed(!isCollapsed)}
                 title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
             >

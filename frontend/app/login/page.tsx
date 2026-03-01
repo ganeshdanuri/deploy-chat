@@ -161,7 +161,7 @@ function LoginContent() {
                         </span>
                     </h1>
 
-                    <p className="text-xl mb-12 text-[#e3e3e3] gsap-text leading-relaxed font-normal max-w-lg">
+                    <p className="text-xl mb-12 text-[#e3e2e5] gsap-text leading-relaxed font-normal max-w-lg">
                         Deploy Chat enables teams to build, scale, and monitor intelligent AI agents with production-grade RAG and native dataset connectors.
                     </p>
 
@@ -266,7 +266,7 @@ function LoginContent() {
                                 maxLength={6}
                                 value={otp}
                                 onChange={(e) => setOtp(e.target.value.replace(/\D/g, ''))}
-                                className="w-full rounded-xl border border-[#e3e3e3] px-4 py-3 text-center text-2xl font-bold tracking-[0.5em] focus:outline-none transition-all focus:ring-4 focus:ring-[#262ef2]/10 focus:border-[#262ef2] bg-white placeholder:text-[#a1a1a1]"
+                                className="w-full rounded-xl border border-[#e3e2e5] px-4 py-3 text-center text-2xl font-bold tracking-[0.5em] focus:outline-none transition-all focus:ring-4 focus:ring-[#262ef2]/10 focus:border-[#262ef2] bg-white placeholder:text-[#a1a1a1]"
                                 placeholder="000000"
                             />
                         </div>
@@ -355,7 +355,7 @@ function LoginContent() {
                     <>
                         <div className="relative my-8">
                             <div className="absolute inset-0 flex items-center">
-                                <div className="w-full border-t border-[#e3e3e3]"></div>
+                                <div className="w-full border-t border-[#e3e2e5]"></div>
                             </div>
                             <div className="relative flex justify-center text-xs">
                                 <span className="bg-white px-4 text-[#a1a1a1] font-medium tracking-wide uppercase">Or continue with</span>

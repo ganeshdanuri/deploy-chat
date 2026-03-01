@@ -89,7 +89,7 @@ export function NotionConnectionDrawer({ isOpen, onClose, onConnected }: NotionC
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
                                 placeholder="e.g. Marketing Docs"
-                                className="w-full px-4 py-3 bg-[#f3f3f9] border border-[#e3e3e3] rounded-xl text-sm text-[#201f32] outline-none focus:border-[#262ef2] transition-colors"
+                                className="w-full px-4 py-3 bg-[#f3f3f9] border border-[#e3e2e5] rounded-xl text-sm text-[#201f32] outline-none focus:border-[#262ef2] transition-colors"
                             />
                         </div>
                         <div className="space-y-2">
@@ -99,7 +99,7 @@ export function NotionConnectionDrawer({ isOpen, onClose, onConnected }: NotionC
                                 value={token}
                                 onChange={(e) => setToken(e.target.value)}
                                 placeholder="secret_..."
-                                className="w-full px-4 py-3 bg-[#f3f3f9] border border-[#e3e3e3] rounded-xl text-sm font-mono text-[#201f32] outline-none focus:border-[#262ef2] transition-colors"
+                                className="w-full px-4 py-3 bg-[#f3f3f9] border border-[#e3e2e5] rounded-xl text-sm font-mono text-[#201f32] outline-none focus:border-[#262ef2] transition-colors"
                             />
                         </div>
                     </div>
@@ -120,7 +120,7 @@ export function NotionConnectionDrawer({ isOpen, onClose, onConnected }: NotionC
                                 <div
                                     key={page.id}
                                     onClick={() => togglePage(page.id)}
-                                    className={`p-4 rounded-2xl border transition-all cursor-pointer flex items-center justify-between ${selectedPages.includes(page.id) ? "border-[#262ef2] bg-[#262ef2]/5 ring-1 ring-[#262ef2] shadow-sm" : "border-[#e3e3e3] hover:bg-[#f3f3f9]"}`}
+                                    className={`p-4 rounded-2xl border transition-all cursor-pointer flex items-center justify-between ${selectedPages.includes(page.id) ? "border-[#262ef2] bg-[#262ef2]/5 ring-1 ring-[#262ef2] shadow-sm" : "border-[#e3e2e5] hover:bg-[#f3f3f9]"}`}
                                 >
                                     <div className="flex-1 min-w-0 mr-4">
                                         <div className="text-sm font-bold text-[#201f32] truncate">{page.title}</div>
@@ -142,7 +142,7 @@ export function NotionConnectionDrawer({ isOpen, onClose, onConnected }: NotionC
             <Button
                 variant="outline"
                 onClick={onClose}
-                className="font-medium bg-white rounded-lg h-10 px-6 border border-[#e3e3e3] text-[#4d5564] shadow-sm transition-all hover:bg-[#f3f3f9]"
+                className="font-medium bg-white rounded-lg h-10 px-6 border border-[#e3e2e5] text-[#4d5564] shadow-sm transition-all hover:bg-[#f3f3f9]"
             >
                 Cancel
             </Button>

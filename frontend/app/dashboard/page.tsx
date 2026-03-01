@@ -137,7 +137,7 @@ function DashboardSummary({
   return (
     <div className="w-full max-w-7xl animate-fade-in-up">
       {/* Page Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#e3e3e3] pb-6 mb-8">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#e3e2e5] pb-6 mb-8">
         <div>
           <div className="flex items-center gap-3">
             <h1 className="text-2xl font-bold text-[#201f32] tracking-tight">Dashboard Overview</h1>
@@ -255,7 +255,7 @@ function MetricCard({ icon: Icon, label, value, trend, accentClass, accentBg, ri
     <Link
       href={href}
       onClick={onClick}
-      className={`p-6 bg-white rounded-lg border border-[#e3e3e3] shadow-sm transition-all group relative overflow-hidden block ${isDisabled ? "opacity-75 cursor-default" : "hover:shadow-md cursor-pointer"}`}
+      className={`p-6 bg-white rounded-lg border border-[#e3e2e5] shadow-sm transition-all group relative overflow-hidden block ${isDisabled ? "opacity-75 cursor-default" : "hover:shadow-md cursor-pointer"}`}
     >
       <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
         <Icon className={`w-24 h-24 ${accentClass} transform translate-x-4 -translate-y-4`} />
@@ -290,7 +290,7 @@ function MetricCard({ icon: Icon, label, value, trend, accentClass, accentBg, ri
 
 function QuickActionsPanel() {
   return (
-    <div className="bg-white rounded-xl border border-[#e3e3e3] shadow-sm p-6 lg:col-span-1 h-full flex flex-col">
+    <div className="bg-white rounded-xl border border-[#e3e2e5] shadow-sm p-6 lg:col-span-1 h-full flex flex-col">
       <div className="flex items-center justify-between mb-6">
         <h3 className="text-base font-bold text-[#201f32]">Knowledge Base</h3>
         <Link href="/dashboard/datasets" className="text-xs text-[#262ef2] font-medium hover:underline">Manage KBs</Link>
@@ -300,7 +300,7 @@ function QuickActionsPanel() {
           <Link
             key={action.label}
             href={action.href}
-            className={`w-full flex items-center gap-4 p-3 rounded-lg border border-dashed border-[#e3e3e3] ${action.hoverBorder} transition-all group text-left block`}
+            className={`w-full flex items-center gap-4 p-3 rounded-lg border border-dashed border-[#e3e2e5] ${action.hoverBorder} transition-all group text-left block`}
           >
             <div className={`w-10 h-10 rounded-lg ${action.iconBg} flex items-center justify-center group-hover:scale-110 transition-transform shadow-sm`}>
               <action.icon className="w-5 h-5" />
@@ -357,7 +357,7 @@ function RecentActivityPanel() {
   };
 
   return (
-    <div className="bg-white rounded-xl border border-[#e3e3e3] shadow-sm p-6 lg:col-span-2">
+    <div className="bg-white rounded-xl border border-[#e3e2e5] shadow-sm p-6 lg:col-span-2">
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
           <h3 className="text-base font-bold text-[#201f32]">Recent Activity</h3>
@@ -372,8 +372,8 @@ function RecentActivityPanel() {
           <div className="space-y-4 py-4">
             {Array.from({ length: 3 }).map((_, i) => (
               <div key={i} className="flex gap-4 py-3">
-                <div className="w-9 h-9 rounded-full bg-[#f3f3f9] flex items-center justify-center border border-[#e3e3e3] shadow-sm shrink-0">
-                  <div className="w-2.5 h-2.5 bg-[#e3e3e3] rounded-full" />
+                <div className="w-9 h-9 rounded-full bg-[#f3f3f9] flex items-center justify-center border border-[#e3e2e5] shadow-sm shrink-0">
+                  <div className="w-2.5 h-2.5 bg-[#e3e2e5] rounded-full" />
                 </div>
                 <div className="flex-1 space-y-2">
                   <div className="flex justify-between">
@@ -397,11 +397,11 @@ function RecentActivityPanel() {
           activities.map((item, idx) => (
             <div key={item.id} className="flex gap-4 py-4 group hover:bg-[#f3f3f9] transition-colors -mx-4 px-4 rounded-lg cursor-pointer">
               <div className="relative mt-1">
-                <div className="w-9 h-9 rounded-full bg-[#f3f3f9] flex items-center justify-center border border-[#e3e3e3] shadow-sm z-10 relative">
+                <div className="w-9 h-9 rounded-full bg-[#f3f3f9] flex items-center justify-center border border-[#e3e2e5] shadow-sm z-10 relative">
                   <div className={`w-2.5 h-2.5 ${getActivityColor(item.activity_type)} rounded-full`} />
                 </div>
                 {idx < activities.length - 1 && (
-                  <div className="absolute top-9 left-1/2 -translate-x-1/2 w-0.5 h-full bg-[#e3e3e3] -z-0" />
+                  <div className="absolute top-9 left-1/2 -translate-x-1/2 w-0.5 h-full bg-[#e3e2e5] -z-0" />
                 )}
               </div>
               <div className="flex-1 min-w-0">
@@ -444,14 +444,14 @@ function OnboardingView({ cardsRef }: { cardsRef: React.RefObject<HTMLDivElement
       <div ref={cardsRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 w-full px-4 relative">
         {/* Flow Lines */}
         <div className="hidden lg:block absolute top-[68px] left-[15%] right-[15%] h-[2px] z-0 overflow-hidden">
-          <div className="flow-line w-full h-full bg-[#e3e3e3] relative">
+          <div className="flow-line w-full h-full bg-[#e3e2e5] relative">
             <div className="absolute top-0 left-0 h-full w-[40%] bg-[#262ef2] shadow-[0_0_10px_rgba(38,46,242,0.5)] animate-shimmer" />
           </div>
         </div>
 
         {ONBOARDING_STEPS.map((step) => (
           <div key={step.id} className="step-card group relative z-10">
-            <div className="bg-white p-6 md:p-8 rounded-xl border border-[#e3e3e3] shadow-sm hover:shadow-2xl hover:border-[#262ef2]/20 transition-all duration-500 flex flex-col h-full relative overflow-hidden">
+            <div className="bg-white p-6 md:p-8 rounded-xl border border-[#e3e2e5] shadow-sm hover:shadow-2xl hover:border-[#262ef2]/20 transition-all duration-500 flex flex-col h-full relative overflow-hidden">
               <div className={`absolute top-0 left-0 w-full h-1 bg-gradient-to-r ${step.gradientFrom} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
               <div className={`w-12 h-12 ${step.bgColor} ${step.color} rounded-lg flex items-center justify-center mb-6 shadow-sm ring-1 ring-inset ${step.borderColor} group-hover:scale-110 group-hover:rotate-3 transition-all duration-500`}>
                 <step.icon className="w-6 h-6" />

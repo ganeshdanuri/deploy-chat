@@ -33,7 +33,7 @@ export default function Footer() {
                                     href={social.href}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="w-10 h-10 rounded-full bg-[#f3f3f9] flex items-center justify-center transition-colors hover:bg-[#e3e3e3] text-[#a1a1a1]"
+                                    className="w-10 h-10 rounded-full bg-[#f3f3f9] flex items-center justify-center transition-colors hover:bg-[#e3e2e5] text-[#a1a1a1]"
                                 >
                                     <social.Icon className="text-lg" />
                                 </a>

@@ -43,7 +43,7 @@ export default function HelpPage() {
                 {helpSections.map((section, idx) => {
                     const Icon = section.icon;
                     return (
-                        <div key={idx} className="p-8 bg-white rounded-[2rem] border border-[#e3e3e3] shadow-sm hover:shadow-xl transition-all group cursor-pointer">
+                        <div key={idx} className="p-8 bg-white rounded-[2rem] border border-[#e3e2e5] shadow-sm hover:shadow-xl transition-all group cursor-pointer">
                             <div className={`w-14 h-14 ${section.bgColor} ${section.color} rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform`}>
                                 <Icon className="w-7 h-7" />
                             </div>

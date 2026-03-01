@@ -79,10 +79,10 @@ export default function ChatbotsPage() {
         const isFailed = (bot as any).status === STATUS.FAILED;
 
         return (
-            <div className="bg-white rounded-xl border border-[#e3e3e3] p-5 hover:border-[#262ef2]/20 hover:shadow-xl hover:shadow-[#262ef2]/5 transition-all group relative animate-fade-in">
+            <div className="bg-white rounded-xl border border-[#e3e2e5] p-5 hover:border-[#262ef2]/20 hover:shadow-xl hover:shadow-[#262ef2]/5 transition-all group relative animate-fade-in">
                 <div className="flex justify-between items-start mb-4">
                     <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#262ef2]/5 to-[#f3f3f9] border border-[#e3e3e3] flex items-center justify-center text-[#262ef2] shadow-sm">
+                        <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#262ef2]/5 to-[#f3f3f9] border border-[#e3e2e5] flex items-center justify-center text-[#262ef2] shadow-sm">
                             <HiChatAlt2 className="w-5 h-5" />
                         </div>
                         <div>
@@ -142,7 +142,7 @@ export default function ChatbotsPage() {
                 </div>
 
                 <div className="space-y-3 mb-6">
-                    <div className="bg-[#f3f3f9] rounded-lg p-3 border border-[#e3e3e3]">
+                    <div className="bg-[#f3f3f9] rounded-lg p-3 border border-[#e3e2e5]">
                         <p className="text-[10px] font-bold text-[#a1a1a1] uppercase tracking-widest mb-1">Welcome Message</p>
                         <p className="text-xs text-[#4d5564] line-clamp-2 italic">
                             &quot;{bot.welcome_message || 'Hi! How can I help you today?'}&quot;
@@ -172,7 +172,7 @@ export default function ChatbotsPage() {
                         size="sm"
                         disabled={isCreating}
                         onClick={() => setEmbedBot(bot)}
-                        className="bg-white text-[#4d5564] text-[11px] font-bold rounded-lg hover:bg-[#f3f3f9] transition-all shadow-sm border border-[#e3e3e3] py-5"
+                        className="bg-white text-[#4d5564] text-[11px] font-bold rounded-lg hover:bg-[#f3f3f9] transition-all shadow-sm border border-[#e3e2e5] py-5"
                     >
                         <HiCode className="w-3.5 h-3.5 mr-1.5" />
                         Embed Code
@@ -193,7 +193,7 @@ export default function ChatbotsPage() {
                             <Button
                                 onClick={() => dispatch(fetchChatbots())}
                                 variant="outline"
-                                className="bg-white border-[#e3e3e3] text-[#4d5564] text-xs sm:text-sm font-medium rounded-lg transition-all hover:bg-[#f3f3f9] h-11 px-6 shadow-sm mr-2"
+                                className="bg-white border-[#e3e2e5] text-[#4d5564] text-xs sm:text-sm font-medium rounded-lg transition-all hover:bg-[#f3f3f9] h-11 px-6 shadow-sm mr-2"
                                 disabled={isLoading}
                             >
                                 <HiRefresh className={`w-4 h-4 mr-2 text-[#a1a1a1] ${isLoading ? 'animate-spin' : ''}`} />

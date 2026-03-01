@@ -36,7 +36,7 @@ export default function AnalyticsPage() {
                 </p>
                 <button
                     disabled
-                    className="px-6 py-1.5 bg-[#f3f3f9] border border-[#e3e3e3] text-[#a1a1a1] text-sm font-medium rounded-lg shadow-sm cursor-not-allowed opacity-60"
+                    className="px-6 py-1.5 bg-[#f3f3f9] border border-[#e3e2e5] text-[#a1a1a1] text-sm font-medium rounded-lg shadow-sm cursor-not-allowed opacity-60"
                 >
                     Upgrade Plan
                 </button>
@@ -51,7 +51,7 @@ export default function AnalyticsPage() {
                     <h1 className="text-2xl font-bold text-[#201f32] tracking-tight">Analytics</h1>
                     <p className="text-sm text-[#4d5564] mt-1">Usage trends and performance metrics.</p>
                 </div>
-                <div className="flex bg-white rounded-lg p-1 border border-[#e3e3e3] shadow-sm">
+                <div className="flex bg-white rounded-lg p-1 border border-[#e3e2e5] shadow-sm">
                     <button className="px-3 py-1.5 bg-[#f3f3f9] text-[#201f32] text-xs font-semibold rounded shadow-sm">7 Days</button>
                     <button className="px-3 py-1.5 text-[#a1a1a1] hover:bg-[#f3f3f9] text-xs font-semibold rounded">30 Days</button>
                     <button className="px-3 py-1.5 text-[#a1a1a1] hover:bg-[#f3f3f9] text-xs font-semibold rounded">90 Days</button>
@@ -61,7 +61,7 @@ export default function AnalyticsPage() {
             {/* Summary Cards */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 {/* Card 1 */}
-                <div className="bg-white p-4 rounded-xl border border-[#e3e3e3] shadow-sm">
+                <div className="bg-white p-4 rounded-xl border border-[#e3e2e5] shadow-sm">
                     <div className="text-sm font-medium text-[#a1a1a1] mb-1">Total Conversations</div>
                     <div className="text-2xl font-bold text-[#201f32]">12,405</div>
                     <div className="flex items-center gap-1 text-[#10b981] text-xs font-bold mt-2">
@@ -70,7 +70,7 @@ export default function AnalyticsPage() {
                     </div>
                 </div>
                 {/* Card 2 */}
-                <div className="bg-white p-4 rounded-xl border border-[#e3e3e3] shadow-sm">
+                <div className="bg-white p-4 rounded-xl border border-[#e3e2e5] shadow-sm">
                     <div className="text-sm font-medium text-[#a1a1a1] mb-1">Avg. Response Time</div>
                     <div className="text-2xl font-bold text-[#201f32]">1.2s</div>
                     <div className="flex items-center gap-1 text-[#10b981] text-xs font-bold mt-2">
@@ -79,7 +79,7 @@ export default function AnalyticsPage() {
                     </div>
                 </div>
                 {/* Card 3 */}
-                <div className="bg-white p-4 rounded-xl border border-[#e3e3e3] shadow-sm">
+                <div className="bg-white p-4 rounded-xl border border-[#e3e2e5] shadow-sm">
                     <div className="text-sm font-medium text-[#a1a1a1] mb-1">User Satisfaction</div>
                     <div className="text-2xl font-bold text-[#201f32]">4.8/5</div>
                     <div className="flex items-center gap-1 text-[#10b981] text-xs font-bold mt-2">
@@ -88,7 +88,7 @@ export default function AnalyticsPage() {
                     </div>
                 </div>
                 {/* Card 4 */}
-                <div className="bg-white p-4 rounded-xl border border-[#e3e3e3] shadow-sm">
+                <div className="bg-white p-4 rounded-xl border border-[#e3e2e5] shadow-sm">
                     <div className="text-sm font-medium text-[#a1a1a1] mb-1">Tokens Consumed</div>
                     <div className="text-2xl font-bold text-[#201f32]">8.4M</div>
                     <div className="flex items-center gap-1 text-[#f59e0b] text-xs font-bold mt-2">
@@ -101,7 +101,7 @@ export default function AnalyticsPage() {
             {/* Charts Section */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Usage Chart */}
-                <div className="bg-white p-6 rounded-xl border border-[#e3e3e3] shadow-sm h-80 flex flex-col">
+                <div className="bg-white p-6 rounded-xl border border-[#e3e2e5] shadow-sm h-80 flex flex-col">
                     <h3 className="text-sm font-bold text-[#201f32] mb-6">Daily Conversations</h3>
                     <div className="flex-1 flex items-end justify-between gap-2 px-2">
                         {[40, 65, 45, 80, 55, 90, 70, 85, 60, 75, 50, 95].map((h, i) => (
@@ -118,7 +118,7 @@ export default function AnalyticsPage() {
                             </div>
                         ))}
                     </div>
-                    <div className="flex justify-between mt-2 pt-2 border-t border-[#e3e3e3] text-xs text-[#a1a1a1]">
+                    <div className="flex justify-between mt-2 pt-2 border-t border-[#e3e2e5] text-xs text-[#a1a1a1]">
                         <span>Mon</span>
                         <span>Tue</span>
                         <span>Wed</span>
@@ -130,9 +130,9 @@ export default function AnalyticsPage() {
                 </div>
 
                 {/* Token Usage Chart */}
-                <div className="bg-white p-6 rounded-xl border border-[#e3e3e3] shadow-sm h-80 flex flex-col">
+                <div className="bg-white p-6 rounded-xl border border-[#e3e2e5] shadow-sm h-80 flex flex-col">
                     <h3 className="text-sm font-bold text-[#201f32] mb-6">Cost Estimation ($)</h3>
-                    <div className="flex-1 flex items-end justify-between gap-4 px-4 border-l border-[#e3e3e3] relative">
+                    <div className="flex-1 flex items-end justify-between gap-4 px-4 border-l border-[#e3e2e5] relative">
                         {/* Grid Lines */}
                         <div className="absolute w-full h-full top-0 left-0 flex flex-col justify-between pointer-events-none">
                             <div className="border-t border-[#f3f3f9] w-full"></div>
@@ -150,7 +150,7 @@ export default function AnalyticsPage() {
                             </div>
                         ))}
                     </div>
-                    <div className="flex justify-between mt-2 pt-2 border-t border-[#e3e3e3] text-xs text-[#a1a1a1] px-4">
+                    <div className="flex justify-between mt-2 pt-2 border-t border-[#e3e2e5] text-xs text-[#a1a1a1] px-4">
                         <span>Week 1</span>
                         <span>Week 2</span>
                         <span>Week 3</span>

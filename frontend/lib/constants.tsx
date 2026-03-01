@@ -445,7 +445,7 @@ export const PRESET_COLORS = [
     { label: "Primary", value: "#262ef2" },
     { label: "Dark", value: "#201f32" },
     { label: "Muted", value: "#a1a1a1" },
-    { label: "Border", value: "#e3e3e3" },
+    { label: "Border", value: "#e3e2e5" },
 ];
 // ─── Drawer Item List Skeleton ──────────────────────────────────────────────────
 export const TOOLTIP_STYLE_CLASSES = "bg-[#201f32] text-white text-[10px] font-bold rounded-lg shadow-xl border border-white/10 transition-all duration-300 pointer-events-none z-50 whitespace-nowrap";

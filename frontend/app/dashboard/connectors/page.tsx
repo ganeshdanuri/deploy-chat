@@ -186,7 +186,7 @@ export default function ConnectorsPage() {
                         {status === 'loading' && connectors.length === 0 ? (
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                 {[1, 2].map(i => (
-                                    <div key={i} className="bg-white border border-[#e3e3e3] rounded-2xl h-48 animate-pulse shadow-sm" />
+                                    <div key={i} className="bg-white border border-[#e3e2e5] rounded-2xl h-48 animate-pulse shadow-sm" />
                                 ))}
                             </div>
                         ) : connectors.length === 0 ? (
@@ -210,7 +210,7 @@ export default function ConnectorsPage() {
                                     const brandColor = getConnectorColor(connector.type);
 
                                     return (
-                                        <div key={connector.id} className="group bg-white rounded-2xl border border-[#e3e3e3] overflow-hidden hover:shadow-xl hover:border-[#262ef2]/20 transition-all flex items-center p-6">
+                                        <div key={connector.id} className="group bg-white rounded-2xl border border-[#e3e2e5] overflow-hidden hover:shadow-xl hover:border-[#262ef2]/20 transition-all flex items-center p-6">
                                             <div className="flex items-center gap-5 flex-1 min-w-0">
                                                 <div className={`w-14 h-14 rounded-2xl flex items-center justify-center text-white shadow-lg ${brandColor} transition-transform group-hover:scale-105`}>
                                                     <Icon className="w-7 h-7" />
@@ -227,7 +227,7 @@ export default function ConnectorsPage() {
                                                             <HiClock className="w-3.5 h-3.5" />
                                                             <span>Last synced: {connector.last_sync_at ? new Date(connector.last_sync_at).toLocaleString() : 'Never'}</span>
                                                         </div>
-                                                        <div className="hidden sm:block w-1 h-1 rounded-full bg-[#e3e3e3]"></div>
+                                                        <div className="hidden sm:block w-1 h-1 rounded-full bg-[#e3e2e5]"></div>
                                                         <div className="flex items-center gap-1.5">
                                                             <HiExternalLink className="w-3.5 h-3.5" />
                                                             <span>{connector.config.selected_pages?.length || 0} items imported</span>
@@ -240,14 +240,14 @@ export default function ConnectorsPage() {
                                                 <button
                                                     onClick={() => handleSync(connector.id)}
                                                     disabled={isSyncing === connector.id}
-                                                    className="p-2.5 rounded-xl bg-[#f3f3f9] text-[#201f32] hover:bg-[#e3e3e3] transition-all border border-[#e3e3e3]/50 disabled:opacity-50"
+                                                    className="p-2.5 rounded-xl bg-[#f3f3f9] text-[#201f32] hover:bg-[#e3e2e5] transition-all border border-[#e3e2e5]/50 disabled:opacity-50"
                                                     title="Sync Now"
                                                 >
                                                     <HiRefresh className={`w-4 h-4 ${isSyncing === connector.id ? "animate-spin" : ""}`} />
                                                 </button>
                                                 <button
                                                     onClick={() => handleDeleteClick(connector.id, connector.name)}
-                                                    className="p-2.5 rounded-xl bg-[#f3f3f9] text-[#a1a1a1] hover:text-[#ef4444] hover:bg-[#ef4444]/5 transition-all border border-[#e3e3e3]/50 hover:border-[#ef4444]/20"
+                                                    className="p-2.5 rounded-xl bg-[#f3f3f9] text-[#a1a1a1] hover:text-[#ef4444] hover:bg-[#ef4444]/5 transition-all border border-[#e3e2e5]/50 hover:border-[#ef4444]/20"
                                                     title="Delete Integration"
                                                 >
                                                     <HiTrash className="w-4 h-4" />
@@ -269,8 +269,8 @@ export default function ConnectorsPage() {
                                 className={`
                                     group relative flex flex-col items-center text-center p-8 rounded-3xl border transition-all duration-300
                                     ${option.status === 'active'
-                                        ? "bg-white border-[#e3e3e3] hover:border-[#262ef2]/40 hover:shadow-2xl hover:shadow-[#262ef2]/10 cursor-pointer"
-                                        : "bg-[#f3f3f9]/50 border-[#e3e3e3] opacity-60 grayscale cursor-not-allowed"
+                                        ? "bg-white border-[#e3e2e5] hover:border-[#262ef2]/40 hover:shadow-2xl hover:shadow-[#262ef2]/10 cursor-pointer"
+                                        : "bg-[#f3f3f9]/50 border-[#e3e2e5] opacity-60 grayscale cursor-not-allowed"
                                     }
                                 `}
                             >
@@ -288,7 +288,7 @@ export default function ConnectorsPage() {
 
                                 {option.status === 'coming-soon' && (
                                     <div className="mt-4">
-                                        <span className="text-[10px] font-black uppercase tracking-widest bg-[#e3e3e3] text-[#4d5564] px-3 py-1 rounded-full">
+                                        <span className="text-[10px] font-black uppercase tracking-widest bg-[#e3e2e5] text-[#4d5564] px-3 py-1 rounded-full">
                                             Beta Soon
                                         </span>
                                     </div>

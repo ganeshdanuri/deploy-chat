@@ -256,21 +256,21 @@ input:disabled {
   --accent: #f3f3f9;
   --accent-foreground: #262ef2;
   --destructive: #ef4444;
-  --border: #e3e3e3;
-  --input: #e3e3e3;
+  --border: #e3e2e5;
+  --input: #e3e2e5;
   --ring: #262ef2;
   --chart-1: #262ef2;
   --chart-2: #201f32;
   --chart-3: #a1a1a1;
   --chart-4: #4d5564;
-  --chart-5: #e3e3e3;
+  --chart-5: #e3e2e5;
   --sidebar: transparent;
   --sidebar-foreground: #4d5564;
   --sidebar-primary: #262ef2;
   --sidebar-primary-foreground: #ffffff;
   --sidebar-accent: rgba(38, 46, 242, 0.06);
   --sidebar-accent-foreground: #262ef2;
-  --sidebar-border: #e3e3e3;
+  --sidebar-border: #e3e2e5;
   --sidebar-ring: #262ef2;
 }
 

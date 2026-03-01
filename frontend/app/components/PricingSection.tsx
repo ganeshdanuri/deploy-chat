@@ -106,7 +106,7 @@ function PlanCard({ plan }: { plan: Plan }) {
                     "transition-all duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2",
                     plan.popular
                         ? "bg-white text-[#262ef2] hover:bg-white/90 focus-visible:outline-white"
-                        : "bg-[#f3f3f9] text-[#201f32] hover:bg-[#e3e3e3] focus-visible:outline-indigo-600",
+                        : "bg-[#f3f3f9] text-[#201f32] hover:bg-[#e3e2e5] focus-visible:outline-indigo-600",
                 ].join(" ")}
             >
                 {plan.cta}

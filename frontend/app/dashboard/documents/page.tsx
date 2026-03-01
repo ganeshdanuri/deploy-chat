@@ -91,7 +91,7 @@ export default function DocumentsPage() {
                     <User
                         avatarProps={{
                             fallback: <Icon className={`w-4 h-4 ${connector ? 'text-[#201f32]' : 'text-[#262ef2]'}`} />,
-                            className: `${connector ? 'bg-[#f3f3f9] border-[#e3e3e3]' : 'bg-[#262ef2]/5 border-[#262ef2]/10'} rounded-lg`,
+                            className: `${connector ? 'bg-[#f3f3f9] border-[#e3e2e5]' : 'bg-[#262ef2]/5 border-[#262ef2]/10'} rounded-lg`,
                         }}
                         description={sourceLabel}
                         name={doc.name}
@@ -153,7 +153,7 @@ export default function DocumentsPage() {
                             <Button
                                 onClick={handleRefresh}
                                 variant="outline"
-                                className="bg-white border-[#e3e3e3] text-[#4d5564] text-xs sm:text-sm font-medium rounded-lg transition-all hover:bg-[#f3f3f9] h-11 px-6 shadow-sm mr-2"
+                                className="bg-white border-[#e3e2e5] text-[#4d5564] text-xs sm:text-sm font-medium rounded-lg transition-all hover:bg-[#f3f3f9] h-11 px-6 shadow-sm mr-2"
                                 disabled={isLoading}
                             >
                                 <HiRefresh className={`w-4 h-4 mr-2 text-[#a1a1a1] ${isLoading ? 'animate-spin' : ''}`} />

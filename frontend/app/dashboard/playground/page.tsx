@@ -129,7 +129,7 @@ export default function PlaygroundPage() {
             )}
 
             {/* Main Chat Area */}
-            <div className="flex-1 flex flex-col bg-white rounded-lg border border-[#e3e3e3] shadow-sm overflow-hidden relative">
+            <div className="flex-1 flex flex-col bg-white rounded-lg border border-[#e3e2e5] shadow-sm overflow-hidden relative">
                 <ChatHeader chatbot={chatbot} onReset={handleResetChat} />
 
                 {chatbotId ? (
@@ -171,7 +171,7 @@ function ConfigurationPanel({
     onTemperatureChange,
 }: ConfigurationPanelProps) {
     return (
-        <div className="w-80 bg-white rounded-lg border border-[#e3e3e3] shadow-sm p-6 flex flex-col h-full overflow-y-auto">
+        <div className="w-80 bg-white rounded-lg border border-[#e3e2e5] shadow-sm p-6 flex flex-col h-full overflow-y-auto">
             <div className="flex items-center gap-2 mb-8">
                 <div className="w-8 h-8 rounded-lg bg-[#262ef2]/5 flex items-center justify-center text-[#262ef2]">
                     <HiCog className="w-5 h-5" />
@@ -192,10 +192,10 @@ function ConfigurationPanel({
                         }}
                         aria-label="Select chatbot"
                     >
-                        <SelectTrigger className="border-[#e3e3e3] bg-[#f3f3f9]/50 hover:bg-white hover:border-[#262ef2]/30 h-11 shadow-none transition-all rounded-lg text-sm font-medium text-[#201f32] outline-none focus:ring-0">
+                        <SelectTrigger className="border-[#e3e2e5] bg-[#f3f3f9]/50 hover:bg-white hover:border-[#262ef2]/30 h-11 shadow-none transition-all rounded-lg text-sm font-medium text-[#201f32] outline-none focus:ring-0">
                             <SelectValue placeholder="Select a chatbot..." />
                         </SelectTrigger>
-                        <SelectContent className="rounded-xl bg-white border border-[#e3e3e3] shadow-lg p-1">
+                        <SelectContent className="rounded-xl bg-white border border-[#e3e2e5] shadow-lg p-1">
                             {chatbots.map((bot) => (
                                 <SelectItem
                                     key={bot.id}
@@ -213,10 +213,10 @@ function ConfigurationPanel({
                 {chatbot && (
                     <div className="space-y-4">
                         <label className="text-xs font-bold text-[#a1a1a1] uppercase tracking-wider">Model Stats</label>
-                        <div className="p-4 bg-[#f3f3f9]/50 rounded-lg border border-[#e3e3e3] space-y-2.5">
+                        <div className="p-4 bg-[#f3f3f9]/50 rounded-lg border border-[#e3e2e5] space-y-2.5">
                             <div className="flex justify-between">
                                 <span className="text-[10px] font-bold text-[#a1a1a1] uppercase">Provider</span>
-                                <span className="text-[10px] font-bold text-[#201f32] bg-white px-2 py-0.5 rounded border border-[#e3e3e3] uppercase tracking-wider">
+                                <span className="text-[10px] font-bold text-[#201f32] bg-white px-2 py-0.5 rounded border border-[#e3e2e5] uppercase tracking-wider">
                                     Gemini 2.5 Flash
                                 </span>
                             </div>
@@ -229,7 +229,7 @@ function ConfigurationPanel({
                 )}
 
                 {/* Temperature Slider */}
-                <div className="space-y-5 pt-8 border-t border-[#e3e3e3]">
+                <div className="space-y-5 pt-8 border-t border-[#e3e2e5]">
                     <div className="flex items-center justify-between">
                         <label className="text-xs font-bold text-[#a1a1a1] uppercase tracking-wider">Creativity (Temp)</label>
                         <span className="text-sm font-mono font-bold text-[#262ef2] bg-[#262ef2]/5 px-2 py-0.5 rounded-lg border border-[#262ef2]/10">
@@ -244,7 +244,7 @@ function ConfigurationPanel({
                             step="0.1"
                             value={temperature}
                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => onTemperatureChange(parseFloat(e.target.value))}
-                            className="w-full accent-[#262ef2] h-1.5 bg-[#f3f3f9] rounded-lg appearance-none cursor-pointer hover:bg-[#e3e3e3] transition-colors"
+                            className="w-full accent-[#262ef2] h-1.5 bg-[#f3f3f9] rounded-lg appearance-none cursor-pointer hover:bg-[#e3e2e5] transition-colors"
                         />
                         <div className="flex justify-between text-[10px] font-bold text-[#a1a1a1] mt-2 uppercase tracking-tighter">
                             <span>Precise</span>
@@ -262,7 +262,7 @@ function ConfigurationPanel({
 
 function ChatHeader({ chatbot, onReset }: { chatbot: Chatbot | undefined; onReset: () => void }) {
     return (
-        <div className="px-6 py-4 border-b border-[#e3e3e3] flex justify-between items-center bg-white/80 backdrop-blur-md z-10 sticky top-0">
+        <div className="px-6 py-4 border-b border-[#e3e2e5] flex justify-between items-center bg-white/80 backdrop-blur-md z-10 sticky top-0">
             <div className="flex items-center gap-4">
                 <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-[#262ef2] to-[#201f32] p-[1px] shadow-lg shadow-[#262ef2]/10">
                     <div className="w-full h-full bg-white rounded-md flex items-center justify-center text-[#262ef2]">
@@ -307,14 +307,14 @@ function ChatMessages({ messages }: { messages: ChatMessage[] }) {
 function MessageBubble({ message: msg }: { message: ChatMessage }) {
     return (
         <div className={`flex gap-3 ${!msg.isBot ? "flex-row-reverse" : ""}`}>
-            <div className={`w-10 h-10 rounded-lg flex items-center justify-center shrink-0 border shadow-sm transition-transform hover:scale-105 ${msg.isBot ? "bg-white border-[#e3e3e3] text-[#262ef2]" : "bg-[#262ef2] border-[#262ef2] text-white"
+            <div className={`w-10 h-10 rounded-lg flex items-center justify-center shrink-0 border shadow-sm transition-transform hover:scale-105 ${msg.isBot ? "bg-white border-[#e3e2e5] text-[#262ef2]" : "bg-[#262ef2] border-[#262ef2] text-white"
                 }`}>
                 {msg.isBot ? <HiChatAlt2 className="w-5 h-5" /> : <HiUser className="w-5 h-5" />}
             </div>
 
             <div className={`max-w-[75%] space-y-2 ${!msg.isBot ? "items-end flex flex-col" : ""}`}>
                 <div className={`px-4 py-2.5 rounded-lg text-[14px] leading-relaxed shadow-sm transition-all ${msg.isBot
-                    ? "bg-white border border-[#e3e3e3] text-[#201f32] rounded-tl-none font-medium"
+                    ? "bg-white border border-[#e3e2e5] text-[#201f32] rounded-tl-none font-medium"
                     : "bg-[#262ef2] text-white rounded-tr-none font-medium"
                     }`}>
                     {msg.isThinking ? (
@@ -399,7 +399,7 @@ interface ChatInputProps {
 function ChatInput({ input, chatbotName, onChange, onSend }: ChatInputProps) {
     return (
         <div className="p-4 bg-white border-t border-[#f3f3f9]">
-            <div className="flex items-center gap-3 w-full border border-[#e3e3e3] rounded-xl px-2 py-1 bg-white hover:border-[#a1a1a1]/40 transition-all focus-within:border-[#262ef2] focus-within:ring-4 focus-within:ring-[#262ef2]/5">
+            <div className="flex items-center gap-3 w-full border border-[#e3e2e5] rounded-xl px-2 py-1 bg-white hover:border-[#a1a1a1]/40 transition-all focus-within:border-[#262ef2] focus-within:ring-4 focus-within:ring-[#262ef2]/5">
                 <textarea
                     className="flex-1 max-h-40 bg-transparent border-none focus:outline-none focus:ring-0 p-3 text-[14px] font-medium text-[#201f32] placeholder:text-[#a1a1a1] resize-none leading-relaxed"
                     placeholder={`Ask ${chatbotName} anything...`}

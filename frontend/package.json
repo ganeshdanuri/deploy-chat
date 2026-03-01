@@ -28,7 +28,8 @@
     "react-redux": "^9.2.0",
     "react-toastify": "^11.0.5",
     "remark-gfm": "^4.0.1",
-    "tailwind-merge": "^3.5.0"
+    "tailwind-merge": "^3.5.0",
+    "three": "^0.183.2"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
