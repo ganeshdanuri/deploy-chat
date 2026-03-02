@@ -7,20 +7,16 @@ export default function CTASection({ onGetStarted }: { onGetStarted: () => void 
         <section className="py-24 bg-white">
             <div className="max-w-[1400px] mx-auto px-10">
                 <div
-                    className="relative overflow-hidden text-center py-20 px-10 md:px-20"
-                    style={{
-                        backgroundColor: "#201f32",
-                        border: "1px solid #2a2a3e",
-                    }}
+                    className="relative overflow-hidden text-center py-20 px-10 md:px-20 bg-secondary border border-[#2a2a3e]"
                 >
                     {/* Subtle decorative elements */}
                     <div
                         className="absolute top-0 right-0 w-[400px] h-[400px] opacity-[0.07]"
-                        style={{ background: "radial-gradient(circle, #3c46dc 0%, transparent 70%)" }}
+                        style={{ background: "radial-gradient(circle, var(--primary) 0%, transparent 70%)" }}
                     />
                     <div
                         className="absolute bottom-0 left-0 w-[300px] h-[300px] opacity-[0.05]"
-                        style={{ background: "radial-gradient(circle, #3c46dc 0%, transparent 70%)" }}
+                        style={{ background: "radial-gradient(circle, var(--primary) 0%, transparent 70%)" }}
                     />
 
                     <div className="relative z-10 max-w-2xl mx-auto">

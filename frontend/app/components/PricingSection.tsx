@@ -56,10 +56,9 @@ function PlanCard({ plan }: { plan: Plan }) {
             className={[
                 "relative flex flex-col p-8 transition-all duration-200",
                 plan.popular
-                    ? "shadow-2xl bg-primary"
+                    ? "shadow-2xl shadow-primary/30 bg-primary"
                     : "bg-white shadow-sm hover:shadow-md",
             ].join(" ")}
-            style={plan.popular ? { boxShadow: `0 25px 50px -12px #262ef24d` } : {}}
         >
             {/* Popular badge */}
             {plan.popular && (

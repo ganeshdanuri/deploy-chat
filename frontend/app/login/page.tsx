@@ -131,11 +131,10 @@ function LoginContent() {
             {/* Left Side - Illustrations & Information */}
             <div
                 ref={leftSideRef}
-                className="hidden lg:flex lg:w-4/6 relative overflow-hidden flex-col justify-center items-start p-16"
-                style={{ backgroundColor: "#201f32" }}
+                className="hidden lg:flex lg:w-4/6 relative overflow-hidden flex-col justify-center items-start p-16 bg-secondary"
             >
                 <div className="absolute inset-0 opacity-10" style={{
-                    backgroundImage: `radial-gradient(circle at 50% 50%, #262ef2 0%, transparent 60%)`,
+                    backgroundImage: `radial-gradient(circle at 50% 50%, var(--primary) 0%, transparent 60%)`,
                 }} />
 
                 {/* Subtle Grid Pattern */}
@@ -155,7 +154,7 @@ function LoginContent() {
 
                     <h1 className="text-4xl font-bold mb-8 gsap-text leading-[1.1] tracking-tight text-white">
                         Powering the <br />
-                        <span style={{ color: "#262ef2" }}>
+                        <span className="text-primary">
                             Autonomous Future
                         </span>
                     </h1>
@@ -272,8 +271,7 @@ function LoginContent() {
                         <button
                             type="submit"
                             disabled={isLoading}
-                            className="text-sm font-medium w-full rounded-xl px-8 py-4 mt-4 transition-all hover:-translate-y-0.5 hover:shadow-xl active:scale-[0.99] flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed text-white shadow-lg shadow-secondary/25"
-                            style={{ background: "#201f32" }}
+                            className="text-sm font-medium w-full rounded-xl px-8 py-4 mt-4 transition-all hover:-translate-y-0.5 hover:shadow-xl active:scale-[0.99] flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed text-white shadow-lg shadow-secondary/25 bg-secondary"
                         >
                             {isLoading ? (
                                 <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -334,8 +332,7 @@ function LoginContent() {
                         <button
                             type="submit"
                             disabled={isLoading}
-                            className="text-sm font-medium w-full rounded-xl px-8 py-4 mt-4 transition-all hover:-translate-y-0.5 hover:shadow-xl active:scale-[0.99] flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed text-white shadow-lg shadow-secondary/25"
-                            style={{ background: "#201f32" }}
+                            className="text-sm font-medium w-full rounded-xl px-8 py-4 mt-4 transition-all hover:-translate-y-0.5 hover:shadow-xl active:scale-[0.99] flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed text-white shadow-lg shadow-secondary/25 bg-secondary"
                         >
                             {isLoading ? (
                                 <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />

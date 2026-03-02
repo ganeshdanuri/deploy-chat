@@ -188,7 +188,7 @@ function DashboardVisual() {
             <div className="p-5 space-y-4">
                 <div className="flex items-end gap-1 h-20">
                     {[30, 52, 38, 68, 44, 80, 58, 74, 50, 88].map((h, i) => (
-                        <div key={i} className="flex-1 rounded-t" style={{ height: `${h}%`, backgroundColor: i === 9 ? "#3c46dc" : "#eeeef8" }} />
+                        <div key={i} className="flex-1 rounded-t" style={{ height: `${h}%`, backgroundColor: i === 9 ? "var(--primary)" : "var(--muted)" }} />
                     ))}
                 </div>
                 {[1, 2, 3].map(i => (
@@ -576,7 +576,7 @@ export default function IntegrationSection() {
 
                     {/* ── RIGHT: Visual panel ── */}
                     <div className="relative flex items-center justify-center lg:flex-1 px-10 overflow-hidden"
-                        style={{ background: "linear-gradient(160deg, #f2f2f8 0%, #ebebf5 100%)" }}>
+                        style={{ background: "linear-gradient(160deg, var(--muted) 0%, var(--border) 100%)" }}>
                         {/* Dot grid */}
                         <div className="absolute inset-0 pointer-events-none"
                             style={{ backgroundImage: "radial-gradient(circle, rgba(80,90,200,0.055) 1px, transparent 1px)", backgroundSize: "22px 22px" }} />
