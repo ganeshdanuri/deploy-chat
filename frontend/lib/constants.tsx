@@ -472,3 +472,101 @@ export const ROLES = {
     USER: "user",
     ASSISTANT: "assistant",
 };
+
+// ─── Brand & Global Content ──────────────────────────────────────────────────
+export const BRAND = {
+    first: "DEPLOY",
+    second: "CHAT",
+};
+
+export const PAGE_CONTENT = {
+    hero: {
+        badge: "Open Source AI Chatbot Platform",
+        headlineStart: "Deploy an AI That",
+        headlineEnd: "In Minutes",
+        subtitle: "Train a chatbot on your own data, customize it to your brand, and embed it on your website with a single line of code.",
+        ctaStandard: "Get Started Free",
+    },
+    features: {
+        badge: "Features",
+        headlineWait: "Everything you need to build",
+        headlineHighlight: "Intelligent Chatbots",
+        subtitle: "A complete suite of tools to create, deploy, and manage AI conversational agents — no complexity required.",
+    },
+    integration: {
+        badge: "How it Works",
+        headline: "From your data to a live AI assistant in less than 5 minutes.",
+        subtitle: "A seamless pipeline from document ingestion to a fully functioning chat widget on your website.",
+    },
+    pricing: {
+        badge: "Pricing",
+        headline: "Simple pricing that scales with you",
+        subtitle: "No hidden fees. No surprise overages. Cancel any time.",
+    },
+    faq: {
+        badge: "FAQ",
+        headline: "Frequently Asked Questions",
+        subtitle: "Everything you need to know before getting started.",
+    },
+    cta: {
+        badge: "Get Started",
+        headlineWait: "Ready to Build Your",
+        headlineHighlight: "Intelligent Future?",
+        subtitleStart: "Join 500+ developers and businesses scaling their support with",
+        subtitleEnd: " Start your 14-day free trial today.",
+        primaryBtn: "Get Started for Free",
+        secondaryBtn: "Talk to Sales",
+        footerText: "No credit card required · Instant setup · GPT-4o access",
+    },
+};
+
+// ─── Component Specific Data ─────────────────────────────────────────────────
+export const HERO_DATA_SOURCES = [
+    { label: "PDF", icon: "M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z", color: "#ef4444" },
+    { label: "Web", icon: "M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9", color: "#3b82f6" },
+    { label: "Notion", icon: "M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4", color: "#1a1a2e" },
+    { label: "API", icon: "M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4", color: "#8b5cf6" },
+    { label: "CSV", icon: "M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z", color: "#10b981" },
+    { label: "Slack", icon: "M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z", color: "#e11d48" },
+];
+
+export const HERO_CHAT_CONVERSATIONS = [
+    {
+        question: "How do I reset my password?",
+        answer: "Go to Settings → Security → Reset Password. You'll receive an email with a reset link.",
+    },
+    {
+        question: "What are your pricing plans?",
+        answer: "We offer Free, Starter ($19/mo), Professional ($49/mo), and Enterprise plans.",
+    },
+    {
+        question: "Do you support multiple languages?",
+        answer: "Yes! Our AI supports 50+ languages with automatic translation and detection.",
+    },
+];
+
+export const HERO_NODES_DATA = [
+    { src: HERO_DATA_SOURCES[0], radius: 240, angle: -90 },
+    { src: HERO_DATA_SOURCES[3], radius: 240, angle: 30 },
+    { src: HERO_DATA_SOURCES[5], radius: 240, angle: 150 },
+    { src: HERO_DATA_SOURCES[1], radius: 300, angle: -30 },
+    { src: HERO_DATA_SOURCES[2], radius: 300, angle: 90 },
+    { src: HERO_DATA_SOURCES[4], radius: 300, angle: 210 },
+];
+
+export const HERO_RING_DEFS = [
+    { radius: 185, arcFraction: 0.06, duration: 25, direction: -1 },
+    { radius: 240, arcFraction: 0.07, duration: 35, direction: 1 },
+    { radius: 300, arcFraction: 0.05, duration: 40, direction: -1 },
+];
+
+export const INTEGRATION_ORBIT_ICONS = [
+    { d: "M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" },
+    { d: "M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" },
+    { d: "M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" },
+    { d: "M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" },
+    { d: "M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 008 4.07M3 15.364c.64-1.319 1-2.8 1-4.364 0-1.457.39-2.823 1.07-4" },
+    { d: "M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4" },
+    { d: "M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" },
+    { d: "M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" },
+];

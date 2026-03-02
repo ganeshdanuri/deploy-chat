@@ -1,15 +1,17 @@
 "use client";
 
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState, useCallback, useLayoutEffect } from "react";
 import { HiClipboardCheck, HiClipboardCopy, HiCheckCircle } from "react-icons/hi";
 import {
     INTEGRATION_STEPS as STEPS,
     EMBED_SNIPPET,
     COMPATIBLE_TECHS,
     IntegrationStep as Step,
+    PAGE_CONTENT,
+    INTEGRATION_ORBIT_ICONS
 } from "../../lib/constants";
 
-const FILL_DURATION = 3800;
+const FILL_DURATION = 6;   // seconds (used by GSAP tween)
 
 // ─── Copy Button ──────────────────────────────────────────────────────────────
 function CopyButton({ text }: { text: string }) {
@@ -58,18 +60,6 @@ function CodeBlock({ code }: { code: string }) {
     );
 }
 
-// ─── Orbit Visual (Step 2) ────────────────────────────────────────────────────
-const ORBIT_ICONS = [
-    { d: "M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" },
-    { d: "M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" },
-    { d: "M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" },
-    { d: "M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" },
-    { d: "M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 008 4.07M3 15.364c.64-1.319 1-2.8 1-4.364 0-1.457.39-2.823 1.07-4" },
-    { d: "M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4" },
-    { d: "M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" },
-    { d: "M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" },
-];
-
 function OrbitVisual() {
     const gRef = useRef<SVGGElement>(null);
     const iconsRef = useRef<SVGGElement>(null);
@@ -84,7 +74,7 @@ function OrbitVisual() {
                     const icons = iconsRef.current.querySelectorAll(".icon-wrap");
                     gsap.to(icons, { rotation: -360, duration: 30, ease: "none", repeat: -1, transformOrigin: "50% 50%" });
                 }
-                if (centerRef.current) gsap.to(centerRef.current, { scale: 1.06, duration: 2.2, ease: "sine.inOut", yoyo: true, repeat: -1, transformOrigin: "200 200" });
+                if (centerRef.current) gsap.to(centerRef.current, { scale: 1.06, duration: 2.2, ease: "sine.inOut", repeat: -1, yoyo: true, transformOrigin: "200 200" });
             });
         })();
         return () => ctx?.revert();
@@ -97,8 +87,8 @@ function OrbitVisual() {
             <circle cx={cx} cy={cy} r={r * 0.55} fill="none" stroke="rgba(60,70,180,0.06)" strokeWidth="1" />
             <g ref={gRef}>
                 <g ref={iconsRef}>
-                    {ORBIT_ICONS.map((icon, i) => {
-                        const angle = (i / ORBIT_ICONS.length) * 2 * Math.PI - Math.PI / 2;
+                    {INTEGRATION_ORBIT_ICONS.map((icon, i) => {
+                        const angle = (i / INTEGRATION_ORBIT_ICONS.length) * 2 * Math.PI - Math.PI / 2;
                         const ix = cx + r * Math.cos(angle);
                         const iy = cy + r * Math.sin(angle);
                         return (
@@ -116,8 +106,10 @@ function OrbitVisual() {
             </g>
             <g ref={centerRef}>
                 <circle cx={cx} cy={cy} r={40} fill="#3c46dc" style={{ filter: "drop-shadow(0 6px 24px rgba(60,70,220,0.40))" }} />
-                <text x={cx} y={cy + 1} textAnchor="middle" dominantBaseline="middle"
-                    fill="white" fontSize="22" fontWeight="bold" style={{ fontFamily: "sans-serif" }}>R</text>
+                <svg x={cx - 13} y={cy - 13} width={26} height={26} viewBox="0 0 24 24"
+                    fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
+                </svg>
             </g>
         </svg>
     );
@@ -131,7 +123,7 @@ function CodeEditorVisual() {
         (async () => {
             const { gsap } = await import("gsap");
             if (!ref.current) return;
-            ctx = gsap.context(() => { gsap.to(ref.current, { y: -10, duration: 3, ease: "sine.inOut", yoyo: true, repeat: -1 }); });
+            ctx = gsap.context(() => { gsap.to(ref.current, { y: -6, duration: 3, ease: "sine.inOut", yoyo: true, repeat: -1 }); });
         })();
         return () => ctx?.revert();
     }, []);
@@ -270,38 +262,162 @@ function StepVisual({ step }: { step: Step }) {
     return <CodeEditorVisual />;
 }
 
+// ─── Connecting Lines SVG Overlay ─────────────────────────────────────────────
+interface LineData {
+    x: number;      // x position relative to container
+    startY: number;  // top of line (bottom of button)
+    endY: number;    // bottom of line (top of content panel)
+}
+
+function ConnectingLines({
+    containerRef,
+    buttonRefs,
+    panelRef,
+    activeStep,
+}: {
+    containerRef: React.RefObject<HTMLDivElement | null>;
+    buttonRefs: React.RefObject<(HTMLButtonElement | null)[]>;
+    panelRef: React.RefObject<HTMLDivElement | null>;
+    activeStep: number;
+}) {
+    const [lines, setLines] = useState<LineData[]>([]);
+    const svgRef = useRef<SVGSVGElement>(null);
+
+    const measure = useCallback(() => {
+        if (!containerRef.current || !panelRef.current || !buttonRefs.current) return;
+        const containerRect = containerRef.current.getBoundingClientRect();
+        const panelRect = panelRef.current.getBoundingClientRect();
+        const panelTopY = panelRect.top - containerRect.top;
+
+        const newLines: LineData[] = buttonRefs.current.map((btn) => {
+            if (!btn) return { x: 0, startY: 0, endY: panelTopY };
+            const btnRect = btn.getBoundingClientRect();
+            return {
+                x: btnRect.left + btnRect.width / 2 - containerRect.left,
+                startY: btnRect.bottom - containerRect.top,
+                endY: panelTopY,
+            };
+        });
+        setLines(newLines);
+    }, [containerRef, buttonRefs, panelRef]);
+
+    useEffect(() => {
+        // Measure on mount + after a small delay for layout settle
+        measure();
+        const timer = setTimeout(measure, 300);
+        window.addEventListener("resize", measure);
+        return () => {
+            clearTimeout(timer);
+            window.removeEventListener("resize", measure);
+        };
+    }, [measure]);
+
+    // Re-measure on step change (button sizes might differ slightly)
+    useEffect(() => {
+        requestAnimationFrame(measure);
+    }, [activeStep, measure]);
+
+    if (lines.length === 0) return null;
+
+    return (
+        <svg
+            ref={svgRef}
+            className="absolute inset-0 w-full h-full pointer-events-none z-[1]"
+            style={{ overflow: "visible" }}
+        >
+            {lines.map((line, idx) => {
+                const isActive = activeStep === idx;
+                const isDone = idx < activeStep;
+                return (
+                    <line
+                        key={idx}
+                        x1={line.x}
+                        y1={line.startY}
+                        x2={line.x}
+                        y2={line.endY}
+                        stroke={isActive ? "#3c46dc" : isDone ? "#c0c0d8" : "#dddde8"}
+                        strokeWidth={1}
+                        opacity={isActive ? 1 : isDone ? 0.7 : 0.4}
+                        style={{ transition: "stroke 0.3s, opacity 0.3s" }}
+                    />
+                );
+            })}
+        </svg>
+    );
+}
+
 // ─── Main ─────────────────────────────────────────────────────────────────────
 export default function IntegrationSection() {
     const [activeStep, setActiveStep] = useState(0);
-    const [fillProgress, setFillProgress] = useState(0);
-    const fillRef = useRef<ReturnType<typeof setInterval> | null>(null);
-    const startRef = useRef(0);
+    const fillTweenRef = useRef<any>(null);    // GSAP tween for the fill bar
+    const fillBarRef = useRef<HTMLDivElement>(null);   // DOM element for the fill bar
+    const progressTextRef = useRef<HTMLSpanElement>(null);   // progress % text
     const badgeRef = useRef<HTMLDivElement>(null);
     const headingRef = useRef<HTMLHeadingElement>(null);
     const subRef = useRef<HTMLParagraphElement>(null);
     const contentRef = useRef<HTMLDivElement>(null);
 
-    const startFill = useCallback((idx: number) => {
-        if (fillRef.current) clearInterval(fillRef.current);
-        setFillProgress(0);
+    // For connecting lines
+    const sectionContainerRef = useRef<HTMLDivElement>(null);
+    const buttonRefs = useRef<(HTMLButtonElement | null)[]>([]);
+    const contentPanelRef = useRef<HTMLDivElement>(null);
+
+    // ── GSAP-powered fill animation (no yoyo, no reverse) ──
+    const startFill = useCallback(async (idx: number) => {
+        const { gsap } = await import("gsap");
+
+        // Kill previous tween
+        if (fillTweenRef.current) {
+            fillTweenRef.current.kill();
+            fillTweenRef.current = null;
+        }
+
+        // Instantly reset bar to 0% (no transition / no reverse animation)
+        if (fillBarRef.current) {
+            gsap.set(fillBarRef.current, { width: "0%" });
+        }
+        if (progressTextRef.current) {
+            progressTextRef.current.textContent = "0%";
+        }
+
         setActiveStep(idx);
-        // Use rAF to ensure state has flushed before starting the timer
+
+        // Wait one frame for React to flush
         requestAnimationFrame(() => {
-            startRef.current = performance.now();
-            fillRef.current = setInterval(() => {
-                const p = Math.min((performance.now() - startRef.current) / FILL_DURATION, 1);
-                setFillProgress(p);
-                if (p >= 1) {
-                    clearInterval(fillRef.current!);
-                    fillRef.current = null;
+            const obj = { progress: 0 };
+
+            fillTweenRef.current = gsap.to(obj, {
+                progress: 100,
+                duration: FILL_DURATION,
+                ease: "none",
+                repeat: 0,           // NO repeat on this tween
+                yoyo: false,         // NO reverse
+                onUpdate: () => {
+                    const p = Math.round(obj.progress);
+                    if (fillBarRef.current) {
+                        fillBarRef.current.style.width = `${p}%`;
+                    }
+                    if (progressTextRef.current) {
+                        progressTextRef.current.textContent = `${p}%`;
+                    }
+                },
+                onComplete: () => {
+                    fillTweenRef.current = null;
                     const next = (idx + 1) % STEPS.length;
+                    // Small delay before next step
                     setTimeout(() => startFill(next), 150);
-                }
-            }, 16);
+                },
+            });
         });
     }, []);
 
-    useEffect(() => { startFill(0); return () => { if (fillRef.current) clearInterval(fillRef.current); }; }, []);
+    useEffect(() => {
+        startFill(0);
+        return () => {
+            if (fillTweenRef.current) fillTweenRef.current.kill();
+        };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     useEffect(() => {
         (async () => {
@@ -320,8 +436,8 @@ export default function IntegrationSection() {
             const { gsap } = await import("gsap");
             if (contentRef.current) {
                 gsap.fromTo(contentRef.current,
-                    { opacity: 0, y: 16 },
-                    { opacity: 1, y: 0, duration: 0.45, ease: "power2.out" }
+                    { opacity: 0 },
+                    { opacity: 1, duration: 0.4, ease: "power2.out" }
                 );
             }
         })();
@@ -362,10 +478,19 @@ export default function IntegrationSection() {
                 </div>
             </div>
 
-            {/* ── STEP TABS ── */}
-            <div className="relative mt-12">
-                {/* Tabs row — no container borders */}
-                <div className="flex items-center justify-center gap-6 py-4 px-6 relative">
+            {/* ── TABS + CONTENT — single relative container for SVG line overlay ── */}
+            <div ref={sectionContainerRef} className="relative mt-12">
+
+                {/* SVG connecting lines overlay */}
+                <ConnectingLines
+                    containerRef={sectionContainerRef}
+                    buttonRefs={buttonRefs}
+                    panelRef={contentPanelRef}
+                    activeStep={activeStep}
+                />
+
+                {/* Tabs row */}
+                <div className="flex items-center justify-center gap-6 py-4 px-6 relative z-[2]">
                     {STEPS.map((step, idx) => {
                         const isActive = activeStep === idx;
                         const isDone = idx < activeStep;
@@ -373,12 +498,13 @@ export default function IntegrationSection() {
                         return (
                             <div key={step.id} className="relative flex flex-col items-center">
                                 <button
+                                    ref={(el) => { buttonRefs.current[idx] = el; }}
                                     onClick={() => startFill(idx)}
                                     className={`inline-flex items-center gap-2 px-5 py-2.5 select-none focus:outline-none transition-all border ${isActive
-                                            ? "bg-[#201f32] text-white border-[#201f32]"
-                                            : isDone
-                                                ? "bg-transparent text-[#8888b0] border-[#c0c0d8] hover:text-[#6868a0] hover:border-[#a0a0b8]"
-                                                : "bg-transparent text-[#a8a8c0] border-[#dddde8] hover:text-[#6868a0] hover:border-[#c0c0d8]"
+                                        ? "bg-[#201f32] text-white border-[#201f32]"
+                                        : isDone
+                                            ? "bg-transparent text-[#8888b0] border-[#c0c0d8] hover:text-[#6868a0] hover:border-[#a0a0b8]"
+                                            : "bg-transparent text-[#a8a8c0] border-[#dddde8] hover:text-[#6868a0] hover:border-[#c0c0d8]"
                                         }`}
                                 >
                                     <span className={`text-sm font-bold ${isActive ? "text-white" : isDone ? "text-[#3c46dc]" : "text-[#c0c0d0]"
@@ -390,90 +516,80 @@ export default function IntegrationSection() {
                                         {step.title}
                                     </span>
                                 </button>
-
-                                {/* Vertical connecting line — starts from bottom of this button */}
-                                <div
-                                    className="w-px"
-                                    style={{
-                                        height: 40,
-                                        backgroundColor: isActive ? "#3c46dc" : isDone ? "#c0c0d8" : "#dddde8",
-                                        opacity: isActive ? 1 : isDone ? 0.7 : 0.4,
-                                    }}
-                                />
                             </div>
                         );
                     })}
                 </div>
-            </div>
 
-            {/* ── CONTENT PANEL: Info left + Visual right ── */}
-            <div className="flex flex-col lg:flex-row border border-[#dddde8]" style={{ height: 480 }}>
+                {/* ── CONTENT PANEL: Info left + Visual right ── */}
+                <div ref={contentPanelRef} className="relative z-[2] flex flex-col lg:flex-row border border-[#dddde8] mt-16" style={{ height: 480, minHeight: 480 }}>
 
-                {/* ── LEFT: White panel with background progress fill ── */}
-                <div className="relative overflow-hidden lg:w-[38%] flex flex-col justify-between p-10 lg:p-12 bg-white border-r border-[#dddde8]">
+                    {/* ── LEFT: White panel with background progress fill ── */}
+                    <div className="relative overflow-hidden lg:w-[38%] flex flex-col justify-between p-10 lg:p-12 bg-white border-r border-[#dddde8]">
 
-                    {/* Background progress fill — sweeps left→right */}
-                    <div
-                        className="absolute inset-0 z-0 pointer-events-none"
-                        style={{
-                            background: "linear-gradient(135deg, #f0f0fa 0%, #e8e8f5 100%)",
-                            width: `${fillProgress * 100}%`,
-                            transition: "width 50ms linear",
-                        }}
-                    />
+                        {/* Background progress fill — driven by GSAP, no CSS transition (prevents reverse) */}
+                        <div
+                            ref={fillBarRef}
+                            className="absolute inset-0 z-0 pointer-events-none"
+                            style={{
+                                background: "linear-gradient(135deg, #f0f0fa 0%, #e8e8f5 100%)",
+                                width: "0%",
+                            }}
+                        />
 
-                    {/* Step content */}
-                    <div ref={contentRef} className="relative z-10 flex flex-col h-full justify-between">
-                        <div>
-                            {/* Step number indicator */}
-                            <div className="flex items-center gap-3 mb-6">
-                                <div className="flex items-center justify-center w-10 h-10 bg-[#3c46dc] text-white">
-                                    <Icon className="w-5 h-5" />
+                        {/* Step content */}
+                        <div ref={contentRef} className="relative z-10 flex flex-col h-full justify-between">
+                            <div>
+                                {/* Step number indicator */}
+                                <div className="flex items-center gap-3 mb-6">
+                                    <div className="flex items-center justify-center w-10 h-10 bg-[#3c46dc] text-white">
+                                        <Icon className="w-5 h-5" />
+                                    </div>
+                                    <span className="text-xs font-bold uppercase tracking-widest text-[#3c46dc]">Step {currentStep.id}</span>
                                 </div>
-                                <span className="text-xs font-bold uppercase tracking-widest text-[#3c46dc]">Step {currentStep.id}</span>
+                                <h3 className="text-[28px] font-bold leading-snug text-[#201f32] mb-6">
+                                    {currentStep.title}
+                                </h3>
                             </div>
-                            <h3 className="text-[28px] font-bold leading-snug text-[#201f32] mb-6">
-                                {currentStep.title}
-                            </h3>
+                            <div>
+                                <p className="text-[14px] leading-relaxed text-[#4a4a66] mb-6">
+                                    {currentStep.description}
+                                </p>
+                                {COMPATIBLE_TECHS && (
+                                    <div className="flex flex-wrap items-center gap-1.5">
+                                        {COMPATIBLE_TECHS.map((t: string) => (
+                                            <span key={t} className="bg-[#f3f3f9] px-2 py-0.5 text-xs text-[#4d5564] border border-[#e8e8f0]">
+                                                {t}
+                                            </span>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
                         </div>
-                        <div>
-                            <p className="text-[14px] leading-relaxed text-[#4a4a66] mb-6">
-                                {currentStep.description}
-                            </p>
-                            {COMPATIBLE_TECHS && (
-                                <div className="flex flex-wrap items-center gap-1.5">
-                                    {COMPATIBLE_TECHS.map((t: string) => (
-                                        <span key={t} className="bg-[#f3f3f9] px-2 py-0.5 text-xs text-[#4d5564] border border-[#e8e8f0]">
-                                            {t}
-                                        </span>
-                                    ))}
-                                </div>
-                            )}
+
+                        {/* Progress percentage indicator */}
+                        <div className="absolute bottom-4 right-4 z-10">
+                            <span ref={progressTextRef} className="text-[10px] font-mono font-bold text-[#3c46dc]/40">
+                                0%
+                            </span>
                         </div>
                     </div>
 
-                    {/* Progress percentage indicator */}
-                    <div className="absolute bottom-4 right-4 z-10">
-                        <span className="text-[10px] font-mono font-bold text-[#3c46dc]/40">
-                            {Math.round(fillProgress * 100)}%
-                        </span>
-                    </div>
-                </div>
+                    {/* ── RIGHT: Visual panel ── */}
+                    <div className="relative flex items-center justify-center lg:flex-1 px-10 overflow-hidden"
+                        style={{ background: "linear-gradient(160deg, #f2f2f8 0%, #ebebf5 100%)" }}>
+                        {/* Dot grid */}
+                        <div className="absolute inset-0 pointer-events-none"
+                            style={{ backgroundImage: "radial-gradient(circle, rgba(80,90,200,0.055) 1px, transparent 1px)", backgroundSize: "22px 22px" }} />
+                        {/* Glow */}
+                        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                            <div className="w-80 h-80 rounded-full"
+                                style={{ background: "radial-gradient(circle, rgba(60,70,220,0.06) 0%, transparent 70%)" }} />
+                        </div>
 
-                {/* ── RIGHT: Visual panel ── */}
-                <div className="relative flex items-center justify-center lg:flex-1 px-10 overflow-hidden"
-                    style={{ background: "linear-gradient(160deg, #f2f2f8 0%, #ebebf5 100%)" }}>
-                    {/* Dot grid */}
-                    <div className="absolute inset-0 pointer-events-none"
-                        style={{ backgroundImage: "radial-gradient(circle, rgba(80,90,200,0.055) 1px, transparent 1px)", backgroundSize: "22px 22px" }} />
-                    {/* Glow */}
-                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                        <div className="w-80 h-80 rounded-full"
-                            style={{ background: "radial-gradient(circle, rgba(60,70,220,0.06) 0%, transparent 70%)" }} />
-                    </div>
-
-                    <div className="relative w-full flex justify-center">
-                        <StepVisual step={currentStep} />
+                        <div className="relative w-full flex justify-center">
+                            <StepVisual step={currentStep} />
+                        </div>
                     </div>
                 </div>
             </div>

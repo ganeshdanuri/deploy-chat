@@ -104,7 +104,7 @@ export default function SettingsPage() {
                     <h1 className="text-2xl font-bold text-[#201f32] tracking-tight">{currentTabLabel}</h1>
                     <p className="text-sm text-[#4d5564] mt-1">Manage your account preferences and system configuration.</p>
                 </div>
-                <div className="flex items-center gap-2 text-xs font-semibold text-[#a1a1a1] bg-[#f3f3f9] px-3 py-1.5 rounded-lg border border-[#e3e2e5]">
+                <div className="flex items-center gap-2 text-xs font-semibold text-[#a1a1a1] bg-[#f3f3f9] px-3 py-1.5 border border-[#e3e2e5]">
                     <HiShieldCheck className="w-4 h-4 text-[#262ef2]" />
                     Secure Settings
                 </div>
@@ -117,7 +117,7 @@ export default function SettingsPage() {
                     ) : (
                         <div className="w-full">
                             {activeTab === "general" && (
-                                <div className="bg-white rounded-2xl border border-[#e3e2e5] shadow-sm overflow-hidden animate-fade-in">
+                                <div className="bg-white border border-[#e3e2e5] shadow-sm overflow-hidden animate-fade-in">
                                     <div className="p-6 border-b border-[#e3e2e5] flex items-center justify-between font-bold">
                                         <div>
                                             <h2 className="text-lg font-bold text-[#201f32]">Profile Information</h2>
@@ -127,7 +127,7 @@ export default function SettingsPage() {
                                             size="sm"
                                             variant="secondary"
                                             onClick={() => setIsEditProfileModalOpen(true)}
-                                            className="bg-[#f3f3f9] text-[#201f32] font-bold rounded-xl hover:bg-[#e3e2e5]"
+                                            className="bg-[#f3f3f9] text-[#201f32] font-bold hover:bg-[#e3e2e5] border border-[#e3e2e5]"
                                         >
                                             <HiPencil className="w-3.5 h-3.5 mr-2" />
                                             Edit Profile
@@ -157,17 +157,17 @@ export default function SettingsPage() {
 
                             {activeTab === "billing" && (
                                 <div className="space-y-4 animate-fade-in">
-                                    <div className="bg-white rounded-2xl border border-[#e3e2e5] shadow-sm overflow-hidden">
+                                    <div className="bg-white border border-[#e3e2e5] shadow-sm overflow-hidden">
                                         <div className="p-5 sm:p-6 flex flex-col md:flex-row md:items-start justify-between gap-6">
                                             <div className="flex-1 space-y-4">
                                                 <div className="flex items-center gap-3">
-                                                    <div className="w-10 h-10 rounded-xl bg-[#262ef2]/5 flex items-center justify-center border border-[#262ef2]/10 shrink-0">
+                                                    <div className="w-10 h-10 bg-[#201f32]/5 flex items-center justify-center border border-[#e3e2e5] shrink-0">
                                                         <HiCreditCard className="w-5 h-5 text-[#262ef2]" />
                                                     </div>
                                                     <div>
                                                         <h2 className="text-lg font-bold text-[#201f32] flex items-center gap-2">
                                                             {userData?.billing?.current_plan ? userData.billing.current_plan.charAt(0).toUpperCase() + userData.billing.current_plan.slice(1) : 'Free'} plan
-                                                            <span className="bg-[#10b981]/10 text-[#10b981] border border-[#10b981]/20 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">Active</span>
+                                                            <span className="bg-[#10b981]/10 text-[#10b981] border border-[#10b981]/20 text-[10px] font-bold px-2 py-0.5 uppercase tracking-wider">Active</span>
                                                         </h2>
                                                         <p className="text-sm text-[#4d5564] mt-0.5">
                                                             {userData?.billing?.expires_at
@@ -186,9 +186,9 @@ export default function SettingsPage() {
                                                             Resets on {userData?.usage?.reset_date ? new Date(userData.usage.reset_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '1st of month'}
                                                         </span>
                                                     </div>
-                                                    <div className="h-1.5 w-full bg-[#f3f3f9] rounded-full overflow-hidden">
+                                                    <div className="h-1.5 w-full bg-[#f3f3f9] overflow-hidden">
                                                         <div
-                                                            className={`h-full rounded-full transition-all duration-1000 ${((userData?.usage?.messages_sent || 0) / (userData?.billing?.monthly_limit || 100)) > 0.9 ? 'bg-[#ef4444]' : 'bg-[#262ef2]'}`}
+                                                            className={`h-full transition-all duration-1000 ${((userData?.usage?.messages_sent || 0) / (userData?.billing?.monthly_limit || 100)) > 0.9 ? 'bg-[#ef4444]' : 'bg-[#262ef2]'}`}
                                                             style={{ width: `${Math.min(((userData?.usage?.messages_sent || 0) / (userData?.billing?.monthly_limit || 100)) * 100, 100)}%` }}
                                                         />
                                                     </div>
@@ -196,7 +196,7 @@ export default function SettingsPage() {
                                             </div>
                                             <div className="shrink-0 pt-1">
                                                 <button
-                                                    className="flex items-center gap-2 px-5 py-2.5 bg-[#f3f3f9] border border-[#e3e2e5] text-[#a1a1a1] text-sm font-medium rounded-lg cursor-not-allowed opacity-60 shadow-sm"
+                                                    className="flex items-center gap-2 px-5 py-2.5 bg-[#f3f3f9] border border-[#e3e2e5] text-[#a1a1a1] text-sm font-medium cursor-not-allowed opacity-60 shadow-sm"
                                                     disabled
                                                 >
                                                     View Invoices
@@ -263,7 +263,7 @@ export default function SettingsPage() {
                                         </div>
                                         <Button
                                             onClick={() => setIsAddKeyModalOpen(true)}
-                                            className="bg-[#201f32] text-white font-bold rounded-xl hover:bg-[#201f32]/90 shadow-lg shadow-[#201f32]/10"
+                                            className="bg-[#201f32] text-white font-bold hover:bg-[#201f32]/90 shadow-lg shadow-[#201f32]/10"
                                         >
                                             <HiPlus className="w-4 h-4 mr-2" />
                                             Add Key
@@ -285,10 +285,10 @@ export default function SettingsPage() {
                                             {apiKeys.map((key) => {
                                                 const Icon = getProviderIcon(key.provider);
                                                 return (
-                                                    <Card key={key.id} className="border-[#e3e2e5] shadow-sm rounded-2xl">
+                                                    <Card key={key.id} className="border-[#e3e2e5] shadow-sm">
                                                         <CardContent className="flex flex-row items-center justify-between p-6">
                                                             <div className="flex items-center gap-6">
-                                                                <div className="w-10 h-10 rounded-xl bg-[#f3f3f9] flex items-center justify-center border border-[#e3e2e5]">
+                                                                <div className="w-10 h-10 bg-[#f3f3f9] flex items-center justify-center border border-[#e3e2e5]">
                                                                     <Icon className="w-5 h-5 text-[#201f32]" />
                                                                 </div>
                                                                 <div>
@@ -317,8 +317,8 @@ export default function SettingsPage() {
 
                             {/* Other tabs placeholder */}
                             {(activeTab !== "general" && activeTab !== "billing" && activeTab !== "api-keys") && (
-                                <div className="flex flex-col items-center justify-center p-12 bg-white rounded-2xl border border-[#e3e2e5] border-dashed animate-fade-in">
-                                    <div className="w-16 h-16 bg-[#f3f3f9] rounded-full flex items-center justify-center mb-4">
+                                <div className="flex flex-col items-center justify-center p-12 bg-white border border-[#e3e2e5] border-dashed animate-fade-in">
+                                    <div className="w-16 h-16 bg-[#f3f3f9] flex items-center justify-center mb-4">
                                         <HiShieldCheck className="w-8 h-8 text-[#a1a1a1]/40" />
                                     </div>
                                     <h3 className="text-[#201f32] font-bold">Coming Soon</h3>

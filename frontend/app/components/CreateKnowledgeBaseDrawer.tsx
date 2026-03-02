@@ -93,15 +93,15 @@ export default function CreateKnowledgeBaseDrawer({ isOpen, onClose, editDataset
             <Button
                 variant="outline"
                 onClick={onClose}
-                className="font-medium rounded-lg h-10 px-6 transition-all hover:bg-slate-50 border border-slate-100 text-slate-600 shadow-sm whitespace-nowrap"
+                className="font-medium h-10 px-6 transition-all hover:bg-[#f3f3f9] border border-[#e3e2e5] text-[#5a5a6a] shadow-sm whitespace-nowrap"
             >
                 Cancel
             </Button>
             <Button
                 onClick={handleSubmit}
                 disabled={isSubmitting || !name || (!editDataset && selectedDocs.length === 0)}
-                className="text-white text-sm font-bold rounded-lg h-10 px-8 shadow-lg shadow-indigo-500/20 transition-all hover:-translate-y-0.5 whitespace-nowrap"
-                style={{ backgroundColor: theme.colors.primary.main }}
+                className="text-white text-sm font-bold h-10 px-8 shadow-lg shadow-[#262ef2]/10 transition-all whitespace-nowrap"
+                style={{ backgroundColor: "#262ef2" }}
             >
                 {isSubmitting ? "Processing..." : editDataset ? "Save Changes" : "Create Knowledge Base"}
             </Button>
@@ -115,23 +115,23 @@ export default function CreateKnowledgeBaseDrawer({ isOpen, onClose, editDataset
             title={editDataset ? "Edit Knowledge Base" : "New Knowledge Base"}
             subtitle={editDataset ? "Update your knowledge collection details." : "Connect and organize your knowledge sources."}
             icon={HiDatabase}
-            iconBgColor="bg-emerald-50"
+            iconBgColor="bg-emerald-50/50"
             iconColor="text-emerald-600"
             footer={footer}
             size="2xl"
         >
             <div className="space-y-8 animate-fade-in">
                 <div className="space-y-3">
-                    <label className="text-sm font-bold block text-slate-700">Knowledge Base Name</label>
-                    <p className="text-xs text-slate-400">Identify this collection for your AI assistants.</p>
+                    <label className="text-sm font-bold block text-[#201f32]">Knowledge Base Name</label>
+                    <p className="text-xs text-[#a1a1a1]">Identify this collection for your AI assistants.</p>
                     <Input
                         variant="bordered"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         placeholder="e.g. Legal Documents 2024"
                         classNames={{
-                            inputWrapper: "rounded-lg border border-slate-100 h-11 hover:border-emerald-400 bg-slate-50 transition-all shadow-none",
-                            input: "font-medium text-sm text-slate-800",
+                            inputWrapper: "border border-[#e3e2e5] h-11 hover:border-emerald-400 bg-[#f3f3f9] transition-all shadow-none",
+                            input: "font-medium text-sm text-[#201f32]",
                         }}
                     />
                 </div>
@@ -139,8 +139,8 @@ export default function CreateKnowledgeBaseDrawer({ isOpen, onClose, editDataset
                 {!editDataset && (
                     <div className="space-y-4">
                         <div className="flex items-center justify-between">
-                            <label className="text-sm font-bold block text-slate-700">Select Sources</label>
-                            <span className="text-[10px] font-black text-slate-400 uppercase bg-slate-100 px-2 py-0.5 rounded-full tracking-wider">
+                            <label className="text-sm font-bold block text-[#201f32]">Select Sources</label>
+                            <span className="text-[10px] font-black text-[#5a5a6a] uppercase bg-[#f3f3f9] px-2 py-0.5 tracking-wider">
                                 {selectedDocs.length} selected
                             </span>
                         </div>
@@ -152,7 +152,7 @@ export default function CreateKnowledgeBaseDrawer({ isOpen, onClose, editDataset
                                 selectedIds={selectedDocs}
                                 onToggle={toggleDocument}
                                 defaultIcon={HiDocumentText}
-                                accentColor="emerald"
+                                accentColor="slate"
                                 emptyIcon={HiDocumentText}
                                 emptyMessage={<>No sources available.</>}
                             />

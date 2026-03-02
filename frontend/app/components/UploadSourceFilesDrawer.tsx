@@ -84,14 +84,14 @@ export default function UploadSourceFilesDrawer({ isOpen, onClose, onUploadSucce
 
     const footer = (
         <>
-            <Button variant="outline" onClick={handleClose} className="font-medium bg-white rounded-lg h-10 px-6 border border-slate-100 text-slate-600 shadow-sm transition-all hover:bg-slate-50">
+            <Button variant="outline" onClick={handleClose} className="font-medium bg-white h-10 px-6 border border-[#e3e2e5] text-[#5a5a6a] shadow-sm transition-all hover:bg-[#f3f3f9]">
                 Cancel
             </Button>
             <Button
                 onClick={handleSubmit}
                 disabled={files.length === 0 || isUploading}
-                className="text-white font-bold rounded-lg h-10 px-8 shadow-lg shadow-indigo-500/20 transition-all hover:-translate-y-0.5"
-                style={{ backgroundColor: theme.colors.primary.main }}
+                className="text-white font-bold h-10 px-8 shadow-lg shadow-[#262ef2]/10 transition-all"
+                style={{ backgroundColor: "#262ef2" }}
             >
                 {isUploading ? "Importing..." : `Import ${files.length} Files`}
             </Button>
@@ -109,32 +109,32 @@ export default function UploadSourceFilesDrawer({ isOpen, onClose, onUploadSucce
             size="2xl"
         >
             <div className="space-y-8 animate-fade-in">
-                <div className={`relative border-2 border-dashed rounded-xl p-8 text-center flex flex-col items-center justify-center transition-all ${files.length > 0 ? 'border-indigo-400 bg-indigo-50/30' : 'border-slate-100 hover:border-indigo-300'}`}>
+                <div className={`relative border-2 border-dashed p-8 text-center flex flex-col items-center justify-center transition-all ${files.length > 0 ? 'border-[#262ef2]/50 bg-[#262ef2]/5' : 'border-[#e3e2e5] hover:border-[#262ef2]/30'}`}>
                     <input type="file" multiple onChange={handleFileChange} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" />
-                    <div className="w-14 h-14 bg-white rounded-xl flex items-center justify-center mb-4 border border-slate-50 shadow-sm"><HiCloudUpload className="text-3xl text-indigo-600" /></div>
-                    <p className="text-sm font-bold text-slate-800">Drop source files here</p>
-                    <p className="text-[11px] text-slate-500 mt-1">Max {MAX_SIZE_MB}MB per file.</p>
+                    <div className="w-14 h-14 bg-white flex items-center justify-center mb-4 border border-[#e3e2e5] shadow-sm"><HiCloudUpload className="text-3xl text-[#262ef2]" /></div>
+                    <p className="text-sm font-bold text-[#201f32]">Drop source files here</p>
+                    <p className="text-[11px] text-[#5a5a6a] mt-1">Max {MAX_SIZE_MB}MB per file.</p>
                 </div>
 
                 {files.length > 0 && (
                     <div className="space-y-2">
-                        <div className="flex items-center justify-between"><h4 className="text-[11px] font-black uppercase text-slate-400">Queue</h4><span className="text-[10px] font-bold text-slate-600 bg-slate-100 px-2 py-0.5 rounded-full">{files.length}</span></div>
+                        <div className="flex items-center justify-between"><h4 className="text-[11px] font-black uppercase text-[#a1a1a1]">Queue</h4><span className="text-[10px] font-bold text-[#5a5a6a] bg-[#f3f3f9] px-2 py-0.5">{files.length}</span></div>
                         <div className="max-h-60 overflow-y-auto space-y-2 pr-2">
                             {files.map((f, i) => (
-                                <div key={i} className="flex items-center justify-between p-3 bg-white border border-slate-100 rounded-xl">
+                                <div key={i} className="flex items-center justify-between p-3 bg-white border border-[#e3e2e5]">
                                     <div className="flex items-center gap-3 overflow-hidden">
-                                        <HiDocumentText className="text-slate-400 w-5 h-5 shrink-0" />
-                                        <div className="overflow-hidden"><p className="text-xs font-bold text-slate-700 truncate">{f.name}</p></div>
+                                        <HiDocumentText className="text-[#a1a1a1] w-5 h-5 shrink-0" />
+                                        <div className="overflow-hidden"><p className="text-xs font-bold text-[#5a5a6a] truncate">{f.name}</p></div>
                                     </div>
-                                    <button onClick={() => removeFile(i)} className="text-slate-400 hover:text-red-500"><HiX className="w-4 h-4" /></button>
+                                    <button onClick={() => removeFile(i)} className="text-[#a1a1a1] hover:text-red-500"><HiX className="w-4 h-4" /></button>
                                 </div>
                             ))}
                         </div>
                     </div>
                 )}
 
-                {error && <div className="p-4 rounded-xl bg-red-50 text-red-600 text-[11px] font-bold border border-red-100"><HiExclamationCircle className="inline mr-2" />{error}</div>}
-                {uploadStatus === 'success' && <div className="p-4 rounded-xl bg-emerald-50 text-emerald-600 text-[11px] font-bold border border-emerald-100"><HiCheckCircle className="inline mr-2" />Imported!</div>}
+                {error && <div className="p-4 bg-red-50/50 text-red-600 text-[11px] font-bold border border-red-100"><HiExclamationCircle className="inline mr-2" />{error}</div>}
+                {uploadStatus === 'success' && <div className="p-4 bg-emerald-50/50 text-emerald-600 text-[11px] font-bold border border-emerald-100"><HiCheckCircle className="inline mr-2" />Imported!</div>}
             </div>
         </Drawer>
     );

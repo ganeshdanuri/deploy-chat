@@ -78,7 +78,7 @@ export default function EmbedDrawer({ isOpen, onClose, chatbot }: EmbedDrawerPro
                 <Button
                     onClick={onClose}
                     variant="outline"
-                    className="font-medium bg-white rounded-lg h-10 px-8 border border-slate-100 text-slate-600 shadow-sm transition-all hover:bg-slate-50"
+                    className="font-medium bg-white h-10 px-8 border border-[#e3e2e5] text-[#5a5a6a] shadow-sm transition-all hover:bg-[#f3f3f9]"
                 >
                     Close
                 </Button>
@@ -89,21 +89,21 @@ export default function EmbedDrawer({ isOpen, onClose, chatbot }: EmbedDrawerPro
                     <div className="space-y-7">
                         <section>
                             <div className="flex items-center gap-2 mb-3">
-                                <span className="w-5 h-5 rounded-full bg-indigo-100 text-indigo-700 text-[10px] font-bold flex items-center justify-center">1</span>
-                                <h3 className="text-sm font-bold text-slate-800 flex items-center gap-1.5">
-                                    <HiChip className="w-4 h-4 text-slate-400" />
+                                <span className="w-5 h-5 bg-[#262ef2]/10 text-[#262ef2] text-[10px] font-bold flex items-center justify-center">1</span>
+                                <h3 className="text-sm font-bold text-[#201f32] flex items-center gap-1.5">
+                                    <HiChip className="w-4 h-4 text-[#a1a1a1]" />
                                     Embed Token
                                 </h3>
                             </div>
                             <div className="flex items-center gap-2">
-                                <div className="flex-1 min-w-0 px-3 py-2 rounded-lg bg-slate-50 border border-slate-200 font-mono text-[10px] text-slate-600 truncate">
+                                <div className="flex-1 min-w-0 px-3 py-2 bg-[#f3f3f9] border border-[#e3e2e5] font-mono text-[10px] text-[#5a5a6a] truncate">
                                     {chatbot.embed_token}
                                 </div>
                                 <Button
                                     size="sm"
                                     variant="outline"
                                     onClick={copyToken}
-                                    className="bg-white border border-slate-200 text-slate-500 rounded-lg hover:border-indigo-300 transition-all h-8 w-8 p-0"
+                                    className="bg-white border border-[#e3e2e5] text-[#a1a1a1] hover:border-[#262ef2]/50 transition-all h-8 w-8 p-0"
                                 >
                                     {copiedToken ? <HiCheck className="w-4 h-4 text-green-500" /> : <HiClipboardCopy className="w-4 h-4" />}
                                 </Button>
@@ -112,21 +112,21 @@ export default function EmbedDrawer({ isOpen, onClose, chatbot }: EmbedDrawerPro
 
                         <section>
                             <div className="flex items-center gap-2 mb-3">
-                                <span className="w-5 h-5 rounded-full bg-indigo-100 text-indigo-700 text-[10px] font-bold flex items-center justify-center">2</span>
-                                <h3 className="text-sm font-bold text-slate-800 flex items-center gap-1.5">
-                                    <HiColorSwatch className="w-4 h-4 text-slate-400" />
+                                <span className="w-5 h-5 bg-[#262ef2]/10 text-[#262ef2] text-[10px] font-bold flex items-center justify-center">2</span>
+                                <h3 className="text-sm font-bold text-[#201f32] flex items-center gap-1.5">
+                                    <HiColorSwatch className="w-4 h-4 text-[#a1a1a1]" />
                                     Customise
                                 </h3>
                             </div>
                             <div className="space-y-4">
                                 <div>
-                                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Brand Color</p>
+                                    <p className="text-[10px] font-bold text-[#a1a1a1] uppercase tracking-widest mb-2">Brand Color</p>
                                     <div className="flex items-center gap-2 flex-wrap">
                                         {PRESET_COLORS.map((c) => (
                                             <button
                                                 key={c.value}
                                                 onClick={() => { setColor(c.value); setCustomColor(""); }}
-                                                className="w-6 h-6 rounded-full border-2 transition-transform hover:scale-110"
+                                                className="w-6 h-6 border-2 transition-transform hover:scale-110"
                                                 style={{
                                                     background: c.value,
                                                     borderColor: (customColor === "" && color === c.value) ? "#fff" : "transparent",
@@ -137,13 +137,13 @@ export default function EmbedDrawer({ isOpen, onClose, chatbot }: EmbedDrawerPro
                                     </div>
                                 </div>
                                 <div>
-                                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Position</p>
+                                    <p className="text-[10px] font-bold text-[#a1a1a1] uppercase tracking-widest mb-2">Position</p>
                                     <div className="flex gap-2">
                                         {(["bottom-right", "bottom-left"] as const).map((pos) => (
                                             <button
                                                 key={pos}
                                                 onClick={() => setPosition(pos)}
-                                                className={`px-3 py-1.5 rounded-lg text-[10px] font-bold border transition-all ${position === pos ? "bg-indigo-50 border-indigo-300 text-indigo-700" : "bg-white border-slate-200 text-slate-500"}`}
+                                                className={`px-3 py-1.5 text-[10px] font-bold border transition-all ${position === pos ? "bg-[#262ef2]/5 border-[#262ef2]/30 text-[#262ef2]" : "bg-white border-[#e3e2e5] text-[#5a5a6a]"}`}
                                             >
                                                 {pos === "bottom-right" ? "↘ Right" : "↙ Left"}
                                             </button>
@@ -157,9 +157,9 @@ export default function EmbedDrawer({ isOpen, onClose, chatbot }: EmbedDrawerPro
                     <div className="space-y-7">
                         <section>
                             <div className="flex items-center gap-2 mb-3">
-                                <span className="w-5 h-5 rounded-full bg-indigo-100 text-indigo-700 text-[10px] font-bold flex items-center justify-center">3</span>
-                                <h3 className="text-sm font-bold text-slate-800 flex items-center gap-1.5">
-                                    <HiGlobe className="w-4 h-4 text-slate-400" />
+                                <span className="w-5 h-5 bg-[#262ef2]/10 text-[#262ef2] text-[10px] font-bold flex items-center justify-center">3</span>
+                                <h3 className="text-sm font-bold text-[#201f32] flex items-center gap-1.5">
+                                    <HiGlobe className="w-4 h-4 text-[#a1a1a1]" />
                                     Preview
                                 </h3>
                             </div>
@@ -171,11 +171,11 @@ export default function EmbedDrawer({ isOpen, onClose, chatbot }: EmbedDrawerPro
                                 </div>
                                 <div className="absolute bottom-3 right-3 flex flex-col items-end gap-1.5"
                                     style={{ left: position === "bottom-left" ? "12px" : "auto", right: position === "bottom-right" ? "12px" : "auto" }}>
-                                    <div className="px-2 py-1.5 rounded-lg text-white text-[8px] font-bold shadow-md"
+                                    <div className="px-2 py-1.5 text-white text-[8px] font-bold shadow-md"
                                         style={{ background: activeColor }}>
                                         👋 Hi! I&apos;m {chatbot.name}
                                     </div>
-                                    <div className="w-8 h-8 rounded-full flex items-center justify-center shadow-lg"
+                                    <div className="w-8 h-8 flex items-center justify-center shadow-lg"
                                         style={{ background: activeColor }}>
                                         <svg className="w-4 h-4 fill-white" viewBox="0 0 24 24">
                                             <path d="M20 2H4a2 2 0 00-2 2v18l4-4h14a2 2 0 002-2V4a2 2 0 00-2-2zm-2 10H6v-2h12v2zm0-4H6V6h12v2z" />
@@ -187,23 +187,23 @@ export default function EmbedDrawer({ isOpen, onClose, chatbot }: EmbedDrawerPro
                     </div>
                 </div>
 
-                <section className="pt-4 border-t border-slate-100">
+                <section className="pt-4 border-t border-[#e3e2e5]">
                     <div className="flex items-center justify-between mb-3">
                         <div className="flex items-center gap-2">
-                            <span className="w-5 h-5 rounded-full bg-indigo-100 text-indigo-700 text-[10px] font-bold flex items-center justify-center">4</span>
-                            <h3 className="text-sm font-bold text-slate-800">Embed Code</h3>
+                            <span className="w-5 h-5 bg-[#262ef2]/10 text-[#262ef2] text-[10px] font-bold flex items-center justify-center">4</span>
+                            <h3 className="text-sm font-bold text-[#201f32]">Embed Code</h3>
                         </div>
                         <Button
                             size="sm"
                             onClick={copySnippet}
                             variant="secondary"
-                            className={`text-xs font-bold rounded-lg transition-all ${copiedSnippet ? "bg-green-50 text-green-700 hover:bg-green-100" : "bg-indigo-50 text-indigo-700 hover:bg-indigo-100"}`}
+                            className={`text-xs font-bold transition-all ${copiedSnippet ? "bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border-none" : "bg-[#262ef2]/5 text-[#262ef2] hover:bg-[#262ef2]/10 border-none"}`}
                         >
                             {copiedSnippet ? <HiCheck className="w-3.5 h-3.5 mr-2" /> : <HiClipboardCopy className="w-3.5 h-3.5 mr-2" />}
                             {copiedSnippet ? "Copied!" : "Copy Code"}
                         </Button>
                     </div>
-                    <div className="rounded-xl bg-slate-900 overflow-hidden">
+                    <div className="bg-[#12121a] overflow-hidden border border-[#e3e2e5]">
                         <pre className="px-4 py-4 text-[10px] text-emerald-300 font-mono overflow-x-auto whitespace-pre-wrap break-all">
                             <code>{snippet}</code>
                         </pre>

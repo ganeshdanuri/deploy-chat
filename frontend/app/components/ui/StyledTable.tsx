@@ -37,7 +37,7 @@ export function StyledTable<T extends { id: string }>({
     emptyContent,
 }: StyledTableProps<T>) {
     return (
-        <div className="bg-white border border-[#e3e2e5] rounded-xl shadow-sm overflow-hidden">
+        <div className="bg-white border border-[#e3e2e5] shadow-sm rounded-sm overflow-hidden">
             {topContent && (
                 <div className="px-6 py-5 border-b border-[#e3e2e5] bg-white">
                     {topContent}
@@ -49,7 +49,7 @@ export function StyledTable<T extends { id: string }>({
                         {columns.map((col) => (
                             <TableHead
                                 key={col.key}
-                                className={`text-[#a1a1a1] font-bold text-[10px] uppercase tracking-[0.15em] py-5 px-6 ${col.align === "end" ? "text-right" :
+                                className={`text-[#a1a1a1] font-bold text-[10px] uppercase tracking-[0.2em] py-5 px-6 ${col.align === "end" ? "text-right" :
                                     col.align === "center" ? "text-center" : "text-left"
                                     }`}
                             >
@@ -74,7 +74,7 @@ export function StyledTable<T extends { id: string }>({
                                 {columns.map((col) => (
                                     <TableCell
                                         key={col.key}
-                                        className={`py-5 px-6 text-[#4d5564] text-sm ${col.align === "end" ? "text-right" : col.align === "center" ? "text-center" : ""}`}
+                                        className={`py-5 px-6 text-[#5a5a6a] text-sm ${col.align === "end" ? "text-right" : col.align === "center" ? "text-center" : ""}`}
                                     >
                                         {renderCell(item, col.key as React.Key)}
                                     </TableCell>

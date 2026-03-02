@@ -48,7 +48,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
             {/* Workspace Selector / Brand */}
             <div className="h-16 flex items-center px-3 border-b border-[#e3e2e5] justify-between shrink-0">
                 <div
-                    className={`flex items-center gap-3 p-1.5 hover:bg-[#f3f3f9] rounded-lg cursor-pointer transition-colors group ${isCollapsed ? "justify-center w-full" : "flex-1 min-w-0"}`}
+                    className={`flex items-center gap-3 p-1.5 hover:bg-[#f3f3f9] rounded-sm cursor-pointer transition-colors group ${isCollapsed ? "justify-center w-full" : "flex-1 min-w-0"}`}
                     onClick={() => !isCollapsed && router.push("/dashboard")}
                 >
                     <div className="shrink-0">
@@ -68,7 +68,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
 
                 {/* Mobile Close Button */}
                 <button
-                    className="lg:hidden p-2 text-[#a1a1a1] hover:text-[#201f32] hover:bg-[#f3f3f9] rounded-lg shrink-0"
+                    className="lg:hidden p-2 text-[#a1a1a1] hover:text-[#201f32] hover:bg-[#f3f3f9] shrink-0"
                     onClick={onClose}
                 >
                     <HiX className="w-5 h-5" />
@@ -92,25 +92,25 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                                 onClick={isDisabled ? (e) => e.preventDefault() : undefined}
                                 title={isCollapsed ? (isDisabled ? `${item.label} (Pro)` : item.label) : undefined}
                                 className={`
-                                        relative group flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all
+                                        relative group flex items-center gap-3 px-3 py-2.5 rounded-sm text-sm font-medium transition-all
                                         ${isCollapsed ? "justify-center" : ""}
                                         ${isDisabled
                                         ? "opacity-50 cursor-not-allowed text-[#a1a1a1]"
                                         : isActive
-                                            ? "bg-[#262ef2]/10 text-[#262ef2] shadow-sm ring-1 ring-[#262ef2]/20"
+                                            ? "bg-[#f3f3f9] text-[#201f32]"
                                             : "text-[#4d5564] hover:text-[#201f32] hover:bg-[#f3f3f9]"
                                     }
                                     `}
-                                style={isActive && !isDisabled ? { color: "#262ef2" } : {}}
+                                style={{}}
                             >
                                 <Icon
-                                    className={`w-5 h-5 shrink-0 transition-colors ${isActive && !isDisabled ? "text-[#262ef2]" : "text-[#a1a1a1] group-hover:text-[#4d5564]"}`}
+                                    className={`w-5 h-5 shrink-0 transition-colors ${isActive && !isDisabled ? "text-[#201f32]" : "text-[#a1a1a1] group-hover:text-[#4d5564]"}`}
                                 />
                                 {!isCollapsed && (
                                     <div className="flex flex-1 items-center justify-between">
                                         <span>{item.label}</span>
                                         {isDisabled && (
-                                            <span className="text-[9px] font-bold bg-[#f3f3f9] text-[#a1a1a1] px-1.5 py-0.5 rounded uppercase tracking-wider">Pro</span>
+                                            <span className="text-[9px] font-bold bg-[#f3f3f9] text-[#a1a1a1] px-1.5 py-0.5 uppercase tracking-wider">Pro</span>
                                         )}
                                     </div>
                                 )}
@@ -142,17 +142,17 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                                     key={item.id}
                                     href={item.path || "#"}
                                     className={`
-                                        relative group flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all
+                                        relative group flex items-center gap-3 px-3 py-2 rounded-sm text-sm font-medium transition-all
                                         ${isCollapsed ? "justify-center" : ""}
                                         ${isActive
-                                            ? "bg-[#262ef2]/10 text-[#262ef2] shadow-sm ring-1 ring-[#262ef2]/20"
+                                            ? "bg-[#f3f3f9] text-[#201f32]"
                                             : "text-[#4d5564] hover:text-[#201f32] hover:bg-[#f3f3f9]"
                                         }
                                     `}
-                                    style={isActive ? { color: "#262ef2" } : {}}
+                                    style={{}}
                                 >
                                     <Icon
-                                        className={`w-4 h-4 shrink-0 transition-colors ${isActive ? "text-[#262ef2]" : "text-[#a1a1a1] group-hover:text-[#4d5564]"}`}
+                                        className={`w-4 h-4 shrink-0 transition-colors ${isActive ? "text-[#201f32]" : "text-[#a1a1a1] group-hover:text-[#4d5564]"}`}
                                     />
                                     {!isCollapsed && <span className="text-[13px]">{item.label}</span>}
 
@@ -181,17 +181,17 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                             href={item.path}
                             title={isCollapsed ? item.label : undefined}
                             className={`
-                                    relative group flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all
+                                    relative group flex items-center gap-3 px-3 py-2.5 rounded-sm text-sm font-medium transition-all
                                     ${isCollapsed ? "justify-center" : ""}
                                     ${isActive
-                                    ? "bg-[#262ef2]/10 text-[#262ef2] shadow-sm ring-1 ring-[#262ef2]/20"
+                                    ? "bg-[#f3f3f9] text-[#201f32]"
                                     : "text-[#4d5564] hover:text-[#201f32] hover:bg-[#f3f3f9]"
                                 }
                                 `}
-                            style={isActive ? { color: "#262ef2" } : {}}
+                            style={{}}
                         >
                             <Icon
-                                className={`w-5 h-5 shrink-0 transition-colors ${isActive ? "text-[#262ef2]" : "text-[#a1a1a1]"}`}
+                                className={`w-5 h-5 shrink-0 transition-colors ${isActive ? "text-[#201f32]" : "text-[#a1a1a1]"}`}
                             />
                             {!isCollapsed && <span>{item.label}</span>}
 
@@ -209,14 +209,14 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                 {/* User Profile Mini */}
                 <div className="mt-2 pt-2 border-t border-[#e3e2e5]">
                     <div
-                        className={`flex items-center gap-3 px-2 py-2 rounded-lg hover:bg-[#f3f3f9] cursor-pointer transition-colors ${isCollapsed ? "justify-center" : ""}`}
+                        className={`flex items-center gap-3 px-2 py-2 rounded-sm hover:bg-[#f3f3f9] cursor-pointer transition-colors ${isCollapsed ? "justify-center" : ""}`}
                         onClick={() => router.push("/dashboard/settings")}
                     >
                         <div className="relative shrink-0">
-                            <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-[#262ef2] to-[#201f32] flex items-center justify-center text-xs font-bold text-white shadow-sm ring-2 ring-white">
+                            <div className="w-8 h-8 bg-gradient-to-tr from-[#262ef2] to-[#201f32] flex items-center justify-center text-xs font-bold text-white shadow-sm ring-2 ring-white">
                                 {userData?.profile?.username?.substring(0, 2).toUpperCase() || "??"}
                             </div>
-                            <div className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-green-500 border-2 border-white rounded-full"></div>
+                            <div className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-green-500 border-2 border-white"></div>
                         </div>
                         {!isCollapsed && (
                             <div className="flex-1 min-w-0">
@@ -234,7 +234,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                                     e.stopPropagation();
                                     logout();
                                 }}
-                                className="relative group p-1 hover:bg-[#f3f3f9] rounded transition-colors text-[#a1a1a1] hover:text-red-400 shrink-0"
+                                className="relative group p-1 hover:bg-[#f3f3f9] transition-colors text-[#a1a1a1] hover:text-red-400 shrink-0"
                             >
                                 <HiLogout className="w-4 h-4" />
                                 <div className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1 opacity-0 group-hover:opacity-100 transition-all ${TOOLTIP_STYLE_CLASSES} translate-y-1 group-hover:translate-y-0`}>
@@ -249,7 +249,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
 
             {/* Desktop Collapse Toggle — fixed arrow tab on the right edge */}
             <button
-                className="hidden lg:flex absolute -right-3.5 top-1/2 -translate-y-1/2 w-7 h-7 items-center justify-center bg-white border border-[#e3e2e5] rounded-full shadow-md text-[#a1a1a1] hover:text-[#262ef2] hover:border-[#262ef2]/30 transition-all z-10"
+                className="hidden lg:flex absolute -right-3.5 top-1/2 -translate-y-1/2 w-7 h-7 items-center justify-center bg-white border border-[#e3e2e5] shadow-md text-[#a1a1a1] hover:text-[#262ef2] hover:border-[#262ef2]/30 transition-all z-10"
                 onClick={() => setIsCollapsed(!isCollapsed)}
                 title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
             >

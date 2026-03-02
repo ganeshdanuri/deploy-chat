@@ -45,15 +45,15 @@ export default function EditProfileDrawer({ isOpen, onClose, currentUsername, cu
             <Button
                 variant="outline"
                 onClick={onClose}
-                className="font-medium bg-white rounded-lg h-10 px-6 border border-slate-100 text-slate-600 shadow-sm transition-all hover:bg-slate-50"
+                className="font-medium bg-white h-10 px-6 border border-[#e3e2e5] text-[#5a5a6a] shadow-sm transition-all hover:bg-[#f3f3f9]"
             >
                 Cancel
             </Button>
             <Button
                 onClick={handleSubmit}
                 disabled={isLoading}
-                className="text-white font-bold rounded-lg h-10 px-8 shadow-lg shadow-indigo-500/20 transition-all hover:-translate-y-0.5"
-                style={{ backgroundColor: theme.colors.primary.main }}
+                className="text-white font-bold h-10 px-8 shadow-lg shadow-[#262ef2]/10 transition-all"
+                style={{ backgroundColor: "#262ef2" }}
             >
                 {isLoading ? "Saving..." : "Save Changes"}
             </Button>
@@ -71,7 +71,7 @@ export default function EditProfileDrawer({ isOpen, onClose, currentUsername, cu
         >
             <div className="space-y-6 animate-fade-in">
                 <div className="space-y-2">
-                    <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">Username</label>
+                    <label className="text-[11px] font-black text-[#a1a1a1] uppercase tracking-widest ml-1">Username</label>
                     <Input
                         value={username}
                         onValueChange={setUsername}
@@ -79,7 +79,7 @@ export default function EditProfileDrawer({ isOpen, onClose, currentUsername, cu
                 </div>
 
                 <div className="space-y-2">
-                    <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">Email Address</label>
+                    <label className="text-[11px] font-black text-[#a1a1a1] uppercase tracking-widest ml-1">Email Address</label>
                     <Input
                         type="email"
                         value={email}

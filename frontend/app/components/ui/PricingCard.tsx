@@ -23,10 +23,10 @@ export function PricingCard({
     isDisabled
 }: PricingCardProps) {
     return (
-        <div className={`bg-white rounded-xl shadow-sm p-6 relative overflow-hidden flex flex-col ${isPopular ? 'border border-[#262ef2]/20 shadow-[#262ef2]/5 shadow-xl' : 'border border-[#e3e2e5]'}`}>
+        <div className={`bg-white rounded-sm shadow-sm p-6 relative overflow-hidden flex flex-col ${isPopular ? 'border border-[#262ef2]/20 shadow-[#262ef2]/5 shadow-xl' : 'border border-[#e3e2e5]'}`}>
             {isPopular && (
                 <div className="absolute top-0 right-0 p-3">
-                    <span className="bg-[#262ef2]/10 text-[#262ef2] text-[10px] font-bold px-2 py-0.5 rounded-lg border border-[#262ef2]/10 uppercase tracking-wider">Most Popular</span>
+                    <span className="bg-[#262ef2]/10 text-[#262ef2] text-[10px] font-bold px-2 py-0.5 rounded-sm border border-[#262ef2]/10 uppercase tracking-wider">Most Popular</span>
                 </div>
             )}
             <h3 className="text-xl font-semibold text-[#201f32]">{title}</h3>
@@ -44,7 +44,7 @@ export function PricingCard({
             </ul>
             <button
                 onClick={onButtonClick}
-                className={`text-sm font-medium mt-6 w-full py-2.5 rounded-lg transition-all ${isDisabled ? 'opacity-50 cursor-not-allowed bg-[#f3f3f9] text-[#a1a1a1] border border-[#e3e2e5]' : (isPopular ? 'text-white shadow-lg shadow-[#262ef2]/20 hover:-translate-y-0.5' : 'bg-white border border-[#e3e2e5] text-[#4d5564] hover:bg-[#f3f3f9] shadow-sm hover:-translate-y-0.5')}`}
+                className={`text-sm font-medium mt-6 w-full py-2.5 transition-all rounded-sm ${isDisabled ? 'opacity-50 cursor-not-allowed bg-[#f3f3f9] text-[#a1a1a1] border border-[#e3e2e5]' : (isPopular ? 'text-white shadow-lg shadow-[#262ef2]/20' : 'bg-white border border-[#e3e2e5] text-[#4d5564] hover:bg-[#f3f3f9] shadow-sm')}`}
                 style={isPopular && !isDisabled ? { backgroundColor: "#262ef2" } : {}}
                 disabled={isDisabled}
             >

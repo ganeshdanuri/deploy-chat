@@ -22,18 +22,18 @@ interface UserProps {
 export const User = ({ name, description, avatarProps, classNames, className }: UserProps) => {
     return (
         <div className={cn("flex items-center gap-3", className)}>
-            <Avatar className={cn("h-8 w-8 rounded-lg", avatarProps?.className)}>
+            <Avatar className={cn("h-8 w-8", avatarProps?.className)}>
                 {avatarProps?.src && <AvatarImage src={avatarProps.src} />}
-                <AvatarFallback className="rounded-lg">
+                <AvatarFallback>
                     {avatarProps?.fallback || name.charAt(0)}
                 </AvatarFallback>
             </Avatar>
             <div className="flex flex-col">
-                <span className={cn("text-sm font-medium text-slate-800", classNames?.name)}>
+                <span className={cn("text-sm font-medium text-[#201f32]", classNames?.name)}>
                     {name}
                 </span>
                 {description && (
-                    <span className={cn("text-[10px] text-slate-400 font-bold uppercase tracking-wider", classNames?.description)}>
+                    <span className={cn("text-[10px] text-[#a1a1a1] font-bold uppercase tracking-wider", classNames?.description)}>
                         {description}
                     </span>
                 )}

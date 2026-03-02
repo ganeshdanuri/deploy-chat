@@ -1,85 +1,61 @@
 "use client";
 
-import { theme } from "../theme";
-import { PLATFORM_FEATURES as features } from "../../lib/constants";
-
-
+import { PLATFORM_FEATURES as features, PAGE_CONTENT } from "../../lib/constants";
 
 export default function FeaturesSection() {
   return (
-    <section id="features" className="relative py-20 bg-transparent overflow-hidden">
-      {/* Background Gradients */}
-      <div className="absolute top-0 left-0 w-full h-full overflow-hidden -z-10">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-100 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"></div>
-        <div className="absolute top-0 right-1/4 w-96 h-96 bg-purple-100 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000"></div>
-      </div>
+    <section id="features" className="relative py-24 bg-white overflow-hidden">
 
-      <div className="mx-auto max-w-7xl px-6">
-        {/* Section Header */}
-        <div className="mb-16 text-center max-w-3xl mx-auto">
-          <div className="inline-flex items-center justify-center px-3 py-1 mb-4 rounded-lg bg-[#262ef2]/10 text-[#262ef2] text-xs font-semibold tracking-widest uppercase">
-            Powerful Features
-          </div>
-          <h2
-            className="text-[44px] font-semibold mb-6 tracking-tight leading-tight"
-            style={{ color: "#201f32" }}
-          >
-            Everything you need to build <br className="hidden md:block" />
-            <span style={{ color: theme.colors.primary.main }}>
-              Intelligent Chatbots
+      <div className="mx-auto max-w-[1400px] px-10">
+
+        {/* ── Section Header ── */}
+        <div className="mb-14 text-center">
+          <div className="flex items-center justify-center gap-3 mb-6">
+            <div className="w-8 h-[2px] bg-[#3c46dc]" />
+            <span className="text-xs font-semibold text-[#4a4a5a] tracking-wide uppercase">
+              {PAGE_CONTENT.features.badge}
             </span>
+            <div className="w-8 h-[2px] bg-[#3c46dc]" />
+          </div>
+          <h2 className="text-[40px] md:text-[44px] font-semibold text-[#201f32] mb-6 leading-tight tracking-tight">
+            {PAGE_CONTENT.features.headlineWait}{" "}
+            <span className="text-[#3c46dc]">{PAGE_CONTENT.features.headlineHighlight}</span>
           </h2>
-          <p
-            className="text-lg leading-relaxed"
-            style={{ color: theme.colors.neutral[600] }}
-          >
-            A complete suite of tools designed for developers and businesses to create, deploy, and manage AI conversational agents.
+          <p className="text-lg text-[#5a5a6a] max-w-xl mx-auto leading-relaxed">
+            {PAGE_CONTENT.features.subtitle}
           </p>
         </div>
 
-        {/* Features Grid - Bento Style */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* ── Features Grid — 3-column, clean ── */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px bg-[#e8e8f0]">
           {features.map((feature) => (
             <div
               key={feature.id}
-              className={`group relative overflow-hidden rounded-xl p-8 transition-all duration-300 hover:shadow-xl bg-[#f3f3f9] hover:bg-white ${feature.span}`}
+              className="group relative bg-white p-10 transition-colors duration-200 hover:bg-[#fafaff]"
             >
-              {/* Hover Gradient Background */}
+              {/* Icon */}
               <div
-                className="absolute inset-0 opacity-0 group-hover:opacity-5 transition-opacity duration-300"
+                className="w-11 h-11 flex items-center justify-center mb-6 transition-transform duration-200 group-hover:scale-105"
+                style={{ backgroundColor: `${feature.color}0a`, color: feature.color }}
+              >
+                <feature.icon className="h-5 w-5" />
+              </div>
+
+              {/* Title */}
+              <h3 className="text-lg font-semibold text-[#201f32] mb-3">
+                {feature.title}
+              </h3>
+
+              {/* Description */}
+              <p className="text-[15px] text-[#5a5a6a] leading-relaxed">
+                {feature.description}
+              </p>
+
+              {/* Subtle bottom accent on hover */}
+              <div
+                className="absolute bottom-0 left-0 h-[2px] w-0 group-hover:w-full transition-all duration-300"
                 style={{ backgroundColor: feature.color }}
               />
-
-              <div className="relative z-10 h-full flex flex-col">
-                <div className="flex items-start justify-between mb-6">
-                  <div
-                    className="flex h-12 w-12 items-center justify-center rounded-lg shadow-sm transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-3"
-                    style={{
-                      backgroundColor: `${feature.color}15`,
-                      color: feature.color
-                    }}
-                  >
-                    <feature.icon className="h-6 w-6" />
-                  </div>
-                  {/* Subtle arrow that appears on hover */}
-                  <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 -translate-x-2 group-hover:translate-x-0">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke={feature.color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
-                  </div>
-                </div>
-
-                <h3
-                  className="text-xl font-medium mb-3"
-                  style={{ color: "#201f32" }}
-                >
-                  {feature.title}
-                </h3>
-                <p
-                  className="text-base leading-relaxed flex-grow"
-                  style={{ color: theme.colors.neutral[600] }}
-                >
-                  {feature.description}
-                </p>
-              </div>
             </div>
           ))}
         </div>

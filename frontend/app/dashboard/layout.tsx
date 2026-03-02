@@ -49,10 +49,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
     if (isLoading) {
         return (
-            <div className="flex min-h-screen items-center justify-center bg-slate-50">
+            <div className="flex min-h-screen items-center justify-center bg-[#f3f3f9]">
                 <div className="animate-pulse flex flex-col items-center gap-4">
                     <Logo className="h-16 w-auto animate-bounce" />
-                    <div className="h-2 w-24 bg-slate-200 rounded" />
+                    <div className="h-2 w-24 bg-[#e3e2e5]" />
                 </div>
             </div>
         );
@@ -67,7 +67,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             {/* Mobile Overlay */}
             {isSidebarOpen && (
                 <div
-                    className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-40 lg:hidden"
+                    className="fixed inset-0 bg-[#201f32]/40 backdrop-blur-sm z-40 lg:hidden"
                     onClick={() => setIsSidebarOpen(false)}
                 />
             )}
@@ -75,7 +75,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             <div className="flex-1 flex flex-col min-w-0 h-screen overflow-hidden">
                 <TopNav onMenuClick={() => setIsSidebarOpen(true)} />
                 <main className="flex-1 overflow-y-auto px-4 sm:px-6">
-                    <div className="max-w-7xl mx-auto space-y-4 sm:space-y-6 py-10">
+                    <div className="max-w-[1400px] mx-auto space-y-4 sm:space-y-6 py-10">
                         {children}
                     </div>
                 </main>

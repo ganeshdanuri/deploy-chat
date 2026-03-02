@@ -342,9 +342,9 @@ function LoginContent() {
                                 <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                             ) : (
                                 isRegister ? (
-                                    <>
-                                        Create <span className="font-bold text-white px-2 py-0.5 rounded bg-white/20 border border-white/30 mx-1">Free</span> Account
-                                    </>
+                                    <span>
+                                        Create Free Account
+                                    </span>
                                 ) : "Sign In"
                             )}
                         </button>

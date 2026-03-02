@@ -69,7 +69,7 @@ export default function DatasetsPage() {
                     <User
                         avatarProps={{
                             fallback: <HiDatabase className="w-4 h-4 text-[#262ef2]" />,
-                            className: "bg-[#262ef2]/5 border border-[#262ef2]/10 rounded-lg",
+                            className: "bg-[#262ef2]/5 border border-[#262ef2]/10",
                         }}
                         description="Collection"
                         name={ds.name}
@@ -124,7 +124,7 @@ export default function DatasetsPage() {
                             <Button
                                 onClick={() => dispatch(fetchDatasets())}
                                 variant="outline"
-                                className="bg-white border-[#e3e2e5] text-[#4d5564] text-xs sm:text-sm font-medium rounded-lg transition-all hover:bg-[#f3f3f9] h-11 px-6 shadow-sm mr-2"
+                                className="bg-white border-[#e3e2e5] text-[#4d5564] text-xs sm:text-sm font-medium transition-all hover:bg-[#f3f3f9] h-11 px-6 shadow-sm mr-2"
                                 disabled={isLoading}
                             >
                                 <HiRefresh className={`w-4 h-4 mr-2 text-[#a1a1a1] ${isLoading ? 'animate-spin' : ''}`} />
@@ -135,7 +135,7 @@ export default function DatasetsPage() {
                                     setEditDataset(null);
                                     setIsModalOpen(true);
                                 }}
-                                className="text-white text-xs sm:text-sm font-bold rounded-lg transition-all hover:-translate-y-0.5 shadow-lg shadow-[#262ef2]/20 h-11 px-6"
+                                className="text-white text-xs sm:text-sm font-bold transition-all hover:-translate-y-0.5 shadow-lg shadow-[#262ef2]/20 h-11 px-6"
                                 style={{ backgroundColor: "#262ef2" }}
                             >
                                 <HiPlus className="w-4 h-4 mr-2" />
@@ -188,10 +188,10 @@ export default function DatasetsPage() {
                             setEditDataset(null);
                             setIsModalOpen(true);
                         }}
-                        className="w-full bg-[#f3f3f9]/50 border-2 border-dashed border-[#e3e2e5] shadow-none hover:border-[#262ef2]/50 hover:bg-[#262ef2]/5 transition-all rounded-lg cursor-pointer"
+                        className="w-full bg-[#f3f3f9]/50 border-2 border-dashed border-[#e3e2e5] shadow-none hover:border-[#262ef2]/50 hover:bg-[#262ef2]/5 transition-all cursor-pointer"
                     >
                         <CardContent className="py-8 flex flex-col items-center justify-center">
-                            <div className="w-12 h-12 rounded-lg bg-white border border-[#e3e2e5] flex items-center justify-center mb-3 shadow-sm">
+                            <div className="w-12 h-12 bg-white border border-[#e3e2e5] flex items-center justify-center mb-3 shadow-sm">
                                 <HiPlus className="w-6 h-6 text-[#a1a1a1]" />
                             </div>
                             <h3 className="text-sm font-bold text-[#201f32]">Add New Knowledge</h3>

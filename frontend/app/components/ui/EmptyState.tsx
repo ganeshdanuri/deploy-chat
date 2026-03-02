@@ -51,16 +51,16 @@ export function EmptyState({
     const colors = colorMap[accentColor];
 
     return (
-        <div className="flex flex-col items-center justify-center py-20 bg-white rounded-xl border-2 border-dashed border-[#e3e2e5]">
-            <div className={`w-16 h-16 ${colors.bg} ${colors.text} rounded-xl flex items-center justify-center mb-4`}>
+        <div className="flex flex-col items-center justify-center py-20 bg-white border-2 border-dashed border-[#e3e2e5] rounded-sm">
+            <div className={`w-16 h-16 ${colors.bg} ${colors.text} flex items-center justify-center mb-4 rounded-sm`}>
                 <Icon className="w-8 h-8" />
             </div>
             <h2 className="text-2xl font-semibold text-[#201f32] mb-2">{title}</h2>
-            <p className="text-[#4d5564] max-w-sm text-center mb-8 text-sm">{description}</p>
+            <p className="text-[#5a5a6a] max-w-sm text-center mb-8 text-sm">{description}</p>
             {actionLabel && onAction && (
                 <Button
                     onClick={onAction}
-                    className={`${colors.btn} px-6 h-12 text-white font-medium rounded-xl shadow-lg transition-all hover:-translate-y-0.5 pointer-events-auto`}
+                    className={`${colors.btn} px-6 h-12 text-white font-medium shadow-lg transition-all hover:-translate-y-0.5 pointer-events-auto`}
                 >
                     <HiPlus className="w-5 h-5 mr-2" />
                     {actionLabel}

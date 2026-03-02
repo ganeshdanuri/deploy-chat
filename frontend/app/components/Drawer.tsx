@@ -31,8 +31,8 @@ export default function Drawer({
     children,
     subtitle,
     icon: Icon,
-    iconColor = "text-indigo-600",
-    iconBgColor = "bg-indigo-50",
+    iconColor = "text-[#262ef2]",
+    iconBgColor = "bg-[#262ef2]/5",
     footer,
     size = "md"
 }: DrawerProps) {
@@ -51,17 +51,17 @@ export default function Drawer({
 
     return (
         <Sheet open={isOpen} onOpenChange={(open) => !open && onClose()}>
-            <SheetContent className={cn("p-0 flex flex-col bg-white border-l border-slate-100 shadow-2xl outline-none", sizeClasses[size])}>
-                <SheetHeader className="px-8 py-6 border-b border-slate-100 flex flex-row items-center justify-between bg-slate-50/30 shrink-0">
+            <SheetContent className={cn("p-0 flex flex-col bg-white border-l border-[#e3e2e5] shadow-2xl outline-none", sizeClasses[size])}>
+                <SheetHeader className="px-8 py-6 border-b border-[#e3e2e5] flex flex-row items-center justify-between bg-[#f3f3f9]/30 shrink-0">
                     <div className="flex items-center gap-4">
                         {Icon && (
-                            <div className={`w-10 h-10 rounded-xl ${iconBgColor} ${iconColor} flex items-center justify-center shadow-sm`}>
+                            <div className={`w-10 h-10 ${iconBgColor} ${iconColor} flex items-center justify-center shadow-sm rounded-sm`}>
                                 <Icon className="w-5 h-5" />
                             </div>
                         )}
                         <div>
-                            <SheetTitle className="text-xl font-bold text-slate-800 leading-tight">{title}</SheetTitle>
-                            {subtitle && <p className="text-xs text-slate-500 mt-0.5 font-medium">{subtitle}</p>}
+                            <SheetTitle className="text-xl font-bold text-[#201f32] leading-tight">{title}</SheetTitle>
+                            {subtitle && <p className="text-xs text-[#5a5a6a] mt-0.5 font-medium">{subtitle}</p>}
                         </div>
                     </div>
                 </SheetHeader>
@@ -71,7 +71,7 @@ export default function Drawer({
                 </div>
 
                 {footer && (
-                    <SheetFooter className="px-8 py-6 border-t border-slate-100 bg-slate-50/50 flex flex-row justify-end items-center gap-3 shrink-0">
+                    <SheetFooter className="px-8 py-6 border-t border-[#e3e2e5] bg-[#f3f3f9]/50 flex flex-row justify-end items-center gap-3 shrink-0">
                         {footer}
                     </SheetFooter>
                 )}

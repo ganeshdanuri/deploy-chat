@@ -60,24 +60,24 @@ interface SelectableItemListProps {
 
 const ACCENT_MAP: Record<SelectableAccentColor, SelectableColors> = {
     indigo: {
-        selectedCard: "bg-indigo-50 border-indigo-200 shadow-sm",
-        unselectedCard: "bg-slate-50/50 border-slate-100 hover:border-indigo-100/50 hover:bg-indigo-50/30 hover:shadow-sm",
-        selectedIcon: "bg-indigo-600 border-indigo-600 text-white shadow-md",
-        unselectedIcon: "bg-white border-slate-100 text-slate-400",
-        selectedText: "text-indigo-900",
-        unselectedText: "text-slate-700",
-        selectedRadio: "bg-indigo-600 border-indigo-600",
-        unselectedRadio: "bg-white border-slate-200",
+        selectedCard: "bg-[#262ef2]/5 border-[#262ef2]/20 shadow-sm",
+        unselectedCard: "bg-[#f3f3f9]/50 border-[#e3e2e5] hover:border-[#262ef2]/30 hover:bg-[#262ef2]/5 hover:shadow-sm",
+        selectedIcon: "bg-[#262ef2] border-[#262ef2] text-white shadow-md",
+        unselectedIcon: "bg-white border-[#e3e2e5] text-[#a1a1a1]",
+        selectedText: "text-[#201f32]",
+        unselectedText: "text-[#5a5a6a]",
+        selectedRadio: "bg-[#262ef2] border-[#262ef2]",
+        unselectedRadio: "bg-white border-[#e3e2e5]",
     },
     emerald: {
         selectedCard: "bg-emerald-50 border-emerald-200 shadow-sm",
-        unselectedCard: "bg-slate-50/50 border-slate-100 hover:border-emerald-100/50 hover:bg-emerald-50/30 hover:shadow-sm",
+        unselectedCard: "bg-[#f3f3f9]/50 border-[#e3e2e5] hover:border-emerald-100/50 hover:bg-emerald-50/30 hover:shadow-sm",
         selectedIcon: "bg-emerald-600 border-emerald-600 text-white shadow-md",
-        unselectedIcon: "bg-white border-slate-100 text-slate-400",
+        unselectedIcon: "bg-white border-[#e3e2e5] text-[#a1a1a1]",
         selectedText: "text-emerald-900",
-        unselectedText: "text-slate-700",
+        unselectedText: "text-[#5a5a6a]",
         selectedRadio: "bg-emerald-600 border-emerald-600",
-        unselectedRadio: "bg-white border-slate-200",
+        unselectedRadio: "bg-white border-[#e3e2e5]",
     },
     amber: {
         selectedCard: "bg-amber-50 border-amber-300 shadow-sm",
@@ -139,7 +139,7 @@ const SIZE_MAP: Record<SelectableSize, {
     sm: {
         gap: "gap-3",
         cardPadding: "p-3",
-        iconBox: "w-8 h-8 rounded-lg",
+        iconBox: "w-8 h-8",
         icon: "w-4 h-4",
         checkIcon: "w-4 h-4",
         listGap: "space-y-2",
@@ -152,7 +152,7 @@ const SIZE_MAP: Record<SelectableSize, {
     md: {
         gap: "gap-4",
         cardPadding: "p-4",
-        iconBox: "w-10 h-10 rounded-xl",
+        iconBox: "w-10 h-10",
         icon: "w-5 h-5",
         checkIcon: "w-6 h-6",
         listGap: "space-y-3",
@@ -165,7 +165,7 @@ const SIZE_MAP: Record<SelectableSize, {
     lg: {
         gap: "gap-5",
         cardPadding: "p-5",
-        iconBox: "w-12 h-12 rounded-2xl",
+        iconBox: "w-12 h-12",
         icon: "w-6 h-6",
         checkIcon: "w-7 h-7",
         listGap: "space-y-4",
@@ -204,9 +204,9 @@ export function SelectableItemList({
 
     if (items.length === 0) {
         return (
-            <div className={`${dim.emptyPadding} text-center bg-slate-50 rounded-[2rem] border border-dashed border-slate-200`}>
-                <EmptyIcon className={`${dim.emptyIcon} text-slate-200 mx-auto mb-3`} />
-                <p className="text-sm text-slate-500 font-medium leading-relaxed">{emptyMessage}</p>
+            <div className={`${dim.emptyPadding} text-center bg-[#f3f3f9] border border-dashed border-[#e3e2e5]`}>
+                <EmptyIcon className={`${dim.emptyIcon} text-[#a1a1a1] mx-auto mb-3`} />
+                <p className="text-sm text-[#5a5a6a] font-medium leading-relaxed">{emptyMessage}</p>
             </div>
         );
     }
@@ -223,7 +223,7 @@ export function SelectableItemList({
                         key={item.id}
                         type="button"
                         onClick={() => onToggle(item.id)}
-                        className={`w-full flex flex-row items-center justify-between ${dim.cardPadding} rounded-2xl border transition-all duration-200 cursor-pointer text-left ${isSelected ? colors.selectedCard : colors.unselectedCard
+                        className={`w-full flex flex-row items-center justify-between ${dim.cardPadding} border transition-all duration-200 cursor-pointer text-left ${isSelected ? colors.selectedCard : colors.unselectedCard
                             }`}
                     >
                         <div className={`flex items-center ${dim.gap} flex-1 min-w-0`}>
@@ -246,7 +246,7 @@ export function SelectableItemList({
                                     {item.label}
                                 </p>
                                 {item.sublabel && (
-                                    <p className={`${dim.sublabelText} text-slate-400 uppercase tracking-tight truncate`}>
+                                    <p className={`${dim.sublabelText} text-[#a1a1a1] uppercase tracking-tight truncate`}>
                                         {item.sublabel}
                                     </p>
                                 )}
@@ -255,7 +255,7 @@ export function SelectableItemList({
 
                         {/* Radio check indicator */}
                         <div
-                            className={`${dim.radioSize} shrink-0 rounded-full border-2 flex items-center justify-center transition-all duration-300 ${isSelected ? colors.selectedRadio : colors.unselectedRadio
+                            className={`${dim.radioSize} shrink-0 border-2 flex items-center justify-center transition-all duration-300 ${isSelected ? colors.selectedRadio : colors.unselectedRadio
                                 }`}
                         >
                             {isSelected && <HiCheck className="w-3.5 h-3.5 text-white" />}

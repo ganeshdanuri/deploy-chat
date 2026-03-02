@@ -18,8 +18,8 @@ export function StatusChip({ status = STATUS.ACTIVE }: StatusChipProps) {
     const label = isCreating ? "Creating" : isFailed ? "Failed" : "Active";
 
     return (
-        <div className={`inline-flex items-center px-2 py-0.5 rounded-md border text-[10px] font-bold uppercase tracking-wider ${bgClass} ${textClass}`}>
-            <span className={`w-1 h-1 rounded-full mr-1.5 ${isCreating ? "bg-amber-500 animate-pulse" : isFailed ? "bg-red-500" : "bg-emerald-500"}`} />
+        <div className={`inline-flex items-center px-2 py-0.5 border text-[10px] font-bold uppercase tracking-wider rounded-sm ${bgClass} ${textClass}`}>
+            <span className={`w-1 h-1 mr-1.5 rounded-sm ${isCreating ? "bg-amber-500 animate-pulse" : isFailed ? "bg-red-500" : "bg-emerald-500"}`} />
             {label}
         </div>
     );

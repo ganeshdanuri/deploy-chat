@@ -135,7 +135,7 @@ function DashboardSummary({
   const usagePercentage = Math.min((message_count / limit) * 100, 100);
 
   return (
-    <div className="w-full max-w-7xl animate-fade-in-up">
+    <div className="w-full max-w-[1400px] animate-fade-in-up">
       {/* Page Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#e3e2e5] pb-6 mb-8">
         <div>
@@ -145,25 +145,25 @@ function DashboardSummary({
               <button
                 onClick={onRefresh}
                 disabled={isRefreshing}
-                className={`p-1.5 rounded-full hover:bg-[#f3f3f9] text-[#a1a1a1] hover:text-[#262ef2] transition-all focus:outline-none focus:ring-2 focus:ring-[#262ef2] focus:ring-offset-1 ${isRefreshing ? "animate-spin text-[#262ef2]" : ""
+                className={`p-1.5 hover:bg-[#f3f3f9] text-[#a1a1a1] hover:text-[#262ef2] transition-all focus:outline-none ${isRefreshing ? "animate-spin text-[#262ef2]" : ""
                   }`}
               >
                 <HiRefresh className="w-5 h-5" />
               </button>
             </Tooltip>
-            <span className="bg-[#262ef2]/5 text-[#262ef2] text-[10px] font-bold px-2 py-0.5 rounded-lg border border-[#262ef2]/10 uppercase tracking-widest">
+            <span className="bg-[#262ef2]/5 text-[#262ef2] text-[10px] font-bold px-2 py-0.5 border border-[#262ef2]/10 uppercase tracking-widest">
               {(userData?.billing?.current_plan || 'free').toUpperCase()} plan
             </span>
           </div>
-          <p className="text-sm text-[#a1a1a1] mt-1 font-medium">
+          <p className="text-sm text-[#5a5a6a] mt-1 font-medium">
             Platform performance and activity summary for{" "}
-            <span className="text-[#262ef2] font-semibold">Workspace A</span>
+            <span className="text-[#201f32] font-semibold">Workspace A</span>
           </p>
         </div>
         <div className="flex gap-2">
           <button
             disabled
-            className="px-5 py-2 bg-[#201f32] text-white/50 text-sm font-medium rounded-lg shadow-sm opacity-60 cursor-not-allowed flex items-center gap-2"
+            className="px-5 py-2 bg-[#201f32] text-white/50 text-sm font-medium shadow-sm opacity-60 cursor-not-allowed flex items-center gap-2"
           >
             <HiCreditCard className="w-4 h-4 text-white/50" />
             Billing & Plans
@@ -186,7 +186,7 @@ function DashboardSummary({
           onClick={(e: any) => e.preventDefault()}
           isDisabled={true}
           details={
-            <div className="mt-4 h-1.5 w-full bg-[#f3f3f9] rounded-full overflow-hidden">
+            <div className="mt-4 h-1.5 w-full bg-[#f3f3f9] rounded-sm overflow-hidden">
               <div
                 className={`h-full transition-all duration-1000 ${usagePercentage > 90 ? 'bg-red-500' : 'bg-[#262ef2]'}`}
                 style={{ width: `${usagePercentage}%` }}
@@ -255,19 +255,19 @@ function MetricCard({ icon: Icon, label, value, trend, accentClass, accentBg, ri
     <Link
       href={href}
       onClick={onClick}
-      className={`p-6 bg-white rounded-lg border border-[#e3e2e5] shadow-sm transition-all group relative overflow-hidden block ${isDisabled ? "opacity-75 cursor-default" : "hover:shadow-md cursor-pointer"}`}
+      className={`p-6 bg-white border border-[#e3e2e5] rounded-sm shadow-sm transition-all group relative overflow-hidden block ${isDisabled ? "opacity-75 cursor-default" : "hover:shadow-md cursor-pointer"}`}
     >
       <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
         <Icon className={`w-24 h-24 ${accentClass} transform translate-x-4 -translate-y-4`} />
       </div>
       <div className={`flex items-center gap-3 mb-4 relative z-10`}>
-        <div className={`p-2.5 ${accentBg} ${accentClass} rounded-lg ring-1 ${ringClass}`}>
+        <div className={`p-2.5 ${accentBg} ${accentClass} ring-1 ${ringClass}`}>
           <Icon className="w-5 h-5" />
         </div>
         <div className="flex flex-1 items-center justify-between">
-          <span className="text-sm font-semibold text-[#4d5564]">{label}</span>
+          <span className="text-sm font-semibold text-[#5a5a6a]">{label}</span>
           {(isLocked || isDisabled) && (
-            <div className="flex items-center gap-1 text-[10px] font-bold text-[#f59e0b] bg-[#f59e0b]/5 px-2 py-0.5 rounded border border-[#f59e0b]/10">
+            <div className="flex items-center gap-1 text-[10px] font-bold text-[#f59e0b] bg-[#f59e0b]/5 px-2 py-0.5 rounded-sm border border-[#f59e0b]/10">
               <HiLightningBolt className="w-3 h-3" />
               PRO
             </div>
@@ -275,7 +275,7 @@ function MetricCard({ icon: Icon, label, value, trend, accentClass, accentBg, ri
         </div>
       </div>
       <div className="text-3xl font-bold text-[#201f32] mb-1 relative z-10 font-mono">{value}</div>
-      <div className={`flex items-center gap-1.5 text-xs font-bold w-fit px-2 py-0.5 rounded-lg relative z-10 ${trendNeutral ? "text-[#a1a1a1] bg-[#f3f3f9]" : "text-[#10b981] bg-[#10b981]/5"
+      <div className={`flex items-center gap-1.5 text-xs font-bold w-fit px-2 py-0.5 relative z-10 ${trendNeutral ? "text-[#a1a1a1] bg-[#f3f3f9]" : "text-[#10b981] bg-[#10b981]/5"
         }`}>
         {trendPositive && <HiTrendingUp className="w-3.5 h-3.5" />}
         <span className={trendPositive ? "font-mono" : ""}>{trend}</span>
@@ -290,7 +290,7 @@ function MetricCard({ icon: Icon, label, value, trend, accentClass, accentBg, ri
 
 function QuickActionsPanel() {
   return (
-    <div className="bg-white rounded-xl border border-[#e3e2e5] shadow-sm p-6 lg:col-span-1 h-full flex flex-col">
+    <div className="bg-white border border-[#e3e2e5] rounded-sm shadow-sm p-6 lg:col-span-1 h-full flex flex-col">
       <div className="flex items-center justify-between mb-6">
         <h3 className="text-base font-bold text-[#201f32]">Knowledge Base</h3>
         <Link href="/dashboard/datasets" className="text-xs text-[#262ef2] font-medium hover:underline">Manage KBs</Link>
@@ -300,9 +300,9 @@ function QuickActionsPanel() {
           <Link
             key={action.label}
             href={action.href}
-            className={`w-full flex items-center gap-4 p-3 rounded-lg border border-dashed border-[#e3e2e5] ${action.hoverBorder} transition-all group text-left block`}
+            className={`w-full flex items-center gap-4 p-3 border border-dashed border-[#e3e2e5] ${action.hoverBorder} transition-all group text-left block`}
           >
-            <div className={`w-10 h-10 rounded-lg ${action.iconBg} flex items-center justify-center group-hover:scale-110 transition-transform shadow-sm`}>
+            <div className={`w-10 h-10 ${action.iconBg} flex items-center justify-center group-hover:scale-110 transition-transform shadow-sm`}>
               <action.icon className="w-5 h-5" />
             </div>
             <div>
@@ -357,11 +357,11 @@ function RecentActivityPanel() {
   };
 
   return (
-    <div className="bg-white rounded-xl border border-[#e3e2e5] shadow-sm p-6 lg:col-span-2">
+    <div className="bg-white border border-[#e3e2e5] rounded-sm shadow-sm p-6 lg:col-span-2">
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
           <h3 className="text-base font-bold text-[#201f32]">Recent Activity</h3>
-          <span className="bg-[#262ef2]/10 text-[#262ef2] text-xs font-bold px-2 py-0.5 rounded-lg">New</span>
+          <span className="bg-[#262ef2]/10 text-[#262ef2] text-xs font-bold px-2 py-0.5">New</span>
         </div>
         <button className="p-1.5 hover:bg-[#f3f3f9] rounded text-[#a1a1a1] hover:text-[#4d5564]">
           <HiDotsVertical className="w-4 h-4" />
@@ -395,10 +395,10 @@ function RecentActivityPanel() {
           <div className="text-center py-6 text-[#a1a1a1] text-sm italic">No recent activity</div>
         ) : (
           activities.map((item, idx) => (
-            <div key={item.id} className="flex gap-4 py-4 group hover:bg-[#f3f3f9] transition-colors -mx-4 px-4 rounded-lg cursor-pointer">
+            <div key={item.id} className="flex gap-4 py-4 group hover:bg-[#f3f3f9] transition-colors -mx-4 px-4 cursor-pointer">
               <div className="relative mt-1">
-                <div className="w-9 h-9 rounded-full bg-[#f3f3f9] flex items-center justify-center border border-[#e3e2e5] shadow-sm z-10 relative">
-                  <div className={`w-2.5 h-2.5 ${getActivityColor(item.activity_type)} rounded-full`} />
+                <div className="w-9 h-9 rounded-sm bg-[#f3f3f9] flex items-center justify-center border border-[#e3e2e5] shadow-sm z-10 relative">
+                  <div className={`w-2.5 h-2.5 ${getActivityColor(item.activity_type)} rounded-sm`} />
                 </div>
                 {idx < activities.length - 1 && (
                   <div className="absolute top-9 left-1/2 -translate-x-1/2 w-0.5 h-full bg-[#e3e2e5] -z-0" />
@@ -427,16 +427,16 @@ function RecentActivityPanel() {
 
 function OnboardingView({ cardsRef }: { cardsRef: React.RefObject<HTMLDivElement | null> }) {
   return (
-    <div className="w-full max-w-6xl mx-auto flex flex-col items-center">
+    <div className="w-full max-w-[1400px] mx-auto flex flex-col items-center">
       <div className="hero-content text-center mb-16 px-4">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#262ef2]/5 text-[#262ef2] text-[10px] font-bold border border-[#262ef2]/10 mb-6 uppercase tracking-widest">
+        <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#262ef2]/5 text-[#262ef2] text-[10px] font-bold border border-[#262ef2]/10 mb-6 uppercase tracking-widest">
           <HiLightningBolt className="w-3 h-3" />
           <span>Getting Started</span>
         </div>
         <h2 className="text-2xl md:text-3xl font-extrabold text-[#201f32] mb-4 tracking-tight">
           Build your AI assistant in 4 simple steps
         </h2>
-        <p className="text-base text-[#4d5564] max-w-xl mx-auto leading-relaxed">
+        <p className="text-base text-[#5a5a6a] max-w-xl mx-auto leading-relaxed">
           Connect your data, organize your knowledge, and deploy a chatbot that actually understands your business.
         </p>
       </div>
@@ -451,9 +451,9 @@ function OnboardingView({ cardsRef }: { cardsRef: React.RefObject<HTMLDivElement
 
         {ONBOARDING_STEPS.map((step) => (
           <div key={step.id} className="step-card group relative z-10">
-            <div className="bg-white p-6 md:p-8 rounded-xl border border-[#e3e2e5] shadow-sm hover:shadow-2xl hover:border-[#262ef2]/20 transition-all duration-500 flex flex-col h-full relative overflow-hidden">
+            <div className="bg-white p-6 md:p-8 border border-[#e3e2e5] rounded-sm shadow-sm hover:shadow-2xl hover:border-[#262ef2]/20 transition-all duration-500 flex flex-col h-full relative overflow-hidden">
               <div className={`absolute top-0 left-0 w-full h-1 bg-gradient-to-r ${step.gradientFrom} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
-              <div className={`w-12 h-12 ${step.bgColor} ${step.color} rounded-lg flex items-center justify-center mb-6 shadow-sm ring-1 ring-inset ${step.borderColor} group-hover:scale-110 group-hover:rotate-3 transition-all duration-500`}>
+              <div className={`w-12 h-12 ${step.bgColor} ${step.color} flex items-center justify-center mb-6 shadow-sm ring-1 ring-inset ${step.borderColor} group-hover:scale-110 transition-all duration-500`}>
                 <step.icon className="w-6 h-6" />
               </div>
               <div className="flex items-center gap-2 mb-2">
@@ -462,12 +462,12 @@ function OnboardingView({ cardsRef }: { cardsRef: React.RefObject<HTMLDivElement
               <h3 className="text-lg font-bold text-[#201f32] mb-2 group-hover:text-[#262ef2] transition-colors">
                 {step.name}
               </h3>
-              <p className="text-[#4d5564] text-xs md:text-sm leading-relaxed mb-8 flex-1">
+              <p className="text-[#5a5a6a] text-xs md:text-sm leading-relaxed mb-8 flex-1">
                 {step.description}
               </p>
               <Link
                 href={step.href}
-                className="flex items-center justify-between w-full px-5 py-2.5 rounded-lg bg-[#201f32] text-white border border-[#201f32] text-[13px] font-medium transition-all duration-300 group/btn shadow-sm hover:shadow-md hover:-translate-y-0.5"
+                className="flex items-center justify-between w-full px-5 py-2.5 bg-[#201f32] text-white border border-[#201f32] text-[13px] font-medium transition-all duration-300 group/btn shadow-sm hover:shadow-md"
               >
                 <span>{step.btnText}</span>
                 <HiArrowRight className="w-4 h-4 transform group-hover/btn:translate-x-1 transition-transform" />

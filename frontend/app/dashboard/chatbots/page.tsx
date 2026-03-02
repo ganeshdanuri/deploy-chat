@@ -79,10 +79,10 @@ export default function ChatbotsPage() {
         const isFailed = (bot as any).status === STATUS.FAILED;
 
         return (
-            <div className="bg-white rounded-xl border border-[#e3e2e5] p-5 hover:border-[#262ef2]/20 hover:shadow-xl hover:shadow-[#262ef2]/5 transition-all group relative animate-fade-in">
+            <div className="bg-white border border-[#e3e2e5] rounded-sm p-5 hover:border-[#262ef2]/20 hover:shadow-xl hover:shadow-[#262ef2]/5 transition-all group relative animate-fade-in">
                 <div className="flex justify-between items-start mb-4">
                     <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#262ef2]/5 to-[#f3f3f9] border border-[#e3e2e5] flex items-center justify-center text-[#262ef2] shadow-sm">
+                        <div className="w-10 h-10 bg-gradient-to-br from-[#262ef2]/5 to-[#f3f3f9] border border-[#e3e2e5] rounded-sm flex items-center justify-center text-[#262ef2] shadow-sm">
                             <HiChatAlt2 className="w-5 h-5" />
                         </div>
                         <div>
@@ -101,7 +101,7 @@ export default function ChatbotsPage() {
                                 size="sm"
                                 variant="ghost"
                                 onClick={() => handleEditClick(bot)}
-                                className="text-[#a1a1a1] hover:text-[#262ef2] hover:bg-[#262ef2]/5 rounded-md h-8 w-8 px-0"
+                                className="text-[#a1a1a1] hover:text-[#262ef2] hover:bg-[#262ef2]/5 rounded-sm h-8 w-8 px-0"
                             >
                                 <HiPencil className="w-4 h-4" />
                             </Button>
@@ -111,7 +111,7 @@ export default function ChatbotsPage() {
                                 size="sm"
                                 variant="ghost"
                                 onClick={() => dispatch(fetchChatbots())}
-                                className="text-[#a1a1a1] hover:text-[#262ef2] hover:bg-[#262ef2]/5 rounded-md h-8 w-8 px-0"
+                                className="text-[#a1a1a1] hover:text-[#262ef2] hover:bg-[#262ef2]/5 rounded-sm h-8 w-8 px-0"
                             >
                                 <HiRefresh className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
                             </Button>
@@ -122,7 +122,7 @@ export default function ChatbotsPage() {
                                     size="sm"
                                     variant="ghost"
                                     onClick={() => handleResume(bot.id, bot.name)}
-                                    className="text-[#10b981] hover:bg-[#10b981]/5 rounded-md h-8 w-8 px-0"
+                                    className="text-[#10b981] hover:bg-[#10b981]/5 rounded-sm h-8 w-8 px-0"
                                 >
                                     <HiRefresh className="w-4 h-4" />
                                 </Button>
@@ -133,7 +133,7 @@ export default function ChatbotsPage() {
                                 size="sm"
                                 variant="ghost"
                                 onClick={() => handleDeleteClick(bot.id, bot.name)}
-                                className="text-[#a1a1a1] hover:text-[#ef4444] hover:bg-[#ef4444]/5 rounded-md h-8 w-8 px-0"
+                                className="text-[#a1a1a1] hover:text-[#ef4444] hover:bg-[#ef4444]/5 rounded-sm h-8 w-8 px-0"
                             >
                                 <HiTrash className="w-4 h-4" />
                             </Button>
@@ -142,7 +142,7 @@ export default function ChatbotsPage() {
                 </div>
 
                 <div className="space-y-3 mb-6">
-                    <div className="bg-[#f3f3f9] rounded-lg p-3 border border-[#e3e2e5]">
+                    <div className="bg-[#f3f3f9] p-3 border border-[#e3e2e5] rounded-sm">
                         <p className="text-[10px] font-bold text-[#a1a1a1] uppercase tracking-widest mb-1">Welcome Message</p>
                         <p className="text-xs text-[#4d5564] line-clamp-2 italic">
                             &quot;{bot.welcome_message || 'Hi! How can I help you today?'}&quot;
@@ -162,7 +162,7 @@ export default function ChatbotsPage() {
                             window.location.href = `/dashboard/playground?chatbotId=${bot.id}`;
                         }}
                         disabled={isCreating}
-                        className="text-white text-xs font-medium rounded-lg hover:-translate-y-0.5 transition-all shadow-lg shadow-[#262ef2]/10 py-5"
+                        className="text-white text-xs font-medium hover:-translate-y-0.5 transition-all shadow-lg shadow-[#262ef2]/10 py-5"
                         style={{ backgroundColor: "#262ef2" }}
                     >
                         <HiSparkles className="w-3.5 h-3.5 mr-1.5" />
@@ -172,7 +172,7 @@ export default function ChatbotsPage() {
                         size="sm"
                         disabled={isCreating}
                         onClick={() => setEmbedBot(bot)}
-                        className="bg-white text-[#4d5564] text-[11px] font-bold rounded-lg hover:bg-[#f3f3f9] transition-all shadow-sm border border-[#e3e2e5] py-5"
+                        className="bg-white text-[#4d5564] text-[11px] font-bold hover:bg-[#f3f3f9] transition-all shadow-sm border border-[#e3e2e5] py-5"
                     >
                         <HiCode className="w-3.5 h-3.5 mr-1.5" />
                         Embed Code
@@ -193,7 +193,7 @@ export default function ChatbotsPage() {
                             <Button
                                 onClick={() => dispatch(fetchChatbots())}
                                 variant="outline"
-                                className="bg-white border-[#e3e2e5] text-[#4d5564] text-xs sm:text-sm font-medium rounded-lg transition-all hover:bg-[#f3f3f9] h-11 px-6 shadow-sm mr-2"
+                                className="bg-white border-[#e3e2e5] text-[#4d5564] text-xs sm:text-sm font-medium transition-all hover:bg-[#f3f3f9] h-11 px-6 shadow-sm mr-2"
                                 disabled={isLoading}
                             >
                                 <HiRefresh className={`w-4 h-4 mr-2 text-[#a1a1a1] ${isLoading ? 'animate-spin' : ''}`} />
@@ -204,7 +204,7 @@ export default function ChatbotsPage() {
                                     setEditBot(null);
                                     setIsModalOpen(true);
                                 }}
-                                className="text-white text-xs sm:text-sm font-bold rounded-lg transition-all hover:-translate-y-0.5 shadow-lg shadow-[#262ef2]/20 h-11 px-6"
+                                className="text-white text-xs sm:text-sm font-bold transition-all hover:-translate-y-0.5 shadow-lg shadow-[#262ef2]/20 h-11 px-6"
                                 style={{ backgroundColor: "#262ef2" }}
                             >
                                 <HiPlus className="w-4 h-4 mr-2" />

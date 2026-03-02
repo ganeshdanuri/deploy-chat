@@ -31,8 +31,8 @@ export default function Modal({
     children,
     subtitle,
     icon: Icon,
-    iconColor = "text-indigo-600",
-    iconBgColor = "bg-indigo-50",
+    iconColor = "text-[#262ef2]",
+    iconBgColor = "bg-[#262ef2]/5",
     footer,
     size = "md"
 }: ModalProps) {
@@ -51,17 +51,17 @@ export default function Modal({
 
     return (
         <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-            <DialogContent className={cn("p-0 overflow-hidden bg-white border border-slate-100 rounded-2xl shadow-2xl", sizeClasses[size])}>
-                <DialogHeader className="px-8 py-6 border-b border-slate-100 flex flex-row items-center justify-between bg-slate-50/30 shrink-0">
+            <DialogContent className={cn("p-0 overflow-hidden bg-white border border-[#e3e2e5] shadow-2xl", sizeClasses[size])}>
+                <DialogHeader className="px-8 py-6 border-b border-[#e3e2e5] flex flex-row items-center justify-between bg-[#f3f3f9]/30 shrink-0">
                     <div className="flex items-center gap-4">
                         {Icon && (
-                            <div className={`w-10 h-10 rounded-xl ${iconBgColor} ${iconColor} flex items-center justify-center shadow-sm`}>
+                            <div className={`w-10 h-10 ${iconBgColor} ${iconColor} flex items-center justify-center shadow-sm rounded-sm`}>
                                 <Icon className="w-5 h-5" />
                             </div>
                         )}
                         <div>
-                            <DialogTitle className="text-xl font-bold text-slate-800 leading-tight">{title}</DialogTitle>
-                            {subtitle && <p className="text-xs text-slate-500 mt-0.5 font-medium">{subtitle}</p>}
+                            <DialogTitle className="text-xl font-bold text-[#201f32] leading-tight">{title}</DialogTitle>
+                            {subtitle && <p className="text-xs text-[#5a5a6a] mt-0.5 font-medium">{subtitle}</p>}
                         </div>
                     </div>
                 </DialogHeader>
@@ -71,7 +71,7 @@ export default function Modal({
                 </div>
 
                 {footer && (
-                    <DialogFooter className="p-8 border-t border-slate-100 bg-slate-50/50 flex flex-row justify-end space-x-2">
+                    <DialogFooter className="p-8 border-t border-[#e3e2e5] bg-[#f3f3f9]/50 flex flex-row justify-end space-x-2">
                         {footer}
                     </DialogFooter>
                 )}
