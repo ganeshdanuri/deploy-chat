@@ -6,6 +6,7 @@ import {
 } from "react-icons/hi";
 import { FaBrain } from "react-icons/fa";
 import { MdIntegrationInstructions } from "react-icons/md";
+import { SiNotion, SiGoogledrive, SiSlack, SiGithub, SiIntercom } from "react-icons/si";
 
 // ─── Landing Page Stats (HeroSection) ────────────────────────────────────────
 export const LANDING_STATS = [
@@ -337,10 +338,10 @@ export const ONBOARDING_STEPS: OnboardingStep[] = [
         description: "Connect your knowledge base. Upload PDFs, CSVs, Markdown, or text files for your AI to learn from.",
         icon: HiDocumentText,
         href: "/dashboard/documents",
-        color: "text-[#262ef2]",
-        bgColor: "bg-[#262ef2]/5",
-        borderColor: "border-[#262ef2]/10",
-        gradientFrom: "from-[#262ef2] to-[#201f32]",
+        color: "text-primary",
+        bgColor: "bg-primary/5",
+        borderColor: "border-primary/10",
+        gradientFrom: "from-primary to-secondary",
         btnText: "Add Documents",
     },
     {
@@ -349,10 +350,10 @@ export const ONBOARDING_STEPS: OnboardingStep[] = [
         description: "Organize synced data into logical collections to help your AI retrieve precise information.",
         icon: HiDatabase,
         href: "/dashboard/datasets",
-        color: "text-[#262ef2]",
-        bgColor: "bg-[#262ef2]/5",
-        borderColor: "border-[#262ef2]/10",
-        gradientFrom: "from-[#262ef2] to-[#201f32]",
+        color: "text-primary",
+        bgColor: "bg-primary/5",
+        borderColor: "border-primary/10",
+        gradientFrom: "from-primary to-secondary",
         btnText: "Setup Knowledge",
     },
     {
@@ -361,10 +362,10 @@ export const ONBOARDING_STEPS: OnboardingStep[] = [
         description: "Define how your AI speaks and which knowledge collections it should prioritize.",
         icon: HiChatAlt2,
         href: "/dashboard/chatbots",
-        color: "text-[#262ef2]",
-        bgColor: "bg-[#262ef2]/5",
-        borderColor: "border-[#262ef2]/10",
-        gradientFrom: "from-[#262ef2] to-[#201f32]",
+        color: "text-primary",
+        bgColor: "bg-primary/5",
+        borderColor: "border-primary/10",
+        gradientFrom: "from-primary to-secondary",
         btnText: "Create Assistant",
     },
     {
@@ -373,10 +374,10 @@ export const ONBOARDING_STEPS: OnboardingStep[] = [
         description: "Perfect your responses in the playground before deploying to your users.",
         icon: HiSparkles,
         href: "/dashboard/playground",
-        color: "text-[#262ef2]",
-        bgColor: "bg-[#262ef2]/5",
-        borderColor: "border-[#262ef2]/10",
-        gradientFrom: "from-[#262ef2] to-[#201f32]",
+        color: "text-primary",
+        bgColor: "bg-primary/5",
+        borderColor: "border-primary/10",
+        gradientFrom: "from-primary to-secondary",
         btnText: "Try Playground",
     },
 ];
@@ -387,27 +388,27 @@ export const QUICK_ACTIONS = [
         label: "New AI Assistant",
         description: "Deploy a new intelligent agent",
         icon: HiChatAlt2,
-        hoverBorder: "hover:border-[#262ef2]/50 hover:bg-[#262ef2]/5",
-        iconBg: "bg-[#262ef2]/5 text-[#262ef2]",
-        hoverText: "group-hover:text-[#262ef2]",
+        hoverBorder: "hover:border-primary/50 hover:bg-primary/5",
+        iconBg: "bg-primary/5 text-primary",
+        hoverText: "group-hover:text-primary",
         href: "/dashboard/chatbots",
     },
     {
         label: "Add Knowledge Source",
         description: "Upload PDF, CSV, Markdown or scrape URL",
         icon: HiDatabase,
-        hoverBorder: "hover:border-[#262ef2]/50 hover:bg-[#262ef2]/5",
-        iconBg: "bg-[#262ef2]/5 text-[#262ef2]",
-        hoverText: "group-hover:text-[#262ef2]",
+        hoverBorder: "hover:border-primary/50 hover:bg-primary/5",
+        iconBg: "bg-primary/5 text-primary",
+        hoverText: "group-hover:text-primary",
         href: "/dashboard/documents",
     },
     {
         label: "Connect Data",
         description: "Fetch from Notion, Drive or Slack",
         icon: HiShare,
-        hoverBorder: "hover:border-[#262ef2]/50 hover:bg-[#262ef2]/5",
-        iconBg: "bg-[#262ef2]/5 text-[#262ef2]",
-        hoverText: "group-hover:text-[#262ef2]",
+        hoverBorder: "hover:border-primary/50 hover:bg-primary/5",
+        iconBg: "bg-primary/5 text-primary",
+        hoverText: "group-hover:text-primary",
         href: "/dashboard/connectors",
     },
 ];
@@ -447,8 +448,8 @@ export const PRESET_COLORS = [
     { label: "Border", value: "#e3e2e5" },
 ];
 // ─── Drawer Item List Skeleton ──────────────────────────────────────────────────
-export const TOOLTIP_STYLE_CLASSES = "bg-[#201f32] text-white text-[10px] font-bold rounded-lg shadow-xl border border-white/10 transition-all duration-300 pointer-events-none z-50 whitespace-nowrap";
-export const TOOLTIP_ARROW_CLASSES = "bg-[#201f32] border-white/10 rotate-45";
+export const TOOLTIP_STYLE_CLASSES = "bg-secondary text-white text-[10px] font-bold rounded-lg shadow-xl border border-white/10 transition-all duration-300 pointer-events-none z-50 whitespace-nowrap";
+export const TOOLTIP_ARROW_CLASSES = "bg-secondary border-white/10 rotate-45";
 
 // ─── Plan Names ─────────────────────────────────────────────────────────────
 export const PLANS = {
@@ -568,4 +569,59 @@ export const INTEGRATION_ORBIT_ICONS = [
     { d: "M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4" },
     { d: "M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" },
     { d: "M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" },
+];
+
+// ─── Connectors ─────────────────────────────────────────────────────────────
+export const AVAILABLE_CONNECTORS = [
+    {
+        id: "notion",
+        name: "Notion",
+        description: "Sync pages and databases",
+        icon: SiNotion,
+        color: "text-secondary",
+        bgColor: "bg-muted",
+        status: "active"
+    },
+    {
+        id: "google-drive",
+        name: "Google Drive",
+        description: "Fetch docs and folders",
+        icon: SiGoogledrive,
+        color: "text-primary",
+        bgColor: "bg-primary/5",
+        status: "coming-soon"
+    },
+    {
+        id: "slack",
+        name: "Slack",
+        description: "Index channel history",
+        icon: SiSlack,
+        color: "text-primary",
+        bgColor: "bg-primary/5",
+        status: "coming-soon"
+    },
+    {
+        id: "github",
+        name: "GitHub",
+        description: "Sync repos and READMEs",
+        icon: SiGithub,
+        color: "text-secondary",
+        bgColor: "bg-muted",
+        status: "coming-soon"
+    },
+    {
+        id: "intercom",
+        name: "Intercom",
+        description: "Import help articles",
+        icon: SiIntercom,
+        color: "text-primary",
+        bgColor: "bg-primary/5",
+        status: "coming-soon"
+    }
+];
+
+export const LLM_PROVIDERS = [
+    { label: "OpenAI", value: "openai" },
+    { label: "Anthropic", value: "anthropic" },
+    { label: "Google Gemini", value: "google" },
 ];

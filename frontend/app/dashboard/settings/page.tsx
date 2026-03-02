@@ -101,11 +101,11 @@ export default function SettingsPage() {
         <div className="animate-fade-in-up max-w-5xl mx-auto">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8 pb-6">
                 <div>
-                    <h1 className="text-2xl font-bold text-[#201f32] tracking-tight">{currentTabLabel}</h1>
-                    <p className="text-sm text-[#4d5564] mt-1.5">Manage your account preferences and system configuration.</p>
+                    <h1 className="text-2xl font-bold text-secondary tracking-tight">{currentTabLabel}</h1>
+                    <p className="text-sm text-foreground mt-1.5">Manage your account preferences and system configuration.</p>
                 </div>
-                <div className="flex items-center gap-2 text-xs font-semibold text-[#a1a1a1] bg-[#f9f9fc] px-3 py-1.5 border border-[#e3e2e5]">
-                    <HiShieldCheck className="w-4 h-4 text-[#262ef2]" />
+                <div className="flex items-center gap-2 text-xs font-semibold text-muted-foreground bg-muted px-3 py-1.5 border border-border">
+                    <HiShieldCheck className="w-4 h-4 text-primary" />
                     Secure Settings
                 </div>
             </div>
@@ -117,17 +117,17 @@ export default function SettingsPage() {
                     ) : (
                         <div className="w-full">
                             {activeTab === "general" && (
-                                <div className="dash-card bg-white border border-[#e3e2e5] shadow-sm overflow-hidden animate-fade-in">
-                                    <div data-slot="card-header-attached" className="p-6 border-b border-[#e3e2e5] flex items-center justify-between font-bold bg-[#f9f9fc]">
+                                <div className="dash-card bg-white border border-border shadow-sm overflow-hidden animate-fade-in">
+                                    <div data-slot="card-header-attached" className="p-6 border-b border-border flex items-center justify-between font-bold bg-muted">
                                         <div>
-                                            <h2 className="text-lg font-bold text-[#201f32]">Profile Information</h2>
-                                            <p className="text-sm text-[#4d5564] mt-1">Update your account&apos;s profile information and email address.</p>
+                                            <h2 className="text-lg font-bold text-secondary">Profile Information</h2>
+                                            <p className="text-sm text-foreground mt-1">Update your account&apos;s profile information and email address.</p>
                                         </div>
                                         <Button
                                             size="sm"
                                             variant="secondary"
                                             onClick={() => setIsEditProfileModalOpen(true)}
-                                            className="bg-[#f3f3f9] text-[#201f32] font-bold hover:bg-[#e3e2e5] border border-[#e3e2e5]"
+                                            className="bg-muted text-secondary font-bold hover:bg-border border border-border"
                                         >
                                             <HiPencil className="w-3.5 h-3.5 mr-2" />
                                             Edit Profile
@@ -136,18 +136,18 @@ export default function SettingsPage() {
                                     <div className="p-6 space-y-6">
                                         <div className="grid grid-cols-2 gap-6">
                                             <div className="col-span-2 space-y-2">
-                                                <label className="text-[11px] font-black text-[#a1a1a1] uppercase tracking-widest ml-1">Username</label>
-                                                <Input type="text" value={userData?.profile?.username || ""} readOnly disabled className="bg-[#f3f3f9] border-[#e3e2e5] opacity-60" />
+                                                <label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest ml-1">Username</label>
+                                                <Input type="text" value={userData?.profile?.username || ""} readOnly disabled className="bg-muted border-border opacity-60" />
                                             </div>
                                             <div className="col-span-2 space-y-2">
-                                                <label className="text-[11px] font-black text-[#a1a1a1] uppercase tracking-widest ml-1">Email Address</label>
+                                                <label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest ml-1">Email Address</label>
                                                 <Input
                                                     type="email"
-                                                    startContent={<HiUser className="w-4 h-4 text-[#a1a1a1]" />}
+                                                    startContent={<HiUser className="w-4 h-4 text-muted-foreground" />}
                                                     value={userData?.profile?.email || authUser?.email || ""}
                                                     readOnly
                                                     disabled
-                                                    className="bg-[#f3f3f9] border-[#e3e2e5] opacity-60"
+                                                    className="bg-muted border-border opacity-60"
                                                 />
                                             </div>
                                         </div>
@@ -157,19 +157,19 @@ export default function SettingsPage() {
 
                             {activeTab === "billing" && (
                                 <div className="space-y-4 animate-fade-in">
-                                    <div className="dash-card bg-white border border-[#e3e2e5] shadow-sm overflow-hidden">
+                                    <div className="dash-card bg-white border border-border shadow-sm overflow-hidden">
                                         <div className="p-5 sm:p-6 flex flex-col md:flex-row md:items-start justify-between gap-6">
                                             <div className="flex-1 space-y-4">
                                                 <div className="flex items-center gap-3">
-                                                    <div className="w-10 h-10 bg-[#201f32]/5 rounded-sm flex items-center justify-center border border-[#e3e2e5] shrink-0">
-                                                        <HiCreditCard className="w-5 h-5 text-[#262ef2]" />
+                                                    <div className="w-10 h-10 bg-secondary/5 rounded-sm flex items-center justify-center border border-border shrink-0">
+                                                        <HiCreditCard className="w-5 h-5 text-primary" />
                                                     </div>
                                                     <div>
-                                                        <h2 className="text-lg font-bold text-[#201f32] flex items-center gap-2">
+                                                        <h2 className="text-lg font-bold text-secondary flex items-center gap-2">
                                                             {userData?.billing?.current_plan ? userData.billing.current_plan.charAt(0).toUpperCase() + userData.billing.current_plan.slice(1) : 'Free'} plan
-                                                            <span className="bg-[#10b981]/10 text-[#10b981] border border-[#10b981]/20 text-[10px] font-bold px-2 py-0.5 uppercase tracking-wider">Active</span>
+                                                            <span className="bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 text-[10px] font-bold px-2 py-0.5 uppercase tracking-wider">Active</span>
                                                         </h2>
-                                                        <p className="text-sm text-[#4d5564] mt-0.5">
+                                                        <p className="text-sm text-foreground mt-0.5">
                                                             {userData?.billing?.expires_at
                                                                 ? `Your plan will renew on ${new Date(userData.billing.expires_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}.`
                                                                 : 'You are currently on the free tier.'}
@@ -177,18 +177,18 @@ export default function SettingsPage() {
                                                     </div>
                                                 </div>
 
-                                                <div className="mt-2 text-[#4d5564] max-w-sm">
+                                                <div className="mt-2 text-foreground max-w-sm">
                                                     <div className="flex justify-between items-end mb-1.5">
-                                                        <span className="text-sm font-semibold text-[#201f32]">
-                                                            {userData?.usage?.messages_sent || 0} <span className="text-[#a1a1a1] font-medium">/ {userData?.billing?.monthly_limit || 100} msgs</span>
+                                                        <span className="text-sm font-semibold text-secondary">
+                                                            {userData?.usage?.messages_sent || 0} <span className="text-muted-foreground font-medium">/ {userData?.billing?.monthly_limit || 100} msgs</span>
                                                         </span>
-                                                        <span className="text-xs font-medium text-[#a1a1a1]">
+                                                        <span className="text-xs font-medium text-muted-foreground">
                                                             Resets on {userData?.usage?.reset_date ? new Date(userData.usage.reset_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '1st of month'}
                                                         </span>
                                                     </div>
-                                                    <div className="h-1.5 w-full bg-[#f3f3f9] rounded-sm overflow-hidden">
+                                                    <div className="h-1.5 w-full bg-muted rounded-sm overflow-hidden">
                                                         <div
-                                                            className={`h-full transition-all duration-1000 ${((userData?.usage?.messages_sent || 0) / (userData?.billing?.monthly_limit || 100)) > 0.9 ? 'bg-[#ef4444]' : 'bg-[#262ef2]'}`}
+                                                            className={`h-full transition-all duration-1000 ${((userData?.usage?.messages_sent || 0) / (userData?.billing?.monthly_limit || 100)) > 0.9 ? 'bg-red-500' : 'bg-primary'}`}
                                                             style={{ width: `${Math.min(((userData?.usage?.messages_sent || 0) / (userData?.billing?.monthly_limit || 100)) * 100, 100)}%` }}
                                                         />
                                                     </div>
@@ -196,7 +196,7 @@ export default function SettingsPage() {
                                             </div>
                                             <div className="shrink-0 pt-1">
                                                 <button
-                                                    className="flex items-center gap-2 px-5 py-2.5 bg-[#f3f3f9] border border-[#e3e2e5] rounded-sm text-[#a1a1a1] text-sm font-medium cursor-not-allowed opacity-60 shadow-sm"
+                                                    className="flex items-center gap-2 px-5 py-2.5 bg-muted border border-border rounded-sm text-muted-foreground text-sm font-medium cursor-not-allowed opacity-60 shadow-sm"
                                                     disabled
                                                 >
                                                     View Invoices
@@ -258,12 +258,12 @@ export default function SettingsPage() {
                                 <div className="space-y-6 animate-fade-in">
                                     <div className="flex items-center justify-between">
                                         <div>
-                                            <h2 className="text-lg font-bold text-[#201f32]">API Keys</h2>
-                                            <p className="text-sm text-[#4d5564] mt-1">Manage platform keys for model providers.</p>
+                                            <h2 className="text-lg font-bold text-secondary">API Keys</h2>
+                                            <p className="text-sm text-foreground mt-1">Manage platform keys for model providers.</p>
                                         </div>
                                         <Button
                                             onClick={() => setIsAddKeyModalOpen(true)}
-                                            className="bg-[#201f32] text-white font-bold hover:bg-[#201f32]/90 shadow-lg shadow-[#201f32]/10"
+                                            className="bg-secondary text-white font-bold hover:bg-secondary/90 shadow-lg shadow-secondary/10"
                                         >
                                             <HiPlus className="w-4 h-4 mr-2" />
                                             Add Key
@@ -285,15 +285,15 @@ export default function SettingsPage() {
                                             {apiKeys.map((key) => {
                                                 const Icon = getProviderIcon(key.provider);
                                                 return (
-                                                    <Card key={key.id} className="border-[#e3e2e5] shadow-sm">
+                                                    <Card key={key.id} className="border-border shadow-sm">
                                                         <CardContent className="flex flex-row items-center justify-between p-6">
                                                             <div className="flex items-center gap-6">
-                                                                <div className="w-10 h-10 bg-[#f3f3f9] rounded-sm flex items-center justify-center border border-[#e3e2e5]">
-                                                                    <Icon className="w-5 h-5 text-[#201f32]" />
+                                                                <div className="w-10 h-10 bg-muted rounded-sm flex items-center justify-center border border-border">
+                                                                    <Icon className="w-5 h-5 text-secondary" />
                                                                 </div>
                                                                 <div>
-                                                                    <h4 className="text-sm font-bold text-[#201f32] uppercase tracking-tight">{key.provider}</h4>
-                                                                    <p className="text-xs text-[#a1a1a1] font-mono">••••••••••••••••</p>
+                                                                    <h4 className="text-sm font-bold text-secondary uppercase tracking-tight">{key.provider}</h4>
+                                                                    <p className="text-xs text-muted-foreground font-mono">••••••••••••••••</p>
                                                                 </div>
                                                             </div>
                                                             <div className="flex items-center gap-2">
@@ -301,7 +301,7 @@ export default function SettingsPage() {
                                                                 <Button
                                                                     variant="ghost"
                                                                     onClick={() => handleDeleteClick(key.id, key.provider)}
-                                                                    className="text-[#a1a1a1] hover:text-[#ef4444] h-8 w-8 p-0"
+                                                                    className="text-muted-foreground hover:text-red-500 h-8 w-8 p-0"
                                                                 >
                                                                     <HiTrash className="w-4 h-4" />
                                                                 </Button>
@@ -317,12 +317,12 @@ export default function SettingsPage() {
 
                             {/* Other tabs placeholder */}
                             {(activeTab !== "general" && activeTab !== "billing" && activeTab !== "api-keys") && (
-                                <div className="flex flex-col items-center justify-center p-12 bg-white border border-[#e3e2e5] border-dashed animate-fade-in">
-                                    <div className="w-16 h-16 bg-[#f3f3f9] rounded-sm flex items-center justify-center mb-4">
-                                        <HiShieldCheck className="w-8 h-8 text-[#a1a1a1]/40" />
+                                <div className="flex flex-col items-center justify-center p-12 bg-white border border-border border-dashed animate-fade-in">
+                                    <div className="w-16 h-16 bg-muted rounded-sm flex items-center justify-center mb-4">
+                                        <HiShieldCheck className="w-8 h-8 text-muted-foreground/40" />
                                     </div>
-                                    <h3 className="text-[#201f32] font-bold">Coming Soon</h3>
-                                    <p className="text-[#4d5564] text-sm mt-1 font-medium">This settings panel is under construction.</p>
+                                    <h3 className="text-secondary font-bold">Coming Soon</h3>
+                                    <p className="text-foreground text-sm mt-1 font-medium">This settings panel is under construction.</p>
                                 </div>
                             )}
                         </div>

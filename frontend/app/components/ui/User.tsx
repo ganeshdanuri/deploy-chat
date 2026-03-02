@@ -29,11 +29,11 @@ export const User = ({ name, description, avatarProps, classNames, className }: 
                 </AvatarFallback>
             </Avatar>
             <div className="flex flex-col">
-                <span className={cn("text-sm font-medium text-[#201f32]", classNames?.name)}>
+                <span className={cn("text-sm font-medium text-secondary", classNames?.name)}>
                     {name}
                 </span>
                 {description && (
-                    <span className={cn("text-[10px] text-[#a1a1a1] font-bold uppercase tracking-wider", classNames?.description)}>
+                    <span className={cn("text-[10px] text-muted-foreground font-bold uppercase tracking-wider", classNames?.description)}>
                         {description}
                     </span>
                 )}

@@ -20,7 +20,7 @@ function CopyButton({ text }: { text: string }) {
         setCopied(true); setTimeout(() => setCopied(false), 2000);
     }, [text]);
     return (
-        <button type="button" onClick={handle} className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium transition-all ${copied ? "bg-[#262ef2]/10 text-[#262ef2]" : "bg-[#f3f3f9] text-[#4d5564] hover:bg-[#eaeaf5]"}`}>
+        <button type="button" onClick={handle} className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium transition-all ${copied ? "bg-primary/10 text-primary" : "bg-muted text-foreground hover:bg-[#eaeaf5]"}`}>
             {copied ? <><HiClipboardCheck className="h-3.5 w-3.5" />Copied!</> : <><HiClipboardCopy className="h-3.5 w-3.5" />Copy snippet</>}
         </button>
     );
@@ -51,7 +51,7 @@ function CodeBlock({ code }: { code: string }) {
         <pre className="overflow-x-auto font-mono text-[10px] leading-5">
             {tokenize(code).map((tokens, li) => (
                 <div key={li} className="table-row">
-                    <span className="table-cell w-8 select-none pr-4 text-right text-[#a1a1a1]/40">{li + 1}</span>
+                    <span className="table-cell w-8 select-none pr-4 text-right text-muted-foreground/40">{li + 1}</span>
                     <span className="table-cell">{tokens.map((tok, ti) => <span key={ti} style={{ color: TC[tok.type] }}>{tok.text}</span>)}</span>
                 </div>
             ))}
@@ -129,34 +129,34 @@ function CodeEditorVisual() {
     return (
         <div ref={ref} className="w-full max-w-[440px] overflow-hidden bg-white"
             style={{ boxShadow: "0 28px 72px rgba(30,30,80,0.14), 0 0 0 1px rgba(60,70,220,0.07)" }}>
-            <div className="flex items-center justify-between bg-[#f3f3f9] px-5 py-3 border-b border-[#ebebf5]">
+            <div className="flex items-center justify-between bg-muted px-5 py-3 border-b border-[#ebebf5]">
                 <div className="flex gap-1.5">
                     <div className="h-2.5 w-2.5 rounded-full bg-[#ff5f57]" />
                     <div className="h-2.5 w-2.5 rounded-full bg-[#febc2e]" />
                     <div className="h-2.5 w-2.5 rounded-full bg-[#28c840]" />
                 </div>
-                <div className="flex items-center gap-3 text-xs text-[#a1a1a1]">
+                <div className="flex items-center gap-3 text-xs text-muted-foreground">
                     <span className="font-mono">index.html</span>
-                    <span className="flex items-center gap-1.5 font-medium text-[#262ef2]">
-                        <span className="h-1.5 w-1.5 rounded-full bg-[#262ef2] animate-pulse" />Ready to embed
+                    <span className="flex items-center gap-1.5 font-medium text-primary">
+                        <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />Ready to embed
                     </span>
                 </div>
             </div>
-            <div className="bg-[#f9f9fc] px-5 py-2.5 font-mono text-[10px] leading-5 text-[#a1a1a1]/60 border-b border-[#f0f0f6]">
+            <div className="bg-muted px-5 py-2.5 font-mono text-[10px] leading-5 text-muted-foreground/60 border-b border-[#f0f0f6]">
                 <div>{"<!DOCTYPE html>"}</div>
                 <div>{'<html lang="en"><head>'}</div>
-                <div className="pl-4 italic text-[#a1a1a1]/40">{"<!-- ↓ paste snippet ↓ -->"}</div>
+                <div className="pl-4 italic text-muted-foreground/40">{"<!-- ↓ paste snippet ↓ -->"}</div>
             </div>
-            <div className="relative px-5 py-4 border-l-[3px] border-[#262ef2] bg-[#262ef2]/[0.03]">
+            <div className="relative px-5 py-4 border-l-[3px] border-primary bg-primary/[0.03]">
                 <div className="absolute right-3 top-3"><CopyButton text={EMBED_SNIPPET} /></div>
                 <CodeBlock code={EMBED_SNIPPET} />
             </div>
-            <div className="bg-[#f9f9fc] px-5 py-2.5 font-mono text-[10px] text-[#a1a1a1]/60 border-t border-[#f0f0f6]">
+            <div className="bg-muted px-5 py-2.5 font-mono text-[10px] text-muted-foreground/60 border-t border-[#f0f0f6]">
                 {"</head><body>...</body></html>"}
             </div>
-            <div className="flex items-center justify-between bg-[#f3f3f9] px-5 py-2.5 border-t border-[#ebebf5]">
-                <div className="flex gap-4 font-mono text-[10px] text-[#a1a1a1]"><span>HTML</span><span>UTF-8</span></div>
-                <div className="flex items-center gap-1.5 text-[10px] font-medium text-[#262ef2]">
+            <div className="flex items-center justify-between bg-muted px-5 py-2.5 border-t border-[#ebebf5]">
+                <div className="flex gap-4 font-mono text-[10px] text-muted-foreground"><span>HTML</span><span>UTF-8</span></div>
+                <div className="flex items-center gap-1.5 text-[10px] font-medium text-primary">
                     <HiCheckCircle className="h-3.5 w-3.5" />No build step required
                 </div>
             </div>
@@ -179,11 +179,11 @@ function DashboardVisual() {
     return (
         <div ref={ref} className="w-full max-w-[420px] bg-white overflow-hidden"
             style={{ boxShadow: "0 24px 64px rgba(30,30,80,0.12), 0 0 0 1px rgba(60,70,220,0.06)" }}>
-            <div className="flex items-center gap-2 bg-[#f3f3f9] px-5 py-3 border-b border-[#ebebf5]">
+            <div className="flex items-center gap-2 bg-muted px-5 py-3 border-b border-[#ebebf5]">
                 <div className="h-2.5 w-2.5 rounded-full bg-[#ff5f57]" />
                 <div className="h-2.5 w-2.5 rounded-full bg-[#febc2e]" />
                 <div className="h-2.5 w-2.5 rounded-full bg-[#28c840]" />
-                <span className="ml-3 text-xs font-mono text-[#a1a1a1]">agent-dashboard</span>
+                <span className="ml-3 text-xs font-mono text-muted-foreground">agent-dashboard</span>
             </div>
             <div className="p-5 space-y-4">
                 <div className="flex items-end gap-1 h-20">
@@ -195,10 +195,10 @@ function DashboardVisual() {
                     <div key={i} className="flex items-center gap-3 p-3 bg-[#f8f8fc]">
                         <div className="h-7 w-7 bg-white border border-[#ebebf5]" />
                         <div className="flex-1 space-y-1.5">
-                            <div className="h-2 w-24 bg-[#e8e8f0]" />
+                            <div className="h-2 w-24 bg-border" />
                             <div className="h-1.5 w-16 bg-[#f0f0f8]" />
                         </div>
-                        <div className="h-5 w-12 bg-[#3c46dc]/15" />
+                        <div className="h-5 w-12 bg-primary/15" />
                     </div>
                 ))}
             </div>
@@ -221,11 +221,11 @@ function BrandVisual() {
     return (
         <div ref={ref} className="w-full max-w-[400px] bg-white overflow-hidden"
             style={{ boxShadow: "0 24px 64px rgba(30,30,80,0.12), 0 0 0 1px rgba(60,70,220,0.06)" }}>
-            <div className="flex items-center gap-2 bg-[#f3f3f9] px-5 py-3 border-b border-[#ebebf5]">
+            <div className="flex items-center gap-2 bg-muted px-5 py-3 border-b border-[#ebebf5]">
                 <div className="h-2.5 w-2.5 rounded-full bg-[#ff5f57]" />
                 <div className="h-2.5 w-2.5 rounded-full bg-[#febc2e]" />
                 <div className="h-2.5 w-2.5 rounded-full bg-[#28c840]" />
-                <span className="ml-3 text-xs font-mono text-[#a1a1a1]">brand-settings</span>
+                <span className="ml-3 text-xs font-mono text-muted-foreground">brand-settings</span>
             </div>
             <div className="p-5 space-y-4">
                 {/* Color swatches */}
@@ -233,20 +233,20 @@ function BrandVisual() {
                     {["#3c46dc", "#201f32", "#10b981", "#f59e0b"].map((c, i) => (
                         <div key={i} className="flex flex-col items-center gap-1.5">
                             <div className="h-10 w-10 border border-[#ebebf5]" style={{ backgroundColor: c }} />
-                            <span className="text-[9px] font-mono text-[#a1a1a1]">{c}</span>
+                            <span className="text-[9px] font-mono text-muted-foreground">{c}</span>
                         </div>
                     ))}
                 </div>
                 {/* Mock form fields */}
                 <div className="space-y-2">
-                    <div className="h-2 w-16 bg-[#e8e8f0]" />
+                    <div className="h-2 w-16 bg-border" />
                     <div className="h-8 w-full bg-[#f8f8fc] border border-[#ebebf5]" />
                 </div>
                 <div className="space-y-2">
-                    <div className="h-2 w-20 bg-[#e8e8f0]" />
+                    <div className="h-2 w-20 bg-border" />
                     <div className="h-8 w-full bg-[#f8f8fc] border border-[#ebebf5]" />
                 </div>
-                <div className="h-8 w-24 bg-[#3c46dc] flex items-center justify-center">
+                <div className="h-8 w-24 bg-primary flex items-center justify-center">
                     <span className="text-[10px] font-medium text-white">Save Theme</span>
                 </div>
             </div>
@@ -457,16 +457,16 @@ export default function IntegrationSection() {
                     <div ref={badgeRef} className="mb-5 inline-flex items-center gap-2" style={{ opacity: 0 }}>
                         <span className="text-[#b0b0c0] text-sm select-none">〈〈</span>
                         <div className="inline-flex items-center gap-2 bg-white border border-[#e0e0ec] px-3.5 py-1.5 shadow-sm">
-                            <svg className="h-3.5 w-3.5 text-[#3c46dc]" viewBox="0 0 20 20" fill="currentColor">
+                            <svg className="h-3.5 w-3.5 text-primary" viewBox="0 0 20 20" fill="currentColor">
                                 <path fillRule="evenodd" d="M3 5a2 2 0 012-2h10a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V5zm3 1h8v8H6V6z" clipRule="evenodd" />
                             </svg>
-                            <span className="text-xs font-semibold text-[#4a4a5a] tracking-wide">How it Works</span>
+                            <span className="text-xs font-semibold text-foreground tracking-wide">How it Works</span>
                         </div>
                         <span className="text-[#b0b0c0] text-sm select-none">〉〉</span>
                     </div>
 
                     <h2 ref={headingRef} id="integration-heading"
-                        className="text-[44px] font-bold leading-tight tracking-tight text-[#201f32] mb-4"
+                        className="text-[44px] font-bold leading-tight tracking-tight text-secondary mb-4"
                         style={{ opacity: 0 }}>
                         Launch Your AI<br />Agent in minutes
                     </h2>
@@ -500,13 +500,13 @@ export default function IntegrationSection() {
                                     ref={(el) => { buttonRefs.current[idx] = el; }}
                                     onClick={() => startFill(idx)}
                                     className={`inline-flex items-center gap-2 px-5 py-2.5 select-none focus:outline-none transition-all border ${isActive
-                                        ? "bg-[#201f32] text-white border-[#201f32]"
+                                        ? "bg-secondary text-white border-secondary"
                                         : isDone
                                             ? "bg-transparent text-[#8888b0] border-[#c0c0d8] hover:text-[#6868a0] hover:border-[#a0a0b8]"
                                             : "bg-transparent text-[#a8a8c0] border-[#dddde8] hover:text-[#6868a0] hover:border-[#c0c0d8]"
                                         }`}
                                 >
-                                    <span className={`text-sm font-bold ${isActive ? "text-white" : isDone ? "text-[#3c46dc]" : "text-[#c0c0d0]"
+                                    <span className={`text-sm font-bold ${isActive ? "text-white" : isDone ? "text-primary" : "text-[#c0c0d0]"
                                         }`}>
                                         {stepNum}
                                     </span>
@@ -541,12 +541,12 @@ export default function IntegrationSection() {
                             <div>
                                 {/* Step number indicator */}
                                 <div className="flex items-center gap-3 mb-6">
-                                    <div className="flex items-center justify-center w-10 h-10 bg-[#3c46dc] text-white">
+                                    <div className="flex items-center justify-center w-10 h-10 bg-primary text-white">
                                         <Icon className="w-5 h-5" />
                                     </div>
-                                    <span className="text-xs font-bold uppercase tracking-widest text-[#3c46dc]">Step {currentStep.id}</span>
+                                    <span className="text-xs font-bold uppercase tracking-widest text-primary">Step {currentStep.id}</span>
                                 </div>
-                                <h3 className="text-[28px] font-bold leading-snug text-[#201f32] mb-6">
+                                <h3 className="text-[28px] font-bold leading-snug text-secondary mb-6">
                                     {currentStep.title}
                                 </h3>
                             </div>
@@ -557,7 +557,7 @@ export default function IntegrationSection() {
                                 {COMPATIBLE_TECHS && (
                                     <div className="flex flex-wrap items-center gap-1.5">
                                         {COMPATIBLE_TECHS.map((t: string) => (
-                                            <span key={t} className="bg-[#f3f3f9] px-2 py-0.5 text-xs text-[#4d5564] border border-[#e8e8f0]">
+                                            <span key={t} className="bg-muted px-2 py-0.5 text-xs text-foreground border border-border">
                                                 {t}
                                             </span>
                                         ))}
@@ -568,7 +568,7 @@ export default function IntegrationSection() {
 
                         {/* Progress percentage indicator */}
                         <div className="absolute bottom-4 right-4 z-10">
-                            <span ref={progressTextRef} className="text-[10px] font-mono font-bold text-[#3c46dc]/40">
+                            <span ref={progressTextRef} className="text-[10px] font-mono font-bold text-primary/40">
                                 0%
                             </span>
                         </div>

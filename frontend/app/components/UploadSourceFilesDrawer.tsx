@@ -2,7 +2,7 @@
 "use client";
 
 import { useState } from "react";
-import { HiCloudUpload, HiCheckCircle, HiExclamationCircle,  HiX, HiDocumentText } from "react-icons/hi";
+import { HiCloudUpload, HiCheckCircle, HiExclamationCircle, HiX, HiDocumentText } from "react-icons/hi";
 import api from "@/lib/api";
 import Drawer from "./Drawer";
 import showToast from "@/lib/toast";
@@ -83,14 +83,14 @@ export default function UploadSourceFilesDrawer({ isOpen, onClose, onUploadSucce
 
     const footer = (
         <>
-            <Button variant="outline" onClick={handleClose} className="font-medium bg-white h-10 px-6 border border-[#e3e2e5] text-[#5a5a6a] shadow-sm transition-all hover:bg-[#f3f3f9]">
+            <Button variant="outline-secondary" onClick={handleClose} className="h-10 px-6">
                 Cancel
             </Button>
             <Button
+                variant="primary"
                 onClick={handleSubmit}
                 disabled={files.length === 0 || isUploading}
-                className="text-white font-bold h-10 px-8 shadow-lg shadow-[#262ef2]/10 transition-all"
-                style={{ backgroundColor: "#262ef2" }}
+                className="h-10 px-8"
             >
                 {isUploading ? "Importing..." : `Import ${files.length} Files`}
             </Button>
@@ -108,24 +108,24 @@ export default function UploadSourceFilesDrawer({ isOpen, onClose, onUploadSucce
             size="2xl"
         >
             <div className="space-y-8 animate-fade-in">
-                <div className={`relative border-2 border-dashed p-8 text-center flex flex-col items-center justify-center transition-all ${files.length > 0 ? 'border-[#262ef2]/50 bg-[#262ef2]/5' : 'border-[#e3e2e5] hover:border-[#262ef2]/30'}`}>
+                <div className={`relative border-2 border-dashed p-8 text-center flex flex-col items-center justify-center transition-all ${files.length > 0 ? 'border-primary/50 bg-primary/5' : 'border-border hover:border-primary/30'}`}>
                     <input type="file" multiple onChange={handleFileChange} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" />
-                    <div className="w-14 h-14 bg-white flex items-center justify-center mb-4 border border-[#e3e2e5] shadow-sm"><HiCloudUpload className="text-3xl text-[#262ef2]" /></div>
-                    <p className="text-sm font-bold text-[#201f32]">Drop source files here</p>
-                    <p className="text-[11px] text-[#5a5a6a] mt-1">Max {MAX_SIZE_MB}MB per file.</p>
+                    <div className="w-14 h-14 bg-white flex items-center justify-center mb-4 border border-border shadow-sm"><HiCloudUpload className="text-3xl text-primary" /></div>
+                    <p className="text-sm font-bold text-secondary">Drop source files here</p>
+                    <p className="text-[11px] text-muted-foreground mt-1">Max {MAX_SIZE_MB}MB per file.</p>
                 </div>
 
                 {files.length > 0 && (
                     <div className="space-y-2">
-                        <div className="flex items-center justify-between"><h4 className="text-[11px] font-black uppercase text-[#a1a1a1]">Queue</h4><span className="text-[10px] font-bold text-[#5a5a6a] bg-[#f3f3f9] px-2 py-0.5">{files.length}</span></div>
+                        <div className="flex items-center justify-between"><h4 className="text-[11px] font-black uppercase text-muted-foreground">Queue</h4><span className="text-[10px] font-bold text-muted-foreground bg-muted px-2 py-0.5">{files.length}</span></div>
                         <div className="max-h-60 overflow-y-auto space-y-2 pr-2">
                             {files.map((f, i) => (
-                                <div key={i} className="flex items-center justify-between p-3 bg-white border border-[#e3e2e5]">
+                                <div key={i} className="flex items-center justify-between p-3 bg-white border border-border">
                                     <div className="flex items-center gap-3 overflow-hidden">
-                                        <HiDocumentText className="text-[#a1a1a1] w-5 h-5 shrink-0" />
-                                        <div className="overflow-hidden"><p className="text-xs font-bold text-[#5a5a6a] truncate">{f.name}</p></div>
+                                        <HiDocumentText className="text-muted-foreground w-5 h-5 shrink-0" />
+                                        <div className="overflow-hidden"><p className="text-xs font-bold text-muted-foreground truncate">{f.name}</p></div>
                                     </div>
-                                    <button onClick={() => removeFile(i)} className="text-[#a1a1a1] hover:text-red-500"><HiX className="w-4 h-4" /></button>
+                                    <button onClick={() => removeFile(i)} className="text-muted-foreground hover:text-red-500"><HiX className="w-4 h-4" /></button>
                                 </div>
                             ))}
                         </div>

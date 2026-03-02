@@ -22,11 +22,7 @@ interface AddAPIKeyDrawerProps {
     onSuccess: () => void;
 }
 
-const PROVIDERS = [
-    { label: "OpenAI", value: "openai" },
-    { label: "Anthropic", value: "anthropic" },
-    { label: "Google Gemini", value: "google" },
-];
+import { LLM_PROVIDERS } from "@/lib/constants";
 
 export default function AddAPIKeyDrawer({ isOpen, onClose, onSuccess }: AddAPIKeyDrawerProps) {
     const [provider, setProvider] = useState("openai");
@@ -64,17 +60,17 @@ export default function AddAPIKeyDrawer({ isOpen, onClose, onSuccess }: AddAPIKe
     const footer = (
         <>
             <Button
-                variant="outline"
+                variant="outline-secondary"
                 onClick={handleClose}
-                className="font-medium bg-white h-10 px-6 border border-[#e3e2e5] text-[#5a5a6a] shadow-sm transition-all hover:bg-[#f3f3f9]"
+                className="h-10 px-6"
             >
                 Cancel
             </Button>
             <Button
+                variant="primary"
                 onClick={handleSubmit}
                 disabled={isLoading}
-                className="text-white font-bold h-10 px-8 shadow-lg shadow-[#262ef2]/10 transition-all"
-                style={{ backgroundColor: "#262ef2" }}
+                className="h-10 px-8"
             >
                 {isLoading ? "Processing..." : "Add Key"}
             </Button>
@@ -92,16 +88,16 @@ export default function AddAPIKeyDrawer({ isOpen, onClose, onSuccess }: AddAPIKe
         >
             <div className="space-y-6 animate-fade-in">
                 <div className="space-y-2">
-                    <label className="text-[11px] font-black text-[#a1a1a1] uppercase tracking-widest ml-1">Provider</label>
+                    <label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest ml-1">Provider</label>
                     <Select
                         value={provider}
                         onValueChange={setProvider}
                     >
-                        <SelectTrigger className="border border-[#e3e2e5] bg-white h-11 transition-all focus:border-[#262ef2] outline-none">
+                        <SelectTrigger className="border border-border bg-white h-11 transition-all focus:border-primary outline-none">
                             <SelectValue placeholder="Select provider" />
                         </SelectTrigger>
-                        <SelectContent className="border border-[#e3e2e5] bg-white">
-                            {PROVIDERS.map((p) => (
+                        <SelectContent className="border border-border bg-white">
+                            {LLM_PROVIDERS.map((p) => (
                                 <SelectItem key={p.value} value={p.value}>
                                     {p.label}
                                 </SelectItem>
@@ -111,14 +107,14 @@ export default function AddAPIKeyDrawer({ isOpen, onClose, onSuccess }: AddAPIKe
                 </div>
 
                 <div className="space-y-2">
-                    <label className="text-[11px] font-black text-[#a1a1a1] uppercase tracking-widest ml-1">API Key</label>
+                    <label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest ml-1">API Key</label>
                     <Input
                         type="password"
                         placeholder="sk-..."
                         value={apiKey}
                         onValueChange={setApiKey}
                     />
-                    <p className="text-[10px] text-[#a1a1a1] font-medium px-1">
+                    <p className="text-[10px] text-muted-foreground font-medium px-1">
                         Your keys are encrypted at rest.
                     </p>
                 </div>

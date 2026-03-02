@@ -28,7 +28,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
         return (
             <div className={cn("relative flex items-center w-full", classNames?.inputWrapper)}>
                 {startContent && (
-                    <div className="absolute left-3 top-1/2 -translate-y-1/2 flex items-center pointer-events-none text-[#a1a1a1]">
+                    <div className="absolute left-3 top-1/2 -translate-y-1/2 flex items-center pointer-events-none text-muted-foreground">
                         {startContent}
                     </div>
                 )}
@@ -49,13 +49,13 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
                         <button
                             type="button"
                             onClick={onClear}
-                            className="text-[#a1a1a1] hover:text-[#4d5564] outline-none transition-colors"
+                            className="text-muted-foreground hover:text-foreground outline-none transition-colors"
                         >
                             <HiX className="w-4 h-4" />
                         </button>
                     )}
                     {endContent && (
-                        <div className="flex items-center text-[#a1a1a1]">
+                        <div className="flex items-center text-muted-foreground">
                             {endContent}
                         </div>
                     )}

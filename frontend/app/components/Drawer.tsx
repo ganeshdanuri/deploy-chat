@@ -29,8 +29,8 @@ export default function Drawer({
     children,
     subtitle,
     icon: Icon,
-    iconColor = "text-[#262ef2]",
-    iconBgColor = "bg-[#262ef2]/5",
+    iconColor = "text-primary",
+    iconBgColor = "bg-primary/5",
     footer,
     size = "md"
 }: DrawerProps) {
@@ -49,8 +49,8 @@ export default function Drawer({
 
     return (
         <Sheet open={isOpen} onOpenChange={(open) => !open && onClose()}>
-            <SheetContent className={cn("p-0 flex flex-col bg-white border-l border-[#e3e2e5] shadow-2xl outline-none", sizeClasses[size])}>
-                <SheetHeader className="px-5 sm:px-8 py-5 sm:py-6 border-b border-[#e3e2e5] flex flex-row items-center justify-between bg-[#f9f9fc] shrink-0">
+            <SheetContent className={cn("p-0 flex flex-col bg-white border-l border-border shadow-2xl outline-none", sizeClasses[size])}>
+                <SheetHeader className="px-5 sm:px-8 py-5 sm:py-6 border-b border-border flex flex-row items-center justify-between bg-muted shrink-0">
                     <div className="flex items-center gap-4">
                         {Icon && (
                             <div className={`w-10 h-10 ${iconBgColor} ${iconColor} flex items-center justify-center shadow-sm rounded-sm`}>
@@ -58,8 +58,8 @@ export default function Drawer({
                             </div>
                         )}
                         <div>
-                            <SheetTitle className="text-xl font-bold text-[#201f32] leading-tight">{title}</SheetTitle>
-                            {subtitle && <p className="text-xs text-[#5a5a6a] mt-0.5 font-medium">{subtitle}</p>}
+                            <SheetTitle className="text-xl font-bold text-secondary leading-tight">{title}</SheetTitle>
+                            {subtitle && <p className="text-xs text-muted-foreground mt-0.5 font-medium">{subtitle}</p>}
                         </div>
                     </div>
                 </SheetHeader>
@@ -69,7 +69,7 @@ export default function Drawer({
                 </div>
 
                 {footer && (
-                    <SheetFooter className="px-5 sm:px-8 py-5 sm:py-6 border-t border-[#e3e2e5] bg-[#f9f9fc] flex flex-row justify-end items-center gap-3 shrink-0">
+                    <SheetFooter className="px-5 sm:px-8 py-5 sm:py-6 border-t border-border bg-muted flex flex-row justify-end items-center gap-3 shrink-0">
                         {footer}
                     </SheetFooter>
                 )}

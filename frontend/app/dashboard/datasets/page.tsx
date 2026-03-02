@@ -66,14 +66,14 @@ export default function DatasetsPage() {
                 return (
                     <User
                         avatarProps={{
-                            fallback: <HiDatabase className="w-4 h-4 text-[#262ef2]" />,
-                            className: "bg-[#262ef2]/5 border border-[#262ef2]/10",
+                            fallback: <HiDatabase className="w-4 h-4 text-primary" />,
+                            className: "bg-primary/5 border border-primary/10",
                         }}
                         description="Collection"
                         name={ds.name}
                         classNames={{
-                            name: "font-medium text-sm text-[#201f32]",
-                            description: "text-xs text-[#a1a1a1]",
+                            name: "font-medium text-sm text-secondary",
+                            description: "text-xs text-muted-foreground",
                         }}
                     />
                 );
@@ -89,7 +89,7 @@ export default function DatasetsPage() {
                                 size="sm"
                                 variant="ghost"
                                 onClick={() => handleEditClick(ds)}
-                                className="text-[#a1a1a1] hover:text-[#262ef2] px-0 h-8 w-8"
+                                className="text-muted-foreground hover:text-primary px-0 h-8 w-8"
                             >
                                 <HiPencil className="w-3.5 h-3.5" />
                             </Button>
@@ -99,7 +99,7 @@ export default function DatasetsPage() {
                                 size="sm"
                                 variant="ghost"
                                 onClick={() => handleDeleteClick(ds.id, ds.name)}
-                                className="text-[#a1a1a1] hover:text-red-500 px-0 h-8 w-8"
+                                className="text-muted-foreground hover:text-red-500 px-0 h-8 w-8"
                             >
                                 <HiTrash className="w-3.5 h-3.5" />
                             </Button>
@@ -121,20 +121,20 @@ export default function DatasetsPage() {
                         <>
                             <Button
                                 onClick={() => dispatch(fetchDatasets())}
-                                variant="outline"
-                                className="bg-white border-[#e3e2e5] text-[#4d5564] text-xs sm:text-sm font-medium transition-all hover:bg-[#f3f3f9] h-11 px-6 shadow-sm mr-2"
+                                variant="outline-secondary"
+                                className="text-xs sm:text-sm h-11 px-6 mr-2"
                                 disabled={isLoading}
                             >
-                                <HiRefresh className={`w-4 h-4 mr-2 text-[#a1a1a1] ${isLoading ? 'animate-spin' : ''}`} />
+                                <HiRefresh className={`w-4 h-4 mr-2 text-muted-foreground ${isLoading ? 'animate-spin' : ''}`} />
                                 Refresh
                             </Button>
                             <Button
+                                variant="primary"
                                 onClick={() => {
                                     setEditDataset(null);
                                     setIsModalOpen(true);
                                 }}
-                                className="text-white text-xs sm:text-sm font-bold transition-all hover:-translate-y-0.5 shadow-lg shadow-[#262ef2]/20 h-11 px-6"
-                                style={{ backgroundColor: "#262ef2" }}
+                                className="text-xs sm:text-sm h-11 px-6"
                             >
                                 <HiPlus className="w-4 h-4 mr-2" />
                                 New Knowledge Base
@@ -171,7 +171,7 @@ export default function DatasetsPage() {
                                     isClearable
                                     className="w-full sm:max-w-xs"
                                     placeholder="Search knowledge..."
-                                    startContent={<HiSearch className="w-4 h-4 text-[#a1a1a1]" />}
+                                    startContent={<HiSearch className="w-4 h-4 text-muted-foreground" />}
                                     value={filterValue}
                                     onClear={() => setFilterValue("")}
                                     onValueChange={setFilterValue}
@@ -185,14 +185,14 @@ export default function DatasetsPage() {
                             setEditDataset(null);
                             setIsModalOpen(true);
                         }}
-                        className="w-full bg-[#f9f9fc] border border-dashed border-[#e3e2e5] hover:border-[#262ef2]/50 hover:bg-[#262ef2]/5 transition-all cursor-pointer dash-card"
+                        className="w-full bg-muted border border-dashed border-border hover:border-primary/50 hover:bg-primary/5 transition-all cursor-pointer dash-card"
                     >
                         <div className="py-8 flex flex-col items-center justify-center">
-                            <div className="w-12 h-12 bg-white border border-[#e3e2e5] flex items-center justify-center mb-3 shadow-sm">
-                                <HiPlus className="w-6 h-6 text-[#a1a1a1]" />
+                            <div className="w-12 h-12 bg-white border border-border flex items-center justify-center mb-3 shadow-sm">
+                                <HiPlus className="w-6 h-6 text-muted-foreground" />
                             </div>
-                            <h3 className="text-sm font-bold text-[#201f32]">Add New Knowledge</h3>
-                            <p className="text-[11px] text-[#a1a1a1] mt-1">Connect more data sources</p>
+                            <h3 className="text-sm font-bold text-secondary">Add New Knowledge</h3>
+                            <p className="text-[11px] text-muted-foreground mt-1">Connect more data sources</p>
                         </div>
                     </div>
                 </div>

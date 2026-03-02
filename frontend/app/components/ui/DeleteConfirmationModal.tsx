@@ -28,7 +28,7 @@ export default function DeleteConfirmationModal({
             <Button
                 onClick={onClose}
                 variant="outline"
-                className="border-[#e3e2e5] text-[#5a5a6a] text-xs sm:text-sm font-bold h-10 px-6 hover:bg-[#f3f3f9] transition-all shadow-sm"
+                className="border-border text-muted-foreground text-xs sm:text-sm font-bold h-10 px-6 hover:bg-muted transition-all shadow-sm"
                 disabled={isLoading}
             >
                 Cancel
@@ -75,20 +75,20 @@ export default function DeleteConfirmationModal({
                     </div>
                 </div>
 
-                <div className="p-4 bg-[#f3f3f9] border border-[#e3e2e5]">
+                <div className="p-4 bg-muted border border-border">
                     <ul className="space-y-2">
-                        <li className="flex items-start gap-2 text-xs text-[#5a5a6a] font-medium italic">
+                        <li className="flex items-start gap-2 text-xs text-muted-foreground font-medium italic">
                             <span className="shrink-0 mt-0.5">•</span>
                             <span>This action is permanent and irreversible.</span>
                         </li>
-                        <li className="flex items-start gap-2 text-xs text-[#5a5a6a] font-medium italic">
+                        <li className="flex items-start gap-2 text-xs text-muted-foreground font-medium italic">
                             <span className="shrink-0 mt-0.5">•</span>
                             <span>All associated analytics and logs will be purged.</span>
                         </li>
                     </ul>
                 </div>
 
-                <p className="text-xs text-[#a1a1a1] text-center px-4 font-medium italic">
+                <p className="text-xs text-muted-foreground text-center px-4 font-medium italic">
                     Type confirmed in your mind before clicking the red button.
                 </p>
             </div>

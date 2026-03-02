@@ -1,4 +1,5 @@
 import { HiShieldCheck } from "react-icons/hi";
+import { Button } from "@/components/ui/button";
 
 export interface PricingCardProps {
     title: string;
@@ -23,33 +24,33 @@ export function PricingCard({
     isDisabled
 }: PricingCardProps) {
     return (
-        <div className={`bg-white rounded-sm shadow-sm p-6 relative overflow-hidden flex flex-col ${isPopular ? 'border border-[#262ef2]/20 shadow-[#262ef2]/5 shadow-xl' : 'border border-[#e3e2e5]'}`}>
+        <div className={`bg-white rounded-sm shadow-sm p-6 relative overflow-hidden flex flex-col ${isPopular ? 'border border-primary/20 shadow-primary/5 shadow-xl' : 'border border-border'}`}>
             {isPopular && (
                 <div className="absolute top-0 right-0 p-3">
-                    <span className="bg-[#262ef2]/10 text-[#262ef2] text-[10px] font-bold px-2 py-0.5 rounded-sm border border-[#262ef2]/10 uppercase tracking-wider">Most Popular</span>
+                    <span className="bg-primary/10 text-primary text-[10px] font-bold px-2 py-0.5 rounded-sm border border-primary/10 uppercase tracking-wider">Most Popular</span>
                 </div>
             )}
-            <h3 className="text-xl font-semibold text-[#201f32]">{title}</h3>
+            <h3 className="text-xl font-semibold text-secondary">{title}</h3>
             <div className="mt-1 flex items-baseline gap-1">
-                <span className="text-3xl font-black text-[#201f32]">{typeof price === 'string' && price === 'Custom' ? price : `$${price}`}</span>
-                {interval && <span className="text-sm text-[#4d5564]">{interval}</span>}
+                <span className="text-3xl font-black text-secondary">{typeof price === 'string' && price === 'Custom' ? price : `$${price}`}</span>
+                {interval && <span className="text-sm text-foreground">{interval}</span>}
             </div>
             <ul className="mt-5 space-y-3 flex-1">
                 {features.map((feat, i) => (
-                    <li key={i} className="flex items-center gap-2 text-sm text-[#4d5564]">
-                        <HiShieldCheck className={`w-5 h-5 shrink-0 ${isPopular ? 'text-[#262ef2]' : 'text-[#a1a1a1]'}`} />
+                    <li key={i} className="flex items-center gap-2 text-sm text-foreground">
+                        <HiShieldCheck className={`w-5 h-5 shrink-0 ${isPopular ? 'text-primary' : 'text-muted-foreground'}`} />
                         {feat}
                     </li>
                 ))}
             </ul>
-            <button
+            <Button
+                variant={isPopular ? "primary" : "outline-secondary"}
                 onClick={onButtonClick}
-                className={`text-sm font-medium mt-6 w-full py-2.5 transition-all rounded-sm ${isDisabled ? 'opacity-50 cursor-not-allowed bg-[#f3f3f9] text-[#a1a1a1] border border-[#e3e2e5]' : (isPopular ? 'text-white shadow-lg shadow-[#262ef2]/20' : 'bg-white border border-[#e3e2e5] text-[#4d5564] hover:bg-[#f3f3f9] shadow-sm')}`}
-                style={isPopular && !isDisabled ? { backgroundColor: "#262ef2" } : {}}
+                className={`mt-6 w-full py-2.5 ${isDisabled ? 'opacity-50 cursor-not-allowed bg-muted text-muted-foreground border border-border' : ''}`}
                 disabled={isDisabled}
             >
                 {buttonText}
-            </button>
+            </Button>
         </div>
     );
 }

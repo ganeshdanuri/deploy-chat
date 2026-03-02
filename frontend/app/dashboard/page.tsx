@@ -140,30 +140,30 @@ function DashboardSummary({
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 mb-8">
         <div>
           <div className="flex items-center gap-3">
-            <h1 className="text-2xl font-bold text-[#201f32] tracking-tight">Dashboard Overview</h1>
+            <h1 className="text-2xl font-bold text-secondary tracking-tight">Dashboard Overview</h1>
             <Tooltip content="Refresh Dashboard Data">
               <button
                 onClick={onRefresh}
                 disabled={isRefreshing}
-                className={`p-1.5 hover:bg-[#f3f3f9] text-[#a1a1a1] hover:text-[#262ef2] transition-all focus:outline-none ${isRefreshing ? "animate-spin text-[#262ef2]" : ""
+                className={`p-1.5 hover:bg-muted text-muted-foreground hover:text-primary transition-all focus:outline-none ${isRefreshing ? "animate-spin text-primary" : ""
                   }`}
               >
                 <HiRefresh className="w-5 h-5" />
               </button>
             </Tooltip>
-            <span className="bg-[#262ef2]/5 text-[#262ef2] text-[10px] font-bold px-2.5 py-1 border border-[#262ef2]/10 uppercase tracking-widest">
+            <span className="bg-primary/5 text-primary text-[10px] font-bold px-2.5 py-1 border border-primary/10 uppercase tracking-widest">
               {(userData?.billing?.current_plan || 'free').toUpperCase()} plan
             </span>
           </div>
-          <p className="text-sm text-[#5a5a6a] mt-2 font-medium">
+          <p className="text-sm text-muted-foreground mt-2 font-medium">
             Platform performance and activity summary for{" "}
-            <span className="text-[#201f32] font-semibold">Workspace A</span>
+            <span className="text-secondary font-semibold">Workspace A</span>
           </p>
         </div>
         <div className="flex gap-2">
           <button
             disabled
-            className="px-5 py-2.5 bg-[#201f32] text-white/50 text-sm font-medium shadow-sm opacity-60 cursor-not-allowed flex items-center gap-2"
+            className="px-5 py-2.5 bg-secondary text-white/50 text-sm font-medium shadow-sm opacity-60 cursor-not-allowed flex items-center gap-2"
           >
             <HiCreditCard className="w-4 h-4 text-white/50" />
             Billing & Plans
@@ -178,17 +178,17 @@ function DashboardSummary({
           label="Message Usage"
           value={`${message_count.toLocaleString()} / ${limit.toLocaleString()}`}
           trend={`${usagePercentage.toFixed(1)}% of limit used`}
-          accentClass="text-[#262ef2]"
-          accentBg="bg-[#262ef2]/5"
-          ringClass="ring-[#262ef2]/10"
+          accentClass="text-primary"
+          accentBg="bg-primary/5"
+          ringClass="ring-primary/10"
           trendPositive={usagePercentage < 80}
           href={"#"}
           onClick={(e: any) => e.preventDefault()}
           isDisabled={true}
           details={
-            <div className="mt-4 h-1.5 w-full bg-[#f3f3f9] rounded-sm overflow-hidden">
+            <div className="mt-4 h-1.5 w-full bg-muted rounded-sm overflow-hidden">
               <div
-                className={`h-full transition-all duration-1000 ${usagePercentage > 90 ? 'bg-red-500' : 'bg-[#262ef2]'}`}
+                className={`h-full transition-all duration-1000 ${usagePercentage > 90 ? 'bg-red-500' : 'bg-primary'}`}
                 style={{ width: `${usagePercentage}%` }}
               />
             </div>
@@ -199,9 +199,9 @@ function DashboardSummary({
           label="Knowledge Bases"
           value={String(datasets.length)}
           trend="Active Collections"
-          accentClass="text-[#10b981]"
-          accentBg="bg-[#10b981]/5"
-          ringClass="ring-[#10b981]/10"
+          accentClass="text-emerald-500"
+          accentBg="bg-emerald-500/5"
+          ringClass="ring-emerald-500/10"
           trendPositive={false}
           trendNeutral
           href="/dashboard/datasets"
@@ -211,9 +211,9 @@ function DashboardSummary({
           label="AI Tokens Used"
           value={token_count >= 1000 ? `${(token_count / 1000).toFixed(1)}K` : String(token_count)}
           trend="Across all chatbots"
-          accentClass="text-[#f59e0b]"
-          accentBg="bg-[#f59e0b]/5"
-          ringClass="ring-[#f59e0b]/10"
+          accentClass="text-amber-500"
+          accentBg="bg-amber-500/5"
+          ringClass="ring-amber-500/10"
           trendPositive={false}
           trendNeutral
           href={"#"}
@@ -255,7 +255,7 @@ function MetricCard({ icon: Icon, label, value, trend, accentClass, accentBg, ri
     <Link
       href={href}
       onClick={onClick}
-      className={`dash-card p-6 bg-white border border-[#e3e2e5] shadow-sm group relative overflow-hidden block ${isDisabled ? "opacity-75 cursor-default" : "cursor-pointer"}`}
+      className={`dash-card p-6 bg-white border border-border shadow-sm group relative overflow-hidden block ${isDisabled ? "opacity-75 cursor-default" : "cursor-pointer"}`}
     >
       <div className="absolute top-0 right-0 p-4 opacity-[0.06] group-hover:opacity-[0.12] transition-opacity">
         <Icon className={`w-24 h-24 ${accentClass} transform translate-x-4 -translate-y-4`} />
@@ -265,17 +265,17 @@ function MetricCard({ icon: Icon, label, value, trend, accentClass, accentBg, ri
           <Icon className="w-5 h-5" />
         </div>
         <div className="flex flex-1 items-center justify-between">
-          <span className="text-sm font-semibold text-[#5a5a6a]">{label}</span>
+          <span className="text-sm font-semibold text-muted-foreground">{label}</span>
           {(isLocked || isDisabled) && (
-            <div className="flex items-center gap-1 text-[10px] font-bold text-[#f59e0b] bg-[#f59e0b]/5 px-2 py-0.5 border border-[#f59e0b]/10">
+            <div className="flex items-center gap-1 text-[10px] font-bold text-amber-500 bg-amber-500/5 px-2 py-0.5 border border-amber-500/10">
               <HiLightningBolt className="w-3 h-3" />
               PRO
             </div>
           )}
         </div>
       </div>
-      <div className="text-3xl font-bold text-[#201f32] mb-1.5 relative z-10 font-mono">{value}</div>
-      <div className={`flex items-center gap-1.5 text-xs font-bold w-fit px-2 py-0.5 relative z-10 mt-1 ${trendNeutral ? "text-[#a1a1a1] bg-[#f3f3f9]" : "text-[#10b981] bg-[#10b981]/5"
+      <div className="text-3xl font-bold text-secondary mb-1.5 relative z-10 font-mono">{value}</div>
+      <div className={`flex items-center gap-1.5 text-xs font-bold w-fit px-2 py-0.5 relative z-10 mt-1 ${trendNeutral ? "text-muted-foreground bg-muted" : "text-emerald-500 bg-emerald-500/5"
         }`}>
         {trendPositive && <HiTrendingUp className="w-3.5 h-3.5" />}
         <span className={trendPositive ? "font-mono" : ""}>{trend}</span>
@@ -290,24 +290,24 @@ function MetricCard({ icon: Icon, label, value, trend, accentClass, accentBg, ri
 
 function QuickActionsPanel() {
   return (
-    <div className="dash-card bg-white border border-[#e3e2e5] shadow-sm lg:col-span-1 h-full flex flex-col overflow-hidden">
-      <div data-slot="card-header-attached" className="flex items-center justify-between px-6 py-5 border-b border-[#e3e2e5] bg-[#f9f9fc]">
-        <h3 className="text-sm font-bold text-[#201f32] uppercase tracking-wide">Knowledge Base</h3>
-        <Link href="/dashboard/datasets" className="text-xs text-[#262ef2] font-semibold hover:underline">Manage →</Link>
+    <div className="dash-card bg-white border border-border shadow-sm lg:col-span-1 h-full flex flex-col overflow-hidden">
+      <div data-slot="card-header-attached" className="flex items-center justify-between px-6 py-5 border-b border-border bg-muted">
+        <h3 className="text-sm font-bold text-secondary uppercase tracking-wide">Knowledge Base</h3>
+        <Link href="/dashboard/datasets" className="text-xs text-primary font-semibold hover:underline">Manage →</Link>
       </div>
       <div className="p-5 space-y-3 flex-1">
         {QUICK_ACTIONS.map((action) => (
           <Link
             key={action.label}
             href={action.href}
-            className={`w-full flex items-center gap-4 p-3.5 border border-dashed border-[#e3e2e5] ${action.hoverBorder} transition-all group text-left block hover:bg-[#f9f9fc]`}
+            className={`w-full flex items-center gap-4 p-3.5 border border-dashed border-border ${action.hoverBorder} transition-all group text-left block hover:bg-muted`}
           >
             <div className={`w-10 h-10 ${action.iconBg} flex items-center justify-center group-hover:scale-110 transition-transform shadow-sm`}>
               <action.icon className="w-5 h-5" />
             </div>
             <div>
-              <h4 className={`text-sm font-semibold text-[#201f32] ${action.hoverText}`}>{action.label}</h4>
-              <p className="text-xs text-[#a1a1a1] mt-0.5">{action.description}</p>
+              <h4 className={`text-sm font-semibold text-secondary ${action.hoverText}`}>{action.label}</h4>
+              <p className="text-xs text-muted-foreground mt-0.5">{action.description}</p>
             </div>
           </Link>
         ))}
@@ -338,11 +338,11 @@ function RecentActivityPanel() {
 
   const getActivityColor = (type: string) => {
     switch (type) {
-      case 'document_added': return 'bg-[#262ef2]';
-      case 'dataset_created': return 'bg-[#10b981]';
+      case 'document_added': return 'bg-primary';
+      case 'dataset_created': return 'bg-emerald-500';
       case 'chatbot_created': return 'bg-[#0ea5e9]';
-      case 'message_limit_warning': return 'bg-[#f59e0b]';
-      default: return 'bg-[#a1a1a1]';
+      case 'message_limit_warning': return 'bg-amber-500';
+      default: return 'bg-muted-foreground';
     }
   };
 
@@ -357,23 +357,23 @@ function RecentActivityPanel() {
   };
 
   return (
-    <div className="dash-card bg-white border border-[#e3e2e5] shadow-sm lg:col-span-2 overflow-hidden">
-      <div data-slot="card-header-attached" className="flex items-center justify-between px-6 py-5 border-b border-[#e3e2e5] bg-[#f9f9fc]">
+    <div className="dash-card bg-white border border-border shadow-sm lg:col-span-2 overflow-hidden">
+      <div data-slot="card-header-attached" className="flex items-center justify-between px-6 py-5 border-b border-border bg-muted">
         <div className="flex items-center gap-3">
-          <h3 className="text-sm font-bold text-[#201f32] uppercase tracking-wide">Recent Activity</h3>
-          <span className="bg-[#262ef2]/10 text-[#262ef2] text-[10px] font-bold px-2 py-0.5">New</span>
+          <h3 className="text-sm font-bold text-secondary uppercase tracking-wide">Recent Activity</h3>
+          <span className="bg-primary/10 text-primary text-[10px] font-bold px-2 py-0.5">New</span>
         </div>
-        <button className="p-1.5 hover:bg-white/80 text-[#a1a1a1] hover:text-[#4d5564] transition-colors">
+        <button className="p-1.5 hover:bg-white/80 text-muted-foreground hover:text-foreground transition-colors">
           <HiDotsVertical className="w-4 h-4" />
         </button>
       </div>
-      <div className="px-6 divide-y divide-[#f3f3f9]">
+      <div className="px-6 divide-y divide-muted">
         {loading ? (
           <div className="space-y-4 py-5">
             {Array.from({ length: 3 }).map((_, i) => (
               <div key={i} className="flex gap-4 py-3">
-                <div className="w-9 h-9 rounded-full bg-[#f3f3f9] flex items-center justify-center border border-[#e3e2e5] shadow-sm shrink-0">
-                  <div className="w-2.5 h-2.5 bg-[#e3e2e5] rounded-full" />
+                <div className="w-9 h-9 rounded-full bg-muted flex items-center justify-center border border-border shadow-sm shrink-0">
+                  <div className="w-2.5 h-2.5 bg-border rounded-full" />
                 </div>
                 <div className="flex-1 space-y-2">
                   <div className="flex justify-between">
@@ -392,26 +392,26 @@ function RecentActivityPanel() {
             ))}
           </div>
         ) : activities.length === 0 ? (
-          <div className="text-center py-12 text-[#a1a1a1] text-sm">No recent activity</div>
+          <div className="text-center py-12 text-muted-foreground text-sm">No recent activity</div>
         ) : (
           activities.map((item, idx) => (
-            <div key={item.id} className="flex gap-4 py-4 group hover:bg-[#f9f9fc] transition-colors -mx-6 px-6 cursor-pointer">
+            <div key={item.id} className="flex gap-4 py-4 group hover:bg-muted transition-colors -mx-6 px-6 cursor-pointer">
               <div className="relative mt-1">
-                <div className="w-9 h-9 bg-[#f3f3f9] flex items-center justify-center border border-[#e3e2e5] shadow-sm z-10 relative">
+                <div className="w-9 h-9 bg-muted flex items-center justify-center border border-border shadow-sm z-10 relative">
                   <div className={`w-2.5 h-2.5 ${getActivityColor(item.activity_type)}`} />
                 </div>
                 {idx < activities.length - 1 && (
-                  <div className="absolute top-9 left-1/2 -translate-x-1/2 w-0.5 h-full bg-[#e3e2e5] -z-0" />
+                  <div className="absolute top-9 left-1/2 -translate-x-1/2 w-0.5 h-full bg-border -z-0" />
                 )}
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
-                  <p className="text-sm font-semibold text-[#201f32] truncate">{getActivityTitle(item.activity_type)}</p>
-                  <span className="text-[10px] sm:text-xs text-[#a1a1a1] font-medium whitespace-nowrap font-mono">
+                  <p className="text-sm font-semibold text-secondary truncate">{getActivityTitle(item.activity_type)}</p>
+                  <span className="text-[10px] sm:text-xs text-muted-foreground font-medium whitespace-nowrap font-mono">
                     {new Date(item.created_at).toLocaleDateString()}
                   </span>
                 </div>
-                <p className="text-xs sm:text-sm text-[#4d5564] mt-0.5 leading-relaxed">
+                <p className="text-xs sm:text-sm text-foreground mt-0.5 leading-relaxed">
                   {item.details}
                 </p>
               </div>
@@ -429,14 +429,14 @@ function OnboardingView({ cardsRef }: { cardsRef: React.RefObject<HTMLDivElement
   return (
     <div className="w-full max-w-[1400px] mx-auto flex flex-col items-center">
       <div className="hero-content text-center mb-16 px-4">
-        <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#262ef2]/5 text-[#262ef2] text-[10px] font-bold border border-[#262ef2]/10 mb-6 uppercase tracking-widest">
+        <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/5 text-primary text-[10px] font-bold border border-primary/10 mb-6 uppercase tracking-widest">
           <HiLightningBolt className="w-3 h-3" />
           <span>Getting Started</span>
         </div>
-        <h2 className="text-2xl md:text-3xl font-extrabold text-[#201f32] mb-4 tracking-tight">
+        <h2 className="text-2xl md:text-3xl font-extrabold text-secondary mb-4 tracking-tight">
           Build your AI assistant in 4 simple steps
         </h2>
-        <p className="text-base text-[#5a5a6a] max-w-xl mx-auto leading-relaxed">
+        <p className="text-base text-muted-foreground max-w-xl mx-auto leading-relaxed">
           Connect your data, organize your knowledge, and deploy a chatbot that actually understands your business.
         </p>
       </div>
@@ -444,30 +444,30 @@ function OnboardingView({ cardsRef }: { cardsRef: React.RefObject<HTMLDivElement
       <div ref={cardsRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 w-full px-4 relative">
         {/* Flow Lines */}
         <div className="hidden lg:block absolute top-[68px] left-[15%] right-[15%] h-[2px] z-0 overflow-hidden">
-          <div className="flow-line w-full h-full bg-[#e3e2e5] relative">
-            <div className="absolute top-0 left-0 h-full w-[40%] bg-[#262ef2] shadow-[0_0_10px_rgba(38,46,242,0.5)] animate-shimmer" />
+          <div className="flow-line w-full h-full bg-border relative">
+            <div className="absolute top-0 left-0 h-full w-[40%] bg-primary shadow-[0_0_10px_rgba(38,46,242,0.5)] animate-shimmer" />
           </div>
         </div>
 
         {ONBOARDING_STEPS.map((step) => (
           <div key={step.id} className="step-card group relative z-10">
-            <div className="bg-white p-6 md:p-8 border border-[#e3e2e5] rounded-sm shadow-sm hover:shadow-2xl hover:border-[#262ef2]/20 transition-all duration-500 flex flex-col h-full relative overflow-hidden">
+            <div className="bg-white p-6 md:p-8 border border-border rounded-sm shadow-sm hover:shadow-2xl hover:border-primary/20 transition-all duration-500 flex flex-col h-full relative overflow-hidden">
               <div className={`absolute top-0 left-0 w-full h-1 bg-gradient-to-r ${step.gradientFrom} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
               <div className={`w-12 h-12 ${step.bgColor} ${step.color} flex items-center justify-center mb-6 shadow-sm ring-1 ring-inset ${step.borderColor} group-hover:scale-110 transition-all duration-500`}>
                 <step.icon className="w-6 h-6" />
               </div>
               <div className="flex items-center gap-2 mb-2">
-                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#a1a1a1] font-mono">Step 0{step.id}</span>
+                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground font-mono">Step 0{step.id}</span>
               </div>
-              <h3 className="text-lg font-bold text-[#201f32] mb-2 group-hover:text-[#262ef2] transition-colors">
+              <h3 className="text-lg font-bold text-secondary mb-2 group-hover:text-primary transition-colors">
                 {step.name}
               </h3>
-              <p className="text-[#5a5a6a] text-xs md:text-sm leading-relaxed mb-8 flex-1">
+              <p className="text-muted-foreground text-xs md:text-sm leading-relaxed mb-8 flex-1">
                 {step.description}
               </p>
               <Link
                 href={step.href}
-                className="flex items-center justify-between w-full px-5 py-2.5 bg-[#201f32] text-white border border-[#201f32] text-[13px] font-medium transition-all duration-300 group/btn shadow-sm hover:shadow-md"
+                className="flex items-center justify-between w-full px-5 py-2.5 bg-secondary text-white border border-secondary text-[13px] font-medium transition-all duration-300 group/btn shadow-sm hover:shadow-md"
               >
                 <span>{step.btnText}</span>
                 <HiArrowRight className="w-4 h-4 transform group-hover/btn:translate-x-1 transition-transform" />
@@ -478,11 +478,11 @@ function OnboardingView({ cardsRef }: { cardsRef: React.RefObject<HTMLDivElement
       </div>
 
       <div className="hero-content mt-16 text-center">
-        <p className="text-[13px] text-[#a1a1a1]">
+        <p className="text-[13px] text-muted-foreground">
           New to Deploy Chat?{" "}
-          <Link href="/dashboard/help" className="font-bold text-[#262ef2] hover:underline">Watch a 2-minute intro</Link>{" "}
+          <Link href="/dashboard/help" className="font-bold text-primary hover:underline">Watch a 2-minute intro</Link>{" "}
           or{" "}
-          <Link href="/dashboard/help" className="font-bold text-[#262ef2] hover:underline">read documentation</Link>
+          <Link href="/dashboard/help" className="font-bold text-primary hover:underline">read documentation</Link>
         </p>
       </div>
     </div>

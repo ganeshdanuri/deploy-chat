@@ -38,8 +38,8 @@ export default function Navbar() {
             {/* Logo */}
             <div className="flex items-center gap-3 cursor-pointer" onClick={() => router.push("/")}>
               <Logo className="h-9 w-auto" />
-              <span className="text-xl font-bold tracking-tight text-[#201f32]">
-                {BRAND.first} <span className="text-[#262ef2]">{BRAND.second}</span>
+              <span className="text-xl font-bold tracking-tight text-secondary">
+                {BRAND.first} <span className="text-primary">{BRAND.second}</span>
               </span>
             </div>
 
@@ -49,7 +49,7 @@ export default function Navbar() {
                 <a
                   key={link.label}
                   href={link.href}
-                  className="relative text-[13px] font-medium px-5 py-2 text-[#4a4a5a] transition-colors hover:text-[#201f32] after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-0 after:h-[2px] after:bg-[#262ef2] after:transition-all after:duration-200 hover:after:w-5"
+                  className="relative text-[13px] font-medium px-5 py-2 text-foreground transition-colors hover:text-secondary after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-0 after:h-[2px] after:bg-primary after:transition-all after:duration-200 hover:after:w-5"
                 >
                   {link.label}
                 </a>
@@ -59,7 +59,7 @@ export default function Navbar() {
 
               <button
                 onClick={handleMainButtonClick}
-                className="text-[13px] font-medium px-6 py-2 text-[#201f32] border border-[#d8d8e4] hover:border-[#262ef2] hover:text-[#262ef2] transition-all duration-200"
+                className="text-[13px] font-medium px-6 py-2 text-secondary border border-[#d8d8e4] hover:border-primary hover:text-primary transition-all duration-200"
               >
                 Login
               </button>
@@ -68,7 +68,7 @@ export default function Navbar() {
             {/* Mobile Menu Button */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="md:hidden p-2 text-[#201f32] hover:text-[#262ef2] transition-colors"
+              className="md:hidden p-2 text-secondary hover:text-primary transition-colors"
             >
               {isMobileMenuOpen ? <HiX size={24} /> : <HiMenu size={24} />}
             </button>
@@ -76,24 +76,24 @@ export default function Navbar() {
 
           {/* Mobile Navigation */}
           {isMobileMenuOpen && (
-            <div className="md:hidden py-4 border-t border-[#e8e8f0]">
+            <div className="md:hidden py-4 border-t border-border">
               {navLinks.map((link) => (
                 <a
                   key={link.label}
                   href={link.href}
-                  className="block py-3 px-4 text-sm font-medium text-[#4a4a5a] hover:text-[#262ef2] transition-colors"
+                  className="block py-3 px-4 text-sm font-medium text-foreground hover:text-primary transition-colors"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   {link.label}
                 </a>
               ))}
-              <div className="mt-4 px-4 pt-4 border-t border-[#e8e8f0]">
+              <div className="mt-4 px-4 pt-4 border-t border-border">
                 <button
                   onClick={() => {
                     handleMainButtonClick();
                     setIsMobileMenuOpen(false);
                   }}
-                  className="w-full py-2.5 text-[#201f32] text-sm font-medium border border-[#d8d8e4]"
+                  className="w-full py-2.5 text-secondary text-sm font-medium border border-[#d8d8e4]"
                 >
                   Login
                 </button>

@@ -10,53 +10,7 @@ import showToast from "@/lib/toast";
 
 import { DeleteConfirmationModal } from "@/app/components/ui";
 
-const AVAILABLE_CONNECTORS = [
-    {
-        id: "notion",
-        name: "Notion",
-        description: "Sync pages and databases",
-        icon: SiNotion,
-        color: "text-[#201f32]",
-        bgColor: "bg-[#f3f3f9]",
-        status: "active"
-    },
-    {
-        id: "google-drive",
-        name: "Google Drive",
-        description: "Fetch docs and folders",
-        icon: SiGoogledrive,
-        color: "text-[#262ef2]",
-        bgColor: "bg-[#262ef2]/5",
-        status: "coming-soon"
-    },
-    {
-        id: "slack",
-        name: "Slack",
-        description: "Index channel history",
-        icon: SiSlack,
-        color: "text-[#262ef2]",
-        bgColor: "bg-[#262ef2]/5",
-        status: "coming-soon"
-    },
-    {
-        id: "github",
-        name: "GitHub",
-        description: "Sync repos and READMEs",
-        icon: SiGithub,
-        color: "text-[#201f32]",
-        bgColor: "bg-[#f3f3f9]",
-        status: "coming-soon"
-    },
-    {
-        id: "intercom",
-        name: "Intercom",
-        description: "Import help articles",
-        icon: SiIntercom,
-        color: "text-[#262ef2]",
-        bgColor: "bg-[#262ef2]/5",
-        status: "coming-soon"
-    }
-];
+import { AVAILABLE_CONNECTORS } from "@/lib/constants";
 
 export default function ConnectorsPage() {
     const dispatch = useAppDispatch();
@@ -87,12 +41,12 @@ export default function ConnectorsPage() {
 
     const getConnectorColor = (type: string) => {
         switch (type.toLowerCase()) {
-            case 'notion': return 'bg-[#201f32]';
-            case 'google-drive': return 'bg-[#262ef2]';
-            case 'slack': return 'bg-[#262ef2]';
-            case 'github': return 'bg-[#201f32]';
-            case 'intercom': return 'bg-[#262ef2]';
-            default: return 'bg-[#262ef2]';
+            case 'notion': return 'bg-secondary';
+            case 'google-drive': return 'bg-primary';
+            case 'slack': return 'bg-primary';
+            case 'github': return 'bg-secondary';
+            case 'intercom': return 'bg-primary';
+            default: return 'bg-primary';
         }
     };
 
@@ -142,8 +96,8 @@ export default function ConnectorsPage() {
             {/* Page Header */}
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
                 <div className="max-w-xl">
-                    <h1 className="text-3xl font-black text-[#201f32] tracking-tight">Integrations</h1>
-                    <p className="text-base text-[#4d5564] mt-2 font-medium leading-relaxed">
+                    <h1 className="text-3xl font-black text-secondary tracking-tight">Integrations</h1>
+                    <p className="text-base text-foreground mt-2 font-medium leading-relaxed">
                         Connect your tools to automatically build your AI knowledge base.
                         Sync documents and conversations in real-time.
                     </p>
@@ -151,18 +105,18 @@ export default function ConnectorsPage() {
             </div>
 
             {/* Tabbed Navigation */}
-            <div className="flex items-center gap-1 p-1 bg-[#f3f3f9]/80 w-fit">
+            <div className="flex items-center gap-1 p-1 bg-muted/80 w-fit">
                 <button
                     onClick={() => setActiveTab('active')}
                     className={`
                         px-6 py-2.5 text-sm font-bold transition-all
                         ${activeTab === 'active'
-                            ? "bg-white text-[#262ef2] shadow-sm"
-                            : "text-[#4d5564] hover:text-[#201f32] hover:bg-white/50"}
+                            ? "bg-white text-primary shadow-sm"
+                            : "text-foreground hover:text-secondary hover:bg-white/50"}
                     `}
                 >
                     My Connections
-                    <span className="ml-2 px-1.5 py-0.5 bg-[#f3f3f9] text-[10px] text-[#a1a1a1]">
+                    <span className="ml-2 px-1.5 py-0.5 bg-muted text-[10px] text-muted-foreground">
                         {status === 'loading' ? '...' : connectors.length}
                     </span>
                 </button>
@@ -171,8 +125,8 @@ export default function ConnectorsPage() {
                     className={`
                         px-6 py-2.5 text-sm font-bold transition-all
                         ${activeTab === 'catalog'
-                            ? "bg-white text-[#262ef2] shadow-sm"
-                            : "text-[#4d5564] hover:text-[#201f32] hover:bg-white/50"}
+                            ? "bg-white text-primary shadow-sm"
+                            : "text-foreground hover:text-secondary hover:bg-white/50"}
                     `}
                 >
                     Browse Catalog
@@ -186,19 +140,19 @@ export default function ConnectorsPage() {
                         {status === 'loading' && connectors.length === 0 ? (
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                 {[1, 2].map(i => (
-                                    <div key={i} className="bg-white border border-[#e3e2e5] h-48 animate-pulse shadow-sm" />
+                                    <div key={i} className="bg-white border border-border h-48 animate-pulse shadow-sm" />
                                 ))}
                             </div>
                         ) : connectors.length === 0 ? (
                             <div className="py-12 flex flex-col items-center text-center max-w-sm mx-auto">
-                                <div className="w-16 h-16 bg-[#f3f3f9] flex items-center justify-center text-[#a1a1a1] mb-6">
+                                <div className="w-16 h-16 bg-muted flex items-center justify-center text-muted-foreground mb-6">
                                     <HiShare className="w-8 h-8" />
                                 </div>
-                                <h3 className="text-xl font-bold text-[#201f32] mb-2">No active integrations</h3>
-                                <p className="text-sm text-[#4d5564] mb-8 font-medium">Connect your workspace tools to automatically sync your content and keep your AI knowledge updated.</p>
+                                <h3 className="text-xl font-bold text-secondary mb-2">No active integrations</h3>
+                                <p className="text-sm text-foreground mb-8 font-medium">Connect your workspace tools to automatically sync your content and keep your AI knowledge updated.</p>
                                 <button
                                     onClick={() => setActiveTab('catalog')}
-                                    className="px-6 py-3 bg-[#262ef2] text-white text-sm font-bold shadow-lg shadow-[#262ef2]/10 hover:bg-[#262ef2]/90 transition-all font-mono tracking-tight"
+                                    className="px-6 py-3 bg-primary text-white text-sm font-bold shadow-lg shadow-primary/10 hover:bg-primary/90 transition-all font-mono tracking-tight"
                                 >
                                     Browse Integration Library
                                 </button>
@@ -210,24 +164,24 @@ export default function ConnectorsPage() {
                                     const brandColor = getConnectorColor(connector.type);
 
                                     return (
-                                        <div key={connector.id} className="group dash-card bg-white border border-[#e3e2e5] overflow-hidden flex items-center p-6">
+                                        <div key={connector.id} className="group dash-card bg-white border border-border overflow-hidden flex items-center p-6">
                                             <div className="flex items-center gap-5 flex-1 min-w-0">
                                                 <div className={`w-14 h-14 flex items-center justify-center text-white shadow-lg ${brandColor} transition-transform group-hover:scale-105`}>
                                                     <Icon className="w-7 h-7" />
                                                 </div>
                                                 <div className="flex-1 min-w-0">
                                                     <div className="flex items-center gap-3 mb-1.5 flex-wrap">
-                                                        <h3 className="font-bold text-[#201f32] text-lg truncate max-w-[200px]">{connector.name}</h3>
-                                                        <span className={`text-[10px] font-black px-2 py-0.5 uppercase tracking-widest ${connector.status === 'active' ? 'bg-[#10b981]/10 text-[#10b981]' : 'bg-[#ef4444]/10 text-[#ef4444]'}`}>
+                                                        <h3 className="font-bold text-secondary text-lg truncate max-w-[200px]">{connector.name}</h3>
+                                                        <span className={`text-[10px] font-black px-2 py-0.5 uppercase tracking-widest ${connector.status === 'active' ? 'bg-emerald-500/10 text-emerald-500' : 'bg-red-500/10 text-red-500'}`}>
                                                             {connector.status}
                                                         </span>
                                                     </div>
-                                                    <div className="flex flex-col sm:flex-row sm:items-center gap-3 text-[11px] font-bold text-[#a1a1a1] uppercase tracking-tight">
+                                                    <div className="flex flex-col sm:flex-row sm:items-center gap-3 text-[11px] font-bold text-muted-foreground uppercase tracking-tight">
                                                         <div className="flex items-center gap-1.5">
                                                             <HiClock className="w-3.5 h-3.5" />
                                                             <span>Last synced: {connector.last_sync_at ? new Date(connector.last_sync_at).toLocaleString() : 'Never'}</span>
                                                         </div>
-                                                        <div className="hidden sm:block w-1 h-1 rounded-full bg-[#e3e2e5]"></div>
+                                                        <div className="hidden sm:block w-1 h-1 rounded-full bg-border"></div>
                                                         <div className="flex items-center gap-1.5">
                                                             <HiExternalLink className="w-3.5 h-3.5" />
                                                             <span>{((connector.config as { selected_pages?: string[] }).selected_pages)?.length || 0} items imported</span>
@@ -240,14 +194,14 @@ export default function ConnectorsPage() {
                                                 <button
                                                     onClick={() => handleSync(connector.id)}
                                                     disabled={isSyncing === connector.id}
-                                                    className="p-2.5 bg-[#f3f3f9] text-[#201f32] hover:bg-[#e3e2e5] transition-all border border-[#e3e2e5]/50 disabled:opacity-50"
+                                                    className="p-2.5 bg-muted text-secondary hover:bg-border transition-all border border-border/50 disabled:opacity-50"
                                                     title="Sync Now"
                                                 >
                                                     <HiRefresh className={`w-4 h-4 ${isSyncing === connector.id ? "animate-spin" : ""}`} />
                                                 </button>
                                                 <button
                                                     onClick={() => handleDeleteClick(connector.id, connector.name)}
-                                                    className="p-2.5 bg-[#f3f3f9] text-[#a1a1a1] hover:text-[#ef4444] hover:bg-[#ef4444]/5 transition-all border border-[#e3e2e5]/50 hover:border-[#ef4444]/20"
+                                                    className="p-2.5 bg-muted text-muted-foreground hover:text-red-500 hover:bg-red-500/5 transition-all border border-border/50 hover:border-red-500/20"
                                                     title="Delete Integration"
                                                 >
                                                     <HiTrash className="w-4 h-4" />
@@ -269,26 +223,26 @@ export default function ConnectorsPage() {
                                 className={`
                                     group relative flex flex-col items-center text-center p-8 border transition-all duration-300
                                     ${option.status === 'active'
-                                        ? "bg-white border-[#e3e2e5] hover:border-[#262ef2]/40 hover:shadow-2xl hover:shadow-[#262ef2]/10 cursor-pointer"
-                                        : "bg-[#f3f3f9]/50 border-[#e3e2e5] opacity-60 grayscale cursor-not-allowed"
+                                        ? "bg-white border-border hover:border-primary/40 hover:shadow-2xl hover:shadow-primary/10 cursor-pointer"
+                                        : "bg-muted/50 border-border opacity-60 grayscale cursor-not-allowed"
                                     }
                                 `}
                             >
                                 <div className={`
                                     w-16 h-16 flex items-center justify-center mb-5 transition-all duration-500 shadow-sm
                                     ${option.status === 'active'
-                                        ? "bg-[#201f32] text-white group-hover:bg-[#262ef2] group-hover:scale-110 group-hover:-translate-y-1"
-                                        : "bg-[#f3f3f9] text-[#a1a1a1]"
+                                        ? "bg-secondary text-white group-hover:bg-primary group-hover:scale-110 group-hover:-translate-y-1"
+                                        : "bg-muted text-muted-foreground"
                                     }
                                 `}>
                                     <option.icon className="w-7 h-7" />
                                 </div>
-                                <h3 className="font-bold text-[#201f32] mb-1 text-base">{option.name}</h3>
-                                <p className="text-xs font-semibold text-[#a1a1a1] leading-tight px-2">{option.description}</p>
+                                <h3 className="font-bold text-secondary mb-1 text-base">{option.name}</h3>
+                                <p className="text-xs font-semibold text-muted-foreground leading-tight px-2">{option.description}</p>
 
                                 {option.status === 'coming-soon' && (
                                     <div className="mt-4">
-                                        <span className="text-[10px] font-black uppercase tracking-widest bg-[#e3e2e5] text-[#4d5564] px-3 py-1">
+                                        <span className="text-[10px] font-black uppercase tracking-widest bg-border text-foreground px-3 py-1">
                                             Beta Soon
                                         </span>
                                     </div>
@@ -296,7 +250,7 @@ export default function ConnectorsPage() {
 
                                 {option.status === 'active' && (
                                     <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                                        <div className="p-1.5 rounded-lg bg-[#262ef2]/5 text-[#262ef2]">
+                                        <div className="p-1.5 rounded-lg bg-primary/5 text-primary">
                                             <HiPlus className="w-4 h-4" />
                                         </div>
                                     </div>

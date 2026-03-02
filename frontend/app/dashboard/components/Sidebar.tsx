@@ -38,27 +38,27 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
     return (
         <aside
             className={`
-                fixed lg:static inset-y-0 left-0 z-50 bg-white border-r border-[#e3e2e5] flex flex-col transition-all duration-300 transform
+                fixed lg:static inset-y-0 left-0 z-50 bg-white border-r border-border flex flex-col transition-all duration-300 transform
                 ${isOpen ? "translate-x-0 shadow-2xl" : "-translate-x-full lg:translate-x-0"}
                 ${isCollapsed ? "lg:w-[72px]" : "lg:w-64"}
                 w-64
             `}
         >
             {/* Workspace Selector / Brand */}
-            <div className="h-16 flex items-center px-3 border-b border-[#e3e2e5] justify-between shrink-0">
+            <div className="h-16 flex items-center px-3 border-b border-border justify-between shrink-0">
                 <div
-                    className={`flex items-center gap-3 p-1.5 hover:bg-[#f3f3f9] rounded-sm cursor-pointer transition-colors group ${isCollapsed ? "justify-center w-full" : "flex-1 min-w-0"}`}
+                    className={`flex items-center gap-3 p-1.5 hover:bg-muted rounded-sm cursor-pointer transition-colors group ${isCollapsed ? "justify-center w-full" : "flex-1 min-w-0"}`}
                     onClick={() => !isCollapsed && router.push("/dashboard")}
                 >
                     <div className="shrink-0">
                         <Logo className="h-8 w-auto" />
                     </div>
                     {!isCollapsed && (
-                        <div className="flex-1 min-w-0 text-[#201f32]">
+                        <div className="flex-1 min-w-0 text-secondary">
                             <h2 className="text-sm font-black tracking-tight truncate">
-                                DEPLOY <span className="text-[#262ef2]">CHAT</span>
+                                DEPLOY <span className="text-primary">CHAT</span>
                             </h2>
-                            <p className="text-[10px] font-bold uppercase tracking-tighter text-[#262ef2]">
+                            <p className="text-[10px] font-bold uppercase tracking-tighter text-primary">
                                 {userData?.billing?.current_plan || "Free"}
                             </p>
                         </div>
@@ -67,7 +67,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
 
                 {/* Mobile Close Button */}
                 <button
-                    className="lg:hidden p-2 text-[#a1a1a1] hover:text-[#201f32] hover:bg-[#f3f3f9] shrink-0"
+                    className="lg:hidden p-2 text-muted-foreground hover:text-secondary hover:bg-muted shrink-0"
                     onClick={onClose}
                 >
                     <HiX className="w-5 h-5" />
@@ -94,22 +94,22 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                                         relative group flex items-center gap-3 px-3 py-2.5 rounded-sm text-sm font-medium transition-all
                                         ${isCollapsed ? "justify-center" : ""}
                                         ${isDisabled
-                                        ? "opacity-50 cursor-not-allowed text-[#a1a1a1]"
+                                        ? "opacity-50 cursor-not-allowed text-muted-foreground"
                                         : isActive
-                                            ? "bg-[#f3f3f9] text-[#201f32]"
-                                            : "text-[#4d5564] hover:text-[#201f32] hover:bg-[#f3f3f9]"
+                                            ? "bg-muted text-secondary"
+                                            : "text-foreground hover:text-secondary hover:bg-muted"
                                     }
                                     `}
                                 style={{}}
                             >
                                 <Icon
-                                    className={`w-5 h-5 shrink-0 transition-colors ${isActive && !isDisabled ? "text-[#201f32]" : "text-[#a1a1a1] group-hover:text-[#4d5564]"}`}
+                                    className={`w-5 h-5 shrink-0 transition-colors ${isActive && !isDisabled ? "text-secondary" : "text-muted-foreground group-hover:text-foreground"}`}
                                 />
                                 {!isCollapsed && (
                                     <div className="flex flex-1 items-center justify-between">
                                         <span>{item.label}</span>
                                         {isDisabled && (
-                                            <span className="text-[9px] font-bold bg-[#f3f3f9] text-[#a1a1a1] px-1.5 py-0.5 rounded-sm uppercase tracking-wider">Pro</span>
+                                            <span className="text-[9px] font-bold bg-muted text-muted-foreground px-1.5 py-0.5 rounded-sm uppercase tracking-wider">Pro</span>
                                         )}
                                     </div>
                                 )}
@@ -129,7 +129,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
 
                 {/* Settings Section */}
                 <div className={`${isCollapsed ? "px-2" : "px-3"}`}>
-                    {!isCollapsed && <div className="text-[10px] font-bold uppercase tracking-wider text-[#a1a1a1] mb-2">Settings</div>}
+                    {!isCollapsed && <div className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-2">Settings</div>}
                     <nav className="space-y-0.5">
                         {settingsNavItems.map((item) => {
                             const Icon = item.icon;
@@ -144,14 +144,14 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                                         relative group flex items-center gap-3 px-3 py-2 rounded-sm text-sm font-medium transition-all
                                         ${isCollapsed ? "justify-center" : ""}
                                         ${isActive
-                                            ? "bg-[#f3f3f9] text-[#201f32]"
-                                            : "text-[#4d5564] hover:text-[#201f32] hover:bg-[#f3f3f9]"
+                                            ? "bg-muted text-secondary"
+                                            : "text-foreground hover:text-secondary hover:bg-muted"
                                         }
                                     `}
                                     style={{}}
                                 >
                                     <Icon
-                                        className={`w-4 h-4 shrink-0 transition-colors ${isActive ? "text-[#201f32]" : "text-[#a1a1a1] group-hover:text-[#4d5564]"}`}
+                                        className={`w-4 h-4 shrink-0 transition-colors ${isActive ? "text-secondary" : "text-muted-foreground group-hover:text-foreground"}`}
                                     />
                                     {!isCollapsed && <span className="text-[13px]">{item.label}</span>}
 
@@ -170,7 +170,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
             </div>
 
             {/* Footer Navigation */}
-            <div className="p-2 border-t border-[#e3e2e5] space-y-0.5 shrink-0">
+            <div className="p-2 border-t border-border space-y-0.5 shrink-0">
                 {secondaryNavItems.map((item) => {
                     const Icon = item.icon;
                     const isActive = pathname === item.path;
@@ -183,14 +183,14 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                                     relative group flex items-center gap-3 px-3 py-2.5 rounded-sm text-sm font-medium transition-all
                                     ${isCollapsed ? "justify-center" : ""}
                                     ${isActive
-                                    ? "bg-[#f3f3f9] text-[#201f32]"
-                                    : "text-[#4d5564] hover:text-[#201f32] hover:bg-[#f3f3f9]"
+                                    ? "bg-muted text-secondary"
+                                    : "text-foreground hover:text-secondary hover:bg-muted"
                                 }
                                 `}
                             style={{}}
                         >
                             <Icon
-                                className={`w-5 h-5 shrink-0 transition-colors ${isActive ? "text-[#201f32]" : "text-[#a1a1a1]"}`}
+                                className={`w-5 h-5 shrink-0 transition-colors ${isActive ? "text-secondary" : "text-muted-foreground"}`}
                             />
                             {!isCollapsed && <span>{item.label}</span>}
 
@@ -206,23 +206,23 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                 })}
 
                 {/* User Profile Mini */}
-                <div className="mt-2 pt-2 border-t border-[#e3e2e5]">
+                <div className="mt-2 pt-2 border-t border-border">
                     <div
-                        className={`flex items-center gap-3 px-2 py-2 rounded-sm hover:bg-[#f3f3f9] cursor-pointer transition-colors ${isCollapsed ? "justify-center" : ""}`}
+                        className={`flex items-center gap-3 px-2 py-2 rounded-sm hover:bg-muted cursor-pointer transition-colors ${isCollapsed ? "justify-center" : ""}`}
                         onClick={() => router.push("/dashboard/settings")}
                     >
                         <div className="relative shrink-0">
-                            <div className="w-8 h-8 bg-gradient-to-tr from-[#262ef2] to-[#201f32] flex items-center justify-center text-xs font-bold text-white shadow-sm ring-2 ring-white rounded-sm">
+                            <div className="w-8 h-8 bg-gradient-to-tr from-primary to-secondary flex items-center justify-center text-xs font-bold text-white shadow-sm ring-2 ring-white rounded-sm">
                                 {userData?.profile?.username?.substring(0, 2).toUpperCase() || "??"}
                             </div>
                             <div className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-green-500 border-2 border-white rounded-sm"></div>
                         </div>
                         {!isCollapsed && (
                             <div className="flex-1 min-w-0">
-                                <div className="text-sm font-medium text-[#201f32] truncate">
+                                <div className="text-sm font-medium text-secondary truncate">
                                     {userData?.profile?.username || "User"}
                                 </div>
-                                <div className="text-xs text-[#a1a1a1] truncate capitalize">
+                                <div className="text-xs text-muted-foreground truncate capitalize">
                                     {userData?.billing?.current_plan || "free"} Plan
                                 </div>
                             </div>
@@ -233,7 +233,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                                     e.stopPropagation();
                                     logout();
                                 }}
-                                className="relative group p-1 hover:bg-[#f3f3f9] transition-colors text-[#a1a1a1] hover:text-red-400 shrink-0"
+                                className="relative group p-1 hover:bg-muted transition-colors text-muted-foreground hover:text-red-400 shrink-0"
                             >
                                 <HiLogout className="w-4 h-4" />
                                 <div className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1 opacity-0 group-hover:opacity-100 transition-all ${TOOLTIP_STYLE_CLASSES} translate-y-1 group-hover:translate-y-0`}>
@@ -248,7 +248,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
 
             {/* Desktop Collapse Toggle — fixed arrow tab on the right edge */}
             <button
-                className="hidden lg:flex absolute -right-3.5 top-1/2 -translate-y-1/2 w-7 h-7 items-center justify-center bg-white border border-[#e3e2e5] shadow-md text-[#a1a1a1] hover:text-[#262ef2] hover:border-[#262ef2]/30 transition-all z-10 rounded-sm"
+                className="hidden lg:flex absolute -right-3.5 top-1/2 -translate-y-1/2 w-7 h-7 items-center justify-center bg-white border border-border shadow-md text-muted-foreground hover:text-primary hover:border-primary/30 transition-all z-10 rounded-sm"
                 onClick={() => setIsCollapsed(!isCollapsed)}
                 title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
             >

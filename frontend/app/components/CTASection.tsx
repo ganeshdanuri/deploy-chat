@@ -26,39 +26,39 @@ export default function CTASection({ onGetStarted }: { onGetStarted: () => void 
                     <div className="relative z-10 max-w-2xl mx-auto">
                         {/* Badge */}
                         <div className="flex items-center justify-center gap-3 mb-8">
-                            <div className="w-8 h-[2px] bg-[#3c46dc]" />
+                            <div className="w-8 h-[2px] bg-primary" />
                             <span className="text-xs font-semibold text-[#8a8a9a] tracking-wide uppercase">
                                 {PAGE_CONTENT.cta.badge}
                             </span>
-                            <div className="w-8 h-[2px] bg-[#3c46dc]" />
+                            <div className="w-8 h-[2px] bg-primary" />
                         </div>
 
                         <h2 className="text-[44px] font-semibold text-white mb-6 leading-tight tracking-tight">
                             {PAGE_CONTENT.cta.headlineWait}{" "}
-                            <span className="text-[#3c46dc]">{PAGE_CONTENT.cta.headlineHighlight}</span>
+                            <span className="text-primary">{PAGE_CONTENT.cta.headlineHighlight}</span>
                         </h2>
 
                         <p className="text-lg text-[#8a8a9a] leading-relaxed mb-12 max-w-lg mx-auto">
                             {PAGE_CONTENT.cta.subtitleStart}{" "}
-                            <span className="font-semibold text-white">{BRAND.first} <span className="text-[#3c46dc]">{BRAND.second}</span></span>.
+                            <span className="font-semibold text-white">{BRAND.first} <span className="text-primary">{BRAND.second}</span></span>.
                             {PAGE_CONTENT.cta.subtitleEnd}
                         </p>
 
                         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                             <button
                                 onClick={onGetStarted}
-                                className="text-sm font-medium px-10 py-4 bg-white text-[#201f32] hover:-translate-y-0.5 transition-all"
+                                className="text-sm font-medium px-10 py-4 bg-white text-secondary hover:-translate-y-0.5 transition-all"
                             >
                                 {PAGE_CONTENT.cta.primaryBtn}
                             </button>
                             <button
-                                className="text-sm font-medium px-10 py-4 border border-[#3a3a4e] text-[#c8c8d4] hover:border-[#3c46dc] hover:text-white transition-all"
+                                className="text-sm font-medium px-10 py-4 border border-[#3a3a4e] text-[#c8c8d4] hover:border-primary hover:text-white transition-all"
                             >
                                 {PAGE_CONTENT.cta.secondaryBtn}
                             </button>
                         </div>
 
-                        <p className="mt-10 text-xs text-[#5a5a6a] font-normal tracking-widest uppercase">
+                        <p className="mt-10 text-xs text-muted-foreground font-normal tracking-widest uppercase">
                             {PAGE_CONTENT.cta.footerText}
                         </p>
                     </div>

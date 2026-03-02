@@ -60,24 +60,24 @@ interface SelectableItemListProps {
 
 const ACCENT_MAP: Record<SelectableAccentColor, SelectableColors> = {
     indigo: {
-        selectedCard: "bg-[#262ef2]/5 border-[#262ef2]/20 shadow-sm",
-        unselectedCard: "bg-[#f3f3f9]/50 border-[#e3e2e5] hover:border-[#262ef2]/30 hover:bg-[#262ef2]/5 hover:shadow-sm",
-        selectedIcon: "bg-[#262ef2] border-[#262ef2] text-white shadow-md",
-        unselectedIcon: "bg-white border-[#e3e2e5] text-[#a1a1a1]",
-        selectedText: "text-[#201f32]",
-        unselectedText: "text-[#5a5a6a]",
-        selectedRadio: "bg-[#262ef2] border-[#262ef2]",
-        unselectedRadio: "bg-white border-[#e3e2e5]",
+        selectedCard: "bg-primary/5 border-primary/20 shadow-sm",
+        unselectedCard: "bg-muted/50 border-border hover:border-primary/30 hover:bg-primary/5 hover:shadow-sm",
+        selectedIcon: "bg-primary border-primary text-white shadow-md",
+        unselectedIcon: "bg-white border-border text-muted-foreground",
+        selectedText: "text-secondary",
+        unselectedText: "text-muted-foreground",
+        selectedRadio: "bg-primary border-primary",
+        unselectedRadio: "bg-white border-border",
     },
     emerald: {
         selectedCard: "bg-emerald-50 border-emerald-200 shadow-sm",
-        unselectedCard: "bg-[#f3f3f9]/50 border-[#e3e2e5] hover:border-emerald-100/50 hover:bg-emerald-50/30 hover:shadow-sm",
+        unselectedCard: "bg-muted/50 border-border hover:border-emerald-100/50 hover:bg-emerald-50/30 hover:shadow-sm",
         selectedIcon: "bg-emerald-600 border-emerald-600 text-white shadow-md",
-        unselectedIcon: "bg-white border-[#e3e2e5] text-[#a1a1a1]",
+        unselectedIcon: "bg-white border-border text-muted-foreground",
         selectedText: "text-emerald-900",
-        unselectedText: "text-[#5a5a6a]",
+        unselectedText: "text-muted-foreground",
         selectedRadio: "bg-emerald-600 border-emerald-600",
-        unselectedRadio: "bg-white border-[#e3e2e5]",
+        unselectedRadio: "bg-white border-border",
     },
     amber: {
         selectedCard: "bg-amber-50 border-amber-300 shadow-sm",
@@ -204,9 +204,9 @@ export function SelectableItemList({
 
     if (items.length === 0) {
         return (
-            <div className={`${dim.emptyPadding} text-center bg-[#f3f3f9] border border-dashed border-[#e3e2e5]`}>
-                <EmptyIcon className={`${dim.emptyIcon} text-[#a1a1a1] mx-auto mb-3`} />
-                <p className="text-sm text-[#5a5a6a] font-medium leading-relaxed">{emptyMessage}</p>
+            <div className={`${dim.emptyPadding} text-center bg-muted border border-dashed border-border`}>
+                <EmptyIcon className={`${dim.emptyIcon} text-muted-foreground mx-auto mb-3`} />
+                <p className="text-sm text-muted-foreground font-medium leading-relaxed">{emptyMessage}</p>
             </div>
         );
     }
@@ -246,7 +246,7 @@ export function SelectableItemList({
                                     {item.label}
                                 </p>
                                 {item.sublabel && (
-                                    <p className={`${dim.sublabelText} text-[#a1a1a1] uppercase tracking-tight truncate`}>
+                                    <p className={`${dim.sublabelText} text-muted-foreground uppercase tracking-tight truncate`}>
                                         {item.sublabel}
                                     </p>
                                 )}

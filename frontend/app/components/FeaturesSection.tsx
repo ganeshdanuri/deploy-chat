@@ -11,27 +11,27 @@ export default function FeaturesSection() {
         {/* ── Section Header ── */}
         <div className="mb-14 text-center">
           <div className="flex items-center justify-center gap-3 mb-6">
-            <div className="w-8 h-[2px] bg-[#3c46dc]" />
-            <span className="text-xs font-semibold text-[#4a4a5a] tracking-wide uppercase">
+            <div className="w-8 h-[2px] bg-primary" />
+            <span className="text-xs font-semibold text-foreground tracking-wide uppercase">
               {PAGE_CONTENT.features.badge}
             </span>
-            <div className="w-8 h-[2px] bg-[#3c46dc]" />
+            <div className="w-8 h-[2px] bg-primary" />
           </div>
-          <h2 className="text-[40px] md:text-[44px] font-semibold text-[#201f32] mb-6 leading-tight tracking-tight">
+          <h2 className="text-[40px] md:text-[44px] font-semibold text-secondary mb-6 leading-tight tracking-tight">
             {PAGE_CONTENT.features.headlineWait}{" "}
-            <span className="text-[#3c46dc]">{PAGE_CONTENT.features.headlineHighlight}</span>
+            <span className="text-primary">{PAGE_CONTENT.features.headlineHighlight}</span>
           </h2>
-          <p className="text-lg text-[#5a5a6a] max-w-xl mx-auto leading-relaxed">
+          <p className="text-lg text-muted-foreground max-w-xl mx-auto leading-relaxed">
             {PAGE_CONTENT.features.subtitle}
           </p>
         </div>
 
         {/* ── Features Grid — 3-column, clean ── */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px bg-[#e8e8f0]">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px bg-border">
           {features.map((feature) => (
             <div
               key={feature.id}
-              className="group relative bg-white p-10 transition-colors duration-200 hover:bg-[#fafaff]"
+              className="group relative bg-white p-10 transition-colors duration-200 hover:bg-muted"
             >
               {/* Icon */}
               <div
@@ -42,12 +42,12 @@ export default function FeaturesSection() {
               </div>
 
               {/* Title */}
-              <h3 className="text-lg font-semibold text-[#201f32] mb-3">
+              <h3 className="text-lg font-semibold text-secondary mb-3">
                 {feature.title}
               </h3>
 
               {/* Description */}
-              <p className="text-[15px] text-[#5a5a6a] leading-relaxed">
+              <p className="text-[15px] text-muted-foreground leading-relaxed">
                 {feature.description}
               </p>
 

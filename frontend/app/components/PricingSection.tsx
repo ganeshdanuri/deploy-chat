@@ -15,17 +15,17 @@ function getPlanHref(plan: Plan): string {
 function PlanPrice({ price, popular }: { price: string; popular?: boolean }) {
     if (price === "Custom") {
         return (
-            <p className={`text-4xl font-semibold tracking-tight ${popular ? "text-white" : "text-[#201f32]"}`}>
+            <p className={`text-4xl font-semibold tracking-tight ${popular ? "text-white" : "text-secondary"}`}>
                 Custom
             </p>
         );
     }
     return (
         <div className="flex items-baseline gap-1">
-            <span className={`text-4xl font-semibold tabular-nums tracking-tight ${popular ? "text-white" : "text-[#201f32]"}`}>
+            <span className={`text-4xl font-semibold tabular-nums tracking-tight ${popular ? "text-white" : "text-secondary"}`}>
                 ${price}
             </span>
-            <span className={`text-sm font-normal ${popular ? "text-white/70" : "text-[#a1a1a1]"}`}>/mo</span>
+            <span className={`text-sm font-normal ${popular ? "text-white/70" : "text-muted-foreground"}`}>/mo</span>
         </div>
     );
 }
@@ -35,12 +35,12 @@ function FeatureItem({ feature, popular }: { feature: string; popular?: boolean 
         <li className="flex items-start gap-3">
             <span
                 aria-hidden="true"
-                className={`mt-0.5 flex-shrink-0 rounded-full p-0.5 ${popular ? "text-[#262ef2] bg-white" : "text-white bg-[#262ef2]"
+                className={`mt-0.5 flex-shrink-0 rounded-full p-0.5 ${popular ? "text-primary bg-white" : "text-white bg-primary"
                     }`}
             >
                 <HiCheck className="h-3.5 w-3.5" />
             </span>
-            <span className={`text-base leading-relaxed ${popular ? "text-white/90" : "text-[#4d5564]"}`}>
+            <span className={`text-base leading-relaxed ${popular ? "text-white/90" : "text-foreground"}`}>
                 {feature}
             </span>
         </li>
@@ -56,7 +56,7 @@ function PlanCard({ plan }: { plan: Plan }) {
             className={[
                 "relative flex flex-col p-8 transition-all duration-200",
                 plan.popular
-                    ? "shadow-2xl bg-[#262ef2]"
+                    ? "shadow-2xl bg-primary"
                     : "bg-white shadow-sm hover:shadow-md",
             ].join(" ")}
             style={plan.popular ? { boxShadow: `0 25px 50px -12px #262ef24d` } : {}}
@@ -73,7 +73,7 @@ function PlanCard({ plan }: { plan: Plan }) {
 
             {/* Plan name */}
             <h3
-                className={`mb-1 text-sm font-medium uppercase tracking-widest ${plan.popular ? "text-white/80" : "text-[#262ef2]"}`}
+                className={`mb-1 text-sm font-medium uppercase tracking-widest ${plan.popular ? "text-white/80" : "text-primary"}`}
             >
                 {plan.name}
             </h3>
@@ -84,7 +84,7 @@ function PlanCard({ plan }: { plan: Plan }) {
             </div>
 
             {/* Description */}
-            <p className={`mb-8 text-base leading-relaxed ${plan.popular ? "text-white/80" : "text-[#a1a1a1]"}`}>
+            <p className={`mb-8 text-base leading-relaxed ${plan.popular ? "text-white/80" : "text-muted-foreground"}`}>
                 {plan.description}
             </p>
 
@@ -104,8 +104,8 @@ function PlanCard({ plan }: { plan: Plan }) {
                     "mt-auto flex items-center justify-center gap-2 px-6 py-3.5 text-sm font-medium",
                     "transition-all duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2",
                     plan.popular
-                        ? "bg-white text-[#262ef2] hover:bg-white/90 focus-visible:outline-white"
-                        : "bg-[#f3f3f9] text-[#201f32] hover:bg-[#e3e2e5] focus-visible:outline-indigo-600",
+                        ? "bg-white text-primary hover:bg-white/90 focus-visible:outline-white"
+                        : "bg-muted text-secondary hover:bg-border focus-visible:outline-indigo-600",
                 ].join(" ")}
             >
                 {plan.cta}
@@ -122,27 +122,27 @@ export default function PricingSection() {
         <section
             id="pricing"
             aria-labelledby="pricing-heading"
-            className="bg-[#f3f3f9] py-20 sm:py-24"
+            className="bg-muted py-20 sm:py-24"
         >
             <div className="mx-auto max-w-[1400px] px-10">
                 {/* Header */}
                 <div className="mb-14 text-center">
                     <div className="flex items-center justify-center gap-3 mb-6">
-                        <div className="w-8 h-[2px] bg-[#3c46dc]" />
-                        <span className="text-xs font-semibold text-[#4a4a5a] tracking-wide uppercase">
+                        <div className="w-8 h-[2px] bg-primary" />
+                        <span className="text-xs font-semibold text-foreground tracking-wide uppercase">
                             {PAGE_CONTENT.pricing.badge}
                         </span>
-                        <div className="w-8 h-[2px] bg-[#3c46dc]" />
+                        <div className="w-8 h-[2px] bg-primary" />
                     </div>
 
                     <h2
                         id="pricing-heading"
-                        className="text-[40px] md:text-[44px] font-semibold text-[#201f32] mb-6 leading-tight tracking-tight"
+                        className="text-[40px] md:text-[44px] font-semibold text-secondary mb-6 leading-tight tracking-tight"
                     >
                         {PAGE_CONTENT.pricing.headline}
                     </h2>
 
-                    <p className="text-lg text-[#5a5a6a] max-w-xl mx-auto leading-relaxed">
+                    <p className="text-lg text-muted-foreground max-w-xl mx-auto leading-relaxed">
                         {PAGE_CONTENT.pricing.subtitle}
                     </p>
                 </div>
@@ -155,11 +155,11 @@ export default function PricingSection() {
                 </div>
 
                 {/* Enterprise footnote */}
-                <p className="mt-12 text-center text-sm text-[#a1a1a1]">
+                <p className="mt-12 text-center text-sm text-muted-foreground">
                     Need a custom volume deal or dedicated infrastructure?{" "}
                     <a
                         href="mailto:sales@deploymind.com"
-                        className="font-medium underline-offset-2 hover:underline text-[#262ef2]"
+                        className="font-medium underline-offset-2 hover:underline text-primary"
                     >
                         Talk to our sales team
                     </a>

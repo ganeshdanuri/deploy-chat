@@ -72,8 +72,8 @@ function ChatWidgetVisual() {
     <div ref={widgetRef} className="w-[360px] bg-white overflow-hidden"
       style={{ boxShadow: "0 24px 80px rgba(30,30,80,0.18), 0 0 0 1px rgba(60,70,220,0.08)" }}>
       {/* Header */}
-      <div className="bg-[#201f32] px-4 py-3 flex items-center gap-2.5">
-        <div className="w-7 h-7 bg-[#3c46dc] flex items-center justify-center">
+      <div className="bg-secondary px-4 py-3 flex items-center gap-2.5">
+        <div className="w-7 h-7 bg-primary flex items-center justify-center">
           <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
           </svg>
@@ -96,7 +96,7 @@ function ChatWidgetVisual() {
       <div className="px-4 py-4 space-y-3 min-h-[220px] bg-[#fafafe]">
         {/* Welcome message */}
         <div className="flex gap-2">
-          <div className="w-5 h-5 bg-[#3c46dc] flex-shrink-0 flex items-center justify-center mt-0.5">
+          <div className="w-5 h-5 bg-primary flex-shrink-0 flex items-center justify-center mt-0.5">
             <svg viewBox="0 0 24 24" className="w-3 h-3" fill="none" stroke="white" strokeWidth="2">
               <path d="M13 10V3L4 14h7v7l9-11h-7z" />
             </svg>
@@ -109,7 +109,7 @@ function ChatWidgetVisual() {
         {/* User question (typing) */}
         {questionText && (
           <div className="flex justify-end">
-            <div className="bg-[#3c46dc] px-3 py-2 text-[11px] text-white leading-relaxed max-w-[220px]">
+            <div className="bg-primary px-3 py-2 text-[11px] text-white leading-relaxed max-w-[220px]">
               {questionText}
               {phase === "typing-q" && <span className="inline-block w-[2px] h-[10px] bg-white/70 ml-0.5 animate-pulse" />}
             </div>
@@ -119,14 +119,14 @@ function ChatWidgetVisual() {
         {/* AI answer (typing) */}
         {answerText && (
           <div className="flex gap-2">
-            <div className="w-5 h-5 bg-[#3c46dc] flex-shrink-0 flex items-center justify-center mt-0.5">
+            <div className="w-5 h-5 bg-primary flex-shrink-0 flex items-center justify-center mt-0.5">
               <svg viewBox="0 0 24 24" className="w-3 h-3" fill="none" stroke="white" strokeWidth="2">
                 <path d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
             </div>
             <div className="bg-[#f0f0f6] px-3 py-2 text-[11px] text-[#4a4a66] leading-relaxed max-w-[240px]">
               {answerText}
-              {phase === "typing-a" && <span className="inline-block w-[2px] h-[10px] bg-[#3c46dc]/60 ml-0.5 animate-pulse" />}
+              {phase === "typing-a" && <span className="inline-block w-[2px] h-[10px] bg-primary/60 ml-0.5 animate-pulse" />}
             </div>
           </div>
         )}
@@ -134,15 +134,15 @@ function ChatWidgetVisual() {
         {/* Thinking indicator */}
         {phase === "pause" && (
           <div className="flex gap-2">
-            <div className="w-5 h-5 bg-[#3c46dc] flex-shrink-0 flex items-center justify-center mt-0.5">
+            <div className="w-5 h-5 bg-primary flex-shrink-0 flex items-center justify-center mt-0.5">
               <svg viewBox="0 0 24 24" className="w-3 h-3" fill="none" stroke="white" strokeWidth="2">
                 <path d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
             </div>
             <div className="bg-[#f0f0f6] px-2.5 py-1.5 flex items-center gap-1">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#3c46dc]/40 animate-bounce" style={{ animationDelay: "0ms" }} />
-              <span className="w-1.5 h-1.5 rounded-full bg-[#3c46dc]/40 animate-bounce" style={{ animationDelay: "150ms" }} />
-              <span className="w-1.5 h-1.5 rounded-full bg-[#3c46dc]/40 animate-bounce" style={{ animationDelay: "300ms" }} />
+              <span className="w-1.5 h-1.5 rounded-full bg-primary/40 animate-bounce" style={{ animationDelay: "0ms" }} />
+              <span className="w-1.5 h-1.5 rounded-full bg-primary/40 animate-bounce" style={{ animationDelay: "150ms" }} />
+              <span className="w-1.5 h-1.5 rounded-full bg-primary/40 animate-bounce" style={{ animationDelay: "300ms" }} />
             </div>
           </div>
         )}
@@ -150,10 +150,10 @@ function ChatWidgetVisual() {
 
       {/* Input bar */}
       <div className="px-3 py-2 border-t border-[#ebebf5] bg-white flex items-center gap-2">
-        <div className="flex-1 h-7 bg-[#f5f5fa] border border-[#e8e8f0] px-2 flex items-center">
-          <span className="text-[9px] text-[#a1a1a1]">Ask a question...</span>
+        <div className="flex-1 h-7 bg-[#f5f5fa] border border-border px-2 flex items-center">
+          <span className="text-[9px] text-muted-foreground">Ask a question...</span>
         </div>
-        <div className="w-6 h-6 bg-[#3c46dc] flex items-center justify-center">
+        <div className="w-6 h-6 bg-primary flex items-center justify-center">
           <svg viewBox="0 0 24 24" className="w-3 h-3" fill="none" stroke="white" strokeWidth="2.5">
             <path d="M5 12h14M12 5l7 7-7 7" />
           </svg>
@@ -324,9 +324,9 @@ function TypingCycle() {
   }, [displayed, isDeleting, phraseIdx]);
 
   return (
-    <span className="text-[#3c46dc]">
+    <span className="text-primary">
       {displayed}
-      <span className="inline-block w-[3px] h-[0.85em] bg-[#3c46dc] ml-0.5 align-middle"
+      <span className="inline-block w-[3px] h-[0.85em] bg-primary ml-0.5 align-middle"
         style={{ opacity: showCursor ? 1 : 0, transition: "opacity 0.1s" }} />
     </span>
   );
@@ -359,15 +359,15 @@ export default function HeroSection({ onGetStarted }: HeroSectionProps) {
           <div className="mb-8">
             <a
               href="#"
-              className="inline-flex items-center gap-2 text-sm text-[#4a4a5a] border border-[#dddde8] rounded px-3 py-1.5 bg-white/60 hover:bg-white transition-colors"
+              className="inline-flex items-center gap-2 text-sm text-foreground border border-[#dddde8] rounded px-3 py-1.5 bg-white/60 hover:bg-white transition-colors"
             >
               {PAGE_CONTENT.hero.badge}
-              <span className="text-[#3c46dc] text-base">›</span>
+              <span className="text-primary text-base">›</span>
             </a>
           </div>
 
           {/* Headline */}
-          <h1 className="text-[44px] lg:text-[52px] font-semibold leading-[1.08] tracking-tight text-[#201f32] mb-6">
+          <h1 className="text-[44px] lg:text-[52px] font-semibold leading-[1.08] tracking-tight text-secondary mb-6">
             {PAGE_CONTENT.hero.headlineStart}
             <br />
             <span className="inline-block" style={{ minHeight: "1.15em" }}>
@@ -378,7 +378,7 @@ export default function HeroSection({ onGetStarted }: HeroSectionProps) {
           </h1>
 
           {/* Subtitle */}
-          <p className="text-lg text-[#5a5a6a] leading-relaxed max-w-[480px] mb-10">
+          <p className="text-lg text-muted-foreground leading-relaxed max-w-[480px] mb-10">
             {PAGE_CONTENT.hero.subtitle}
           </p>
 
@@ -386,10 +386,10 @@ export default function HeroSection({ onGetStarted }: HeroSectionProps) {
           <div>
             <button
               onClick={onGetStarted}
-              className="inline-flex items-center gap-3 bg-[#1a1a2e] text-white text-base font-semibold px-7 py-4 rounded-lg hover:bg-[#2a2a40] transition-all hover:-translate-y-0.5 hover:shadow-xl active:translate-y-0"
+              className="inline-flex items-center gap-3 bg-secondary text-white text-base font-semibold px-7 py-4 rounded-lg hover:bg-[#2a2a40] transition-all hover:-translate-y-0.5 hover:shadow-xl active:translate-y-0"
             >
               {PAGE_CONTENT.hero.ctaStandard}
-              <span className="text-[#3c46dc] text-lg">⇒</span>
+              <span className="text-primary text-lg">⇒</span>
             </button>
           </div>
 

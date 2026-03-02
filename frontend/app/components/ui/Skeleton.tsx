@@ -17,7 +17,7 @@ export function Skeleton({ className, style }: SkeletonProps) {
     return (
         <div
             className={cn(
-                "relative overflow-hidden bg-[#f3f3f9]",
+                "relative overflow-hidden bg-muted",
                 "before:absolute before:inset-0 before:-translate-x-full",
                 "before:bg-gradient-to-r before:from-transparent before:via-white/80 before:to-transparent",
                 "before:animate-shimmer",
@@ -42,9 +42,9 @@ interface TableSkeletonProps {
  */
 export function TableSkeleton({ rows = 5, columns = 4 }: TableSkeletonProps) {
     return (
-        <div className="bg-white border border-[#e3e2e5] shadow-sm overflow-hidden">
+        <div className="bg-white border border-border shadow-sm overflow-hidden">
             {/* Fake table header */}
-            <div className="flex gap-6 px-4 py-3 bg-[#f3f3f9] border-b border-[#e3e2e5]">
+            <div className="flex gap-6 px-4 py-3 bg-muted border-b border-border">
                 {Array.from({ length: columns }).map((_, i) => (
                     <Skeleton
                         key={i}
@@ -54,7 +54,7 @@ export function TableSkeleton({ rows = 5, columns = 4 }: TableSkeletonProps) {
             </div>
 
             {/* Fake rows */}
-            <div className="divide-y divide-[#f3f3f9]">
+            <div className="divide-y divide-muted">
                 {Array.from({ length: rows }).map((_, rowIdx) => (
                     <div key={rowIdx} className="flex items-center gap-6 px-4 py-4">
                         {/* Avatar + text cell */}
@@ -95,7 +95,7 @@ export function TableSkeleton({ rows = 5, columns = 4 }: TableSkeletonProps) {
  */
 export function MetricCardSkeleton() {
     return (
-        <div className="p-6 bg-white border border-[#e3e2e5] shadow-sm space-y-4">
+        <div className="p-6 bg-white border border-border shadow-sm space-y-4">
             <div className="flex items-center gap-3">
                 <Skeleton className="w-10 h-10" />
                 <Skeleton className="h-3 w-28" />
@@ -115,7 +115,7 @@ export function DashboardSkeleton() {
     return (
         <div className="w-full max-w-[1400px] space-y-8 animate-pulse-subtle">
             {/* Header */}
-            <div className="flex items-center justify-between border-b border-[#e3e2e5] pb-6">
+            <div className="flex items-center justify-between border-b border-border pb-6">
                 <div className="space-y-2">
                     <Skeleton className="h-7 w-52" />
                     <Skeleton className="h-3 w-80" />
@@ -136,10 +136,10 @@ export function DashboardSkeleton() {
             {/* Lower Panels */}
             <div className="flex flex-col lg:grid lg:grid-cols-3 gap-6">
                 {/* Quick Actions */}
-                <div className="bg-white border border-[#e3e2e5] shadow-sm p-6 space-y-4">
+                <div className="bg-white border border-border shadow-sm p-6 space-y-4">
                     <Skeleton className="h-4 w-28" />
                     {Array.from({ length: 3 }).map((_, i) => (
-                        <div key={i} className="flex items-center gap-3 p-3 border border-[#f3f3f9]">
+                        <div key={i} className="flex items-center gap-3 p-3 border border-muted">
                             <Skeleton className="w-10 h-10 shrink-0" />
                             <div className="space-y-1.5 flex-1">
                                 <Skeleton className="h-3 w-24" />
@@ -150,10 +150,10 @@ export function DashboardSkeleton() {
                 </div>
 
                 {/* Recent Activity */}
-                <div className="bg-white border border-[#e3e2e5] shadow-sm p-6 space-y-4 lg:col-span-2">
+                <div className="bg-white border border-border shadow-sm p-6 space-y-4 lg:col-span-2">
                     <Skeleton className="h-4 w-32" />
                     {Array.from({ length: 3 }).map((_, i) => (
-                        <div key={i} className="flex gap-4 py-3 border-b border-[#f3f3f9] last:border-0">
+                        <div key={i} className="flex gap-4 py-3 border-b border-muted last:border-0">
                             <Skeleton className="w-9 h-9 shrink-0 mt-1" />
                             <div className="flex-1 space-y-2">
                                 <div className="flex justify-between">
@@ -178,7 +178,7 @@ export function DashboardSkeleton() {
  */
 export function PlaygroundConfigSkeleton() {
     return (
-        <div className="w-80 bg-white border border-[#e3e2e5] shadow-sm p-6 flex flex-col h-full overflow-y-auto space-y-8">
+        <div className="w-80 bg-white border border-border shadow-sm p-6 flex flex-col h-full overflow-y-auto space-y-8">
             {/* Header */}
             <div className="flex items-center gap-2">
                 <Skeleton className="w-8 h-8" />
@@ -192,7 +192,7 @@ export function PlaygroundConfigSkeleton() {
             </div>
 
             {/* Temperature */}
-            <div className="space-y-4 pt-8 border-t border-[#f3f3f9]">
+            <div className="space-y-4 pt-8 border-t border-muted">
                 <div className="flex justify-between">
                     <Skeleton className="h-3 w-28" />
                     <Skeleton className="h-5 w-10" />
@@ -212,7 +212,7 @@ export function SelectableListSkeleton({ rows = 3 }: { rows?: number }) {
     return (
         <div className="space-y-3">
             {Array.from({ length: rows }).map((_, i) => (
-                <div key={i} className="flex items-center justify-between p-4 border border-[#f3f3f9] bg-white">
+                <div key={i} className="flex items-center justify-between p-4 border border-muted bg-white">
                     <div className="flex items-center gap-4">
                         <Skeleton className="w-10 h-10" />
                         <div className="space-y-1.5">
@@ -236,8 +236,8 @@ export function SettingsSkeleton() {
     return (
         <div className="space-y-6 animate-pulse-subtle">
             {/* Form Card */}
-            <div className="bg-white border border-[#e3e2e5] shadow-sm overflow-hidden">
-                <div className="p-6 border-b border-[#e3e2e5] space-y-2">
+            <div className="bg-white border border-border shadow-sm overflow-hidden">
+                <div className="p-6 border-b border-border space-y-2">
                     <Skeleton className="h-5 w-40" />
                     <Skeleton className="h-3 w-64" />
                 </div>
@@ -256,7 +256,7 @@ export function SettingsSkeleton() {
             </div>
 
             {/* Billing Card Skeleton */}
-            <div className="p-6 bg-white border border-[#e3e2e5] shadow-sm flex flex-col md:flex-row gap-6">
+            <div className="p-6 bg-white border border-border shadow-sm flex flex-col md:flex-row gap-6">
                 <div className="flex-1 space-y-4">
                     <div className="flex items-center gap-3">
                         <Skeleton className="w-10 h-10" />
@@ -298,7 +298,7 @@ export function AnalyticsSkeleton() {
             {/* Summary Cards */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 {Array.from({ length: 4 }).map((_, i) => (
-                    <div key={i} className="bg-white p-4 border border-[#e3e2e5] shadow-sm space-y-3">
+                    <div key={i} className="bg-white p-4 border border-border shadow-sm space-y-3">
                         <Skeleton className="h-3 w-32" />
                         <Skeleton className="h-7 w-20" />
                         <Skeleton className="h-3 w-16" />
@@ -309,7 +309,7 @@ export function AnalyticsSkeleton() {
             {/* Charts Section */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {Array.from({ length: 2 }).map((_, i) => (
-                    <div key={i} className="bg-white p-6 border border-[#e3e2e5] shadow-sm h-80 space-y-6">
+                    <div key={i} className="bg-white p-6 border border-border shadow-sm h-80 space-y-6">
                         <Skeleton className="h-4 w-40" />
                         <div className="flex-1 flex items-end justify-between gap-2 h-48">
                             {Array.from({ length: 12 }).map((_, j) => (
@@ -320,7 +320,7 @@ export function AnalyticsSkeleton() {
                                 />
                             ))}
                         </div>
-                        <div className="flex justify-between border-t border-[#f3f3f9] pt-3">
+                        <div className="flex justify-between border-t border-muted pt-3">
                             {Array.from({ length: 6 }).map((_, k) => (
                                 <Skeleton key={k} className="h-2.5 w-8" />
                             ))}
@@ -338,7 +338,7 @@ export function AnalyticsSkeleton() {
  */
 export function ChatbotCardSkeleton() {
     return (
-        <div className="bg-white border border-[#e3e2e5] p-5 space-y-4 animate-pulse-subtle">
+        <div className="bg-white border border-border p-5 space-y-4 animate-pulse-subtle">
             <div className="flex justify-between items-start">
                 <div className="flex items-center gap-3">
                     <Skeleton className="w-10 h-10" />
@@ -353,7 +353,7 @@ export function ChatbotCardSkeleton() {
                 </div>
             </div>
             <div className="space-y-3">
-                <div className="bg-[#f3f3f9] p-3 space-y-2">
+                <div className="bg-muted p-3 space-y-2">
                     <Skeleton className="h-2 w-20 opacity-50" />
                     <Skeleton className="h-3 w-full" />
                 </div>

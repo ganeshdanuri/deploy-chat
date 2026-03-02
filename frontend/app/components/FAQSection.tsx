@@ -17,25 +17,25 @@ export default function FAQSection({ faqs = FAQS }) {
                 {/* ── Section Header ── */}
                 <div className="mb-14 text-center">
                     <div className="flex items-center justify-center gap-3 mb-6">
-                        <div className="w-8 h-[2px] bg-[#3c46dc]" />
-                        <span className="text-xs font-semibold text-[#4a4a5a] tracking-wide uppercase">
+                        <div className="w-8 h-[2px] bg-primary" />
+                        <span className="text-xs font-semibold text-foreground tracking-wide uppercase">
                             {PAGE_CONTENT.faq.badge}
                         </span>
-                        <div className="w-8 h-[2px] bg-[#3c46dc]" />
+                        <div className="w-8 h-[2px] bg-primary" />
                     </div>
                     <h2
                         id="faq-heading"
-                        className="text-[40px] md:text-[44px] font-semibold text-[#201f32] mb-6 leading-tight tracking-tight"
+                        className="text-[40px] md:text-[44px] font-semibold text-secondary mb-6 leading-tight tracking-tight"
                     >
                         {PAGE_CONTENT.faq.headline}
                     </h2>
-                    <p className="text-lg text-[#5a5a6a] max-w-xl mx-auto leading-relaxed">
+                    <p className="text-lg text-muted-foreground max-w-xl mx-auto leading-relaxed">
                         {PAGE_CONTENT.faq.subtitle}
                     </p>
                 </div>
 
                 {/* ── FAQ Accordion ── */}
-                <div className="mx-auto max-w-4xl border border-[#e8e8f0] bg-[#fafaff]">
+                <div className="mx-auto max-w-4xl border border-border bg-muted">
                     <dl>
                         {faqs.map((faq, i) => {
                             const isOpen = openIndex === i;
@@ -56,7 +56,7 @@ export default function FAQSection({ faqs = FAQS }) {
                                             className="flex w-full items-center justify-between gap-4 text-left px-8 py-6 hover:bg-white transition-colors duration-150"
                                         >
                                             <span
-                                                className={`text-[17px] font-medium leading-snug transition-colors duration-200 ${isOpen ? "text-[#3c46dc]" : "text-[#201f32]"
+                                                className={`text-[17px] font-medium leading-snug transition-colors duration-200 ${isOpen ? "text-primary" : "text-secondary"
                                                     }`}
                                             >
                                                 {faq.question}
@@ -85,7 +85,7 @@ export default function FAQSection({ faqs = FAQS }) {
                                             }`}
                                     >
                                         <div className="overflow-hidden">
-                                            <p className="px-8 pb-6 pt-2 text-[15px] leading-relaxed text-[#5a5a6a]">
+                                            <p className="px-8 pb-6 pt-2 text-[15px] leading-relaxed text-muted-foreground">
                                                 {faq.answer}
                                             </p>
                                         </div>

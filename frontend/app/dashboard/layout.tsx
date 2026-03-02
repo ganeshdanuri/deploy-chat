@@ -51,10 +51,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
     if (isLoading) {
         return (
-            <div className="flex min-h-screen items-center justify-center bg-[#f3f3f9]">
+            <div className="flex min-h-screen items-center justify-center bg-muted">
                 <div className="animate-pulse flex flex-col items-center gap-4">
                     <Logo className="h-16 w-auto animate-bounce" />
-                    <div className="h-2 w-24 bg-[#e3e2e5]" />
+                    <div className="h-2 w-24 bg-border" />
                 </div>
             </div>
         );
@@ -63,13 +63,13 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     if (!isAuthenticated) return null;
 
     return (
-        <div className="flex min-h-screen bg-[#f3f3f9] text-[#201f32] font-sans overflow-hidden dashboard-theme">
+        <div className="flex min-h-screen bg-muted text-secondary font-sans overflow-hidden dashboard-theme">
             <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
 
             {/* Mobile Overlay */}
             {isSidebarOpen && (
                 <div
-                    className="fixed inset-0 bg-[#201f32]/40 backdrop-blur-sm z-40 lg:hidden"
+                    className="fixed inset-0 bg-secondary/40 backdrop-blur-sm z-40 lg:hidden"
                     onClick={() => setIsSidebarOpen(false)}
                 />
             )}

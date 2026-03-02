@@ -31,9 +31,9 @@ export default function Banner() {
         {ITEMS.map((item, idx) => (
           <div key={idx} className="flex items-center gap-3 px-10">
             {/* Icon */}
-            {item.icon && <item.icon className="h-4 w-4 text-[#a1a1a1]" />}
+            {item.icon && <item.icon className="h-4 w-4 text-muted-foreground" />}
             {/* Keyword */}
-            <span className="whitespace-nowrap text-sm font-medium tracking-wide text-[#a1a1a1]">
+            <span className="whitespace-nowrap text-sm font-medium tracking-wide text-muted-foreground">
               {item.label}
             </span>
           </div>

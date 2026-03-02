@@ -17,7 +17,7 @@ export const Tooltip = ({ children, content, className }: TooltipProps) => {
             </TooltipTrigger>
             <TooltipContent
                 className={cn(
-                    "py-1.5 px-3 bg-[#201f32] text-white border border-white/10 rounded-none",
+                    "py-1.5 px-3 bg-secondary text-white border border-white/10 rounded-none",
                     className
                 )}
             >

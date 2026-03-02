@@ -89,14 +89,14 @@ export default function DocumentsPage() {
                 return (
                     <User
                         avatarProps={{
-                            fallback: <Icon className={`w-4 h-4 ${connector ? 'text-[#201f32]' : 'text-[#262ef2]'}`} />,
-                            className: `${connector ? 'bg-[#f3f3f9] border-[#e3e2e5]' : 'bg-[#262ef2]/5 border-[#262ef2]/10'}`,
+                            fallback: <Icon className={`w-4 h-4 ${connector ? 'text-secondary' : 'text-primary'}`} />,
+                            className: `${connector ? 'bg-muted border-border' : 'bg-primary/5 border-primary/10'}`,
                         }}
                         description={sourceLabel}
                         name={doc.name}
                         classNames={{
-                            name: "font-medium text-sm text-[#201f32]",
-                            description: "text-[10px] text-[#a1a1a1] font-bold uppercase tracking-wider",
+                            name: "font-medium text-sm text-secondary",
+                            description: "text-[10px] text-muted-foreground font-bold uppercase tracking-wider",
                         }}
                     />
                 );
@@ -106,7 +106,7 @@ export default function DocumentsPage() {
                 return (
                     <div className="relative flex items-center justify-end gap-2">
                         <Tooltip content="View Content">
-                            <Button size="sm" variant="ghost" className="text-[#a1a1a1] hover:text-[#262ef2] px-0 h-8 w-8">
+                            <Button size="sm" variant="ghost" className="text-muted-foreground hover:text-primary px-0 h-8 w-8">
                                 <HiExternalLink className="w-3.5 h-3.5" />
                             </Button>
                         </Tooltip>
@@ -115,7 +115,7 @@ export default function DocumentsPage() {
                                 size="sm"
                                 variant="ghost"
                                 onClick={() => handleDeleteClick(doc.id, doc.name)}
-                                className="text-[#a1a1a1] hover:text-red-500 px-0 h-8 w-8"
+                                className="text-muted-foreground hover:text-red-500 px-0 h-8 w-8"
                             >
                                 <HiTrash className="w-3.5 h-3.5" />
                             </Button>
@@ -133,7 +133,7 @@ export default function DocumentsPage() {
                 isClearable
                 className="w-full sm:max-w-xs"
                 placeholder="Search documents..."
-                startContent={<HiSearch className="w-4 h-4 text-[#a1a1a1]" />}
+                startContent={<HiSearch className="w-4 h-4 text-muted-foreground" />}
                 value={filterValue}
                 onClear={() => setFilterValue("")}
                 onValueChange={setFilterValue}
@@ -151,17 +151,17 @@ export default function DocumentsPage() {
                         <>
                             <Button
                                 onClick={handleRefresh}
-                                variant="outline"
-                                className="bg-white border-[#e3e2e5] text-[#4d5564] text-xs sm:text-sm font-medium transition-all hover:bg-[#f3f3f9] h-11 px-6 shadow-sm mr-2"
+                                variant="outline-secondary"
+                                className="text-xs sm:text-sm h-11 px-6 mr-2"
                                 disabled={isLoading}
                             >
-                                <HiRefresh className={`w-4 h-4 mr-2 text-[#a1a1a1] ${isLoading ? 'animate-spin' : ''}`} />
+                                <HiRefresh className={`w-4 h-4 mr-2 text-muted-foreground ${isLoading ? 'animate-spin' : ''}`} />
                                 Refresh
                             </Button>
                             <Button
+                                variant="primary"
                                 onClick={() => setIsUploadModalOpen(true)}
-                                className="text-white text-xs sm:text-sm font-bold transition-all hover:-translate-y-0.5 shadow-lg shadow-[#262ef2]/20 h-11 px-6"
-                                style={{ backgroundColor: "#262ef2" }}
+                                className="text-xs sm:text-sm h-11 px-6"
                             >
                                 <HiPlus className="w-4 h-4 mr-2" />
                                 Upload File
