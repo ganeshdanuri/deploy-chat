@@ -2,7 +2,6 @@
 
 import { HiTrendingUp, HiLockClosed } from "react-icons/hi";
 import { useAppSelector } from "@/lib/store/hooks";
-import Link from "next/link";
 import { TOOLTIP_STYLE_CLASSES, TOOLTIP_ARROW_CLASSES, PLANS } from "@/lib/constants";
 import { AnalyticsSkeleton } from "@/app/components/ui";
 import { useEffect, useState } from "react";
@@ -27,7 +26,7 @@ export default function AnalyticsPage() {
     if (isFreePlan) {
         return (
             <div className="flex flex-col items-center justify-center h-[calc(100vh-12rem)] text-center animate-fade-in-up">
-                <div className="w-16 h-16 bg-[#262ef2]/5 rounded-2xl flex items-center justify-center mb-6 shadow-sm border border-[#262ef2]/10">
+                <div className="w-16 h-16 bg-[#262ef2]/5 flex items-center justify-center mb-6 shadow-sm border border-[#262ef2]/10">
                     <HiLockClosed className="w-8 h-8 text-[#262ef2]" />
                 </div>
                 <h1 className="text-2xl font-bold text-[#201f32] mb-2">Analytics Pro</h1>
@@ -36,7 +35,7 @@ export default function AnalyticsPage() {
                 </p>
                 <button
                     disabled
-                    className="px-6 py-1.5 bg-[#f3f3f9] border border-[#e3e2e5] text-[#a1a1a1] text-sm font-medium rounded-lg shadow-sm cursor-not-allowed opacity-60"
+                    className="px-6 py-1.5 bg-[#f3f3f9] border border-[#e3e2e5] text-[#a1a1a1] text-sm font-medium shadow-sm cursor-not-allowed opacity-60"
                 >
                     Upgrade Plan
                 </button>
@@ -51,17 +50,17 @@ export default function AnalyticsPage() {
                     <h1 className="text-2xl font-bold text-[#201f32] tracking-tight">Analytics</h1>
                     <p className="text-sm text-[#4d5564] mt-1">Usage trends and performance metrics.</p>
                 </div>
-                <div className="flex bg-white rounded-lg p-1 border border-[#e3e2e5] shadow-sm">
-                    <button className="px-3 py-1.5 bg-[#f3f3f9] text-[#201f32] text-xs font-semibold rounded shadow-sm">7 Days</button>
-                    <button className="px-3 py-1.5 text-[#a1a1a1] hover:bg-[#f3f3f9] text-xs font-semibold rounded">30 Days</button>
-                    <button className="px-3 py-1.5 text-[#a1a1a1] hover:bg-[#f3f3f9] text-xs font-semibold rounded">90 Days</button>
+                <div className="flex bg-white p-1 border border-[#e3e2e5] shadow-sm">
+                    <button className="px-3 py-1.5 bg-[#f3f3f9] text-[#201f32] text-xs font-semibold shadow-sm">7 Days</button>
+                    <button className="px-3 py-1.5 text-[#a1a1a1] hover:bg-[#f3f3f9] text-xs font-semibold">30 Days</button>
+                    <button className="px-3 py-1.5 text-[#a1a1a1] hover:bg-[#f3f3f9] text-xs font-semibold">90 Days</button>
                 </div>
             </div>
 
             {/* Summary Cards */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 {/* Card 1 */}
-                <div className="bg-white p-4 rounded-xl border border-[#e3e2e5] shadow-sm">
+                <div className="dash-card bg-white p-4 border border-[#e3e2e5] shadow-sm">
                     <div className="text-sm font-medium text-[#a1a1a1] mb-1">Total Conversations</div>
                     <div className="text-2xl font-bold text-[#201f32]">12,405</div>
                     <div className="flex items-center gap-1 text-[#10b981] text-xs font-bold mt-2">
@@ -70,7 +69,7 @@ export default function AnalyticsPage() {
                     </div>
                 </div>
                 {/* Card 2 */}
-                <div className="bg-white p-4 rounded-xl border border-[#e3e2e5] shadow-sm">
+                <div className="dash-card bg-white p-4 border border-[#e3e2e5] shadow-sm">
                     <div className="text-sm font-medium text-[#a1a1a1] mb-1">Avg. Response Time</div>
                     <div className="text-2xl font-bold text-[#201f32]">1.2s</div>
                     <div className="flex items-center gap-1 text-[#10b981] text-xs font-bold mt-2">
@@ -79,7 +78,7 @@ export default function AnalyticsPage() {
                     </div>
                 </div>
                 {/* Card 3 */}
-                <div className="bg-white p-4 rounded-xl border border-[#e3e2e5] shadow-sm">
+                <div className="dash-card bg-white p-4 border border-[#e3e2e5] shadow-sm">
                     <div className="text-sm font-medium text-[#a1a1a1] mb-1">User Satisfaction</div>
                     <div className="text-2xl font-bold text-[#201f32]">4.8/5</div>
                     <div className="flex items-center gap-1 text-[#10b981] text-xs font-bold mt-2">
@@ -88,7 +87,7 @@ export default function AnalyticsPage() {
                     </div>
                 </div>
                 {/* Card 4 */}
-                <div className="bg-white p-4 rounded-xl border border-[#e3e2e5] shadow-sm">
+                <div className="dash-card bg-white p-4 border border-[#e3e2e5] shadow-sm">
                     <div className="text-sm font-medium text-[#a1a1a1] mb-1">Tokens Consumed</div>
                     <div className="text-2xl font-bold text-[#201f32]">8.4M</div>
                     <div className="flex items-center gap-1 text-[#f59e0b] text-xs font-bold mt-2">
@@ -101,7 +100,7 @@ export default function AnalyticsPage() {
             {/* Charts Section */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Usage Chart */}
-                <div className="bg-white p-6 rounded-xl border border-[#e3e2e5] shadow-sm h-80 flex flex-col">
+                <div className="dash-card bg-white p-6 border border-[#e3e2e5] shadow-sm h-80 flex flex-col">
                     <h3 className="text-sm font-bold text-[#201f32] mb-6">Daily Conversations</h3>
                     <div className="flex-1 flex items-end justify-between gap-2 px-2">
                         {[40, 65, 45, 80, 55, 90, 70, 85, 60, 75, 50, 95].map((h, i) => (
@@ -130,7 +129,7 @@ export default function AnalyticsPage() {
                 </div>
 
                 {/* Token Usage Chart */}
-                <div className="bg-white p-6 rounded-xl border border-[#e3e2e5] shadow-sm h-80 flex flex-col">
+                <div className="dash-card bg-white p-6 border border-[#e3e2e5] shadow-sm h-80 flex flex-col">
                     <h3 className="text-sm font-bold text-[#201f32] mb-6">Cost Estimation ($)</h3>
                     <div className="flex-1 flex items-end justify-between gap-4 px-4 border-l border-[#e3e2e5] relative">
                         {/* Grid Lines */}

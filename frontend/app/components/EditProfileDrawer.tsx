@@ -8,7 +8,6 @@ import showToast from "@/lib/toast";
 import Drawer from "./Drawer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/app/components/ui";
-import { theme } from "../theme";
 
 interface EditProfileDrawerProps {
     isOpen: boolean;
@@ -33,8 +32,9 @@ export default function EditProfileDrawer({ isOpen, onClose, currentUsername, cu
             showToast.success("Profile updated successfully");
             onSuccess();
             onClose();
-        } catch (err: any) {
-            showToast.error(err.response?.data?.detail || "Failed to update profile");
+        } catch (err) {
+            const error = err as { response?: { data?: { detail?: string } } };
+            showToast.error(error.response?.data?.detail || "Failed to update profile");
         } finally {
             setIsLoading(false);
         }

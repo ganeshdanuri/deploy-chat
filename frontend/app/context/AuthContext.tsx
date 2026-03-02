@@ -37,7 +37,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         try {
           setUser(JSON.parse(storedUser));
           setIsAuthenticated(true);
-        } catch (e) {
+        } catch {
           console.error("Failed to parse stored user session data.");
         }
       }

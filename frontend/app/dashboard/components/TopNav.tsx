@@ -4,7 +4,6 @@ import { HiSearch, HiBell, HiQuestionMarkCircle, HiMenuAlt2 } from "react-icons/
 import { useRouter } from "next/navigation";
 import showToast from "@/lib/toast";
 import { useAppSelector } from "@/lib/store/hooks";
-import { theme } from "../../theme";
 
 interface TopNavProps {
     onMenuClick?: () => void;
@@ -29,27 +28,19 @@ export function TopNav({ onMenuClick }: TopNavProps) {
                     <input
                         type="text"
                         placeholder="Search documents, chatbots, or commands... (Cmd+K)"
-                        className="w-full pl-10 pr-4 py-2 bg-[#f3f3f9] border border-[#e3e2e5] text-sm text-[#201f32] placeholder:text-[#a1a1a1] focus:outline-none focus:border-[#262ef2] transition-all font-medium"
+                        className="w-full pl-10 pr-4 py-2 bg-[#f3f3f9] border border-[#e3e2e5] text-sm text-[#201f32] placeholder:text-[#a1a1a1] focus:outline-none focus:border-[#262ef2] transition-all font-medium rounded-sm"
                     />
                     <div className="absolute right-3 top-1/2 -translate-y-1/2 flex gap-1">
-                        <span className="text-[10px] font-bold text-[#a1a1a1] bg-white border border-[#e3e2e5] px-1.5 py-0.5 shadow-sm">⌘</span>
-                        <span className="text-[10px] font-bold text-[#a1a1a1] bg-white border border-[#e3e2e5] px-1.5 py-0.5 shadow-sm">K</span>
+                        <span className="text-[10px] font-bold text-[#a1a1a1] bg-white border border-[#e3e2e5] px-1.5 py-0.5 shadow-sm rounded-sm">⌘</span>
+                        <span className="text-[10px] font-bold text-[#a1a1a1] bg-white border border-[#e3e2e5] px-1.5 py-0.5 shadow-sm rounded-sm">K</span>
                     </div>
                 </div>
             </div>
 
             {/* Right Actions */}
             <div className="flex items-center gap-1 sm:gap-2">
-                {/* Beta Version Badge */}
-                <div className="hidden lg:flex items-center px-3 py-1.5 bg-[#262ef2]/5 border border-[#262ef2]/10 mr-2">
-                    <span className="text-[11px] font-bold text-[#262ef2] uppercase tracking-tight flex items-center gap-1.5">
-                        <span className="w-1.5 h-1.5 bg-[#262ef2]"></span>
-                        Beta Free Version • v1 will be released in 2 days
-                    </span>
-                </div>
-
                 <div className="flex items-center gap-1 border-r border-[#e3e2e5] pr-2 sm:pr-3 mr-2 sm:mr-3">
-                    <div className="hidden md:flex items-center px-2 py-1 bg-[#f3f3f9] border border-[#e3e2e5] mr-2">
+                    <div className="hidden md:flex items-center px-2 py-1 bg-[#f3f3f9] border border-[#e3e2e5] mr-2 rounded-sm">
                         <span className="text-[10px] font-black text-[#a1a1a1] uppercase tracking-wider">
                             {userData?.billing?.current_plan || 'Free'}
                         </span>
@@ -70,7 +61,7 @@ export function TopNav({ onMenuClick }: TopNavProps) {
                 </div>
 
                 <button
-                    className="flex items-center gap-2 px-5 py-2 text-white text-sm font-medium transition-all opacity-50 cursor-not-allowed shadow-lg shadow-[#262ef2]/20"
+                    className="flex items-center gap-2 px-5 py-2 text-white text-sm font-medium transition-all opacity-50 cursor-not-allowed shadow-lg shadow-[#262ef2]/20 rounded-sm"
                     style={{ backgroundColor: "#262ef2" }}
                     disabled
                 >

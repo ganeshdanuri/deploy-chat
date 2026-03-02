@@ -7,7 +7,7 @@ import {
     HiCode,
     HiClipboardCopy,
     HiCheck,
-    HiExternalLink,
+    
     HiColorSwatch,
     HiChip,
     HiGlobe,

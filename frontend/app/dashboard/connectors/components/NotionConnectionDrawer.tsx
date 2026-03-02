@@ -11,13 +11,19 @@ import { Button } from "@/components/ui/button";
 interface NotionConnectionDrawerProps {
     isOpen: boolean;
     onClose: () => void;
-    onConnected: (connector: any) => void;
+    onConnected: (connector: Record<string, unknown>) => void;
+}
+
+interface NotionPage {
+    id: string;
+    title: string;
+    url: string;
 }
 
 export function NotionConnectionDrawer({ isOpen, onClose, onConnected }: NotionConnectionDrawerProps) {
     const [step, setStep] = useState(1);
     const [token, setToken] = useState("");
-    const [pages, setPages] = useState<any[]>([]);
+    const [pages, setPages] = useState<NotionPage[]>([]);
     const [selectedPages, setSelectedPages] = useState<string[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [name, setName] = useState("My Notion Workspace");
@@ -32,7 +38,7 @@ export function NotionConnectionDrawer({ isOpen, onClose, onConnected }: NotionC
             const res = await api.get(`${ENDPOINTS.CONNECTORS.NOTION_PAGES}?token=${token}`);
             setPages(res.data);
             setStep(2);
-        } catch (err) {
+        } catch {
             showToast.error("Failed to fetch pages. Verify your token.");
         } finally {
             setIsLoading(false);
@@ -57,7 +63,7 @@ export function NotionConnectionDrawer({ isOpen, onClose, onConnected }: NotionC
             onConnected(res.data);
             showToast.success("Notion connected successfully");
             onClose();
-        } catch (err) {
+        } catch {
             showToast.error("Failed to connect Notion");
         } finally {
             setIsLoading(false);

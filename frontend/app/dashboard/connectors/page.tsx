@@ -3,12 +3,12 @@
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 import { fetchConnectors, deleteConnector, syncConnector } from "@/lib/store/slices/connectorsSlice";
-import { HiPlus, HiRefresh, HiTrash, HiExternalLink, HiCheckCircle, HiExclamationCircle, HiClock, HiShare } from "react-icons/hi";
+import { HiPlus, HiRefresh, HiTrash, HiExternalLink, HiClock, HiShare } from "react-icons/hi";
 import { SiNotion, SiGoogledrive, SiSlack, SiGithub, SiIntercom } from "react-icons/si";
 import { NotionConnectionDrawer } from "./components/NotionConnectionDrawer";
 import showToast from "@/lib/toast";
 
-import { PageHeader, EmptyState, DateCell, StatusChip, Tooltip, DeleteConfirmationModal } from "@/app/components/ui";
+import { DeleteConfirmationModal } from "@/app/components/ui";
 
 const AVAILABLE_CONNECTORS = [
     {
@@ -102,7 +102,7 @@ export default function ConnectorsPage() {
             await dispatch(syncConnector(id)).unwrap();
             showToast.success("Sync completed");
             dispatch(fetchConnectors());
-        } catch (err) {
+        } catch {
             showToast.error("Sync failed");
         } finally {
             setIsSyncing(null);
@@ -121,7 +121,7 @@ export default function ConnectorsPage() {
             await dispatch(deleteConnector(itemToDelete.id)).unwrap();
             showToast.success("Integration deleted successfully");
             setDeleteModalOpen(false);
-        } catch (err) {
+        } catch {
             showToast.error("Delete failed");
         } finally {
             setIsDeleting(false);
@@ -151,25 +151,25 @@ export default function ConnectorsPage() {
             </div>
 
             {/* Tabbed Navigation */}
-            <div className="flex items-center gap-1 p-1 bg-[#f3f3f9]/80 rounded-2xl w-fit">
+            <div className="flex items-center gap-1 p-1 bg-[#f3f3f9]/80 w-fit">
                 <button
                     onClick={() => setActiveTab('active')}
                     className={`
-                        px-6 py-2.5 rounded-xl text-sm font-bold transition-all
+                        px-6 py-2.5 text-sm font-bold transition-all
                         ${activeTab === 'active'
                             ? "bg-white text-[#262ef2] shadow-sm"
                             : "text-[#4d5564] hover:text-[#201f32] hover:bg-white/50"}
                     `}
                 >
                     My Connections
-                    <span className="ml-2 px-1.5 py-0.5 rounded-md bg-[#f3f3f9] text-[10px] text-[#a1a1a1]">
+                    <span className="ml-2 px-1.5 py-0.5 bg-[#f3f3f9] text-[10px] text-[#a1a1a1]">
                         {status === 'loading' ? '...' : connectors.length}
                     </span>
                 </button>
                 <button
                     onClick={() => setActiveTab('catalog')}
                     className={`
-                        px-6 py-2.5 rounded-xl text-sm font-bold transition-all
+                        px-6 py-2.5 text-sm font-bold transition-all
                         ${activeTab === 'catalog'
                             ? "bg-white text-[#262ef2] shadow-sm"
                             : "text-[#4d5564] hover:text-[#201f32] hover:bg-white/50"}
@@ -186,19 +186,19 @@ export default function ConnectorsPage() {
                         {status === 'loading' && connectors.length === 0 ? (
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                 {[1, 2].map(i => (
-                                    <div key={i} className="bg-white border border-[#e3e2e5] rounded-2xl h-48 animate-pulse shadow-sm" />
+                                    <div key={i} className="bg-white border border-[#e3e2e5] h-48 animate-pulse shadow-sm" />
                                 ))}
                             </div>
                         ) : connectors.length === 0 ? (
                             <div className="py-12 flex flex-col items-center text-center max-w-sm mx-auto">
-                                <div className="w-16 h-16 rounded-3xl bg-[#f3f3f9] flex items-center justify-center text-[#a1a1a1] mb-6">
+                                <div className="w-16 h-16 bg-[#f3f3f9] flex items-center justify-center text-[#a1a1a1] mb-6">
                                     <HiShare className="w-8 h-8" />
                                 </div>
                                 <h3 className="text-xl font-bold text-[#201f32] mb-2">No active integrations</h3>
                                 <p className="text-sm text-[#4d5564] mb-8 font-medium">Connect your workspace tools to automatically sync your content and keep your AI knowledge updated.</p>
                                 <button
                                     onClick={() => setActiveTab('catalog')}
-                                    className="px-6 py-3 bg-[#262ef2] text-white rounded-xl text-sm font-bold shadow-lg shadow-[#262ef2]/10 hover:bg-[#262ef2]/90 transition-all font-mono tracking-tight"
+                                    className="px-6 py-3 bg-[#262ef2] text-white text-sm font-bold shadow-lg shadow-[#262ef2]/10 hover:bg-[#262ef2]/90 transition-all font-mono tracking-tight"
                                 >
                                     Browse Integration Library
                                 </button>
@@ -210,15 +210,15 @@ export default function ConnectorsPage() {
                                     const brandColor = getConnectorColor(connector.type);
 
                                     return (
-                                        <div key={connector.id} className="group bg-white rounded-2xl border border-[#e3e2e5] overflow-hidden hover:shadow-xl hover:border-[#262ef2]/20 transition-all flex items-center p-6">
+                                        <div key={connector.id} className="group dash-card bg-white border border-[#e3e2e5] overflow-hidden flex items-center p-6">
                                             <div className="flex items-center gap-5 flex-1 min-w-0">
-                                                <div className={`w-14 h-14 rounded-2xl flex items-center justify-center text-white shadow-lg ${brandColor} transition-transform group-hover:scale-105`}>
+                                                <div className={`w-14 h-14 flex items-center justify-center text-white shadow-lg ${brandColor} transition-transform group-hover:scale-105`}>
                                                     <Icon className="w-7 h-7" />
                                                 </div>
                                                 <div className="flex-1 min-w-0">
                                                     <div className="flex items-center gap-3 mb-1.5 flex-wrap">
                                                         <h3 className="font-bold text-[#201f32] text-lg truncate max-w-[200px]">{connector.name}</h3>
-                                                        <span className={`text-[10px] font-black px-2 py-0.5 rounded-lg uppercase tracking-widest ${connector.status === 'active' ? 'bg-[#10b981]/10 text-[#10b981]' : 'bg-[#ef4444]/10 text-[#ef4444]'}`}>
+                                                        <span className={`text-[10px] font-black px-2 py-0.5 uppercase tracking-widest ${connector.status === 'active' ? 'bg-[#10b981]/10 text-[#10b981]' : 'bg-[#ef4444]/10 text-[#ef4444]'}`}>
                                                             {connector.status}
                                                         </span>
                                                     </div>
@@ -230,7 +230,7 @@ export default function ConnectorsPage() {
                                                         <div className="hidden sm:block w-1 h-1 rounded-full bg-[#e3e2e5]"></div>
                                                         <div className="flex items-center gap-1.5">
                                                             <HiExternalLink className="w-3.5 h-3.5" />
-                                                            <span>{connector.config.selected_pages?.length || 0} items imported</span>
+                                                            <span>{((connector.config as { selected_pages?: string[] }).selected_pages)?.length || 0} items imported</span>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -240,14 +240,14 @@ export default function ConnectorsPage() {
                                                 <button
                                                     onClick={() => handleSync(connector.id)}
                                                     disabled={isSyncing === connector.id}
-                                                    className="p-2.5 rounded-xl bg-[#f3f3f9] text-[#201f32] hover:bg-[#e3e2e5] transition-all border border-[#e3e2e5]/50 disabled:opacity-50"
+                                                    className="p-2.5 bg-[#f3f3f9] text-[#201f32] hover:bg-[#e3e2e5] transition-all border border-[#e3e2e5]/50 disabled:opacity-50"
                                                     title="Sync Now"
                                                 >
                                                     <HiRefresh className={`w-4 h-4 ${isSyncing === connector.id ? "animate-spin" : ""}`} />
                                                 </button>
                                                 <button
                                                     onClick={() => handleDeleteClick(connector.id, connector.name)}
-                                                    className="p-2.5 rounded-xl bg-[#f3f3f9] text-[#a1a1a1] hover:text-[#ef4444] hover:bg-[#ef4444]/5 transition-all border border-[#e3e2e5]/50 hover:border-[#ef4444]/20"
+                                                    className="p-2.5 bg-[#f3f3f9] text-[#a1a1a1] hover:text-[#ef4444] hover:bg-[#ef4444]/5 transition-all border border-[#e3e2e5]/50 hover:border-[#ef4444]/20"
                                                     title="Delete Integration"
                                                 >
                                                     <HiTrash className="w-4 h-4" />
@@ -267,7 +267,7 @@ export default function ConnectorsPage() {
                                 disabled={option.status !== 'active'}
                                 onClick={() => handleOptionClick(option.id)}
                                 className={`
-                                    group relative flex flex-col items-center text-center p-8 rounded-3xl border transition-all duration-300
+                                    group relative flex flex-col items-center text-center p-8 border transition-all duration-300
                                     ${option.status === 'active'
                                         ? "bg-white border-[#e3e2e5] hover:border-[#262ef2]/40 hover:shadow-2xl hover:shadow-[#262ef2]/10 cursor-pointer"
                                         : "bg-[#f3f3f9]/50 border-[#e3e2e5] opacity-60 grayscale cursor-not-allowed"
@@ -275,7 +275,7 @@ export default function ConnectorsPage() {
                                 `}
                             >
                                 <div className={`
-                                    w-16 h-16 rounded-2xl flex items-center justify-center mb-5 transition-all duration-500 shadow-sm
+                                    w-16 h-16 flex items-center justify-center mb-5 transition-all duration-500 shadow-sm
                                     ${option.status === 'active'
                                         ? "bg-[#201f32] text-white group-hover:bg-[#262ef2] group-hover:scale-110 group-hover:-translate-y-1"
                                         : "bg-[#f3f3f9] text-[#a1a1a1]"
@@ -288,7 +288,7 @@ export default function ConnectorsPage() {
 
                                 {option.status === 'coming-soon' && (
                                     <div className="mt-4">
-                                        <span className="text-[10px] font-black uppercase tracking-widest bg-[#e3e2e5] text-[#4d5564] px-3 py-1 rounded-full">
+                                        <span className="text-[10px] font-black uppercase tracking-widest bg-[#e3e2e5] text-[#4d5564] px-3 py-1">
                                             Beta Soon
                                         </span>
                                     </div>
@@ -310,7 +310,7 @@ export default function ConnectorsPage() {
             <NotionConnectionDrawer
                 isOpen={isNotionModalOpen}
                 onClose={() => setIsNotionModalOpen(false)}
-                onConnected={(newConn) => {
+                onConnected={() => {
                     dispatch(fetchConnectors());
                     setIsNotionModalOpen(false);
                 }}

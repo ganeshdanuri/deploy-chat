@@ -6,7 +6,7 @@ export interface Connector {
     id: string;
     name: string;
     type: string;
-    config: any;
+    config: Record<string, unknown>;
     status: string;
     last_sync_at: string | null;
     created_at: string;
@@ -32,7 +32,7 @@ export const fetchConnectors = createAsyncThunk('connectors/fetchConnectors', as
 
 export const createConnector = createAsyncThunk(
     'connectors/createConnector',
-    async (data: { name: string; type: string; config: any }) => {
+    async (data: { name: string; type: string; config: Record<string, unknown> }) => {
         const response = await api.post(ENDPOINTS.CONNECTORS.BASE, data);
         return response.data;
     }

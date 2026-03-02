@@ -30,7 +30,7 @@ export default function HelpPage() {
     return (
         <div className="animate-fade-in-up">
             <div className="flex items-center gap-3 mb-8">
-                <div className="p-3 bg-[#262ef2]/5 text-[#262ef2] rounded-2xl ring-1 ring-[#262ef2]/10">
+                <div className="p-3 bg-[#262ef2]/5 text-[#262ef2] ring-1 ring-[#262ef2]/10">
                     <HiQuestionMarkCircle className="w-8 h-8" />
                 </div>
                 <div>
@@ -43,8 +43,8 @@ export default function HelpPage() {
                 {helpSections.map((section, idx) => {
                     const Icon = section.icon;
                     return (
-                        <div key={idx} className="p-8 bg-white rounded-[2rem] border border-[#e3e2e5] shadow-sm hover:shadow-xl transition-all group cursor-pointer">
-                            <div className={`w-14 h-14 ${section.bgColor} ${section.color} rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform`}>
+                        <div key={idx} className="dash-card p-8 bg-white border border-[#e3e2e5] shadow-sm group cursor-pointer">
+                            <div className={`w-14 h-14 ${section.bgColor} ${section.color} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform`}>
                                 <Icon className="w-7 h-7" />
                             </div>
                             <h3 className="text-xl font-bold text-[#201f32] mb-3">{section.title}</h3>
@@ -60,13 +60,13 @@ export default function HelpPage() {
                 })}
             </div>
 
-            <div className="mt-12 p-8 bg-[#201f32] rounded-[2.5rem] text-white overflow-hidden relative">
+            <div className="mt-12 p-8 bg-[#201f32] text-white overflow-hidden relative">
                 <div className="relative z-10">
                     <h2 className="text-2xl font-bold mb-4">Enterprise Support</h2>
                     <p className="text-[#a1a1a1] max-w-xl mb-8 leading-relaxed">
                         Looking for dedicated support, custom integrations, or on-premise deployment? Our enterprise team is here to help.
                     </p>
-                    <button className="px-6 py-1.5 bg-white text-[#201f32] font-bold rounded-xl hover:bg-[#f3f3f9] transition-colors shadow-lg">
+                    <button className="px-6 py-1.5 bg-white text-[#201f32] font-bold hover:bg-[#f3f3f9] transition-colors shadow-lg">
                         Contact Sales
                     </button>
                 </div>

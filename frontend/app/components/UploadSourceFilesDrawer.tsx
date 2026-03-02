@@ -2,13 +2,12 @@
 "use client";
 
 import { useState } from "react";
-import { HiCloudUpload, HiCheckCircle, HiExclamationCircle, HiLightningBolt, HiX, HiDocumentText } from "react-icons/hi";
+import { HiCloudUpload, HiCheckCircle, HiExclamationCircle,  HiX, HiDocumentText } from "react-icons/hi";
 import api from "@/lib/api";
 import Drawer from "./Drawer";
 import showToast from "@/lib/toast";
 import { Button } from "@/components/ui/button";
 import { ENDPOINTS } from "@/lib/endpoints";
-import { theme } from "../theme";
 
 interface UploadSourceFilesDrawerProps {
     isOpen: boolean;

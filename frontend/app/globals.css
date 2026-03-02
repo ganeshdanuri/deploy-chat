@@ -342,3 +342,68 @@ select,
 [role="button"] {
   border-radius: 4px !important;
 }
+
+/* 
+ * Dashboard Section Specific Styles
+ * - Minimal radius for containers (6px)
+ * - More radius for buttons/inputs (10px)
+ * - Top-only radius for containers with content below
+ */
+.dashboard-theme {
+  --app-border-radius: 6px;
+}
+
+.dashboard-theme button,
+.dashboard-theme input,
+.dashboard-theme textarea,
+.dashboard-theme select,
+.dashboard-theme [role="button"] {
+  border-radius: 10px !important;
+}
+
+/* Top-only radius for containers that have content below */
+.dashboard-theme .rounded-t-container,
+.dashboard-theme .rounded-t-container *,
+.dashboard-theme .rounded-t-container *::before,
+.dashboard-theme .rounded-t-container *::after {
+  border-bottom-left-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+}
+
+/* 
+ * Table wrapper — top-only radius on the outer wrapper
+ * Bottom corners are flat because content (rows) follows below
+ */
+.dashboard-theme [data-slot="table-wrapper"] {
+  border-top-left-radius: 8px !important;
+  border-top-right-radius: 8px !important;
+  border-bottom-left-radius: 8px !important;
+  border-bottom-right-radius: 8px !important;
+  overflow: hidden;
+}
+
+/* Table header row — flat bottom radius so it blends with body */
+.dashboard-theme [data-slot="table-header"] {
+  border-top-left-radius: 8px !important;
+  border-top-right-radius: 8px !important;
+  border-bottom-left-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+}
+
+/* Card container with a header section that has content below */
+.dashboard-theme [data-slot="card-header-attached"] {
+  border-top-left-radius: 8px !important;
+  border-top-right-radius: 8px !important;
+  border-bottom-left-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+}
+
+/* Smooth card shadow on hover in dashboard */
+.dashboard-theme .dash-card {
+  transition: box-shadow 0.3s ease, border-color 0.3s ease, transform 0.2s ease;
+}
+
+.dashboard-theme .dash-card:hover {
+  box-shadow: 0 8px 30px -8px rgba(38, 46, 242, 0.08), 0 1px 3px rgba(0, 0, 0, 0.04);
+  border-color: rgba(38, 46, 242, 0.15);
+}

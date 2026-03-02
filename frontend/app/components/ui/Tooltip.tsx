@@ -1,7 +1,6 @@
 "use client";
 
 import { Tooltip as ShadcnTooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { TOOLTIP_STYLE_CLASSES } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 
 interface TooltipProps {

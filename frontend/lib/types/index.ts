@@ -13,7 +13,7 @@ export interface Connector {
     id: string;
     name: string;
     type: string;
-    config: any;
+    config: Record<string, unknown>;
     status: string;
     last_sync_at: string | null;
     created_at: string;

@@ -51,8 +51,8 @@ export function EmptyState({
     const colors = colorMap[accentColor];
 
     return (
-        <div className="flex flex-col items-center justify-center py-20 bg-white border-2 border-dashed border-[#e3e2e5] rounded-sm">
-            <div className={`w-16 h-16 ${colors.bg} ${colors.text} flex items-center justify-center mb-4 rounded-sm`}>
+        <div className="flex flex-col items-center justify-center py-20 bg-white border border-dashed border-[#e3e2e5]">
+            <div className={`w-16 h-16 ${colors.bg} ${colors.text} flex items-center justify-center mb-4`}>
                 <Icon className="w-8 h-8" />
             </div>
             <h2 className="text-2xl font-semibold text-[#201f32] mb-2">{title}</h2>

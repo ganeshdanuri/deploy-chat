@@ -10,7 +10,6 @@ import FAQSection from "./components/FAQSection";
 import CTASection from "./components/CTASection";
 import Footer from "./components/Footer";
 
-import { LANDING_STATS as stats } from "../lib/constants";
 
 
 export default function LandingPage() {
@@ -27,7 +26,6 @@ export default function LandingPage() {
         {/* Hero Section */}
         <div className="flex-1 flex flex-col pt-16">
           <HeroSection
-            stats={stats}
             onGetStarted={() => window.open('/login?register=true', '_blank', 'noopener,noreferrer')}
           />
         </div>

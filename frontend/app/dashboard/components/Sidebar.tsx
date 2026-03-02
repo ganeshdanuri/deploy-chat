@@ -12,7 +12,6 @@ import {
 import { useState } from "react";
 import Logo from "../../components/Logo";
 import { useAppSelector } from "@/lib/store/hooks";
-import { theme } from "../../theme";
 import {
     SIDEBAR_MAIN_NAV as mainNavItems,
     SIDEBAR_SECONDARY_NAV as secondaryNavItems,
@@ -110,7 +109,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                                     <div className="flex flex-1 items-center justify-between">
                                         <span>{item.label}</span>
                                         {isDisabled && (
-                                            <span className="text-[9px] font-bold bg-[#f3f3f9] text-[#a1a1a1] px-1.5 py-0.5 uppercase tracking-wider">Pro</span>
+                                            <span className="text-[9px] font-bold bg-[#f3f3f9] text-[#a1a1a1] px-1.5 py-0.5 rounded-sm uppercase tracking-wider">Pro</span>
                                         )}
                                     </div>
                                 )}
@@ -213,10 +212,10 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                         onClick={() => router.push("/dashboard/settings")}
                     >
                         <div className="relative shrink-0">
-                            <div className="w-8 h-8 bg-gradient-to-tr from-[#262ef2] to-[#201f32] flex items-center justify-center text-xs font-bold text-white shadow-sm ring-2 ring-white">
+                            <div className="w-8 h-8 bg-gradient-to-tr from-[#262ef2] to-[#201f32] flex items-center justify-center text-xs font-bold text-white shadow-sm ring-2 ring-white rounded-sm">
                                 {userData?.profile?.username?.substring(0, 2).toUpperCase() || "??"}
                             </div>
-                            <div className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-green-500 border-2 border-white"></div>
+                            <div className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-green-500 border-2 border-white rounded-sm"></div>
                         </div>
                         {!isCollapsed && (
                             <div className="flex-1 min-w-0">
@@ -249,7 +248,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
 
             {/* Desktop Collapse Toggle — fixed arrow tab on the right edge */}
             <button
-                className="hidden lg:flex absolute -right-3.5 top-1/2 -translate-y-1/2 w-7 h-7 items-center justify-center bg-white border border-[#e3e2e5] shadow-md text-[#a1a1a1] hover:text-[#262ef2] hover:border-[#262ef2]/30 transition-all z-10"
+                className="hidden lg:flex absolute -right-3.5 top-1/2 -translate-y-1/2 w-7 h-7 items-center justify-center bg-white border border-[#e3e2e5] shadow-md text-[#a1a1a1] hover:text-[#262ef2] hover:border-[#262ef2]/30 transition-all z-10 rounded-sm"
                 onClick={() => setIsCollapsed(!isCollapsed)}
                 title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
             >

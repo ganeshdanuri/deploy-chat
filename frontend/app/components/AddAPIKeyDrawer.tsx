@@ -15,7 +15,6 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { theme } from "../theme";
 
 interface AddAPIKeyDrawerProps {
     isOpen: boolean;
@@ -48,8 +47,9 @@ export default function AddAPIKeyDrawer({ isOpen, onClose, onSuccess }: AddAPIKe
             showToast.success("API key added successfully");
             onSuccess();
             handleClose();
-        } catch (err: any) {
-            showToast.error(err.response?.data?.detail || "Failed to add API key");
+        } catch (err) {
+            const error = err as { response?: { data?: { detail?: string } } };
+            showToast.error(error.response?.data?.detail || "Failed to add API key");
         } finally {
             setIsLoading(false);
         }

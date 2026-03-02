@@ -4,7 +4,6 @@ import { useState, useEffect, useRef, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "../context/AuthContext";
 import { GoogleLogin } from "@react-oauth/google";
-import { theme } from "../theme";
 import Logo from "../components/Logo";
 import gsap from "gsap";
 import { Input } from "../components/ui";

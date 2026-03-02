@@ -20,7 +20,7 @@ import { EmptyState, DateCell, DeleteConfirmationModal, Input } from "@/app/comp
 export default function SettingsPage() {
     const searchParams = useSearchParams();
     const [activeTab, setActiveTab] = useState(searchParams.get("tab") || "general");
-    const [apiKeys, setApiKeys] = useState<any[]>([]);
+    const [apiKeys, setApiKeys] = useState<{ id: string; provider: string; created_at: string }[]>([]);
     const [isApiKeysLoading, setIsApiKeysLoading] = useState(false);
     const [isAddKeyModalOpen, setIsAddKeyModalOpen] = useState(false);
     const [isEditProfileModalOpen, setIsEditProfileModalOpen] = useState(false);
@@ -46,7 +46,7 @@ export default function SettingsPage() {
         try {
             const res = await api.get(ENDPOINTS.API_KEYS.BASE);
             setApiKeys(res.data);
-        } catch (err) {
+        } catch {
             showToast.error("Failed to load API keys");
         } finally {
             setIsApiKeysLoading(false);
@@ -66,7 +66,7 @@ export default function SettingsPage() {
             showToast.success("API key deleted");
             setDeleteModalOpen(false);
             fetchApiKeys();
-        } catch (err) {
+        } catch {
             showToast.error("Failed to delete API key");
         } finally {
             setIsDeleting(false);
@@ -99,12 +99,12 @@ export default function SettingsPage() {
 
     return (
         <div className="animate-fade-in-up max-w-5xl mx-auto">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8 pb-6 border-b border-[#e3e2e5]">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8 pb-6">
                 <div>
                     <h1 className="text-2xl font-bold text-[#201f32] tracking-tight">{currentTabLabel}</h1>
-                    <p className="text-sm text-[#4d5564] mt-1">Manage your account preferences and system configuration.</p>
+                    <p className="text-sm text-[#4d5564] mt-1.5">Manage your account preferences and system configuration.</p>
                 </div>
-                <div className="flex items-center gap-2 text-xs font-semibold text-[#a1a1a1] bg-[#f3f3f9] px-3 py-1.5 border border-[#e3e2e5]">
+                <div className="flex items-center gap-2 text-xs font-semibold text-[#a1a1a1] bg-[#f9f9fc] px-3 py-1.5 border border-[#e3e2e5]">
                     <HiShieldCheck className="w-4 h-4 text-[#262ef2]" />
                     Secure Settings
                 </div>
@@ -117,8 +117,8 @@ export default function SettingsPage() {
                     ) : (
                         <div className="w-full">
                             {activeTab === "general" && (
-                                <div className="bg-white border border-[#e3e2e5] shadow-sm overflow-hidden animate-fade-in">
-                                    <div className="p-6 border-b border-[#e3e2e5] flex items-center justify-between font-bold">
+                                <div className="dash-card bg-white border border-[#e3e2e5] shadow-sm overflow-hidden animate-fade-in">
+                                    <div data-slot="card-header-attached" className="p-6 border-b border-[#e3e2e5] flex items-center justify-between font-bold bg-[#f9f9fc]">
                                         <div>
                                             <h2 className="text-lg font-bold text-[#201f32]">Profile Information</h2>
                                             <p className="text-sm text-[#4d5564] mt-1">Update your account&apos;s profile information and email address.</p>
@@ -157,11 +157,11 @@ export default function SettingsPage() {
 
                             {activeTab === "billing" && (
                                 <div className="space-y-4 animate-fade-in">
-                                    <div className="bg-white border border-[#e3e2e5] shadow-sm overflow-hidden">
+                                    <div className="dash-card bg-white border border-[#e3e2e5] shadow-sm overflow-hidden">
                                         <div className="p-5 sm:p-6 flex flex-col md:flex-row md:items-start justify-between gap-6">
                                             <div className="flex-1 space-y-4">
                                                 <div className="flex items-center gap-3">
-                                                    <div className="w-10 h-10 bg-[#201f32]/5 flex items-center justify-center border border-[#e3e2e5] shrink-0">
+                                                    <div className="w-10 h-10 bg-[#201f32]/5 rounded-sm flex items-center justify-center border border-[#e3e2e5] shrink-0">
                                                         <HiCreditCard className="w-5 h-5 text-[#262ef2]" />
                                                     </div>
                                                     <div>
@@ -186,7 +186,7 @@ export default function SettingsPage() {
                                                             Resets on {userData?.usage?.reset_date ? new Date(userData.usage.reset_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '1st of month'}
                                                         </span>
                                                     </div>
-                                                    <div className="h-1.5 w-full bg-[#f3f3f9] overflow-hidden">
+                                                    <div className="h-1.5 w-full bg-[#f3f3f9] rounded-sm overflow-hidden">
                                                         <div
                                                             className={`h-full transition-all duration-1000 ${((userData?.usage?.messages_sent || 0) / (userData?.billing?.monthly_limit || 100)) > 0.9 ? 'bg-[#ef4444]' : 'bg-[#262ef2]'}`}
                                                             style={{ width: `${Math.min(((userData?.usage?.messages_sent || 0) / (userData?.billing?.monthly_limit || 100)) * 100, 100)}%` }}
@@ -196,7 +196,7 @@ export default function SettingsPage() {
                                             </div>
                                             <div className="shrink-0 pt-1">
                                                 <button
-                                                    className="flex items-center gap-2 px-5 py-2.5 bg-[#f3f3f9] border border-[#e3e2e5] text-[#a1a1a1] text-sm font-medium cursor-not-allowed opacity-60 shadow-sm"
+                                                    className="flex items-center gap-2 px-5 py-2.5 bg-[#f3f3f9] border border-[#e3e2e5] rounded-sm text-[#a1a1a1] text-sm font-medium cursor-not-allowed opacity-60 shadow-sm"
                                                     disabled
                                                 >
                                                     View Invoices
@@ -288,7 +288,7 @@ export default function SettingsPage() {
                                                     <Card key={key.id} className="border-[#e3e2e5] shadow-sm">
                                                         <CardContent className="flex flex-row items-center justify-between p-6">
                                                             <div className="flex items-center gap-6">
-                                                                <div className="w-10 h-10 bg-[#f3f3f9] flex items-center justify-center border border-[#e3e2e5]">
+                                                                <div className="w-10 h-10 bg-[#f3f3f9] rounded-sm flex items-center justify-center border border-[#e3e2e5]">
                                                                     <Icon className="w-5 h-5 text-[#201f32]" />
                                                                 </div>
                                                                 <div>
@@ -318,7 +318,7 @@ export default function SettingsPage() {
                             {/* Other tabs placeholder */}
                             {(activeTab !== "general" && activeTab !== "billing" && activeTab !== "api-keys") && (
                                 <div className="flex flex-col items-center justify-center p-12 bg-white border border-[#e3e2e5] border-dashed animate-fade-in">
-                                    <div className="w-16 h-16 bg-[#f3f3f9] flex items-center justify-center mb-4">
+                                    <div className="w-16 h-16 bg-[#f3f3f9] rounded-sm flex items-center justify-center mb-4">
                                         <HiShieldCheck className="w-8 h-8 text-[#a1a1a1]/40" />
                                     </div>
                                     <h3 className="text-[#201f32] font-bold">Coming Soon</h3>

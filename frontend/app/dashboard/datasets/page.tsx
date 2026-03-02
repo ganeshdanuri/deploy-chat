@@ -8,11 +8,9 @@ import { fetchDatasets, deleteDataset } from "@/lib/store/slices/datasetsSlice";
 import CreateKnowledgeBaseDrawer from "../../components/CreateKnowledgeBaseDrawer";
 import showToast from "@/lib/toast";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { PageHeader, EmptyState, StyledTable, DateCell, StatusChip, TableSkeleton, DeleteConfirmationModal, User, Input, Tooltip } from "@/app/components/ui";
 import type { TableColumnDef } from "@/app/components/ui";
 import type { Dataset } from "@/lib/types";
-import { theme } from "@/app/theme";
 
 const COLUMNS: TableColumnDef[] = [
     { key: "name", label: "NAME" },
@@ -182,22 +180,21 @@ export default function DatasetsPage() {
                         }
                     />
 
-                    {/* Quick Add Card */}
-                    <Card
+                    <div
                         onClick={() => {
                             setEditDataset(null);
                             setIsModalOpen(true);
                         }}
-                        className="w-full bg-[#f3f3f9]/50 border-2 border-dashed border-[#e3e2e5] shadow-none hover:border-[#262ef2]/50 hover:bg-[#262ef2]/5 transition-all cursor-pointer"
+                        className="w-full bg-[#f9f9fc] border border-dashed border-[#e3e2e5] hover:border-[#262ef2]/50 hover:bg-[#262ef2]/5 transition-all cursor-pointer dash-card"
                     >
-                        <CardContent className="py-8 flex flex-col items-center justify-center">
+                        <div className="py-8 flex flex-col items-center justify-center">
                             <div className="w-12 h-12 bg-white border border-[#e3e2e5] flex items-center justify-center mb-3 shadow-sm">
                                 <HiPlus className="w-6 h-6 text-[#a1a1a1]" />
                             </div>
                             <h3 className="text-sm font-bold text-[#201f32]">Add New Knowledge</h3>
                             <p className="text-[11px] text-[#a1a1a1] mt-1">Connect more data sources</p>
-                        </CardContent>
-                    </Card>
+                        </div>
+                    </div>
                 </div>
             )}
 

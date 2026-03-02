@@ -7,8 +7,6 @@ import {
     SheetTitle,
     SheetFooter,
 } from "@/components/ui/sheet";
-import { Button } from "@/components/ui/button";
-import { HiX } from "react-icons/hi";
 import { cn } from "@/lib/utils";
 
 interface DrawerProps {
@@ -52,7 +50,7 @@ export default function Drawer({
     return (
         <Sheet open={isOpen} onOpenChange={(open) => !open && onClose()}>
             <SheetContent className={cn("p-0 flex flex-col bg-white border-l border-[#e3e2e5] shadow-2xl outline-none", sizeClasses[size])}>
-                <SheetHeader className="px-8 py-6 border-b border-[#e3e2e5] flex flex-row items-center justify-between bg-[#f3f3f9]/30 shrink-0">
+                <SheetHeader className="px-5 sm:px-8 py-5 sm:py-6 border-b border-[#e3e2e5] flex flex-row items-center justify-between bg-[#f9f9fc] shrink-0">
                     <div className="flex items-center gap-4">
                         {Icon && (
                             <div className={`w-10 h-10 ${iconBgColor} ${iconColor} flex items-center justify-center shadow-sm rounded-sm`}>
@@ -66,12 +64,12 @@ export default function Drawer({
                     </div>
                 </SheetHeader>
 
-                <div className="flex-1 overflow-y-auto p-8">
+                <div className="flex-1 overflow-y-auto p-5 sm:p-8">
                     {children}
                 </div>
 
                 {footer && (
-                    <SheetFooter className="px-8 py-6 border-t border-[#e3e2e5] bg-[#f3f3f9]/50 flex flex-row justify-end items-center gap-3 shrink-0">
+                    <SheetFooter className="px-5 sm:px-8 py-5 sm:py-6 border-t border-[#e3e2e5] bg-[#f9f9fc] flex flex-row justify-end items-center gap-3 shrink-0">
                         {footer}
                     </SheetFooter>
                 )}

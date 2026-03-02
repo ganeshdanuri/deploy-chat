@@ -7,8 +7,6 @@ import {
     DialogTitle,
     DialogFooter,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { HiX } from "react-icons/hi";
 import { cn } from "@/lib/utils";
 
 interface ModalProps {

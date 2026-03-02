@@ -1,13 +1,12 @@
 "use client";
 
-import { useEffect, useRef, useState, useCallback, useLayoutEffect } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { HiClipboardCheck, HiClipboardCopy, HiCheckCircle } from "react-icons/hi";
 import {
     INTEGRATION_STEPS as STEPS,
     EMBED_SNIPPET,
     COMPATIBLE_TECHS,
     IntegrationStep as Step,
-    PAGE_CONTENT,
     INTEGRATION_ORBIT_ICONS
 } from "../../lib/constants";
 
@@ -65,7 +64,7 @@ function OrbitVisual() {
     const iconsRef = useRef<SVGGElement>(null);
     const centerRef = useRef<SVGGElement>(null);
     useEffect(() => {
-        let ctx: any;
+        let ctx: { revert: () => void };
         (async () => {
             const { gsap } = await import("gsap");
             ctx = gsap.context(() => {
@@ -119,7 +118,7 @@ function OrbitVisual() {
 function CodeEditorVisual() {
     const ref = useRef<HTMLDivElement>(null);
     useEffect(() => {
-        let ctx: any;
+        let ctx: { revert: () => void };
         (async () => {
             const { gsap } = await import("gsap");
             if (!ref.current) return;
@@ -169,7 +168,7 @@ function CodeEditorVisual() {
 function DashboardVisual() {
     const ref = useRef<HTMLDivElement>(null);
     useEffect(() => {
-        let ctx: any;
+        let ctx: { revert: () => void };
         (async () => {
             const { gsap } = await import("gsap");
             if (!ref.current) return;
@@ -211,7 +210,7 @@ function DashboardVisual() {
 function BrandVisual() {
     const ref = useRef<HTMLDivElement>(null);
     useEffect(() => {
-        let ctx: any;
+        let ctx: { revert: () => void };
         (async () => {
             const { gsap } = await import("gsap");
             if (!ref.current) return;
@@ -349,7 +348,7 @@ function ConnectingLines({
 // ─── Main ─────────────────────────────────────────────────────────────────────
 export default function IntegrationSection() {
     const [activeStep, setActiveStep] = useState(0);
-    const fillTweenRef = useRef<any>(null);    // GSAP tween for the fill bar
+    const fillTweenRef = useRef<{ kill: () => void } | null>(null);    // GSAP tween for the fill bar
     const fillBarRef = useRef<HTMLDivElement>(null);   // DOM element for the fill bar
     const progressTextRef = useRef<HTMLSpanElement>(null);   // progress % text
     const badgeRef = useRef<HTMLDivElement>(null);

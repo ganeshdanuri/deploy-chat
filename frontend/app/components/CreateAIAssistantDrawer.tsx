@@ -12,7 +12,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/app/components/ui";
 import { SelectableItemList, SelectableListSkeleton } from "./ui";
 import type { SelectableItem } from "./ui";
-import { theme } from "../theme";
 import api from "@/lib/api";
 import { ENDPOINTS } from "@/lib/endpoints";
 

@@ -1,4 +1,3 @@
-import { theme } from "../app/theme";
 import {
     HiGlobe, HiChartBar, HiUserGroup, HiShieldCheck, HiDatabase,
     HiLightningBolt, HiColorSwatch, HiCode, HiSparkles, HiDocumentText,

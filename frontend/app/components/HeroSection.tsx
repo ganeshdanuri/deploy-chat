@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState } from "react";
 import { HiCheck } from "react-icons/hi";
 import {
   HERO_CHECKMARKS,
@@ -57,7 +57,7 @@ function ChatWidgetVisual() {
 
   // Floating animation via GSAP
   useEffect(() => {
-    let ctx: any;
+    let ctx: { revert: () => void };
     (async () => {
       const { gsap } = await import("gsap");
       if (!widgetRef.current) return;
@@ -172,7 +172,7 @@ function HeroVisual() {
   const cx = 370, cy = 370;
 
   useEffect(() => {
-    let ctx: any;
+    let ctx: { revert: () => void };
     (async () => {
       const { gsap } = await import("gsap");
       ctx = gsap.context(() => {
@@ -314,6 +314,7 @@ function TypingCycle() {
           setDisplayed(displayed.slice(0, -1));
         }, 40);
       } else {
+        // eslint-disable-next-line
         setIsDeleting(false);
         setPhraseIdx((phraseIdx + 1) % TYPING_PHRASES.length);
       }
@@ -332,10 +333,9 @@ function TypingCycle() {
 }
 
 // ── Hero Section ───────────────────────────────────────────────────────────
-interface Stat { id: number; value: string; label: string; color: string; bgColor: string; }
-interface HeroSectionProps { stats: Stat[]; onGetStarted: () => void; }
+interface HeroSectionProps { onGetStarted: () => void; }
 
-export default function HeroSection({ stats, onGetStarted }: HeroSectionProps) {
+export default function HeroSection({ onGetStarted }: HeroSectionProps) {
   return (
     <section className="relative overflow-hidden bg-[#f0f0f6]" style={{ minHeight: "calc(100vh - 72px)" }}>
 

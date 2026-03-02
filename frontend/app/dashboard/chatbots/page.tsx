@@ -13,7 +13,6 @@ import showToast from "@/lib/toast";
 import { Button } from "@/components/ui/button";
 import { PageHeader, EmptyState, DateCell, StatusChip, ChatbotCardSkeleton, Tooltip, DeleteConfirmationModal, Input } from "@/app/components/ui";
 import type { Chatbot } from "@/lib/types";
-import { theme } from "@/app/theme";
 import { STATUS } from "@/lib/constants";
 
 
@@ -79,7 +78,7 @@ export default function ChatbotsPage() {
         const isFailed = (bot as any).status === STATUS.FAILED;
 
         return (
-            <div className="bg-white border border-[#e3e2e5] rounded-sm p-5 hover:border-[#262ef2]/20 hover:shadow-xl hover:shadow-[#262ef2]/5 transition-all group relative animate-fade-in">
+            <div className="dash-card bg-white border border-[#e3e2e5] p-5 group relative animate-fade-in overflow-hidden">
                 <div className="flex justify-between items-start mb-4">
                     <div className="flex items-center gap-3">
                         <div className="w-10 h-10 bg-gradient-to-br from-[#262ef2]/5 to-[#f3f3f9] border border-[#e3e2e5] rounded-sm flex items-center justify-center text-[#262ef2] shadow-sm">
@@ -142,7 +141,7 @@ export default function ChatbotsPage() {
                 </div>
 
                 <div className="space-y-3 mb-6">
-                    <div className="bg-[#f3f3f9] p-3 border border-[#e3e2e5] rounded-sm">
+                    <div className="bg-[#f9f9fc] p-3 border border-[#e3e2e5]">
                         <p className="text-[10px] font-bold text-[#a1a1a1] uppercase tracking-widest mb-1">Welcome Message</p>
                         <p className="text-xs text-[#4d5564] line-clamp-2 italic">
                             &quot;{bot.welcome_message || 'Hi! How can I help you today?'}&quot;

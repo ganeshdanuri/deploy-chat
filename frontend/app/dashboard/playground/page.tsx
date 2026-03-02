@@ -129,7 +129,7 @@ export default function PlaygroundPage() {
             )}
 
             {/* Main Chat Area */}
-            <div className="flex-1 flex flex-col bg-white rounded-sm border border-[#e3e2e5] shadow-sm overflow-hidden relative">
+            <div className="flex-1 flex flex-col bg-white border border-[#e3e2e5] shadow-sm overflow-hidden relative">
                 <ChatHeader chatbot={chatbot} onReset={handleResetChat} />
 
                 {chatbotId ? (
@@ -171,7 +171,7 @@ function ConfigurationPanel({
     onTemperatureChange,
 }: ConfigurationPanelProps) {
     return (
-        <div className="w-80 bg-white rounded-sm border border-[#e3e2e5] shadow-sm p-6 flex flex-col h-full overflow-y-auto">
+        <div className="w-80 bg-white border border-[#e3e2e5] shadow-sm p-6 flex flex-col h-full overflow-y-auto">
             <div className="flex items-center gap-2 mb-8">
                 <div className="w-8 h-8 rounded-sm bg-[#262ef2]/5 flex items-center justify-center text-[#262ef2]">
                     <HiCog className="w-5 h-5" />
@@ -216,7 +216,7 @@ function ConfigurationPanel({
                         <div className="p-4 bg-[#f3f3f9]/50 rounded-sm border border-[#e3e2e5] space-y-2.5">
                             <div className="flex justify-between">
                                 <span className="text-[10px] font-bold text-[#a1a1a1] uppercase">Provider</span>
-                                <span className="text-[10px] font-bold text-[#201f32] bg-white px-2 py-0.5 rounded border border-[#e3e2e5] uppercase tracking-wider">
+                                <span className="text-[10px] font-bold text-[#201f32] bg-white px-2 py-0.5 rounded-sm border border-[#e3e2e5] uppercase tracking-wider">
                                     Gemini 2.5 Flash
                                 </span>
                             </div>
@@ -232,7 +232,7 @@ function ConfigurationPanel({
                 <div className="space-y-5 pt-8 border-t border-[#e3e2e5]">
                     <div className="flex items-center justify-between">
                         <label className="text-xs font-bold text-[#a1a1a1] uppercase tracking-wider">Creativity (Temp)</label>
-                        <span className="text-sm font-mono font-bold text-[#262ef2] bg-[#262ef2]/5 px-2 py-0.5 border border-[#262ef2]/10">
+                        <span className="text-sm font-mono font-bold text-[#262ef2] bg-[#262ef2]/5 px-2 py-0.5 border border-[#262ef2]/10 rounded-sm">
                             {temperature}
                         </span>
                     </div>
@@ -264,8 +264,8 @@ function ChatHeader({ chatbot, onReset }: { chatbot: Chatbot | undefined; onRese
     return (
         <div className="px-6 py-4 border-b border-[#e3e2e5] flex justify-between items-center bg-white/80 backdrop-blur-md z-10 sticky top-0">
             <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-gradient-to-br from-[#262ef2] to-[#201f32] p-[1px] shadow-lg shadow-[#262ef2]/10">
-                    <div className="w-full h-full bg-white flex items-center justify-center text-[#262ef2]">
+                <div className="w-12 h-12 bg-gradient-to-br from-[#262ef2] to-[#201f32] p-[1px] shadow-lg shadow-[#262ef2]/10 rounded-sm">
+                    <div className="w-full h-full bg-white flex items-center justify-center text-[#262ef2] rounded-sm">
                         <HiSparkles className="w-6 h-6" />
                     </div>
                 </div>
@@ -283,7 +283,7 @@ function ChatHeader({ chatbot, onReset }: { chatbot: Chatbot | undefined; onRese
             </div>
             <button
                 onClick={onReset}
-                className="p-2.5 text-[#a1a1a1] hover:text-[#262ef2] hover:bg-[#262ef2]/5 rounded-lg transition-all"
+                className="p-2.5 text-[#a1a1a1] hover:text-[#262ef2] hover:bg-[#262ef2]/5 rounded-sm transition-all"
                 title="Reset Chat"
             >
                 <HiRefresh className="w-5 h-5" />
@@ -307,13 +307,13 @@ function ChatMessages({ messages }: { messages: ChatMessage[] }) {
 function MessageBubble({ message: msg }: { message: ChatMessage }) {
     return (
         <div className={`flex gap-3 ${!msg.isBot ? "flex-row-reverse" : ""}`}>
-            <div className={`w-10 h-10 rounded-lg flex items-center justify-center shrink-0 border shadow-sm transition-transform hover:scale-105 ${msg.isBot ? "bg-white border-[#e3e2e5] text-[#262ef2]" : "bg-[#262ef2] border-[#262ef2] text-white"
+            <div className={`w-10 h-10 rounded-sm flex items-center justify-center shrink-0 border shadow-sm transition-transform hover:scale-105 ${msg.isBot ? "bg-white border-[#e3e2e5] text-[#262ef2]" : "bg-[#262ef2] border-[#262ef2] text-white"
                 }`}>
                 {msg.isBot ? <HiChatAlt2 className="w-5 h-5" /> : <HiUser className="w-5 h-5" />}
             </div>
 
             <div className={`max-w-[75%] space-y-2 ${!msg.isBot ? "items-end flex flex-col" : ""}`}>
-                <div className={`px-4 py-2.5 rounded-lg text-[14px] leading-relaxed shadow-sm transition-all ${msg.isBot
+                <div className={`px-4 py-2.5 rounded-sm text-[14px] leading-relaxed shadow-sm transition-all ${msg.isBot
                     ? "bg-white border border-[#e3e2e5] text-[#201f32] rounded-tl-none font-medium"
                     : "bg-[#262ef2] text-white rounded-tr-none font-medium"
                     }`}>
@@ -375,7 +375,7 @@ function NoChatbotSelected() {
     return (
         <div className="flex-1 flex items-center justify-center bg-[#f3f3f9]/30">
             <div className="text-center max-w-md px-8">
-                <div className="w-20 h-20 bg-[#262ef2]/5 flex items-center justify-center mx-auto mb-6 border border-[#262ef2]/10">
+                <div className="w-20 h-20 bg-[#262ef2]/5 flex items-center justify-center mx-auto mb-6 border border-[#262ef2]/10 rounded-sm">
                     <HiChatAlt2 className="w-10 h-10 text-[#262ef2]/40" />
                 </div>
                 <h3 className="text-xl font-bold text-[#201f32] mb-2">Select a Chatbot</h3>
@@ -399,7 +399,7 @@ interface ChatInputProps {
 function ChatInput({ input, chatbotName, onChange, onSend }: ChatInputProps) {
     return (
         <div className="p-4 bg-white border-t border-[#f3f3f9]">
-            <div className="flex items-center gap-3 w-full border border-[#e3e2e5] px-2 py-1 bg-white hover:border-[#a1a1a1]/40 transition-all focus-within:border-[#262ef2] focus-within:ring-4 focus-within:ring-[#262ef2]/5">
+            <div className="flex items-center gap-3 w-full border border-[#e3e2e5] px-2 py-1 bg-white hover:border-[#a1a1a1]/40 transition-all focus-within:border-[#262ef2] focus-within:ring-4 focus-within:ring-[#262ef2]/5 rounded-sm">
                 <textarea
                     className="flex-1 max-h-40 bg-transparent border-none focus:outline-none focus:ring-0 p-3 text-[14px] font-medium text-[#201f32] placeholder:text-[#a1a1a1] resize-none leading-relaxed"
                     placeholder={`Ask ${chatbotName} anything...`}
@@ -416,7 +416,7 @@ function ChatInput({ input, chatbotName, onChange, onSend }: ChatInputProps) {
                 <button
                     onClick={onSend}
                     disabled={!input.trim()}
-                    className="bg-[#262ef2] text-white p-2.5 hover:bg-[#201f32] shadow-md shadow-[#262ef2]/10 disabled:opacity-30 disabled:cursor-not-allowed transition-all shrink-0"
+                    className="bg-[#262ef2] text-white p-2.5 hover:bg-[#201f32] shadow-md shadow-[#262ef2]/10 disabled:opacity-30 disabled:cursor-not-allowed transition-all shrink-0 rounded-sm"
                 >
                     <HiPaperAirplane className="w-5 h-5 transform rotate-90" />
                 </button>

@@ -19,7 +19,7 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 }
 
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(
-    ({ startContent, endContent, isClearable, onClear, variant, classNames, onValueChange, className, onChange, value, ...props }, ref) => {
+    ({ startContent, endContent, isClearable, onClear, classNames, onValueChange, className, onChange, value, ...props }, ref) => {
         const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
             if (onChange) onChange(e);
             if (onValueChange) onValueChange(e.target.value);

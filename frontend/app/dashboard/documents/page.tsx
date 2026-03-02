@@ -21,7 +21,6 @@ import { Button } from "@/components/ui/button";
 import { PageHeader, EmptyState, StyledTable, DateCell, TableSkeleton, Tooltip, DeleteConfirmationModal, User, Input } from "@/app/components/ui";
 import type { TableColumnDef } from "@/app/components/ui";
 import type { Document } from "@/lib/types";
-import { theme } from "@/app/theme";
 
 const COLUMNS: TableColumnDef[] = [
     { key: "name", label: "SOURCE FILE" },
