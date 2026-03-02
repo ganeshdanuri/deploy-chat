@@ -32,7 +32,7 @@ export default function Footer() {
                                     href={social.href}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="w-9 h-9 bg-muted flex items-center justify-center transition-colors hover:bg-border text-[#8a8a9a] hover:text-secondary"
+                                    className="w-9 h-9 bg-muted flex items-center justify-center transition-colors hover:bg-border text-muted-foreground hover:text-secondary"
                                 >
                                     <social.Icon className="text-base" />
                                 </a>

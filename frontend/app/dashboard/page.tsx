@@ -340,7 +340,7 @@ function RecentActivityPanel() {
     switch (type) {
       case 'document_added': return 'bg-primary';
       case 'dataset_created': return 'bg-emerald-500';
-      case 'chatbot_created': return 'bg-[#0ea5e9]';
+      case 'chatbot_created': return 'bg-[var(--link)]';
       case 'message_limit_warning': return 'bg-amber-500';
       default: return 'bg-muted-foreground';
     }
@@ -377,14 +377,14 @@ function RecentActivityPanel() {
                 </div>
                 <div className="flex-1 space-y-2">
                   <div className="flex justify-between">
-                    <div className="h-3 w-32 bg-slate-100 rounded-full overflow-hidden relative">
+                    <div className="h-3 w-32 bg-muted rounded-full overflow-hidden relative">
                       <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/60 to-transparent animate-shimmer" />
                     </div>
-                    <div className="h-2 w-16 bg-slate-50 rounded-full overflow-hidden relative">
+                    <div className="h-2 w-16 bg-muted rounded-full overflow-hidden relative">
                       <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/60 to-transparent animate-shimmer" />
                     </div>
                   </div>
-                  <div className="h-2.5 w-full bg-slate-50 rounded-full overflow-hidden relative">
+                  <div className="h-2.5 w-full bg-muted rounded-full overflow-hidden relative">
                     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/60 to-transparent animate-shimmer" />
                   </div>
                 </div>

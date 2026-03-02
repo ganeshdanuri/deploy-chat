@@ -7,7 +7,7 @@ import {
     HiCode,
     HiClipboardCopy,
     HiCheck,
-    
+
     HiColorSwatch,
     HiChip,
     HiGlobe,
@@ -163,8 +163,8 @@ export default function EmbedDrawer({ isOpen, onClose, chatbot }: EmbedDrawerPro
                                     Preview
                                 </h3>
                             </div>
-                            <div className="relative h-48 rounded-xl bg-slate-50 border border-slate-200 overflow-hidden shadow-inner font-sans">
-                                <div className="h-7 bg-white border-b border-slate-200 flex items-center gap-1.5 px-3">
+                            <div className="relative h-48 rounded-xl bg-muted border border-border overflow-hidden shadow-inner font-sans">
+                                <div className="h-7 bg-white border-b border-border flex items-center gap-1.5 px-3">
                                     <span className="w-2 h-2 rounded-full bg-red-400" />
                                     <span className="w-2 h-2 rounded-full bg-amber-400" />
                                     <span className="w-2 h-2 rounded-full bg-green-400" />
@@ -203,7 +203,7 @@ export default function EmbedDrawer({ isOpen, onClose, chatbot }: EmbedDrawerPro
                             {copiedSnippet ? "Copied!" : "Copy Code"}
                         </Button>
                     </div>
-                    <div className="bg-[#12121a] overflow-hidden border border-border">
+                    <div className="bg-secondary overflow-hidden border border-border">
                         <pre className="px-4 py-4 text-[10px] text-emerald-300 font-mono overflow-x-auto whitespace-pre-wrap break-all">
                             <code>{snippet}</code>
                         </pre>

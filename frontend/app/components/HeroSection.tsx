@@ -93,7 +93,7 @@ function ChatWidgetVisual() {
       </div>
 
       {/* Messages */}
-      <div className="px-4 py-4 space-y-3 min-h-[220px] bg-[#fafafe]">
+      <div className="px-4 py-4 space-y-3 min-h-[220px] bg-muted">
         {/* Welcome message */}
         <div className="flex gap-2">
           <div className="w-5 h-5 bg-primary flex-shrink-0 flex items-center justify-center mt-0.5">
@@ -101,7 +101,7 @@ function ChatWidgetVisual() {
               <path d="M13 10V3L4 14h7v7l9-11h-7z" />
             </svg>
           </div>
-          <div className="bg-[#f0f0f6] px-3 py-2 text-[11px] text-[#4a4a66] leading-relaxed max-w-[240px]">
+          <div className="bg-muted px-3 py-2 text-[11px] text-foreground leading-relaxed max-w-[240px]">
             Hi! I&apos;m trained on your docs. Ask me anything.
           </div>
         </div>
@@ -111,7 +111,7 @@ function ChatWidgetVisual() {
           <div className="flex justify-end">
             <div className="bg-primary px-3 py-2 text-[11px] text-white leading-relaxed max-w-[220px]">
               {questionText}
-              {phase === "typing-q" && <span className="inline-block w-[2px] h-[10px] bg-white/70 ml-0.5 animate-pulse" />}
+              {phase === "typing-q" && <span className="inline-block w-[2px] h-[10px] bg-[var(--primary-light)] ml-0.5 animate-pulse" />}
             </div>
           </div>
         )}
@@ -124,9 +124,9 @@ function ChatWidgetVisual() {
                 <path d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
             </div>
-            <div className="bg-[#f0f0f6] px-3 py-2 text-[11px] text-[#4a4a66] leading-relaxed max-w-[240px]">
+            <div className="bg-muted px-3 py-2 text-[11px] text-foreground leading-relaxed max-w-[240px]">
               {answerText}
-              {phase === "typing-a" && <span className="inline-block w-[2px] h-[10px] bg-primary/60 ml-0.5 animate-pulse" />}
+              {phase === "typing-a" && <span className="inline-block w-[2px] h-[10px] bg-[var(--primary-light)] ml-0.5 animate-pulse" />}
             </div>
           </div>
         )}
@@ -139,7 +139,7 @@ function ChatWidgetVisual() {
                 <path d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
             </div>
-            <div className="bg-[#f0f0f6] px-2.5 py-1.5 flex items-center gap-1">
+            <div className="bg-muted px-2.5 py-1.5 flex items-center gap-1">
               <span className="w-1.5 h-1.5 rounded-full bg-primary/40 animate-bounce" style={{ animationDelay: "0ms" }} />
               <span className="w-1.5 h-1.5 rounded-full bg-primary/40 animate-bounce" style={{ animationDelay: "150ms" }} />
               <span className="w-1.5 h-1.5 rounded-full bg-primary/40 animate-bounce" style={{ animationDelay: "300ms" }} />
@@ -149,8 +149,8 @@ function ChatWidgetVisual() {
       </div>
 
       {/* Input bar */}
-      <div className="px-3 py-2 border-t border-[#ebebf5] bg-white flex items-center gap-2">
-        <div className="flex-1 h-7 bg-[#f5f5fa] border border-border px-2 flex items-center">
+      <div className="px-3 py-2 border-t border-border bg-white flex items-center gap-2">
+        <div className="flex-1 h-7 bg-muted border border-border px-2 flex items-center">
           <span className="text-[9px] text-muted-foreground">Ask a question...</span>
         </div>
         <div className="w-6 h-6 bg-primary flex items-center justify-center">
@@ -224,7 +224,7 @@ function HeroVisual() {
               ref={el => { arcRefs.current[i] = el; }}
               cx={cx} cy={cy} r={ring.radius}
               fill="none"
-              stroke="rgba(60,100,220,0.3)"
+              stroke="var(--primary-light)"
               strokeWidth="2"
               strokeLinecap="round"
               strokeDasharray={`${arcLen} ${gapLen}`}
@@ -326,7 +326,7 @@ function TypingCycle() {
   return (
     <span className="text-primary">
       {displayed}
-      <span className="inline-block w-[3px] h-[0.85em] bg-primary ml-0.5 align-middle"
+      <span className="inline-block w-[3px] h-[0.85em] bg-[var(--primary-light)] ml-0.5 align-middle"
         style={{ opacity: showCursor ? 1 : 0, transition: "opacity 0.1s" }} />
     </span>
   );
@@ -337,7 +337,7 @@ interface HeroSectionProps { onGetStarted: () => void; }
 
 export default function HeroSection({ onGetStarted }: HeroSectionProps) {
   return (
-    <section className="relative overflow-hidden bg-[#f0f0f6]" style={{ minHeight: "calc(100vh - 72px)" }}>
+    <section className="relative overflow-hidden bg-background" style={{ minHeight: "calc(100vh - 72px)" }}>
 
       {/* Corner circles */}
       {[
@@ -346,7 +346,7 @@ export default function HeroSection({ onGetStarted }: HeroSectionProps) {
       ].map((pos) => (
         <span
           key={pos}
-          className={`absolute ${pos} w-3 h-3 rounded-full border border-[#c8c8d0] bg-transparent`}
+          className={`absolute ${pos} w-3 h-3 rounded-full border border-[var(--border-medium)] bg-transparent`}
         />
       ))}
 
@@ -359,7 +359,7 @@ export default function HeroSection({ onGetStarted }: HeroSectionProps) {
           <div className="mb-8">
             <a
               href="#"
-              className="inline-flex items-center gap-2 text-sm text-foreground border border-[#dddde8] rounded px-3 py-1.5 bg-white/60 hover:bg-white transition-colors"
+              className="inline-flex items-center gap-2 text-sm text-foreground border border-[var(--border-medium)] rounded px-3 py-1.5 bg-white/60 hover:bg-white transition-colors"
             >
               {PAGE_CONTENT.hero.badge}
               <span className="text-primary text-base">›</span>
@@ -386,7 +386,7 @@ export default function HeroSection({ onGetStarted }: HeroSectionProps) {
           <div>
             <button
               onClick={onGetStarted}
-              className="inline-flex items-center gap-3 bg-secondary text-white text-base font-semibold px-7 py-4 rounded-lg hover:bg-[#2a2a40] transition-all hover:-translate-y-0.5 hover:shadow-xl active:translate-y-0"
+              className="inline-flex items-center gap-3 bg-secondary text-white text-base font-semibold px-7 py-4 rounded-lg hover:bg-secondary/90 transition-all hover:-translate-y-0.5 hover:shadow-xl active:translate-y-0"
             >
               {PAGE_CONTENT.hero.ctaStandard}
               <span className="text-primary text-lg">⇒</span>
@@ -397,7 +397,7 @@ export default function HeroSection({ onGetStarted }: HeroSectionProps) {
           {HERO_CHECKMARKS && (
             <div className="mt-10 flex flex-wrap gap-x-6 gap-y-3">
               {HERO_CHECKMARKS.map((item: string, idx: number) => (
-                <div key={idx} className="flex items-center gap-2 text-sm text-[#6a6a7a]">
+                <div key={idx} className="flex items-center gap-2 text-sm text-muted-foreground">
                   <HiCheck className="text-emerald-500 flex-shrink-0" />
                   {item}
                 </div>

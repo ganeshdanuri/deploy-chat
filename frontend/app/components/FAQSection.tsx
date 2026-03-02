@@ -44,7 +44,7 @@ export default function FAQSection({ faqs = FAQS }) {
                                 <div
                                     key={i}
                                     style={{
-                                        borderBottom: isLast ? "none" : "1px solid #e8e8f0",
+                                        borderBottom: isLast ? "none" : "1px solid var(--border)",
                                     }}
                                 >
                                     <dt>
@@ -62,7 +62,7 @@ export default function FAQSection({ faqs = FAQS }) {
                                                 {faq.question}
                                             </span>
                                             <span
-                                                className="flex-shrink-0 w-5 h-5 flex items-center justify-center text-[#8a8a9a]"
+                                                className="flex-shrink-0 w-5 h-5 flex items-center justify-center text-muted-foreground"
                                                 aria-hidden="true"
                                             >
                                                 {isOpen ? (

@@ -170,7 +170,7 @@ input:disabled {
   width: 200%;
   height: 200%;
   z-index: -1;
-  background-color: #f3f3f9;
+  background-color: var(--background);
   background-image:
     radial-gradient(at 0% 0%, color-mix(in srgb, var(--primary) 4%, transparent) 0, transparent 50%),
     radial-gradient(at 50% 0%, color-mix(in srgb, var(--secondary) 3%, transparent) 0, transparent 50%),
@@ -228,24 +228,84 @@ input:disabled {
 :root {
   --app-border-radius: 0;
   --radius: 0;
-  --background: #f3f3f9;
-  --foreground: #4d5564;
-  --card: #ffffff;
-  --card-foreground: #4d5564;
-  --popover: #ffffff;
-  --popover-foreground: #4d5564;
+
+  /* ── Core Colors ── */
   --primary: #262ef2;
-  --primary-foreground: #ffffff;
+  --primary-light: #6e73fa;
+  --primary-foreground: #fff;
   --secondary: #201f32;
-  --secondary-foreground: #ffffff;
+  --secondary-foreground: #fff;
+  --foreground: #4d5564;
+  --background: #f3f3f9;
+  --card: #fff;
+  --card-foreground: #4d5564;
+  --popover: #fff;
+  --popover-foreground: #4d5564;
   --muted: #f3f3f9;
   --muted-foreground: #a1a1a1;
   --accent: #f3f3f9;
   --accent-foreground: #262ef2;
-  --destructive: #ef4444;
-  --border: #e3e2e5;
+  --destructive: red;
+
+  /* ── Borders & Input ── */
+  --border: #e3e3e3;
+  --border-medium: #dddde4;
+  --border-light: #d6e3eb;
   --input: #e3e2e5;
-  --ring: #262ef2;
+
+  /* ── Focus Ring ── */
+  --ring: #262ef21a;
+
+  /* ── Primary Opacity Variants ── */
+  --primary-ghost: #262ef21a;
+  --primary-5: #262ef20d;
+  --primary-25: #262ef240;
+  --primary-light: #6e73fa;
+  --primary-bg: #e5eaff;
+
+  /* ── Secondary Opacity Variants ── */
+  --secondary-overlay: #1f1f3280;
+  --secondary-ghost: #201f3233;
+
+  /* ── Foreground Opacity Variants ── */
+  --foreground-ghost: #4d55640d;
+  --foreground-muted: #4d5564bf;
+
+  /* ── White Opacity Variants ── */
+  --white-4: #ffffff0a;
+  --white-10: #ffffff1a;
+  --white-40: #fff6;
+  --white-50: #ffffff80;
+  --white-60: #fff9;
+  --white-80: #fffc;
+
+  /* ── Accent Palette ── */
+  --accent-orange: #ed4d13;
+  --accent-purple: #7933ea;
+  --accent-green: #1e8c2c;
+  --accent-green-dark: #00820f;
+  --accent-violet: #aa26f2;
+  --accent-gold: #ca7c0e;
+  --accent-burnt: #f25c26;
+  --accent-emerald: #0c9618;
+  --accent-lime: #71880a;
+  --accent-teal: #20a684;
+  --accent-navy: #0c5696;
+  --link: #09f;
+
+  /* ── Status Backgrounds ── */
+  --violet-bg: #f2e5ff;
+  --gold-bg: #fffce5;
+  --burnt-bg: #ffece5;
+  --emerald-bg: #e5ffe9;
+  --lime-bg: #fbffe7;
+  --teal-bg: #e5fff7;
+  --sky-bg: #e5f7ff;
+  --muted-blue: #e9edf8;
+
+  /* ── Status Ghost ── */
+  --destructive-ghost: #fe00001a;
+  --success-ghost: #05a2341a;
 }
 
 .dark {

@@ -27,10 +27,10 @@ export default function Navbar() {
       <nav
         className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
         style={{
-          backgroundColor: "rgba(255, 255, 255, 0.9)",
+          backgroundColor: "var(--white-80)",
           backdropFilter: "blur(20px)",
           WebkitBackdropFilter: "blur(20px)",
-          borderBottom: "1px solid rgba(0, 0, 0, 0.06)",
+          borderBottom: "1px solid var(--foreground-ghost)",
         }}
       >
         <div className="max-w-[1400px] mx-auto px-10">
@@ -55,11 +55,11 @@ export default function Navbar() {
                 </a>
               ))}
 
-              <div className="w-px h-5 bg-[#e0e0ea] mx-3" />
+              <div className="w-px h-5 bg-[var(--border-medium)] mx-3" />
 
               <button
                 onClick={handleMainButtonClick}
-                className="text-[13px] font-medium px-6 py-2 text-secondary border border-[#d8d8e4] hover:border-primary hover:text-primary transition-all duration-200"
+                className="text-[13px] font-medium px-6 py-2 text-secondary border border-[var(--border-medium)] hover:border-[var(--primary-light)] hover:text-[var(--primary-light)] transition-all duration-200"
               >
                 Login
               </button>
@@ -93,7 +93,7 @@ export default function Navbar() {
                     handleMainButtonClick();
                     setIsMobileMenuOpen(false);
                   }}
-                  className="w-full py-2.5 text-secondary text-sm font-medium border border-[#d8d8e4]"
+                  className="w-full py-2.5 text-secondary text-sm font-medium border border-[var(--border-medium)]"
                 >
                   Login
                 </button>

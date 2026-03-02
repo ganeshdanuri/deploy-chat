@@ -20,7 +20,7 @@ function CopyButton({ text }: { text: string }) {
         setCopied(true); setTimeout(() => setCopied(false), 2000);
     }, [text]);
     return (
-        <button type="button" onClick={handle} className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium transition-all ${copied ? "bg-primary/10 text-primary" : "bg-muted text-foreground hover:bg-[#eaeaf5]"}`}>
+        <button type="button" onClick={handle} className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium transition-all ${copied ? "bg-primary/10 text-primary" : "bg-muted text-foreground hover:bg-[var(--muted-blue)]"}`}>
             {copied ? <><HiClipboardCheck className="h-3.5 w-3.5" />Copied!</> : <><HiClipboardCopy className="h-3.5 w-3.5" />Copy snippet</>}
         </button>
     );
@@ -28,7 +28,7 @@ function CopyButton({ text }: { text: string }) {
 
 // ─── Syntax highlight ─────────────────────────────────────────────────────────
 type Token = { type: "tag" | "attr" | "string" | "plain"; text: string };
-const TC: Record<Token["type"], string> = { tag: "#262ef2", attr: "#201f32", string: "#10b981", plain: "#4d5564" };
+const TC: Record<Token["type"], string> = { tag: "var(--primary)", attr: "var(--secondary)", string: "var(--accent-emerald)", plain: "var(--foreground)" };
 function tokenize(code: string): Token[][] {
     return code.split("\n").map(line => {
         const tokens: Token[] = []; const re = /(< \/?\w[\w.-]*>?|\/?>|[\w-]+=|"[^"]*"|'[^']*'|[\w-]+)/g;
@@ -104,7 +104,7 @@ function OrbitVisual() {
                 </g>
             </g>
             <g ref={centerRef}>
-                <circle cx={cx} cy={cy} r={40} fill="#3c46dc" style={{ filter: "drop-shadow(0 6px 24px rgba(60,70,220,0.40))" }} />
+                <circle cx={cx} cy={cy} r={40} fill="var(--primary)" style={{ filter: "drop-shadow(0 6px 24px rgba(60,70,220,0.40))" }} />
                 <svg x={cx - 13} y={cy - 13} width={26} height={26} viewBox="0 0 24 24"
                     fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
@@ -129,7 +129,7 @@ function CodeEditorVisual() {
     return (
         <div ref={ref} className="w-full max-w-[440px] overflow-hidden bg-white"
             style={{ boxShadow: "0 28px 72px rgba(30,30,80,0.14), 0 0 0 1px rgba(60,70,220,0.07)" }}>
-            <div className="flex items-center justify-between bg-muted px-5 py-3 border-b border-[#ebebf5]">
+            <div className="flex items-center justify-between bg-muted px-5 py-3 border-b border-border">
                 <div className="flex gap-1.5">
                     <div className="h-2.5 w-2.5 rounded-full bg-[#ff5f57]" />
                     <div className="h-2.5 w-2.5 rounded-full bg-[#febc2e]" />
@@ -142,7 +142,7 @@ function CodeEditorVisual() {
                     </span>
                 </div>
             </div>
-            <div className="bg-muted px-5 py-2.5 font-mono text-[10px] leading-5 text-muted-foreground/60 border-b border-[#f0f0f6]">
+            <div className="bg-muted px-5 py-2.5 font-mono text-[10px] leading-5 text-muted-foreground/60 border-b border-background">
                 <div>{"<!DOCTYPE html>"}</div>
                 <div>{'<html lang="en"><head>'}</div>
                 <div className="pl-4 italic text-muted-foreground/40">{"<!-- ↓ paste snippet ↓ -->"}</div>
@@ -151,10 +151,10 @@ function CodeEditorVisual() {
                 <div className="absolute right-3 top-3"><CopyButton text={EMBED_SNIPPET} /></div>
                 <CodeBlock code={EMBED_SNIPPET} />
             </div>
-            <div className="bg-muted px-5 py-2.5 font-mono text-[10px] text-muted-foreground/60 border-t border-[#f0f0f6]">
+            <div className="bg-muted px-5 py-2.5 font-mono text-[10px] text-muted-foreground/60 border-t border-background">
                 {"</head><body>...</body></html>"}
             </div>
-            <div className="flex items-center justify-between bg-muted px-5 py-2.5 border-t border-[#ebebf5]">
+            <div className="flex items-center justify-between bg-muted px-5 py-2.5 border-t border-border">
                 <div className="flex gap-4 font-mono text-[10px] text-muted-foreground"><span>HTML</span><span>UTF-8</span></div>
                 <div className="flex items-center gap-1.5 text-[10px] font-medium text-primary">
                     <HiCheckCircle className="h-3.5 w-3.5" />No build step required
@@ -179,7 +179,7 @@ function DashboardVisual() {
     return (
         <div ref={ref} className="w-full max-w-[420px] bg-white overflow-hidden"
             style={{ boxShadow: "0 24px 64px rgba(30,30,80,0.12), 0 0 0 1px rgba(60,70,220,0.06)" }}>
-            <div className="flex items-center gap-2 bg-muted px-5 py-3 border-b border-[#ebebf5]">
+            <div className="flex items-center gap-2 bg-muted px-5 py-3 border-b border-border">
                 <div className="h-2.5 w-2.5 rounded-full bg-[#ff5f57]" />
                 <div className="h-2.5 w-2.5 rounded-full bg-[#febc2e]" />
                 <div className="h-2.5 w-2.5 rounded-full bg-[#28c840]" />
@@ -192,11 +192,11 @@ function DashboardVisual() {
                     ))}
                 </div>
                 {[1, 2, 3].map(i => (
-                    <div key={i} className="flex items-center gap-3 p-3 bg-[#f8f8fc]">
-                        <div className="h-7 w-7 bg-white border border-[#ebebf5]" />
+                    <div key={i} className="flex items-center gap-3 p-3 bg-muted">
+                        <div className="h-7 w-7 bg-white border border-border" />
                         <div className="flex-1 space-y-1.5">
                             <div className="h-2 w-24 bg-border" />
-                            <div className="h-1.5 w-16 bg-[#f0f0f8]" />
+                            <div className="h-1.5 w-16 bg-background" />
                         </div>
                         <div className="h-5 w-12 bg-primary/15" />
                     </div>
@@ -221,7 +221,7 @@ function BrandVisual() {
     return (
         <div ref={ref} className="w-full max-w-[400px] bg-white overflow-hidden"
             style={{ boxShadow: "0 24px 64px rgba(30,30,80,0.12), 0 0 0 1px rgba(60,70,220,0.06)" }}>
-            <div className="flex items-center gap-2 bg-muted px-5 py-3 border-b border-[#ebebf5]">
+            <div className="flex items-center gap-2 bg-muted px-5 py-3 border-b border-border">
                 <div className="h-2.5 w-2.5 rounded-full bg-[#ff5f57]" />
                 <div className="h-2.5 w-2.5 rounded-full bg-[#febc2e]" />
                 <div className="h-2.5 w-2.5 rounded-full bg-[#28c840]" />
@@ -230,9 +230,9 @@ function BrandVisual() {
             <div className="p-5 space-y-4">
                 {/* Color swatches */}
                 <div className="flex gap-3">
-                    {["#3c46dc", "#201f32", "#10b981", "#f59e0b"].map((c, i) => (
+                    {["var(--primary)", "var(--secondary)", "var(--accent-emerald)", "var(--accent-gold)"].map((c, i) => (
                         <div key={i} className="flex flex-col items-center gap-1.5">
-                            <div className="h-10 w-10 border border-[#ebebf5]" style={{ backgroundColor: c }} />
+                            <div className="h-10 w-10 border border-border" style={{ backgroundColor: c }} />
                             <span className="text-[9px] font-mono text-muted-foreground">{c}</span>
                         </div>
                     ))}
@@ -240,11 +240,11 @@ function BrandVisual() {
                 {/* Mock form fields */}
                 <div className="space-y-2">
                     <div className="h-2 w-16 bg-border" />
-                    <div className="h-8 w-full bg-[#f8f8fc] border border-[#ebebf5]" />
+                    <div className="h-8 w-full bg-muted border border-border" />
                 </div>
                 <div className="space-y-2">
                     <div className="h-2 w-20 bg-border" />
-                    <div className="h-8 w-full bg-[#f8f8fc] border border-[#ebebf5]" />
+                    <div className="h-8 w-full bg-muted border border-border" />
                 </div>
                 <div className="h-8 w-24 bg-primary flex items-center justify-center">
                     <span className="text-[10px] font-medium text-white">Save Theme</span>
@@ -334,7 +334,7 @@ function ConnectingLines({
                         y1={line.startY}
                         x2={line.x}
                         y2={line.endY}
-                        stroke={isActive ? "#3c46dc" : isDone ? "#c0c0d8" : "#dddde8"}
+                        stroke={isActive ? "var(--primary)" : isDone ? "var(--border)" : "var(--border-medium)"}
                         strokeWidth={1}
                         opacity={isActive ? 1 : isDone ? 0.7 : 0.4}
                         style={{ transition: "stroke 0.3s, opacity 0.3s" }}
@@ -447,7 +447,7 @@ export default function IntegrationSection() {
 
     return (
         <section id="integration" aria-labelledby="integration-heading"
-            className="relative overflow-hidden bg-[#f0f0f6]">
+            className="relative overflow-hidden bg-background">
 
             {/* ── HEADER ── */}
             <div className="relative overflow-hidden pt-20 pb-0 px-6">
@@ -455,14 +455,14 @@ export default function IntegrationSection() {
                 {/* Badge + heading + subtitle */}
                 <div className="relative z-10 text-center">
                     <div ref={badgeRef} className="mb-5 inline-flex items-center gap-2" style={{ opacity: 0 }}>
-                        <span className="text-[#b0b0c0] text-sm select-none">〈〈</span>
-                        <div className="inline-flex items-center gap-2 bg-white border border-[#e0e0ec] px-3.5 py-1.5 shadow-sm">
+                        <span className="text-muted-foreground text-sm select-none">〈〈</span>
+                        <div className="inline-flex items-center gap-2 bg-white border border-[var(--border-medium)] px-3.5 py-1.5 shadow-sm">
                             <svg className="h-3.5 w-3.5 text-primary" viewBox="0 0 20 20" fill="currentColor">
                                 <path fillRule="evenodd" d="M3 5a2 2 0 012-2h10a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V5zm3 1h8v8H6V6z" clipRule="evenodd" />
                             </svg>
                             <span className="text-xs font-semibold text-foreground tracking-wide">How it Works</span>
                         </div>
-                        <span className="text-[#b0b0c0] text-sm select-none">〉〉</span>
+                        <span className="text-muted-foreground text-sm select-none">〉〉</span>
                     </div>
 
                     <h2 ref={headingRef} id="integration-heading"
@@ -471,7 +471,7 @@ export default function IntegrationSection() {
                         Launch Your AI<br />Agent in minutes
                     </h2>
 
-                    <p ref={subRef} className="text-lg text-[#6a6a7a] leading-relaxed mb-0 max-w-lg mx-auto" style={{ opacity: 0 }}>
+                    <p ref={subRef} className="text-lg text-muted-foreground leading-relaxed mb-0 max-w-lg mx-auto" style={{ opacity: 0 }}>
                         Powerful automation, built without<br />technical overhead for your team.
                     </p>
                 </div>
@@ -502,11 +502,11 @@ export default function IntegrationSection() {
                                     className={`inline-flex items-center gap-2 px-5 py-2.5 select-none focus:outline-none transition-all border ${isActive
                                         ? "bg-secondary text-white border-secondary"
                                         : isDone
-                                            ? "bg-transparent text-[#8888b0] border-[#c0c0d8] hover:text-[#6868a0] hover:border-[#a0a0b8]"
-                                            : "bg-transparent text-[#a8a8c0] border-[#dddde8] hover:text-[#6868a0] hover:border-[#c0c0d8]"
+                                            ? "bg-transparent text-[var(--foreground-muted)] border-[var(--border)] hover:text-foreground hover:border-[var(--border-medium)]"
+                                            : "bg-transparent text-muted-foreground border-[var(--border-medium)] hover:text-foreground hover:border-[var(--border)]"
                                         }`}
                                 >
-                                    <span className={`text-sm font-bold ${isActive ? "text-white" : isDone ? "text-primary" : "text-[#c0c0d0]"
+                                    <span className={`text-sm font-bold ${isActive ? "text-white" : isDone ? "text-primary" : "text-muted-foreground"
                                         }`}>
                                         {stepNum}
                                     </span>
@@ -521,17 +521,17 @@ export default function IntegrationSection() {
                 </div>
 
                 {/* ── CONTENT PANEL: Info left + Visual right ── */}
-                <div ref={contentPanelRef} className="relative z-[2] flex flex-col lg:flex-row border border-[#dddde8] mt-16" style={{ height: 480, minHeight: 480 }}>
+                <div ref={contentPanelRef} className="relative z-[2] flex flex-col lg:flex-row border border-[var(--border-medium)] mt-16" style={{ height: 480, minHeight: 480 }}>
 
                     {/* ── LEFT: White panel with background progress fill ── */}
-                    <div className="relative overflow-hidden lg:w-[38%] flex flex-col justify-between p-10 lg:p-12 bg-white border-r border-[#dddde8]">
+                    <div className="relative overflow-hidden lg:w-[38%] flex flex-col justify-between p-10 lg:p-12 bg-white border-r border-[var(--border-medium)]">
 
                         {/* Background progress fill — driven by GSAP, no CSS transition (prevents reverse) */}
                         <div
                             ref={fillBarRef}
                             className="absolute inset-0 z-0 pointer-events-none"
                             style={{
-                                background: "linear-gradient(135deg, #f0f0fa 0%, #e8e8f5 100%)",
+                                background: "linear-gradient(135deg, var(--primary-light) 0%, var(--primary) 100%)",
                                 width: "0%",
                             }}
                         />
@@ -551,7 +551,7 @@ export default function IntegrationSection() {
                                 </h3>
                             </div>
                             <div>
-                                <p className="text-[14px] leading-relaxed text-[#4a4a66] mb-6">
+                                <p className="text-[14px] leading-relaxed text-foreground mb-6">
                                     {currentStep.description}
                                 </p>
                                 {COMPATIBLE_TECHS && (
