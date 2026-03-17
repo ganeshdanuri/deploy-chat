@@ -1,48 +1,104 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import { PLATFORM_FEATURES as features, PAGE_CONTENT } from "../../lib/constants";
 
 export default function FeaturesSection() {
-  return (
-    <section id="features" className="relative py-24 bg-white overflow-hidden">
+  const headerRef = useRef<HTMLDivElement>(null);
+  const cardsRef = useRef<HTMLDivElement>(null);
 
-      <div className="mx-auto max-w-[1400px] px-10">
+  useEffect(() => {
+    let ctx: { revert: () => void };
+    (async () => {
+      const { gsap } = await import("gsap");
+      const { ScrollTrigger } = await import("gsap/ScrollTrigger");
+      gsap.registerPlugin(ScrollTrigger);
+
+      ctx = gsap.context(() => {
+        // Header animation
+        gsap.from(headerRef.current, {
+          y: 30,
+          opacity: 0,
+          duration: 0.8,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: headerRef.current,
+            start: "top 85%",
+          }
+        });
+
+        // Cards staggered animation
+        if (cardsRef.current) {
+          const cards = cardsRef.current.children;
+          gsap.from(cards, {
+            y: 50,
+            scale: 0.9,
+            opacity: 0,
+            duration: 0.8,
+            stagger: 0.15,
+            ease: "back.out(1.4)",
+            scrollTrigger: {
+              trigger: cardsRef.current,
+              start: "top 80%",
+            }
+          });
+        }
+      });
+    })();
+    return () => ctx?.revert();
+  }, []);
+
+  return (
+    <section id="features" className="relative py-16 lg:py-24 bg-white overflow-hidden">
+
+      {/* Subtle radial glow */}
+      <div className="radial-glow w-[500px] h-[500px] -top-[150px] -left-[100px] bg-primary/[0.03]" />
+
+      <div className="mx-auto max-w-6xl px-6 lg:px-10">
 
         {/* ── Section Header ── */}
-        <div className="mb-14 text-center">
-          <div className="flex items-center justify-center gap-3 mb-6">
-            <div className="w-8 h-[2px] bg-primary" />
-            <span className="text-xs font-semibold text-foreground tracking-wide uppercase">
-              {PAGE_CONTENT.features.badge}
-            </span>
-            <div className="w-8 h-[2px] bg-primary" />
+        <div ref={headerRef} className="mb-10 text-center">
+          {/* Section label badge */}
+          <div className="flex items-center justify-center mb-6">
+            <div className="inline-flex items-center rounded-full border border-border bg-muted/50 px-3 py-1 shadow-sm">
+              <span className="text-sm font-medium text-foreground">
+                {PAGE_CONTENT.features.badge}
+              </span>
+            </div>
           </div>
-          <h2 className="text-[40px] md:text-[44px] font-semibold text-secondary mb-6 leading-tight tracking-tight">
+
+          <h2 className="text-3xl md:text-[3.25rem] leading-[1.15] text-foreground mb-6">
             {PAGE_CONTENT.features.headlineWait}{" "}
-            <span className="text-primary">{PAGE_CONTENT.features.headlineHighlight}</span>
+            <span className="gradient-text">{PAGE_CONTENT.features.headlineHighlight}</span>
           </h2>
           <p className="text-lg text-muted-foreground max-w-xl mx-auto leading-relaxed">
             {PAGE_CONTENT.features.subtitle}
           </p>
         </div>
 
-        {/* ── Features Grid — 3-column, clean ── */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px bg-border">
+        {/* ── Features Grid — 3-column with elevated cards ── */}
+        <div ref={cardsRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {features.map((feature) => (
             <div
               key={feature.id}
-              className="group relative bg-white p-10 transition-colors duration-200 hover:bg-muted"
+              className="group relative bg-white rounded-2xl border border-border p-8 lg:p-10 transition-all duration-300 hover:-translate-y-1 hover:bg-gradient-to-br hover:from-primary/[0.02] hover:to-transparent"
+              style={{ boxShadow: 'var(--shadow-md)' }}
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLElement).style.boxShadow = 'var(--shadow-xl)';
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLElement).style.boxShadow = 'var(--shadow-md)';
+              }}
             >
-              {/* Icon */}
+              {/* Icon — gradient background */}
               <div
-                className="w-11 h-11 flex items-center justify-center mb-6 transition-transform duration-200 group-hover:scale-105"
-                style={{ backgroundColor: `${feature.color}0a`, color: feature.color }}
+                className="w-12 h-12 rounded-xl flex items-center justify-center mb-6 gradient-bg transition-transform duration-200 group-hover:scale-110"
               >
-                <feature.icon className="h-5 w-5" />
+                <feature.icon className="h-5 w-5 text-white" />
               </div>
 
               {/* Title */}
-              <h3 className="text-lg font-semibold text-secondary mb-3">
+              <h3 className="text-lg font-semibold tracking-tight text-foreground mb-3">
                 {feature.title}
               </h3>
 
@@ -53,8 +109,7 @@ export default function FeaturesSection() {
 
               {/* Subtle bottom accent on hover */}
               <div
-                className="absolute bottom-0 left-0 h-[2px] w-0 group-hover:w-full transition-all duration-300"
-                style={{ backgroundColor: feature.color }}
+                className="absolute bottom-0 left-4 right-4 h-[2px] rounded-full w-0 group-hover:w-[calc(100%-2rem)] transition-all duration-300 gradient-bg"
               />
             </div>
           ))}

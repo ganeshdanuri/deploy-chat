@@ -8,31 +8,6 @@ import { FaBrain } from "react-icons/fa";
 import { MdIntegrationInstructions } from "react-icons/md";
 import { SiNotion, SiGoogledrive, SiSlack, SiGithub, SiIntercom } from "react-icons/si";
 
-// ─── Landing Page Stats (HeroSection) ────────────────────────────────────────
-export const LANDING_STATS = [
-    {
-        id: 1,
-        value: "98%",
-        label: "Accuracy Rate",
-        color: "#262ef2",
-        bgColor: "#262ef215",
-    },
-    {
-        id: 2,
-        value: "24/7",
-        label: "Always Available",
-        color: "#262ef2",
-        bgColor: "#262ef215",
-    },
-    {
-        id: 3,
-        value: "10K+",
-        label: "Active Users",
-        color: "#262ef2",
-        bgColor: "#262ef215",
-    },
-];
-
 // ─── Hero Checkmarks ─────────────────────────────────────────────────────────
 export const HERO_CHECKMARKS = [
     "No credit card required",
@@ -482,7 +457,7 @@ export const BRAND = {
 export const PAGE_CONTENT = {
     hero: {
         badge: "Open Source AI Chatbot Platform",
-        headlineStart: "Deploy an AI That",
+        headlineStart: "Deploy an Agent",
         headlineEnd: "In Minutes",
         subtitle: "Train a chatbot on your own data, customize it to your brand, and embed it on your website with a single line of code.",
         ctaStandard: "Get Started Free",
@@ -497,6 +472,12 @@ export const PAGE_CONTENT = {
         badge: "How it Works",
         headline: "From your data to a live AI assistant in less than 5 minutes.",
         subtitle: "A seamless pipeline from document ingestion to a fully functioning chat widget on your website.",
+    },
+    connectors: {
+        badge: "Integrations",
+        headlineWait: "Connect all your",
+        headlineHighlight: "Knowledge Sources",
+        subtitle: "Sync data from the tools your team already uses. Your AI stays up-to-date automatically as your documents change.",
     },
     pricing: {
         badge: "Pricing",

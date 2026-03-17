@@ -1,31 +1,71 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { PAGE_CONTENT, FAQS } from "../../lib/constants";
 
 export default function FAQSection({ faqs = FAQS }) {
     const [openIndex, setOpenIndex] = useState<number | null>(0);
+    const headerRef = useRef<HTMLDivElement>(null);
+    const accordionRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        let ctx: { revert: () => void };
+        (async () => {
+            const { gsap } = await import("gsap");
+            const { ScrollTrigger } = await import("gsap/ScrollTrigger");
+            gsap.registerPlugin(ScrollTrigger);
+
+            ctx = gsap.context(() => {
+                gsap.from(headerRef.current, {
+                    y: 30,
+                    opacity: 0,
+                    duration: 0.8,
+                    ease: "power3.out",
+                    scrollTrigger: {
+                        trigger: headerRef.current,
+                        start: "top 85%",
+                    }
+                });
+
+                gsap.from(accordionRef.current, {
+                    y: 40,
+                    opacity: 0,
+                    duration: 0.8,
+                    ease: "power3.out",
+                    scrollTrigger: {
+                        trigger: accordionRef.current,
+                        start: "top 80%",
+                    }
+                });
+            });
+        })();
+        return () => ctx?.revert();
+    }, []);
 
     return (
         <section
             id="faq"
             aria-labelledby="faq-heading"
-            className="relative py-24 bg-white overflow-hidden"
+            className="relative py-16 lg:py-24 bg-white overflow-hidden"
         >
-            <div className="mx-auto max-w-[1400px] px-10">
+            {/* Subtle radial glow */}
+            <div className="radial-glow w-[400px] h-[400px] bottom-0 left-0 bg-primary/[0.03]" />
+
+            <div className="mx-auto max-w-6xl px-6 lg:px-10">
 
                 {/* ── Section Header ── */}
-                <div className="mb-14 text-center">
-                    <div className="flex items-center justify-center gap-3 mb-6">
-                        <div className="w-8 h-[2px] bg-primary" />
-                        <span className="text-xs font-semibold text-foreground tracking-wide uppercase">
-                            {PAGE_CONTENT.faq.badge}
-                        </span>
-                        <div className="w-8 h-[2px] bg-primary" />
+                <div ref={headerRef} className="mb-10 text-center">
+                    {/* Section label badge */}
+                    <div className="flex items-center justify-center mb-6">
+                        <div className="inline-flex items-center rounded-full border border-border bg-muted/50 px-3 py-1 shadow-sm">
+                            <span className="text-sm font-medium text-foreground">
+                                {PAGE_CONTENT.faq.badge}
+                            </span>
+                        </div>
                     </div>
                     <h2
                         id="faq-heading"
-                        className="text-[40px] md:text-[44px] font-semibold text-secondary mb-6 leading-tight tracking-tight"
+                        className="text-3xl md:text-[3.25rem] leading-[1.15] text-foreground mb-6"
                     >
                         {PAGE_CONTENT.faq.headline}
                     </h2>
@@ -35,7 +75,8 @@ export default function FAQSection({ faqs = FAQS }) {
                 </div>
 
                 {/* ── FAQ Accordion ── */}
-                <div className="mx-auto max-w-4xl border border-border bg-muted">
+                <div ref={accordionRef} className="mx-auto max-w-3xl rounded-2xl border border-border bg-white overflow-hidden"
+                    style={{ boxShadow: 'var(--shadow-md)' }}>
                     <dl>
                         {faqs.map((faq, i) => {
                             const isOpen = openIndex === i;
@@ -53,16 +94,19 @@ export default function FAQSection({ faqs = FAQS }) {
                                             onClick={() => setOpenIndex(isOpen ? null : i)}
                                             aria-expanded={isOpen}
                                             aria-controls={`faq-answer-${i}`}
-                                            className="flex w-full items-center justify-between gap-4 text-left px-8 py-6 hover:bg-white transition-colors duration-150"
+                                            className="flex w-full items-center justify-between gap-4 text-left px-8 py-6 hover:bg-muted/50 transition-colors duration-150 rounded-none"
                                         >
                                             <span
-                                                className={`text-[17px] font-medium leading-snug transition-colors duration-200 ${isOpen ? "text-primary" : "text-secondary"
+                                                className={`text-[17px] font-medium leading-snug transition-colors duration-200 ${isOpen ? "text-primary" : "text-foreground"
                                                     }`}
                                             >
                                                 {faq.question}
                                             </span>
                                             <span
-                                                className="flex-shrink-0 w-5 h-5 flex items-center justify-center text-muted-foreground"
+                                                className={`flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center transition-all duration-200 ${isOpen
+                                                    ? "bg-primary/10 text-primary rotate-0"
+                                                    : "bg-muted text-muted-foreground rotate-0"
+                                                    }`}
                                                 aria-hidden="true"
                                             >
                                                 {isOpen ? (
@@ -81,11 +125,11 @@ export default function FAQSection({ faqs = FAQS }) {
                                         id={`faq-answer-${i}`}
                                         role="region"
                                         aria-hidden={!isOpen}
-                                        className={`grid transition-all duration-300 ease-in-out ${isOpen ? "grid-rows-[1fr] opacity-100 bg-white" : "grid-rows-[0fr] opacity-0"
+                                        className={`grid transition-all duration-300 ease-in-out ${isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
                                             }`}
                                     >
                                         <div className="overflow-hidden">
-                                            <p className="px-8 pb-6 pt-2 text-[15px] leading-relaxed text-muted-foreground">
+                                            <p className="px-8 pb-6 pt-0 text-[15px] leading-relaxed text-muted-foreground">
                                                 {faq.answer}
                                             </p>
                                         </div>

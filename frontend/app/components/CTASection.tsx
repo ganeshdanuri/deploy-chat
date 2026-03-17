@@ -1,60 +1,97 @@
 "use client";
 
+import { useEffect, useRef } from "react";
+import { HiArrowRight } from "react-icons/hi";
 import { PAGE_CONTENT, BRAND } from "../../lib/constants";
 
 export default function CTASection({ onGetStarted }: { onGetStarted: () => void }) {
+    const sectionRef = useRef<HTMLDivElement>(null);
+    const contentRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        let ctx: { revert: () => void };
+        (async () => {
+            const { gsap } = await import("gsap");
+            const { ScrollTrigger } = await import("gsap/ScrollTrigger");
+            gsap.registerPlugin(ScrollTrigger);
+
+            ctx = gsap.context(() => {
+                gsap.from(contentRef.current, {
+                    y: 40,
+                    opacity: 0,
+                    scale: 0.98,
+                    duration: 0.8,
+                    ease: "power3.out",
+                    scrollTrigger: {
+                        trigger: contentRef.current,
+                        start: "top 85%",
+                    }
+                });
+            });
+        })();
+        return () => ctx?.revert();
+    }, []);
+
     return (
-        <section className="py-24 bg-white">
-            <div className="max-w-[1400px] mx-auto px-10">
+        <section className="py-16 lg:py-24 bg-white">
+            <div className="max-w-6xl mx-auto px-6 lg:px-10">
                 <div
-                    className="relative overflow-hidden text-center py-20 px-10 md:px-20 bg-secondary border border-[var(--secondary-ghost)]"
+                    ref={contentRef}
+                    className="relative overflow-hidden text-center py-14 px-8 md:px-16 rounded-[2rem] bg-foreground"
                 >
-                    {/* Subtle decorative elements */}
+                    {/* Dot pattern texture */}
+                    <div className="absolute inset-0 dot-pattern" />
+
+                    {/* Radial glows */}
                     <div
-                        className="absolute top-0 right-0 w-[400px] h-[400px] opacity-[0.07]"
-                        style={{ background: "radial-gradient(circle, var(--primary) 0%, transparent 70%)" }}
+                        className="absolute -top-[100px] -right-[100px] w-[500px] h-[500px] rounded-full opacity-[0.08]"
+                        style={{ background: "radial-gradient(circle, var(--primary-light) 0%, transparent 70%)" }}
                     />
                     <div
-                        className="absolute bottom-0 left-0 w-[300px] h-[300px] opacity-[0.05]"
+                        className="absolute -bottom-[100px] -left-[100px] w-[400px] h-[400px] rounded-full opacity-[0.06]"
                         style={{ background: "radial-gradient(circle, var(--primary) 0%, transparent 70%)" }}
                     />
 
                     <div className="relative z-10 max-w-2xl mx-auto">
-                        {/* Badge */}
-                        <div className="flex items-center justify-center gap-3 mb-8">
-                            <div className="w-8 h-[2px] bg-primary" />
-                            <span className="text-xs font-semibold text-muted-foreground tracking-wide uppercase">
-                                {PAGE_CONTENT.cta.badge}
-                            </span>
-                            <div className="w-8 h-[2px] bg-primary" />
+                        {/* Section label badge */}
+                        <div className="flex items-center justify-center mb-6">
+                            <div className="inline-flex items-center rounded-full border border-white/10 bg-white/5 px-3 py-1 shadow-sm">
+                                <span className="text-sm font-medium text-background/80">
+                                    {PAGE_CONTENT.cta.badge}
+                                </span>
+                            </div>
                         </div>
 
-                        <h2 className="text-[44px] font-semibold text-white mb-6 leading-tight tracking-tight">
+                        <h2 className="text-3xl md:text-[3.25rem] leading-[1.15] text-background mb-6">
                             {PAGE_CONTENT.cta.headlineWait}{" "}
-                            <span className="text-primary">{PAGE_CONTENT.cta.headlineHighlight}</span>
+                            <span className="gradient-text">{PAGE_CONTENT.cta.headlineHighlight}</span>
                         </h2>
 
-                        <p className="text-lg text-[var(--white-60)] leading-relaxed mb-12 max-w-lg mx-auto">
+                        <p className="text-lg text-background/60 leading-relaxed mb-8 max-w-lg mx-auto">
                             {PAGE_CONTENT.cta.subtitleStart}{" "}
-                            <span className="font-semibold text-white">{BRAND.first} <span className="text-primary">{BRAND.second}</span></span>.
+                            <span className="font-semibold text-background">{BRAND.first} <span className="gradient-text">{BRAND.second}</span></span>.
                             {PAGE_CONTENT.cta.subtitleEnd}
                         </p>
 
                         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                             <button
                                 onClick={onGetStarted}
-                                className="text-sm font-medium px-10 py-4 bg-white text-secondary hover:-translate-y-0.5 transition-all"
+                                className="group text-sm font-medium px-10 py-3.5 rounded-lg gradient-bg text-white transition-all duration-200 hover:-translate-y-0.5 hover:brightness-110 active:scale-[0.98]"
+                                style={{ boxShadow: 'var(--shadow-accent)' }}
                             >
-                                {PAGE_CONTENT.cta.primaryBtn}
+                                <span className="flex items-center gap-2">
+                                    {PAGE_CONTENT.cta.primaryBtn}
+                                    <HiArrowRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" />
+                                </span>
                             </button>
                             <button
-                                className="text-sm font-medium px-10 py-4 border border-[var(--secondary-ghost)] text-[var(--white-60)] hover:border-primary hover:text-white transition-all"
+                                className="text-sm font-medium px-10 py-3.5 rounded-xl border border-background/15 text-background/70 hover:border-background/30 hover:text-background hover:bg-background/5 transition-all duration-200 hover:-translate-y-0.5 active:scale-[0.98]"
                             >
                                 {PAGE_CONTENT.cta.secondaryBtn}
                             </button>
                         </div>
 
-                        <p className="mt-10 text-xs text-muted-foreground font-normal tracking-widest uppercase">
+                        <p className="mt-8 text-xs text-background/30 font-medium tracking-widest uppercase font-mono">
                             {PAGE_CONTENT.cta.footerText}
                         </p>
                     </div>

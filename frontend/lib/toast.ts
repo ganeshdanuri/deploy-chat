@@ -1,77 +1,41 @@
-import { toast, ToastOptions, Id } from 'react-toastify';
+import { toast } from 'sonner';
 
-// Default toast configuration for consistent styling
-const defaultOptions: ToastOptions = {
-    position: 'top-right',
-    autoClose: 4000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-};
-
-// Toast utility functions with consistent styling
+// Toast utility functions with consistent styling using Sonner
 export const showToast = {
-    success: (message: string, options?: ToastOptions): Id => {
-        return toast.success(message, {
-            ...defaultOptions,
-            ...options,
-        });
+    success: (message: string) => {
+        return toast.success(message);
     },
 
-    error: (message: string, options?: ToastOptions): Id => {
-        return toast.error(message, {
-            ...defaultOptions,
-            autoClose: 5000, // Errors stay longer
-            ...options,
-        });
+    error: (message: string) => {
+        return toast.error(message);
     },
 
-    info: (message: string, options?: ToastOptions): Id => {
-        return toast.info(message, {
-            ...defaultOptions,
-            ...options,
-        });
+    info: (message: string) => {
+        return toast.info(message);
     },
 
-    warning: (message: string, options?: ToastOptions): Id => {
-        return toast.warning(message, {
-            ...defaultOptions,
-            ...options,
-        });
+    warning: (message: string) => {
+        return toast.warning(message);
     },
 
-    loading: (message: string, options?: ToastOptions): Id => {
-        return toast.loading(message, {
-            ...defaultOptions,
-            autoClose: false,
-            ...options,
-        });
+    loading: (message: string) => {
+        return toast.loading(message);
     },
 
-    dismiss: (toastId?: Id): void => {
-        toast.dismiss(toastId);
-    },
-
-    update: (toastId: Id, options: ToastOptions & { render?: string }): void => {
-        toast.update(toastId, options);
+    dismiss: (id?: string | number) => {
+        toast.dismiss(id);
     },
 
     // Promise-based toast for async operations
     promise: <T>(
-        promise: Promise<T>,
+        promise: Promise<T> | (() => Promise<T>),
         messages: {
-            pending: string;
-            success: string;
-            error: string;
-        },
-        options?: ToastOptions
-    ): Promise<T> => {
-        return toast.promise(promise, messages, {
-            ...defaultOptions,
-            ...options,
-        }) as Promise<T>;
+            loading: string;
+            success: string | ((data: T) => string);
+            error: string | ((error: any) => string);
+        }
+    ): Promise<T> | any => {
+        return toast.promise(promise, messages);
     },
 };
 

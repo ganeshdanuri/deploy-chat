@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { HiCheck } from "react-icons/hi";
+import { HiCheck, HiArrowRight } from "react-icons/hi";
 import {
   HERO_CHECKMARKS,
   HERO_CHAT_CONVERSATIONS,
@@ -9,6 +9,13 @@ import {
   HERO_RING_DEFS,
   PAGE_CONTENT
 } from "../../lib/constants";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
 // ── Animated Chat Widget (center of hero visual) ───────────────────────────
 function ChatWidgetVisual() {
@@ -56,32 +63,25 @@ function ChatWidgetVisual() {
   }, [phase, questionText, answerText, convoIdx]);
 
   // Floating animation via GSAP
-  useEffect(() => {
-    let ctx: { revert: () => void };
-    (async () => {
-      const { gsap } = await import("gsap");
-      if (!widgetRef.current) return;
-      ctx = gsap.context(() => {
-        gsap.to(widgetRef.current, { y: -8, duration: 3, ease: "sine.inOut", yoyo: true, repeat: -1 });
-      });
-    })();
-    return () => ctx?.revert();
-  }, []);
+  useGSAP(() => {
+    if (!widgetRef.current) return;
+    gsap.to(widgetRef.current, { y: -8, duration: 3, ease: "sine.inOut", yoyo: true, repeat: -1 });
+  }, { scope: widgetRef });
 
   return (
-    <div ref={widgetRef} className="w-[360px] bg-white overflow-hidden"
-      style={{ boxShadow: "0 24px 80px rgba(30,30,80,0.18), 0 0 0 1px rgba(60,70,220,0.08)" }}>
+    <div ref={widgetRef} className="w-[400px] rounded-2xl bg-white relative"
+      style={{ boxShadow: "0 24px 80px rgba(15,23,42,0.16), 0 0 0 1px rgba(0,82,255,0.06)" }}>
       {/* Header */}
-      <div className="bg-secondary px-4 py-3 flex items-center gap-2.5">
-        <div className="w-7 h-7 bg-primary flex items-center justify-center">
+      <div className="gradient-bg px-4 py-3 flex items-center gap-2.5 rounded-t-2xl">
+        <div className="w-7 h-7 bg-white/20 rounded-lg flex items-center justify-center">
           <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
           </svg>
         </div>
         <div className="flex-1">
           <div className="text-[11px] font-semibold text-white leading-none">AI Assistant</div>
-          <div className="text-[9px] text-green-400 mt-0.5 flex items-center gap-1">
-            <span className="w-1 h-1 rounded-full bg-green-400 inline-block" />
+          <div className="text-[9px] text-emerald-300 mt-0.5 flex items-center gap-1">
+            <span className="w-1 h-1 rounded-full bg-emerald-300 inline-block animate-pulse-dot" />
             Online
           </div>
         </div>
@@ -93,15 +93,15 @@ function ChatWidgetVisual() {
       </div>
 
       {/* Messages */}
-      <div className="px-4 py-4 space-y-3 min-h-[220px] bg-muted">
+      <div className="px-4 py-4 space-y-4 min-h-[380px] bg-muted/80">
         {/* Welcome message */}
         <div className="flex gap-2">
-          <div className="w-5 h-5 bg-primary flex-shrink-0 flex items-center justify-center mt-0.5">
-            <svg viewBox="0 0 24 24" className="w-3 h-3" fill="none" stroke="white" strokeWidth="2">
+          <div className="w-5 h-5 rounded-sm flex-shrink-0 flex items-center justify-center mt-0.5">
+            <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="var(--primary)" strokeWidth="2">
               <path d="M13 10V3L4 14h7v7l9-11h-7z" />
             </svg>
           </div>
-          <div className="bg-muted px-3 py-2 text-[11px] text-foreground leading-relaxed max-w-[240px]">
+          <div className="bg-white rounded-lg rounded-tl-sm px-4 py-3 text-[12px] text-foreground leading-relaxed max-w-[280px]" style={{ boxShadow: 'var(--shadow-sm)' }}>
             Hi! I&apos;m trained on your docs. Ask me anything.
           </div>
         </div>
@@ -109,9 +109,9 @@ function ChatWidgetVisual() {
         {/* User question (typing) */}
         {questionText && (
           <div className="flex justify-end">
-            <div className="bg-primary px-3 py-2 text-[11px] text-white leading-relaxed max-w-[220px]">
+            <div className="gradient-bg rounded-lg rounded-tr-sm px-4 py-3 text-[12px] text-white leading-relaxed max-w-[260px]">
               {questionText}
-              {phase === "typing-q" && <span className="inline-block w-[2px] h-[10px] bg-[var(--primary-light)] ml-0.5 animate-pulse" />}
+              {phase === "typing-q" && <span className="inline-block w-[2px] h-[10px] bg-white/60 ml-0.5 animate-pulse" />}
             </div>
           </div>
         )}
@@ -119,14 +119,14 @@ function ChatWidgetVisual() {
         {/* AI answer (typing) */}
         {answerText && (
           <div className="flex gap-2">
-            <div className="w-5 h-5 bg-primary flex-shrink-0 flex items-center justify-center mt-0.5">
-              <svg viewBox="0 0 24 24" className="w-3 h-3" fill="none" stroke="white" strokeWidth="2">
+            <div className="w-5 h-5 rounded-sm flex-shrink-0 flex items-center justify-center mt-0.5">
+              <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="var(--primary)" strokeWidth="2">
                 <path d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
             </div>
-            <div className="bg-muted px-3 py-2 text-[11px] text-foreground leading-relaxed max-w-[240px]">
+            <div className="bg-white rounded-lg rounded-tl-sm px-4 py-3 text-[12px] text-foreground leading-relaxed max-w-[280px]" style={{ boxShadow: 'var(--shadow-sm)' }}>
               {answerText}
-              {phase === "typing-a" && <span className="inline-block w-[2px] h-[10px] bg-[var(--primary-light)] ml-0.5 animate-pulse" />}
+              {phase === "typing-a" && <span className="inline-block w-[2px] h-[10px] bg-primary/50 ml-0.5 animate-pulse" />}
             </div>
           </div>
         )}
@@ -134,12 +134,12 @@ function ChatWidgetVisual() {
         {/* Thinking indicator */}
         {phase === "pause" && (
           <div className="flex gap-2">
-            <div className="w-5 h-5 bg-primary flex-shrink-0 flex items-center justify-center mt-0.5">
-              <svg viewBox="0 0 24 24" className="w-3 h-3" fill="none" stroke="white" strokeWidth="2">
+            <div className="w-5 h-5 rounded-sm flex-shrink-0 flex items-center justify-center mt-0.5">
+              <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="var(--primary)" strokeWidth="2">
                 <path d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
             </div>
-            <div className="bg-muted px-2.5 py-1.5 flex items-center gap-1">
+            <div className="bg-white rounded-lg px-2.5 py-1.5 flex items-center gap-1" style={{ boxShadow: 'var(--shadow-sm)' }}>
               <span className="w-1.5 h-1.5 rounded-full bg-primary/40 animate-bounce" style={{ animationDelay: "0ms" }} />
               <span className="w-1.5 h-1.5 rounded-full bg-primary/40 animate-bounce" style={{ animationDelay: "150ms" }} />
               <span className="w-1.5 h-1.5 rounded-full bg-primary/40 animate-bounce" style={{ animationDelay: "300ms" }} />
@@ -149,15 +149,22 @@ function ChatWidgetVisual() {
       </div>
 
       {/* Input bar */}
-      <div className="px-3 py-2 border-t border-border bg-white flex items-center gap-2">
-        <div className="flex-1 h-7 bg-muted border border-border px-2 flex items-center">
-          <span className="text-[9px] text-muted-foreground">Ask a question...</span>
+      <div className="px-3 py-2.5 border-t border-border bg-white flex items-center gap-2 rounded-b-2xl">
+        <div className="flex-1 h-8 bg-muted rounded-lg border border-border px-3 flex items-center">
+          <span className="text-[10px] text-muted-foreground">Ask a question...</span>
         </div>
-        <div className="w-6 h-6 bg-primary flex items-center justify-center">
-          <svg viewBox="0 0 24 24" className="w-3 h-3" fill="none" stroke="white" strokeWidth="2.5">
+        <div className="w-7 h-7 gradient-bg rounded-lg flex items-center justify-center">
+          <svg viewBox="0 0 24 24" className="w-3.5 h-3.5" fill="none" stroke="white" strokeWidth="2.5">
             <path d="M5 12h14M12 5l7 7-7 7" />
           </svg>
         </div>
+      </div>
+
+      {/* Floating Chat Icon (separated from widget) */}
+      <div className="absolute -bottom-[72px] right-0 w-14 h-14 gradient-bg rounded-full flex items-center justify-center shadow-lg" style={{ boxShadow: '0 8px 32px rgba(0,82,255,0.25)' }}>
+        <svg viewBox="0 0 24 24" className="w-6 h-6 text-white" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+        </svg>
       </div>
     </div>
   );
@@ -171,36 +178,29 @@ function HeroVisual() {
 
   const cx = 370, cy = 370;
 
-  useEffect(() => {
-    let ctx: { revert: () => void };
-    (async () => {
-      const { gsap } = await import("gsap");
-      ctx = gsap.context(() => {
-        // Animate each blue arc sweeping around its ring
-        HERO_RING_DEFS.forEach((ring, i) => {
-          const circ = 2 * Math.PI * ring.radius;
-          if (arcRefs.current[i]) {
-            gsap.to(arcRefs.current[i], {
-              strokeDashoffset: -circ * ring.direction,
-              duration: ring.duration,
-              ease: "none",
-              repeat: -1,
-            });
-          }
+  useGSAP(() => {
+    // Animate each blue arc sweeping around its ring
+    HERO_RING_DEFS.forEach((ring, i) => {
+      const circ = 2 * Math.PI * ring.radius;
+      if (arcRefs.current[i]) {
+        gsap.to(arcRefs.current[i], {
+          strokeDashoffset: -circ * ring.direction,
+          duration: ring.duration,
+          ease: "none",
+          repeat: -1,
         });
-      });
-    })();
-    return () => ctx?.revert();
-  }, []);
+      }
+    });
+  }, { scope: containerRef });
 
   return (
     <div ref={containerRef} className="relative w-full h-full flex items-center justify-center">
       {/* Background effects */}
       <div className="absolute inset-0 pointer-events-none"
-        style={{ backgroundImage: "radial-gradient(circle, rgba(80,90,200,0.04) 1px, transparent 1px)", backgroundSize: "24px 24px" }} />
+        style={{ backgroundImage: "radial-gradient(circle, rgba(0,82,255,0.03) 1px, transparent 1px)", backgroundSize: "24px 24px" }} />
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
         <div className="w-[720px] h-[720px] rounded-full"
-          style={{ background: "radial-gradient(circle, rgba(60,70,220,0.06) 0%, transparent 70%)" }} />
+          style={{ background: "radial-gradient(circle, rgba(0,82,255,0.05) 0%, transparent 70%)" }} />
       </div>
 
       {/* SVG layer */}
@@ -210,7 +210,7 @@ function HeroVisual() {
         {/* ── Base rings (always visible, light) ── */}
         {HERO_RING_DEFS.map((ring, i) => (
           <circle key={`base-${i}`} cx={cx} cy={cy} r={ring.radius}
-            fill="none" stroke="rgba(60,70,180,0.06)" strokeWidth="1" />
+            fill="none" stroke="rgba(0,82,255,0.06)" strokeWidth="1" />
         ))}
 
         {/* ── Animated blue arcs sweeping around each ring ── */}
@@ -242,7 +242,7 @@ function HeroVisual() {
             <line key={`line-${i}`}
               x1={nx} y1={ny} x2={cx} y2={cy}
               stroke={node.src.color} strokeWidth="0.8"
-              strokeDasharray="4 6" opacity="0.2"
+              strokeDasharray="4 6" opacity="0.15"
             />
           );
         })}
@@ -255,13 +255,14 @@ function HeroVisual() {
           return (
             <g key={i} transform={`translate(${nx}, ${ny})`}>
               <circle r={26} fill="white" stroke={node.src.color} strokeWidth="1.5" opacity="0.95"
-                style={{ filter: "drop-shadow(0 4px 14px rgba(30,30,80,0.12))" }} />
+                rx="8"
+                style={{ filter: "drop-shadow(0 4px 14px rgba(15,23,42,0.10))" }} />
               <svg x={-11} y={-15} width={22} height={22} viewBox="0 0 24 24"
                 fill="none" stroke={node.src.color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                 <path d={node.src.icon} />
               </svg>
               <text x={0} y={17} textAnchor="middle" fill={node.src.color} fontSize="8" fontWeight="700"
-                style={{ fontFamily: "system-ui, sans-serif" }}>
+                style={{ fontFamily: "Inter, system-ui, sans-serif" }}>
                 {node.src.label}
               </text>
             </g>
@@ -280,7 +281,7 @@ function HeroVisual() {
 // ── Typing animation — cycles through phrases ─────────────────────────────
 const TYPING_PHRASES = [
   "Answers Your Customers",
-  "Learns From Your Docs",
+  "Learns From Your Data",
   "Works 24/7 for You",
   "Boosts Your Conversions",
 ];
@@ -324,9 +325,9 @@ function TypingCycle() {
   }, [displayed, isDeleting, phraseIdx]);
 
   return (
-    <span className="text-primary">
+    <span className="gradient-text">
       {displayed}
-      <span className="inline-block w-[3px] h-[0.85em] bg-[var(--primary-light)] ml-0.5 align-middle"
+      <span className="inline-block w-[3px] h-[0.85em] bg-primary ml-0.5 align-middle rounded-full"
         style={{ opacity: showCursor ? 1 : 0, transition: "opacity 0.1s" }} />
     </span>
   );
@@ -336,41 +337,81 @@ function TypingCycle() {
 interface HeroSectionProps { onGetStarted: () => void; }
 
 export default function HeroSection({ onGetStarted }: HeroSectionProps) {
+  const leftSideRef = useRef<HTMLDivElement>(null);
+  const visualRef = useRef<HTMLDivElement>(null);
+
+  useGSAP(() => {
+    // Entrance animations
+    if (leftSideRef.current) {
+      gsap.from(leftSideRef.current.children, {
+        y: 20,
+        opacity: 0,
+        duration: 0.8,
+        stagger: 0.1,
+        ease: "power3.out",
+        delay: 0.2
+      });
+
+      // Parallax scroll effect
+      gsap.to(leftSideRef.current, {
+        y: -30,
+        scrollTrigger: {
+          trigger: leftSideRef.current,
+          start: "top center",
+          end: "bottom top",
+          scrub: 1
+        }
+      });
+    }
+    if (visualRef.current) {
+      gsap.from(visualRef.current, {
+        x: 40,
+        opacity: 0,
+        duration: 1,
+        ease: "power3.out",
+        delay: 0.4
+      });
+
+      // Parallax scroll effect for visual
+      gsap.to(visualRef.current, {
+        y: 40,
+        scrollTrigger: {
+          trigger: visualRef.current,
+          start: "top center",
+          end: "bottom top",
+          scrub: 1.5
+        }
+      });
+    }
+  }, { scope: leftSideRef }); // Scoping to leftSideRef but applying to both refs inside
+
   return (
-    <section className="relative overflow-hidden bg-background" style={{ minHeight: "calc(100vh - 72px)" }}>
+    <section className="relative" style={{ minHeight: "calc(100vh - 72px)", background: "transparent" }}>
+      {/* Background container for constrained glow effects */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
+        <div className="radial-glow w-[600px] h-[600px] -top-[200px] -right-[200px] bg-primary/[0.04]" />
+        <div className="radial-glow w-[400px] h-[400px] -bottom-[100px] -left-[100px] bg-primary/[0.03]" />
+      </div>
 
-      {/* Corner circles */}
-      {[
-        "top-3 left-3", "top-3 right-3",
-        "bottom-3 left-3", "bottom-3 right-3",
-      ].map((pos) => (
-        <span
-          key={pos}
-          className={`absolute ${pos} w-3 h-3 rounded-full border border-[var(--border-medium)] bg-transparent`}
-        />
-      ))}
-
-      <div className="relative mx-auto max-w-[1400px] h-full grid lg:grid-cols-2 min-h-[calc(100vh-72px)]">
+      <div className="relative mx-auto max-w-7xl px-4 lg:px-8 h-full grid lg:grid-cols-[1.2fr_0.8fr] min-h-[calc(100vh-72px)] gap-10">
 
         {/* ── LEFT ── */}
-        <div className="flex flex-col justify-center px-10 py-20">
+        <div ref={leftSideRef} className="flex flex-col justify-center py-14 min-w-0">
 
-          {/* Release badge */}
-          <div className="mb-8">
-            <a
-              href="#"
-              className="inline-flex items-center gap-2 text-sm text-foreground border border-[var(--border-medium)] rounded px-3 py-1.5 bg-white/60 hover:bg-white transition-colors"
-            >
-              {PAGE_CONTENT.hero.badge}
-              <span className="text-primary text-base">›</span>
-            </a>
+          {/* Section label badge */}
+          <div className="mb-6">
+            <div className="inline-flex items-center rounded-full border border-border bg-muted/50 px-3 py-1 shadow-sm">
+              <span className="text-sm font-medium text-foreground">
+                {PAGE_CONTENT.hero.badge}
+              </span>
+            </div>
           </div>
 
           {/* Headline */}
-          <h1 className="text-[44px] lg:text-[52px] font-semibold leading-[1.08] tracking-tight text-secondary mb-6">
+          <h1 className="text-[2.5rem] leading-[1.1] sm:text-5xl lg:text-[3.5rem] xl:text-[4rem] tracking-[-0.02em] text-foreground mb-5">
             {PAGE_CONTENT.hero.headlineStart}
-            <br />
-            <span className="inline-block" style={{ minHeight: "1.15em" }}>
+            <br className="hidden sm:block" />
+            <span className="sm:inline-block whitespace-normal sm:whitespace-nowrap sm:pl-3 lg:pl-0" style={{ minHeight: "1.15em" }}>
               <TypingCycle />
             </span>
             <br />
@@ -378,24 +419,25 @@ export default function HeroSection({ onGetStarted }: HeroSectionProps) {
           </h1>
 
           {/* Subtitle */}
-          <p className="text-lg text-muted-foreground leading-relaxed max-w-[480px] mb-10">
+          <p className="text-lg text-muted-foreground leading-relaxed max-w-[480px] mb-8">
             {PAGE_CONTENT.hero.subtitle}
           </p>
 
-          {/* CTA */}
-          <div>
+          {/* CTA — Gradient button */}
+          <div className="flex flex-col sm:flex-row items-start gap-4">
             <button
               onClick={onGetStarted}
-              className="inline-flex items-center gap-3 bg-secondary text-white text-base font-semibold px-7 py-4 rounded-lg hover:bg-secondary/90 transition-all hover:-translate-y-0.5 hover:shadow-xl active:translate-y-0"
+              className="group inline-flex items-center gap-3 gradient-bg text-white text-base font-medium px-8 py-3.5 rounded-lg transition-all duration-200 hover:-translate-y-0.5 hover:brightness-110 active:scale-[0.98]"
+              style={{ boxShadow: 'var(--shadow-accent)' }}
             >
               {PAGE_CONTENT.hero.ctaStandard}
-              <span className="text-primary text-lg">⇒</span>
+              <HiArrowRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" />
             </button>
           </div>
 
           {/* Checkmarks */}
           {HERO_CHECKMARKS && (
-            <div className="mt-10 flex flex-wrap gap-x-6 gap-y-3">
+            <div className="mt-8 flex flex-wrap gap-x-6 gap-y-3">
               {HERO_CHECKMARKS.map((item: string, idx: number) => (
                 <div key={idx} className="flex items-center gap-2 text-sm text-muted-foreground">
                   <HiCheck className="text-emerald-500 flex-shrink-0" />
@@ -407,7 +449,7 @@ export default function HeroSection({ onGetStarted }: HeroSectionProps) {
         </div>
 
         {/* ── RIGHT: Hero Visual ── */}
-        <div className="relative hidden lg:flex items-center justify-center py-6 overflow-hidden">
+        <div ref={visualRef} className="relative hidden lg:flex items-center justify-center py-12 pb-24 lg:py-6 lg:pb-0 translate-x-4 xl:translate-x-8">
           <HeroVisual />
         </div>
 

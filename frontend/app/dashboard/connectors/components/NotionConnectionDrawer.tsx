@@ -120,7 +120,7 @@ export function NotionConnectionDrawer({ isOpen, onClose, onConnected }: NotionC
 
                     <div className="space-y-2 max-h-[50vh] overflow-y-auto pr-3">
                         {pages.length === 0 ? (
-                            <div className="py-12 text-center text-slate-500 text-sm italic">No pages found.</div>
+                            <div className="py-12 text-center text-muted-foreground text-sm italic">No pages found.</div>
                         ) : (
                             pages.map(page => (
                                 <div

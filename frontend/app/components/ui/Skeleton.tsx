@@ -315,7 +315,7 @@ export function AnalyticsSkeleton() {
                             {Array.from({ length: 12 }).map((_, j) => (
                                 <Skeleton
                                     key={j}
-                                    className="w-full bg-slate-100/50"
+                                    className="w-full bg-muted/50"
                                     style={{ height: `${Math.random() * 60 + 20}%` }}
                                 />
                             ))}

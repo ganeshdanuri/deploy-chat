@@ -2,6 +2,7 @@
 
 import Navbar from "./components/Navbar";
 import FeaturesSection from "./components/FeaturesSection";
+import ConnectorsSection from "./components/ConnectorsSection";
 import HeroSection from "./components/HeroSection";
 import Banner from "./components/Banner";
 import IntegrationSection from "./components/IntegrationSection";
@@ -36,6 +37,9 @@ export default function LandingPage() {
 
       {/* Features Section */}
       <FeaturesSection />
+
+      {/* Connectors Section */}
+      <ConnectorsSection />
 
       {/* Integration Section */}
       <IntegrationSection />

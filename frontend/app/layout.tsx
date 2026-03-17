@@ -1,22 +1,25 @@
-import { Space_Grotesk, IBM_Plex_Mono } from "next/font/google";
+import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "./context/AuthContext";
 import ReduxProvider from "./components/ReduxProvider";
 import ToastProvider from "./components/ToastProvider";
 import GoogleOAuthWrapper from "./components/GoogleOAuthWrapper";
 import { Analytics } from "@vercel/analytics/next"
-import { TooltipProvider } from "@/components/ui/tooltip";
 
-const spaceGrotesk = Space_Grotesk({
-  variable: "--font-space-grotesk",
+
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
   display: "swap",
 });
 
-const ibmPlexMono = IBM_Plex_Mono({
-  variable: "--font-ibm-plex-mono",
+
+
+const jetbrainsMono = JetBrains_Mono({
+  variable: "--font-jetbrains-mono",
   subsets: ["latin"],
-  weight: ["400", "500", "600"],
+  weight: ["400", "500"],
   display: "swap",
 });
 
@@ -33,7 +36,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${spaceGrotesk.variable} ${ibmPlexMono.variable}`}>
+    <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable}`}>
       <head>
       </head>
       <body
@@ -41,16 +44,14 @@ export default function RootLayout({
       >
         <div className="mesh-gradient" />
         <ReduxProvider>
-          <TooltipProvider>
-            <GoogleOAuthWrapper>
-              <AuthProvider>
-                <ToastProvider>
-                  {children}
-                  <Analytics />
-                </ToastProvider>
-              </AuthProvider>
-            </GoogleOAuthWrapper>
-          </TooltipProvider>
+          <GoogleOAuthWrapper>
+            <AuthProvider>
+              <ToastProvider>
+                {children}
+                <Analytics />
+              </ToastProvider>
+            </AuthProvider>
+          </GoogleOAuthWrapper>
         </ReduxProvider>
       </body>
     </html>

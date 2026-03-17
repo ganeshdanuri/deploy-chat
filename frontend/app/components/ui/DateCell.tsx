@@ -8,8 +8,8 @@ export function DateCell({ isoString, className }: { isoString: string; classNam
     const date = new Date(isoString);
     return (
         <div className={`flex flex-col ${className || ""}`}>
-            <p className="text-xs text-slate-600">{date.toLocaleDateString()}</p>
-            <p className="text-xs text-slate-400 font-mono">
+            <p className="text-xs text-foreground">{date.toLocaleDateString()}</p>
+            <p className="text-xs text-muted-foreground font-mono">
                 {date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
             </p>
         </div>

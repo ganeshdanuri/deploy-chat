@@ -7,8 +7,16 @@ import {
     EMBED_SNIPPET,
     COMPATIBLE_TECHS,
     IntegrationStep as Step,
-    INTEGRATION_ORBIT_ICONS
+    INTEGRATION_ORBIT_ICONS,
+    PAGE_CONTENT
 } from "../../lib/constants";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+if (typeof window !== "undefined") {
+    gsap.registerPlugin(ScrollTrigger);
+}
 
 const FILL_DURATION = 6;   // seconds (used by GSAP tween)
 
@@ -20,7 +28,7 @@ function CopyButton({ text }: { text: string }) {
         setCopied(true); setTimeout(() => setCopied(false), 2000);
     }, [text]);
     return (
-        <button type="button" onClick={handle} className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium transition-all ${copied ? "bg-primary/10 text-primary" : "bg-muted text-foreground hover:bg-[var(--muted-blue)]"}`}>
+        <button type="button" onClick={handle} className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${copied ? "bg-primary/10 text-primary" : "bg-muted text-foreground hover:bg-primary/5 hover:text-primary"}`}>
             {copied ? <><HiClipboardCheck className="h-3.5 w-3.5" />Copied!</> : <><HiClipboardCopy className="h-3.5 w-3.5" />Copy snippet</>}
         </button>
     );
@@ -63,27 +71,20 @@ function OrbitVisual() {
     const gRef = useRef<SVGGElement>(null);
     const iconsRef = useRef<SVGGElement>(null);
     const centerRef = useRef<SVGGElement>(null);
-    useEffect(() => {
-        let ctx: { revert: () => void };
-        (async () => {
-            const { gsap } = await import("gsap");
-            ctx = gsap.context(() => {
-                if (gRef.current) gsap.to(gRef.current, { rotation: 360, duration: 30, ease: "none", repeat: -1, transformOrigin: "200 200" });
-                if (iconsRef.current) {
-                    const icons = iconsRef.current.querySelectorAll(".icon-wrap");
-                    gsap.to(icons, { rotation: -360, duration: 30, ease: "none", repeat: -1, transformOrigin: "50% 50%" });
-                }
-                if (centerRef.current) gsap.to(centerRef.current, { scale: 1.06, duration: 2.2, ease: "sine.inOut", repeat: -1, yoyo: true, transformOrigin: "200 200" });
-            });
-        })();
-        return () => ctx?.revert();
-    }, []);
+    useGSAP(() => {
+        if (gRef.current) gsap.to(gRef.current, { rotation: 360, duration: 30, ease: "none", repeat: -1, transformOrigin: "200 200" });
+        if (iconsRef.current) {
+            const icons = iconsRef.current.querySelectorAll(".icon-wrap");
+            gsap.to(icons, { rotation: -360, duration: 30, ease: "none", repeat: -1, transformOrigin: "50% 50%" });
+        }
+        if (centerRef.current) gsap.to(centerRef.current, { scale: 1.06, duration: 2.2, ease: "sine.inOut", repeat: -1, yoyo: true, transformOrigin: "200 200" });
+    }, { scope: gRef });
 
     const r = 140, cx = 200, cy = 200;
     return (
         <svg viewBox="0 0 400 400" className="w-full max-w-[440px]">
-            <circle cx={cx} cy={cy} r={r} fill="none" stroke="rgba(60,70,180,0.10)" strokeWidth="1.5" />
-            <circle cx={cx} cy={cy} r={r * 0.55} fill="none" stroke="rgba(60,70,180,0.06)" strokeWidth="1" />
+            <circle cx={cx} cy={cy} r={r} fill="none" stroke="rgba(0,82,255,0.10)" strokeWidth="1.5" />
+            <circle cx={cx} cy={cy} r={r * 0.55} fill="none" stroke="rgba(0,82,255,0.06)" strokeWidth="1" />
             <g ref={gRef}>
                 <g ref={iconsRef}>
                     {INTEGRATION_ORBIT_ICONS.map((icon, i) => {
@@ -92,10 +93,10 @@ function OrbitVisual() {
                         const iy = cy + r * Math.sin(angle);
                         return (
                             <g key={i} className="icon-wrap" style={{ transformOrigin: `${ix}px ${iy}px` }}>
-                                <circle cx={ix} cy={iy} r={17} fill="white" stroke="rgba(60,70,180,0.12)" strokeWidth="1"
-                                    style={{ filter: "drop-shadow(0 2px 8px rgba(30,30,80,0.08))" }} />
+                                <circle cx={ix} cy={iy} r={17} fill="white" stroke="rgba(0,82,255,0.12)" strokeWidth="1"
+                                    style={{ filter: "drop-shadow(0 2px 8px rgba(15,23,42,0.08))" }} />
                                 <svg x={ix - 8.5} y={iy - 8.5} width={17} height={17} viewBox="0 0 24 24"
-                                    fill="none" stroke="rgba(50,60,160,0.50)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                                    fill="none" stroke="rgba(0,82,255,0.50)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                                     <path d={icon.d} />
                                 </svg>
                             </g>
@@ -104,7 +105,8 @@ function OrbitVisual() {
                 </g>
             </g>
             <g ref={centerRef}>
-                <circle cx={cx} cy={cy} r={40} fill="var(--primary)" style={{ filter: "drop-shadow(0 6px 24px rgba(60,70,220,0.40))" }} />
+                <circle cx={cx} cy={cy} r={40} fill="url(#gradient-center)" style={{ filter: "drop-shadow(0 6px 24px rgba(0,82,255,0.35))" }} />
+                <defs><linearGradient id="gradient-center" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#0052FF" /><stop offset="100%" stopColor="#4D7CFF" /></linearGradient></defs>
                 <svg x={cx - 13} y={cy - 13} width={26} height={26} viewBox="0 0 24 24"
                     fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
@@ -117,19 +119,14 @@ function OrbitVisual() {
 // ─── Code Editor Visual ───────────────────────────────────────────────────────
 function CodeEditorVisual() {
     const ref = useRef<HTMLDivElement>(null);
-    useEffect(() => {
-        let ctx: { revert: () => void };
-        (async () => {
-            const { gsap } = await import("gsap");
-            if (!ref.current) return;
-            ctx = gsap.context(() => { gsap.to(ref.current, { y: -6, duration: 3, ease: "sine.inOut", yoyo: true, repeat: -1 }); });
-        })();
-        return () => ctx?.revert();
-    }, []);
+    useGSAP(() => {
+        if (!ref.current) return;
+        gsap.to(ref.current, { y: -6, duration: 3, ease: "sine.inOut", yoyo: true, repeat: -1 });
+    }, { scope: ref });
     return (
-        <div ref={ref} className="w-full max-w-[440px] overflow-hidden bg-white"
-            style={{ boxShadow: "0 28px 72px rgba(30,30,80,0.14), 0 0 0 1px rgba(60,70,220,0.07)" }}>
-            <div className="flex items-center justify-between bg-muted px-5 py-3 border-b border-border">
+        <div ref={ref} className="w-full max-w-[440px] overflow-hidden bg-white rounded-2xl"
+            style={{ boxShadow: "0 28px 72px rgba(15,23,42,0.12), 0 0 0 1px rgba(0,82,255,0.06)" }}>
+            <div className="flex items-center justify-between bg-muted rounded-t-2xl px-5 py-3 border-b border-border">
                 <div className="flex gap-1.5">
                     <div className="h-2.5 w-2.5 rounded-full bg-[#ff5f57]" />
                     <div className="h-2.5 w-2.5 rounded-full bg-[#febc2e]" />
@@ -147,8 +144,8 @@ function CodeEditorVisual() {
                 <div>{'<html lang="en"><head>'}</div>
                 <div className="pl-4 italic text-muted-foreground/40">{"<!-- ↓ paste snippet ↓ -->"}</div>
             </div>
-            <div className="relative px-5 py-4 border-l-[3px] border-primary bg-primary/[0.03]">
-                <div className="absolute right-3 top-3"><CopyButton text={EMBED_SNIPPET} /></div>
+            <div className="relative px-5 py-4 border-l-[3px] border-primary bg-primary/[0.03] overflow-x-auto max-w-full">
+                <div className="absolute right-3 top-3 z-10"><CopyButton text={EMBED_SNIPPET} /></div>
                 <CodeBlock code={EMBED_SNIPPET} />
             </div>
             <div className="bg-muted px-5 py-2.5 font-mono text-[10px] text-muted-foreground/60 border-t border-background">
@@ -167,19 +164,14 @@ function CodeEditorVisual() {
 // ─── Dashboard Visual (Step 1) ────────────────────────────────────────────────
 function DashboardVisual() {
     const ref = useRef<HTMLDivElement>(null);
-    useEffect(() => {
-        let ctx: { revert: () => void };
-        (async () => {
-            const { gsap } = await import("gsap");
-            if (!ref.current) return;
-            ctx = gsap.context(() => { gsap.to(ref.current, { y: -8, duration: 3.5, ease: "sine.inOut", yoyo: true, repeat: -1 }); });
-        })();
-        return () => ctx?.revert();
-    }, []);
+    useGSAP(() => {
+        if (!ref.current) return;
+        gsap.to(ref.current, { y: -8, duration: 3.5, ease: "sine.inOut", yoyo: true, repeat: -1 });
+    }, { scope: ref });
     return (
-        <div ref={ref} className="w-full max-w-[420px] bg-white overflow-hidden"
-            style={{ boxShadow: "0 24px 64px rgba(30,30,80,0.12), 0 0 0 1px rgba(60,70,220,0.06)" }}>
-            <div className="flex items-center gap-2 bg-muted px-5 py-3 border-b border-border">
+        <div ref={ref} className="w-full max-w-[420px] bg-white overflow-hidden rounded-2xl"
+            style={{ boxShadow: "0 24px 64px rgba(15,23,42,0.10), 0 0 0 1px rgba(0,82,255,0.05)" }}>
+            <div className="flex items-center gap-2 bg-muted rounded-t-2xl px-5 py-3 border-b border-border">
                 <div className="h-2.5 w-2.5 rounded-full bg-[#ff5f57]" />
                 <div className="h-2.5 w-2.5 rounded-full bg-[#febc2e]" />
                 <div className="h-2.5 w-2.5 rounded-full bg-[#28c840]" />
@@ -209,19 +201,14 @@ function DashboardVisual() {
 // ─── Brand Visual (Step 3) ────────────────────────────────────────────────────
 function BrandVisual() {
     const ref = useRef<HTMLDivElement>(null);
-    useEffect(() => {
-        let ctx: { revert: () => void };
-        (async () => {
-            const { gsap } = await import("gsap");
-            if (!ref.current) return;
-            ctx = gsap.context(() => { gsap.to(ref.current, { y: -6, duration: 3, ease: "sine.inOut", yoyo: true, repeat: -1 }); });
-        })();
-        return () => ctx?.revert();
-    }, []);
+    useGSAP(() => {
+        if (!ref.current) return;
+        gsap.to(ref.current, { y: -6, duration: 3, ease: "sine.inOut", yoyo: true, repeat: -1 });
+    }, { scope: ref });
     return (
-        <div ref={ref} className="w-full max-w-[400px] bg-white overflow-hidden"
-            style={{ boxShadow: "0 24px 64px rgba(30,30,80,0.12), 0 0 0 1px rgba(60,70,220,0.06)" }}>
-            <div className="flex items-center gap-2 bg-muted px-5 py-3 border-b border-border">
+        <div ref={ref} className="w-full max-w-[400px] bg-white overflow-hidden rounded-2xl"
+            style={{ boxShadow: "0 24px 64px rgba(15,23,42,0.10), 0 0 0 1px rgba(0,82,255,0.05)" }}>
+            <div className="flex items-center gap-2 bg-muted rounded-t-2xl px-5 py-3 border-b border-border">
                 <div className="h-2.5 w-2.5 rounded-full bg-[#ff5f57]" />
                 <div className="h-2.5 w-2.5 rounded-full bg-[#febc2e]" />
                 <div className="h-2.5 w-2.5 rounded-full bg-[#28c840]" />
@@ -246,7 +233,7 @@ function BrandVisual() {
                     <div className="h-2 w-20 bg-border" />
                     <div className="h-8 w-full bg-muted border border-border" />
                 </div>
-                <div className="h-8 w-24 bg-primary flex items-center justify-center">
+                <div className="h-8 w-24 gradient-bg rounded-lg flex items-center justify-center">
                     <span className="text-[10px] font-medium text-white">Save Theme</span>
                 </div>
             </div>
@@ -301,15 +288,11 @@ function ConnectingLines({
     }, [containerRef, buttonRefs, panelRef]);
 
     useEffect(() => {
-        // Measure on mount + after a small delay for layout settle
         measure();
-        const timer = setTimeout(measure, 300);
-        window.addEventListener("resize", measure);
-        return () => {
-            clearTimeout(timer);
-            window.removeEventListener("resize", measure);
-        };
-    }, [measure]);
+        const observer = new ResizeObserver(measure);
+        if (containerRef.current) observer.observe(containerRef.current);
+        return () => observer.disconnect();
+    }, [measure, containerRef]);
 
     // Re-measure on step change (button sizes might differ slightly)
     useEffect(() => {
@@ -362,9 +345,7 @@ export default function IntegrationSection() {
     const contentPanelRef = useRef<HTMLDivElement>(null);
 
     // ── GSAP-powered fill animation (no yoyo, no reverse) ──
-    const startFill = useCallback(async (idx: number) => {
-        const { gsap } = await import("gsap");
-
+    const startFill = useCallback((idx: number) => {
         // Kill previous tween
         if (fillTweenRef.current) {
             fillTweenRef.current.kill();
@@ -408,7 +389,7 @@ export default function IntegrationSection() {
                 },
             });
         });
-    }, []);
+    }, [STEPS.length]);
 
     useEffect(() => {
         startFill(0);
@@ -418,29 +399,70 @@ export default function IntegrationSection() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    useEffect(() => {
-        (async () => {
-            const { gsap } = await import("gsap");
-            gsap.fromTo(
-                [badgeRef.current, headingRef.current, subRef.current],
-                { opacity: 0, y: 24 },
-                { opacity: 1, y: 0, duration: 0.7, ease: "power3.out", stagger: 0.12, delay: 0.05 }
+    useGSAP(() => {
+        // Header entrance
+        gsap.fromTo(
+            [badgeRef.current, headingRef.current, subRef.current],
+            { opacity: 0, y: 24 },
+            {
+                opacity: 1,
+                y: 0,
+                duration: 0.8,
+                ease: "power3.out",
+                stagger: 0.15,
+                scrollTrigger: {
+                    trigger: headingRef.current,
+                    start: "top 85%",
+                }
+            }
+        );
+
+        // Step buttons staggered entrance
+        const buttons = buttonRefs.current.filter(Boolean);
+        if (buttons.length > 0) {
+            gsap.from(buttons, {
+                opacity: 0,
+                scale: 0.8,
+                y: 20,
+                duration: 0.6,
+                stagger: 0.1,
+                ease: "back.out(1.7)",
+                scrollTrigger: {
+                    trigger: buttons[0],
+                    start: "top 90%",
+                }
+            });
+        }
+
+        // Content panel entrance
+        if (contentPanelRef.current) {
+            gsap.fromTo(contentPanelRef.current,
+                { y: 60, opacity: 0, scale: 0.98 },
+                {
+                    y: 0,
+                    opacity: 1,
+                    scale: 1,
+                    duration: 1,
+                    ease: "power4.out",
+                    scrollTrigger: {
+                        trigger: contentPanelRef.current,
+                        start: "top 80%",
+                    }
+                }
             );
-        })();
-    }, []);
+        }
+    }, { scope: sectionContainerRef });
 
     // Animate content on step change
-    useEffect(() => {
-        (async () => {
-            const { gsap } = await import("gsap");
-            if (contentRef.current) {
-                gsap.fromTo(contentRef.current,
-                    { opacity: 0 },
-                    { opacity: 1, duration: 0.4, ease: "power2.out" }
-                );
-            }
-        })();
-    }, [activeStep]);
+    useGSAP(() => {
+        if (contentRef.current) {
+            // Flash animation for the content panel interior on change
+            gsap.fromTo(contentRef.current,
+                { opacity: 0, x: 20 },
+                { opacity: 1, x: 0, duration: 0.5, ease: "power2.out" }
+            );
+        }
+    }, { dependencies: [activeStep], scope: contentPanelRef });
 
     const currentStep = STEPS[activeStep];
     const Icon = currentStep.icon;
@@ -450,25 +472,22 @@ export default function IntegrationSection() {
             className="relative overflow-hidden bg-background">
 
             {/* ── HEADER ── */}
-            <div className="relative overflow-hidden pt-20 pb-0 px-6">
+            <div className="relative overflow-hidden pt-16 lg:pt-24 pb-0 px-6">
 
                 {/* Badge + heading + subtitle */}
                 <div className="relative z-10 text-center">
-                    <div ref={badgeRef} className="mb-5 inline-flex items-center gap-2" style={{ opacity: 0 }}>
-                        <span className="text-muted-foreground text-sm select-none">〈〈</span>
-                        <div className="inline-flex items-center gap-2 bg-white border border-[var(--border-medium)] px-3.5 py-1.5 shadow-sm">
-                            <svg className="h-3.5 w-3.5 text-primary" viewBox="0 0 20 20" fill="currentColor">
-                                <path fillRule="evenodd" d="M3 5a2 2 0 012-2h10a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V5zm3 1h8v8H6V6z" clipRule="evenodd" />
-                            </svg>
-                            <span className="text-xs font-semibold text-foreground tracking-wide">How it Works</span>
+                    <div ref={badgeRef} className="mb-6 flex items-center justify-center" style={{ opacity: 0 }}>
+                        <div className="inline-flex items-center rounded-full border border-border bg-muted/50 px-3 py-1 shadow-sm">
+                            <span className="text-sm font-medium text-foreground">
+                                {PAGE_CONTENT.integration.badge}
+                            </span>
                         </div>
-                        <span className="text-muted-foreground text-sm select-none">〉〉</span>
                     </div>
 
                     <h2 ref={headingRef} id="integration-heading"
-                        className="text-[44px] font-bold leading-tight tracking-tight text-secondary mb-4"
+                        className="text-3xl md:text-[3.25rem] leading-[1.15] text-foreground mb-4"
                         style={{ opacity: 0 }}>
-                        Launch Your AI<br />Agent in minutes
+                        Launch Your AI<br />Agent in <span className="gradient-text">Minutes</span>
                     </h2>
 
                     <p ref={subRef} className="text-lg text-muted-foreground leading-relaxed mb-0 max-w-lg mx-auto" style={{ opacity: 0 }}>
@@ -478,7 +497,7 @@ export default function IntegrationSection() {
             </div>
 
             {/* ── TABS + CONTENT — single relative container for SVG line overlay ── */}
-            <div ref={sectionContainerRef} className="relative mt-12">
+            <div ref={sectionContainerRef} className="relative mt-8 lg:mt-12">
 
                 {/* SVG connecting lines overlay */}
                 <ConnectingLines
@@ -489,7 +508,7 @@ export default function IntegrationSection() {
                 />
 
                 {/* Tabs row */}
-                <div className="flex items-center justify-center gap-6 py-4 px-6 relative z-[2]">
+                <div className="flex items-center justify-center gap-4 lg:gap-6 py-4 px-6 relative z-[2]">
                     {STEPS.map((step, idx) => {
                         const isActive = activeStep === idx;
                         const isDone = idx < activeStep;
@@ -499,11 +518,11 @@ export default function IntegrationSection() {
                                 <button
                                     ref={(el) => { buttonRefs.current[idx] = el; }}
                                     onClick={() => startFill(idx)}
-                                    className={`inline-flex items-center gap-2 px-5 py-2.5 select-none focus:outline-none transition-all border ${isActive
-                                        ? "bg-secondary text-white border-secondary"
+                                    className={`inline-flex items-center justify-center sm:gap-2 w-10 h-10 sm:w-auto sm:h-auto sm:px-5 sm:py-2.5 rounded-full sm:rounded-xl select-none focus:outline-none transition-all duration-200 active:scale-[0.98] border ${isActive
+                                        ? "gradient-bg text-white border-transparent shadow-md"
                                         : isDone
-                                            ? "bg-transparent text-[var(--foreground-muted)] border-[var(--border)] hover:text-foreground hover:border-[var(--border-medium)]"
-                                            : "bg-transparent text-muted-foreground border-[var(--border-medium)] hover:text-foreground hover:border-[var(--border)]"
+                                            ? "bg-white text-muted-foreground border-border hover:text-foreground hover:border-primary/20"
+                                            : "bg-white text-muted-foreground border-border hover:text-foreground hover:border-primary/20"
                                         }`}
                                 >
                                     <span className={`text-sm font-bold ${isActive ? "text-white" : isDone ? "text-primary" : "text-muted-foreground"
@@ -521,17 +540,17 @@ export default function IntegrationSection() {
                 </div>
 
                 {/* ── CONTENT PANEL: Info left + Visual right ── */}
-                <div ref={contentPanelRef} className="relative z-[2] flex flex-col lg:flex-row border border-[var(--border-medium)] mt-16" style={{ height: 480, minHeight: 480 }}>
+                <div ref={contentPanelRef} className="relative z-[2] flex flex-col lg:flex-row border border-border rounded-2xl overflow-hidden mt-8 lg:mt-16 mb-16 lg:mb-24 mx-4 lg:mx-10 lg:h-[480px] lg:min-h-[480px] bg-white lg:bg-transparent shadow-lg" style={{ boxShadow: 'var(--shadow-lg)' }}>
 
                     {/* ── LEFT: White panel with background progress fill ── */}
-                    <div className="relative overflow-hidden lg:w-[38%] flex flex-col justify-between p-10 lg:p-12 bg-white border-r border-[var(--border-medium)]">
+                    <div className="relative overflow-hidden lg:w-[38%] flex flex-col justify-between p-8 lg:p-12 bg-white border-b lg:border-b-0 lg:border-r border-border min-h-[320px] lg:min-h-0">
 
                         {/* Background progress fill — driven by GSAP, no CSS transition (prevents reverse) */}
                         <div
                             ref={fillBarRef}
                             className="absolute inset-0 z-0 pointer-events-none"
                             style={{
-                                background: "linear-gradient(135deg, var(--primary-light) 0%, var(--primary) 100%)",
+                                background: "var(--primary-bg)",
                                 width: "0%",
                             }}
                         />
@@ -541,12 +560,12 @@ export default function IntegrationSection() {
                             <div>
                                 {/* Step number indicator */}
                                 <div className="flex items-center gap-3 mb-6">
-                                    <div className="flex items-center justify-center w-10 h-10 bg-primary text-white">
+                                    <div className="flex items-center justify-center w-10 h-10 gradient-bg rounded-xl text-white">
                                         <Icon className="w-5 h-5" />
                                     </div>
                                     <span className="text-xs font-bold uppercase tracking-widest text-primary">Step {currentStep.id}</span>
                                 </div>
-                                <h3 className="text-[28px] font-bold leading-snug text-secondary mb-6">
+                                <h3 className="text-[28px] font-bold leading-snug text-foreground mb-6">
                                     {currentStep.title}
                                 </h3>
                             </div>
@@ -557,7 +576,7 @@ export default function IntegrationSection() {
                                 {COMPATIBLE_TECHS && (
                                     <div className="flex flex-wrap items-center gap-1.5">
                                         {COMPATIBLE_TECHS.map((t: string) => (
-                                            <span key={t} className="bg-muted px-2 py-0.5 text-xs text-foreground border border-border">
+                                            <span key={t} className="bg-muted rounded-md px-2 py-0.5 text-xs text-foreground border border-border">
                                                 {t}
                                             </span>
                                         ))}
@@ -575,15 +594,15 @@ export default function IntegrationSection() {
                     </div>
 
                     {/* ── RIGHT: Visual panel ── */}
-                    <div className="relative flex items-center justify-center lg:flex-1 px-10 overflow-hidden"
-                        style={{ background: "linear-gradient(160deg, var(--muted) 0%, var(--border) 100%)" }}>
+                    <div className="relative flex items-center justify-center lg:flex-1 px-10 py-12 lg:py-0 overflow-hidden"
+                        style={{ background: "linear-gradient(160deg, #FFFFFF 0%, var(--muted) 100%)" }}>
                         {/* Dot grid */}
                         <div className="absolute inset-0 pointer-events-none"
-                            style={{ backgroundImage: "radial-gradient(circle, rgba(80,90,200,0.055) 1px, transparent 1px)", backgroundSize: "22px 22px" }} />
+                            style={{ backgroundImage: "radial-gradient(circle, rgba(0,82,255,0.04) 1px, transparent 1px)", backgroundSize: "22px 22px" }} />
                         {/* Glow */}
                         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                             <div className="w-80 h-80 rounded-full"
-                                style={{ background: "radial-gradient(circle, rgba(60,70,220,0.06) 0%, transparent 70%)" }} />
+                                style={{ background: "radial-gradient(circle, rgba(0,82,255,0.05) 0%, transparent 70%)" }} />
                         </div>
 
                         <div className="relative w-full flex justify-center">
