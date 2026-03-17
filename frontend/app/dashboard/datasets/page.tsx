@@ -185,10 +185,10 @@ export default function DatasetsPage() {
                             setEditDataset(null);
                             setIsModalOpen(true);
                         }}
-                        className="w-full bg-muted border border-dashed border-border hover:border-primary/50 hover:bg-primary/5 transition-all cursor-pointer dash-card"
+                        className="w-full bg-muted border border-dashed border-border hover:border-primary/50 hover:bg-primary/5 transition-all cursor-pointer dash-card rounded-2xl"
                     >
                         <div className="py-8 flex flex-col items-center justify-center">
-                            <div className="w-12 h-12 bg-white border border-border flex items-center justify-center mb-3 shadow-sm">
+                            <div className="w-12 h-12 bg-white border border-border flex items-center justify-center mb-3 shadow-sm rounded-xl">
                                 <HiPlus className="w-6 h-6 text-muted-foreground" />
                             </div>
                             <h3 className="text-sm font-bold text-secondary">Add New Knowledge</h3>

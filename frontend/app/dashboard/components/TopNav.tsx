@@ -28,12 +28,12 @@ export function TopNav({ onMenuClick }: TopNavProps) {
                     <HiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-primary transition-colors w-4 h-4" />
                     <input
                         type="text"
-                        placeholder="Search documents, chatbots, or commands... (Cmd+K)"
-                        className="w-full pl-10 pr-4 py-2 bg-muted border border-border text-sm text-secondary placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-all font-medium rounded-sm"
+                        placeholder="Search... (Cmd+K)"
+                        className="w-full pl-10 pr-4 py-2 bg-muted border border-border text-sm text-secondary placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-all font-medium rounded-xl"
                     />
                     <div className="absolute right-3 top-1/2 -translate-y-1/2 flex gap-1">
-                        <span className="text-[10px] font-bold text-muted-foreground bg-white border border-border px-1.5 py-0.5 shadow-sm rounded-sm">⌘</span>
-                        <span className="text-[10px] font-bold text-muted-foreground bg-white border border-border px-1.5 py-0.5 shadow-sm rounded-sm">K</span>
+                        <span className="text-[10px] font-bold text-muted-foreground bg-white border border-border px-1.5 py-0.5 shadow-sm rounded-lg">⌘</span>
+                        <span className="text-[10px] font-bold text-muted-foreground bg-white border border-border px-1.5 py-0.5 shadow-sm rounded-lg">K</span>
                     </div>
                 </div>
             </div>
@@ -41,7 +41,7 @@ export function TopNav({ onMenuClick }: TopNavProps) {
             {/* Right Actions */}
             <div className="flex items-center gap-1 sm:gap-2">
                 <div className="flex items-center gap-1 border-r border-border pr-2 sm:pr-3 mr-2 sm:mr-3">
-                    <div className="hidden md:flex items-center px-2 py-1 bg-muted border border-border mr-2 rounded-sm">
+                    <div className="hidden md:flex items-center px-2 py-1 bg-muted border border-border mr-2 rounded-lg">
                         <span className="text-[10px] font-black text-muted-foreground uppercase tracking-wider">
                             {userData?.billing?.current_plan || 'Free'}
                         </span>

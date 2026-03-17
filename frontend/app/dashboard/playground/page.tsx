@@ -129,7 +129,7 @@ export default function PlaygroundPage() {
             )}
 
             {/* Main Chat Area */}
-            <div className="flex-1 flex flex-col bg-white border border-border shadow-sm overflow-hidden relative">
+            <div className="flex-1 flex flex-col bg-white border border-border rounded-2xl shadow-sm overflow-hidden relative" style={{ boxShadow: 'var(--shadow-md)' }}>
                 <ChatHeader chatbot={chatbot} onReset={handleResetChat} />
 
                 {chatbotId ? (
@@ -171,9 +171,9 @@ function ConfigurationPanel({
     onTemperatureChange,
 }: ConfigurationPanelProps) {
     return (
-        <div className="w-80 bg-white border border-border shadow-sm p-6 flex flex-col h-full overflow-y-auto">
+        <div className="w-80 bg-white border border-border rounded-2xl shadow-sm p-6 flex flex-col h-full overflow-y-auto" style={{ boxShadow: 'var(--shadow-md)' }}>
             <div className="flex items-center gap-2 mb-8">
-                <div className="w-8 h-8 rounded-sm bg-primary/5 flex items-center justify-center text-primary">
+                <div className="w-8 h-8 rounded-xl bg-primary/5 flex items-center justify-center text-primary">
                     <HiCog className="w-5 h-5" />
                 </div>
                 <h3 className="text-lg font-bold text-secondary">Configuration</h3>
@@ -192,10 +192,10 @@ function ConfigurationPanel({
                         }}
                         aria-label="Select chatbot"
                     >
-                        <SelectTrigger className="border-border bg-muted/50 hover:bg-white hover:border-primary/30 h-11 shadow-none transition-all rounded-sm text-sm font-medium text-secondary outline-none focus:ring-0">
+                        <SelectTrigger className="border-border bg-muted/50 hover:bg-white hover:border-primary/30 h-11 shadow-none transition-all rounded-xl text-sm font-medium text-secondary outline-none focus:ring-0">
                             <SelectValue placeholder="Select a chatbot..." />
                         </SelectTrigger>
-                        <SelectContent className="rounded-sm bg-white border border-border shadow-lg p-1">
+                        <SelectContent className="rounded-xl bg-white border border-border shadow-lg p-1">
                             {chatbots.map((bot) => (
                                 <SelectItem
                                     key={bot.id}
@@ -213,10 +213,10 @@ function ConfigurationPanel({
                 {chatbot && (
                     <div className="space-y-4">
                         <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Model Stats</label>
-                        <div className="p-4 bg-muted/50 rounded-sm border border-border space-y-2.5">
+                        <div className="p-4 bg-muted/50 rounded-xl border border-border space-y-2.5">
                             <div className="flex justify-between">
                                 <span className="text-[10px] font-bold text-muted-foreground uppercase">Provider</span>
-                                <span className="text-[10px] font-bold text-secondary bg-white px-2 py-0.5 rounded-sm border border-border uppercase tracking-wider">
+                                <span className="text-[10px] font-bold text-secondary bg-white px-2 py-0.5 rounded-lg border border-border uppercase tracking-wider">
                                     Gemini 2.5 Flash
                                 </span>
                             </div>
@@ -232,7 +232,7 @@ function ConfigurationPanel({
                 <div className="space-y-5 pt-8 border-t border-border">
                     <div className="flex items-center justify-between">
                         <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Creativity (Temp)</label>
-                        <span className="text-sm font-mono font-bold text-primary bg-primary/5 px-2 py-0.5 border border-primary/10 rounded-sm">
+                        <span className="text-sm font-mono font-bold text-primary bg-primary/5 px-2 py-0.5 border border-primary/10 rounded-lg">
                             {temperature}
                         </span>
                     </div>
@@ -264,8 +264,8 @@ function ChatHeader({ chatbot, onReset }: { chatbot: Chatbot | undefined; onRese
     return (
         <div className="px-6 py-4 border-b border-border flex justify-between items-center bg-white/80 backdrop-blur-md z-10 sticky top-0">
             <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-gradient-to-br from-primary to-secondary p-[1px] shadow-lg shadow-primary/10 rounded-sm">
-                    <div className="w-full h-full bg-white flex items-center justify-center text-primary rounded-sm">
+                <div className="w-12 h-12 bg-gradient-to-br from-primary to-secondary p-[1px] shadow-lg shadow-primary/10 rounded-xl">
+                    <div className="w-full h-full bg-white flex items-center justify-center text-primary rounded-xl">
                         <HiSparkles className="w-6 h-6" />
                     </div>
                 </div>
@@ -283,7 +283,7 @@ function ChatHeader({ chatbot, onReset }: { chatbot: Chatbot | undefined; onRese
             </div>
             <button
                 onClick={onReset}
-                className="p-2.5 text-muted-foreground hover:text-primary hover:bg-primary/5 rounded-sm transition-all"
+                className="p-2.5 text-muted-foreground hover:text-primary hover:bg-primary/5 rounded-xl transition-all"
                 title="Reset Chat"
             >
                 <HiRefresh className="w-5 h-5" />
@@ -307,13 +307,13 @@ function ChatMessages({ messages }: { messages: ChatMessage[] }) {
 function MessageBubble({ message: msg }: { message: ChatMessage }) {
     return (
         <div className={`flex gap-3 ${!msg.isBot ? "flex-row-reverse" : ""}`}>
-            <div className={`w-10 h-10 rounded-sm flex items-center justify-center shrink-0 border shadow-sm transition-transform hover:scale-105 ${msg.isBot ? "bg-white border-border text-primary" : "bg-primary border-primary text-white"
+            <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 border shadow-sm transition-transform hover:scale-105 ${msg.isBot ? "bg-white border-border text-primary" : "bg-primary border-primary text-white"
                 }`}>
                 {msg.isBot ? <HiChatAlt2 className="w-5 h-5" /> : <HiUser className="w-5 h-5" />}
             </div>
 
             <div className={`max-w-[75%] space-y-2 ${!msg.isBot ? "items-end flex flex-col" : ""}`}>
-                <div className={`px-4 py-2.5 rounded-sm text-[14px] leading-relaxed shadow-sm transition-all ${msg.isBot
+                <div className={`px-4 py-2.5 rounded-2xl text-[14px] leading-relaxed shadow-sm transition-all ${msg.isBot
                     ? "bg-white border border-border text-secondary rounded-tl-none font-medium"
                     : "bg-primary text-white rounded-tr-none font-medium"
                     }`}>
@@ -339,7 +339,7 @@ function MessageBubble({ message: msg }: { message: ChatMessage }) {
                                                 {children}
                                             </code>
                                         ) : (
-                                            <pre className="bg-secondary text-white p-4 rounded-sm overflow-x-auto my-4 font-mono text-[13px]">
+                                            <pre className="bg-secondary text-white p-4 rounded-xl overflow-x-auto my-4 font-mono text-[13px]">
                                                 <code className={className} {...props}>{children}</code>
                                             </pre>
                                         );
@@ -375,7 +375,7 @@ function NoChatbotSelected() {
     return (
         <div className="flex-1 flex items-center justify-center bg-muted/30">
             <div className="text-center max-w-md px-8">
-                <div className="w-20 h-20 bg-primary/5 flex items-center justify-center mx-auto mb-6 border border-primary/10 rounded-sm">
+                <div className="w-20 h-20 bg-primary/5 flex items-center justify-center mx-auto mb-6 border border-primary/10 rounded-2xl">
                     <HiChatAlt2 className="w-10 h-10 text-primary/40" />
                 </div>
                 <h3 className="text-xl font-bold text-secondary mb-2">Select a Chatbot</h3>
@@ -399,7 +399,7 @@ interface ChatInputProps {
 function ChatInput({ input, chatbotName, onChange, onSend }: ChatInputProps) {
     return (
         <div className="p-4 bg-white border-t border-muted">
-            <div className="flex items-center gap-3 w-full border border-border px-2 py-1 bg-white hover:border-muted-foreground/40 transition-all focus-within:border-primary focus-within:ring-4 focus-within:ring-primary/5 rounded-sm">
+            <div className="flex items-center gap-3 w-full border border-border px-2 py-1 bg-white hover:border-muted-foreground/40 transition-all focus-within:border-primary focus-within:ring-4 focus-within:ring-primary/5 rounded-2xl">
                 <textarea
                     className="flex-1 max-h-40 bg-transparent border-none focus:outline-none focus:ring-0 p-3 text-[14px] font-medium text-secondary placeholder:text-muted-foreground resize-none leading-relaxed"
                     placeholder={`Ask ${chatbotName} anything...`}
@@ -416,7 +416,7 @@ function ChatInput({ input, chatbotName, onChange, onSend }: ChatInputProps) {
                 <button
                     onClick={onSend}
                     disabled={!input.trim()}
-                    className="bg-primary text-white p-2.5 hover:bg-secondary shadow-md shadow-primary/10 disabled:opacity-30 disabled:cursor-not-allowed transition-all shrink-0 rounded-sm"
+                    className="bg-primary text-white p-2.5 hover:bg-secondary shadow-md shadow-primary/10 disabled:opacity-30 disabled:cursor-not-allowed transition-all shrink-0 rounded-xl"
                 >
                     <HiPaperAirplane className="w-5 h-5 transform rotate-90" />
                 </button>

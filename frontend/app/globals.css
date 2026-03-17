@@ -449,7 +449,7 @@ input:disabled {
 
 /* ── Dashboard Section Specific Styles ── */
 .dashboard-theme {
-  --app-border-radius: 12px;
+  --app-border-radius: 1rem; /* Matches rounded-2xl roughly in this setup */
 }
 
 .dashboard-theme button,
@@ -457,7 +457,7 @@ input:disabled {
 .dashboard-theme textarea,
 .dashboard-theme select,
 .dashboard-theme [role="button"] {
-  border-radius: 12px !important;
+  border-radius: 0.75rem !important; /* rounded-xl for smaller elements */
 }
 
 /* Top-only radius for containers that have content below */
@@ -471,10 +471,10 @@ input:disabled {
 
 /* Table wrapper */
 .dashboard-theme [data-slot="table-wrapper"] {
-  border-top-left-radius: 12px !important;
-  border-top-right-radius: 12px !important;
-  border-bottom-left-radius: 12px !important;
-  border-bottom-right-radius: 12px !important;
+  border-top-left-radius: 1rem !important;
+  border-top-right-radius: 1rem !important;
+  border-bottom-left-radius: 1rem !important;
+  border-bottom-right-radius: 1rem !important;
   overflow: hidden;
 }
 
@@ -488,8 +488,8 @@ input:disabled {
 
 /* Card container with a header section */
 .dashboard-theme [data-slot="card-header-attached"] {
-  border-top-left-radius: 12px !important;
-  border-top-right-radius: 12px !important;
+  border-top-left-radius: 1rem !important;
+  border-top-right-radius: 1rem !important;
   border-bottom-left-radius: 0 !important;
   border-bottom-right-radius: 0 !important;
 }
@@ -500,8 +500,9 @@ input:disabled {
 }
 
 .dashboard-theme .dash-card:hover {
-  box-shadow: 0 8px 30px -8px color-mix(in srgb, var(--primary) 8%, transparent), 0 1px 3px rgba(0, 0, 0, 0.04);
-  border-color: color-mix(in srgb, var(--primary) 15%, transparent);
+  box-shadow: var(--shadow-accent-lg), 0 1px 3px rgba(0, 0, 0, 0.04);
+  border-color: var(--primary-light);
+  transform: translateY(-2px);
 }
 
 /* ── Reduced Motion ── */

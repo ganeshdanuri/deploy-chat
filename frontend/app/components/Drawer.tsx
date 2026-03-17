@@ -53,7 +53,7 @@ export default function Drawer({
                 <SheetHeader className="px-5 sm:px-8 py-5 sm:py-6 border-b border-border flex flex-row items-center justify-between bg-muted shrink-0">
                     <div className="flex items-center gap-4">
                         {Icon && (
-                            <div className={`w-10 h-10 ${iconBgColor} ${iconColor} flex items-center justify-center shadow-sm rounded-sm`}>
+                            <div className={`w-10 h-10 ${iconBgColor} ${iconColor} flex items-center justify-center shadow-sm rounded-xl`}>
                                 <Icon className="w-5 h-5" />
                             </div>
                         )}

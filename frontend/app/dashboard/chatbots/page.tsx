@@ -78,10 +78,10 @@ export default function ChatbotsPage() {
         const isFailed = (bot as any).status === STATUS.FAILED;
 
         return (
-            <div className="dash-card bg-white border border-border p-5 group relative animate-fade-in overflow-hidden">
+            <div className="dash-card bg-white border border-border rounded-2xl p-5 group relative animate-fade-in overflow-hidden" style={{ boxShadow: 'var(--shadow-md)' }}>
                 <div className="flex justify-between items-start mb-4">
                     <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-gradient-to-br from-primary/5 to-muted border border-border rounded-sm flex items-center justify-center text-primary shadow-sm">
+                        <div className="w-10 h-10 bg-gradient-to-br from-primary/5 to-muted border border-border rounded-xl flex items-center justify-center text-primary shadow-sm">
                             <HiChatAlt2 className="w-5 h-5" />
                         </div>
                         <div>
@@ -100,7 +100,7 @@ export default function ChatbotsPage() {
                                 size="sm"
                                 variant="ghost"
                                 onClick={() => handleEditClick(bot)}
-                                className="text-muted-foreground hover:text-primary hover:bg-primary/5 rounded-sm h-8 w-8 px-0"
+                                className="text-muted-foreground hover:text-primary hover:bg-primary/5 rounded-xl h-8 w-8 px-0"
                             >
                                 <HiPencil className="w-4 h-4" />
                             </Button>
@@ -110,7 +110,7 @@ export default function ChatbotsPage() {
                                 size="sm"
                                 variant="ghost"
                                 onClick={() => dispatch(fetchChatbots())}
-                                className="text-muted-foreground hover:text-primary hover:bg-primary/5 rounded-sm h-8 w-8 px-0"
+                                className="text-muted-foreground hover:text-primary hover:bg-primary/5 rounded-xl h-8 w-8 px-0"
                             >
                                 <HiRefresh className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
                             </Button>
@@ -121,7 +121,7 @@ export default function ChatbotsPage() {
                                     size="sm"
                                     variant="ghost"
                                     onClick={() => handleResume(bot.id, bot.name)}
-                                    className="text-emerald-500 hover:bg-emerald-500/5 rounded-sm h-8 w-8 px-0"
+                                    className="text-emerald-500 hover:bg-emerald-500/5 rounded-xl h-8 w-8 px-0"
                                 >
                                     <HiRefresh className="w-4 h-4" />
                                 </Button>
@@ -132,7 +132,7 @@ export default function ChatbotsPage() {
                                 size="sm"
                                 variant="ghost"
                                 onClick={() => handleDeleteClick(bot.id, bot.name)}
-                                className="text-muted-foreground hover:text-red-500 hover:bg-red-500/5 rounded-sm h-8 w-8 px-0"
+                                className="text-muted-foreground hover:text-red-500 hover:bg-red-500/5 rounded-xl h-8 w-8 px-0"
                             >
                                 <HiTrash className="w-4 h-4" />
                             </Button>
@@ -141,7 +141,7 @@ export default function ChatbotsPage() {
                 </div>
 
                 <div className="space-y-3 mb-6">
-                    <div className="bg-muted p-3 border border-border">
+                    <div className="bg-muted p-3 border border-border rounded-xl">
                         <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-1">Welcome Message</p>
                         <p className="text-xs text-foreground line-clamp-2 italic">
                             &quot;{bot.welcome_message || 'Hi! How can I help you today?'}&quot;

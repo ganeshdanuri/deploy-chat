@@ -96,12 +96,12 @@ function ChatWidgetVisual() {
       <div className="px-4 py-4 space-y-4 min-h-[380px] bg-muted/80">
         {/* Welcome message */}
         <div className="flex gap-2">
-          <div className="w-5 h-5 rounded-sm flex-shrink-0 flex items-center justify-center mt-0.5">
+          <div className="w-5 h-5 rounded-xl flex-shrink-0 flex items-center justify-center mt-0.5">
             <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="var(--primary)" strokeWidth="2">
               <path d="M13 10V3L4 14h7v7l9-11h-7z" />
             </svg>
           </div>
-          <div className="bg-white rounded-lg rounded-tl-sm px-4 py-3 text-[12px] text-foreground leading-relaxed max-w-[280px]" style={{ boxShadow: 'var(--shadow-sm)' }}>
+          <div className="bg-white rounded-xl rounded-tl-none px-4 py-3 text-[12px] text-foreground leading-relaxed max-w-[280px]" style={{ boxShadow: 'var(--shadow-sm)' }}>
             Hi! I&apos;m trained Agent. Ask me anything.
           </div>
         </div>
@@ -109,7 +109,7 @@ function ChatWidgetVisual() {
         {/* User question (typing) */}
         {questionText && (
           <div className="flex justify-end">
-            <div className="gradient-bg rounded-lg rounded-tr-sm px-4 py-3 text-[12px] text-white leading-relaxed max-w-[260px]">
+            <div className="gradient-bg rounded-xl rounded-tr-none px-4 py-3 text-[12px] text-white leading-relaxed max-w-[260px]">
               {questionText}
               {phase === "typing-q" && <span className="inline-block w-[2px] h-[10px] bg-white/60 ml-0.5 animate-pulse" />}
             </div>
@@ -119,12 +119,12 @@ function ChatWidgetVisual() {
         {/* AI answer (typing) */}
         {answerText && (
           <div className="flex gap-2">
-            <div className="w-5 h-5 rounded-sm flex-shrink-0 flex items-center justify-center mt-0.5">
+            <div className="w-5 h-5 rounded-xl flex-shrink-0 flex items-center justify-center mt-0.5">
               <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="var(--primary)" strokeWidth="2">
                 <path d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
             </div>
-            <div className="bg-white rounded-lg rounded-tl-sm px-4 py-3 text-[12px] text-foreground leading-relaxed max-w-[280px]" style={{ boxShadow: 'var(--shadow-sm)' }}>
+            <div className="bg-white rounded-xl rounded-tl-none px-4 py-3 text-[12px] text-foreground leading-relaxed max-w-[280px]" style={{ boxShadow: 'var(--shadow-sm)' }}>
               {answerText}
               {phase === "typing-a" && <span className="inline-block w-[2px] h-[10px] bg-primary/50 ml-0.5 animate-pulse" />}
             </div>
@@ -134,7 +134,7 @@ function ChatWidgetVisual() {
         {/* Thinking indicator */}
         {phase === "pause" && (
           <div className="flex gap-2">
-            <div className="w-5 h-5 rounded-sm flex-shrink-0 flex items-center justify-center mt-0.5">
+            <div className="w-5 h-5 rounded-xl flex-shrink-0 flex items-center justify-center mt-0.5">
               <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="var(--primary)" strokeWidth="2">
                 <path d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
@@ -427,7 +427,7 @@ export default function HeroSection({ onGetStarted }: HeroSectionProps) {
           <div className="flex flex-col sm:flex-row items-start gap-4">
             <button
               onClick={onGetStarted}
-              className="group inline-flex items-center gap-3 gradient-bg text-white text-base font-medium px-8 py-3.5 rounded-lg transition-all duration-200 hover:-translate-y-0.5 hover:brightness-110 active:scale-[0.98]"
+              className="group inline-flex items-center gap-3 gradient-bg text-white text-base font-medium px-8 py-3.5 rounded-xl transition-all duration-200 hover:-translate-y-0.5 hover:brightness-110 active:scale-[0.98]"
               style={{ boxShadow: 'var(--shadow-accent)' }}
             >
               {PAGE_CONTENT.hero.ctaStandard}

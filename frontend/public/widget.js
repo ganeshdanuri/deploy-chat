@@ -12,7 +12,7 @@
 
   const CONFIG = {
     token: script.getAttribute("data-token") || "",
-    apiBase: script.getAttribute("data-api") || "http://localhost:8000",
+    apiBase: script.getAttribute("data-api") || "https://api.deploychat.in",
     position: script.getAttribute("data-position") || "bottom-right",
     primaryColor: script.getAttribute("data-color") || "#0052FF",
     secondaryColor: script.getAttribute("data-secondary-color") || "#f1f5f9"

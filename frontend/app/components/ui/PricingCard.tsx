@@ -24,10 +24,10 @@ export function PricingCard({
     isDisabled
 }: PricingCardProps) {
     return (
-        <div className={`bg-white rounded-sm shadow-sm p-6 relative overflow-hidden flex flex-col ${isPopular ? 'border border-primary/20 shadow-primary/5 shadow-xl' : 'border border-border'}`}>
+        <div className={`bg-white rounded-2xl shadow-sm p-6 relative overflow-hidden flex flex-col ${isPopular ? 'border border-primary/20 shadow-primary/5 shadow-xl' : 'border border-border'}`}>
             {isPopular && (
                 <div className="absolute top-0 right-0 p-3">
-                    <span className="bg-primary/10 text-primary text-[10px] font-bold px-2 py-0.5 rounded-sm border border-primary/10 uppercase tracking-wider">Most Popular</span>
+                    <span className="bg-primary/10 text-primary text-[10px] font-bold px-2 py-0.5 rounded-lg border border-primary/10 uppercase tracking-wider">Most Popular</span>
                 </div>
             )}
             <h3 className="text-xl font-semibold text-secondary">{title}</h3>

@@ -47,7 +47,7 @@ export function EmptyState({
     const colors = colorMap[accentColor];
 
     return (
-        <div className="flex flex-col items-center justify-center py-20 bg-white border border-dashed border-border">
+        <div className="flex flex-col items-center justify-center py-20 bg-white border border-border rounded-2xl shadow-sm" style={{ boxShadow: 'var(--shadow-md)' }}>
             <div className={`w-16 h-16 ${colors.bg} ${colors.text} flex items-center justify-center mb-4`}>
                 <Icon className="w-8 h-8" />
             </div>

@@ -49,11 +49,11 @@ export default function Modal({
 
     return (
         <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-            <DialogContent className={cn("p-0 overflow-hidden bg-white border border-border shadow-2xl", sizeClasses[size])}>
+            <DialogContent className={cn("p-0 overflow-hidden bg-white border border-border shadow-2xl rounded-2xl", sizeClasses[size])}>
                 <DialogHeader className="px-8 py-6 border-b border-border flex flex-row items-center justify-between bg-muted/30 shrink-0">
                     <div className="flex items-center gap-4">
                         {Icon && (
-                            <div className={`w-10 h-10 ${iconBgColor} ${iconColor} flex items-center justify-center shadow-sm rounded-sm`}>
+                            <div className={`w-10 h-10 ${iconBgColor} ${iconColor} flex items-center justify-center shadow-sm rounded-xl`}>
                                 <Icon className="w-5 h-5" />
                             </div>
                         )}

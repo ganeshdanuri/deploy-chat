@@ -136,7 +136,7 @@ function DashboardSummary({
                 <HiRefresh className="w-5 h-5" />
               </button>
             </Tooltip>
-            <span className="bg-primary/5 text-primary text-[10px] font-bold px-2.5 py-1 border border-primary/10 uppercase tracking-widest">
+            <span className="bg-primary/5 text-primary text-[10px] font-bold px-2.5 py-1 border border-primary/10 uppercase tracking-widest rounded-lg">
               {(userData?.billing?.current_plan || 'free').toUpperCase()} plan
             </span>
           </div>
@@ -148,7 +148,7 @@ function DashboardSummary({
         <div className="flex gap-2">
           <button
             disabled
-            className="px-5 py-2.5 bg-secondary text-white/50 text-sm font-medium shadow-sm opacity-60 cursor-not-allowed flex items-center gap-2"
+            className="px-5 py-2.5 bg-secondary text-white/50 text-sm font-medium shadow-sm opacity-60 cursor-not-allowed flex items-center gap-2 rounded-xl"
           >
             <HiCreditCard className="w-4 h-4 text-white/50" />
             Billing & Plans
@@ -171,7 +171,7 @@ function DashboardSummary({
           onClick={(e: any) => e.preventDefault()}
           isDisabled={true}
           details={
-            <div className="mt-4 h-1.5 w-full bg-muted rounded-sm overflow-hidden">
+            <div className="mt-4 h-1.5 w-full bg-muted rounded-lg overflow-hidden">
               <div
                 className={`h-full transition-all duration-1000 ${usagePercentage > 90 ? 'bg-red-500' : 'bg-primary'}`}
                 style={{ width: `${usagePercentage}%` }}
@@ -240,19 +240,20 @@ function MetricCard({ icon: Icon, label, value, trend, accentClass, accentBg, ri
     <Link
       href={href}
       onClick={onClick}
-      className={`dash-card p-6 bg-white border border-border shadow-sm group relative overflow-hidden block ${isDisabled ? "opacity-75 cursor-default" : "cursor-pointer"}`}
+      className={`dash-card p-6 bg-white border border-border rounded-2xl shadow-sm group relative overflow-hidden block ${isDisabled ? "opacity-75 cursor-default" : "cursor-pointer"}`}
+      style={{ boxShadow: 'var(--shadow-md)' }}
     >
       <div className="absolute top-0 right-0 p-4 opacity-[0.06] group-hover:opacity-[0.12] transition-opacity">
         <Icon className={`w-24 h-24 ${accentClass} transform translate-x-4 -translate-y-4`} />
       </div>
       <div className={`flex items-center gap-3 mb-5 relative z-10`}>
-        <div className={`p-2.5 ${accentBg} ${accentClass} ring-1 ${ringClass}`}>
+        <div className={`p-2.5 ${accentBg} ${accentClass} ring-1 ${ringClass} rounded-xl`}>
           <Icon className="w-5 h-5" />
         </div>
         <div className="flex flex-1 items-center justify-between">
           <span className="text-sm font-semibold text-muted-foreground">{label}</span>
           {(isLocked || isDisabled) && (
-            <div className="flex items-center gap-1 text-[10px] font-bold text-amber-500 bg-amber-500/5 px-2 py-0.5 border border-amber-500/10">
+            <div className="flex items-center gap-1 text-[10px] font-bold text-amber-500 bg-amber-500/5 px-2 py-0.5 border border-amber-500/10 rounded-lg">
               <HiLightningBolt className="w-3 h-3" />
               PRO
             </div>
@@ -260,7 +261,7 @@ function MetricCard({ icon: Icon, label, value, trend, accentClass, accentBg, ri
         </div>
       </div>
       <div className="text-3xl font-bold text-secondary mb-1.5 relative z-10 font-mono">{value}</div>
-      <div className={`flex items-center gap-1.5 text-xs font-bold w-fit px-2 py-0.5 relative z-10 mt-1 ${trendNeutral ? "text-muted-foreground bg-muted" : "text-emerald-500 bg-emerald-500/5"
+      <div className={`flex items-center gap-1.5 text-xs font-bold w-fit px-2 py-0.5 relative z-10 mt-1 rounded-lg ${trendNeutral ? "text-muted-foreground bg-muted" : "text-emerald-500 bg-emerald-500/5"
         }`}>
         {trendPositive && <HiTrendingUp className="w-3.5 h-3.5" />}
         <span className={trendPositive ? "font-mono" : ""}>{trend}</span>
@@ -275,8 +276,9 @@ function MetricCard({ icon: Icon, label, value, trend, accentClass, accentBg, ri
 
 function QuickActionsPanel() {
   return (
-    <div className="dash-card bg-white border border-border shadow-sm lg:col-span-1 h-full flex flex-col overflow-hidden">
-      <div data-slot="card-header-attached" className="flex items-center justify-between px-6 py-5 border-b border-border bg-muted">
+    <div className="dash-card bg-white border border-border rounded-2xl shadow-sm lg:col-span-1 h-full flex flex-col overflow-hidden"
+      style={{ boxShadow: 'var(--shadow-md)' }}>
+      <div data-slot="card-header-attached" className="flex items-center justify-between px-6 py-5 border-b border-border">
         <h3 className="text-sm font-bold text-secondary uppercase tracking-wide">Knowledge Base</h3>
         <Link href="/dashboard/datasets" className="text-xs text-primary font-semibold hover:underline">Manage →</Link>
       </div>
@@ -287,7 +289,7 @@ function QuickActionsPanel() {
             href={action.href}
             className={`w-full flex items-center gap-4 p-3.5 border border-dashed border-border ${action.hoverBorder} transition-all group text-left block hover:bg-muted`}
           >
-            <div className={`w-10 h-10 ${action.iconBg} flex items-center justify-center group-hover:scale-110 transition-transform shadow-sm`}>
+            <div className={`w-10 h-10 ${action.iconBg} flex items-center justify-center group-hover:scale-110 transition-transform shadow-sm rounded-xl`}>
               <action.icon className="w-5 h-5" />
             </div>
             <div>
@@ -342,11 +344,12 @@ function RecentActivityPanel() {
   };
 
   return (
-    <div className="dash-card bg-white border border-border shadow-sm lg:col-span-2 overflow-hidden">
-      <div data-slot="card-header-attached" className="flex items-center justify-between px-6 py-5 border-b border-border bg-muted">
+    <div className="dash-card bg-white border border-border rounded-2xl shadow-sm lg:col-span-2 overflow-hidden"
+      style={{ boxShadow: 'var(--shadow-md)' }}>
+      <div data-slot="card-header-attached" className="flex items-center justify-between px-6 py-5 border-b border-border">
         <div className="flex items-center gap-3">
           <h3 className="text-sm font-bold text-secondary uppercase tracking-wide">Recent Activity</h3>
-          <span className="bg-primary/10 text-primary text-[10px] font-bold px-2 py-0.5">New</span>
+          <span className="bg-primary/10 text-primary text-[10px] font-bold px-2 py-0.5 rounded-lg">New</span>
         </div>
         <button className="p-1.5 hover:bg-white/80 text-muted-foreground hover:text-foreground transition-colors">
           <HiDotsVertical className="w-4 h-4" />
@@ -382,7 +385,7 @@ function RecentActivityPanel() {
           activities.map((item, idx) => (
             <div key={item.id} className="flex gap-4 py-4 group hover:bg-muted transition-colors -mx-6 px-6 cursor-pointer">
               <div className="relative mt-1">
-                <div className="w-9 h-9 bg-muted flex items-center justify-center border border-border shadow-sm z-10 relative">
+                <div className="w-9 h-9 bg-muted flex items-center justify-center border border-border shadow-sm z-10 relative rounded-lg">
                   <div className={`w-2.5 h-2.5 ${getActivityColor(item.activity_type)}`} />
                 </div>
                 {idx < activities.length - 1 && (
@@ -414,7 +417,7 @@ function OnboardingView() {
   return (
     <div className="w-full max-w-[1400px] mx-auto flex flex-col items-center">
       <div className="hero-content text-center mb-16 px-4">
-        <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/5 text-primary text-[10px] font-bold border border-primary/10 mb-6 uppercase tracking-widest">
+        <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/5 text-primary text-[10px] font-bold border border-primary/10 mb-6 rounded-lg uppercase tracking-widest">
           <HiLightningBolt className="w-3 h-3" />
           <span>Getting Started</span>
         </div>
@@ -430,9 +433,10 @@ function OnboardingView() {
 
         {ONBOARDING_STEPS.map((step) => (
           <div key={step.id} className="step-card group relative z-10">
-            <div className="bg-white p-6 md:p-8 border border-border rounded-sm shadow-sm hover:shadow-2xl hover:border-primary/20 transition-all duration-500 flex flex-col h-full relative overflow-hidden">
+            <div className="bg-white p-6 md:p-8 border border-border rounded-2xl shadow-sm hover:shadow-2xl hover:border-primary/20 transition-all duration-500 flex flex-col h-full relative overflow-hidden"
+              style={{ boxShadow: 'var(--shadow-md)' }}>
               <div className={`absolute top-0 left-0 w-full h-1 bg-gradient-to-r ${step.gradientFrom} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
-              <div className={`w-12 h-12 ${step.bgColor} ${step.color} flex items-center justify-center mb-6 shadow-sm ring-1 ring-inset ${step.borderColor} group-hover:scale-110 transition-all duration-500`}>
+              <div className={`w-12 h-12 ${step.bgColor} ${step.color} flex items-center justify-center mb-6 shadow-sm ring-1 ring-inset ${step.borderColor} group-hover:scale-110 transition-all duration-500 rounded-xl`}>
                 <step.icon className="w-6 h-6" />
               </div>
               <div className="flex items-center gap-2 mb-2">
@@ -446,7 +450,7 @@ function OnboardingView() {
               </p>
               <Link
                 href={step.href}
-                className="flex items-center justify-between w-full px-5 py-2.5 bg-secondary text-white border border-secondary text-[13px] font-medium transition-all duration-300 group/btn shadow-sm hover:shadow-md"
+                className="flex items-center justify-between w-full px-5 py-2.5 bg-secondary text-white border border-secondary text-[13px] font-medium transition-all duration-300 group/btn shadow-sm hover:shadow-md rounded-xl"
               >
                 <span>{step.btnText}</span>
                 <HiArrowRight className="w-4 h-4 transform group-hover/btn:translate-x-1 transition-transform" />

@@ -117,7 +117,7 @@ export default function SettingsPage() {
                     ) : (
                         <div className="w-full">
                             {activeTab === "general" && (
-                                <div className="dash-card bg-white border border-border shadow-sm overflow-hidden animate-fade-in">
+                                <div className="dash-card bg-white border border-border rounded-2xl shadow-sm overflow-hidden animate-fade-in" style={{ boxShadow: 'var(--shadow-md)' }}>
                                     <div data-slot="card-header-attached" className="p-6 border-b border-border flex items-center justify-between font-bold bg-muted">
                                         <div>
                                             <h2 className="text-lg font-bold text-secondary">Profile Information</h2>
@@ -157,17 +157,17 @@ export default function SettingsPage() {
 
                             {activeTab === "billing" && (
                                 <div className="space-y-4 animate-fade-in">
-                                    <div className="dash-card bg-white border border-border shadow-sm overflow-hidden">
+                                    <div className="dash-card bg-white border border-border rounded-2xl shadow-sm overflow-hidden" style={{ boxShadow: 'var(--shadow-md)' }}>
                                         <div className="p-5 sm:p-6 flex flex-col md:flex-row md:items-start justify-between gap-6">
                                             <div className="flex-1 space-y-4">
                                                 <div className="flex items-center gap-3">
-                                                    <div className="w-10 h-10 bg-secondary/5 rounded-sm flex items-center justify-center border border-border shrink-0">
+                                                    <div className="w-10 h-10 bg-secondary/5 rounded-xl flex items-center justify-center border border-border shrink-0">
                                                         <HiCreditCard className="w-5 h-5 text-primary" />
                                                     </div>
                                                     <div>
                                                         <h2 className="text-lg font-bold text-secondary flex items-center gap-2">
                                                             {userData?.billing?.current_plan ? userData.billing.current_plan.charAt(0).toUpperCase() + userData.billing.current_plan.slice(1) : 'Free'} plan
-                                                            <span className="bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 text-[10px] font-bold px-2 py-0.5 uppercase tracking-wider">Active</span>
+                                                            <span className="bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 text-[10px] font-bold px-2 py-0.5 rounded-lg uppercase tracking-wider">Active</span>
                                                         </h2>
                                                         <p className="text-sm text-foreground mt-0.5">
                                                             {userData?.billing?.expires_at
@@ -186,7 +186,7 @@ export default function SettingsPage() {
                                                             Resets on {userData?.usage?.reset_date ? new Date(userData.usage.reset_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '1st of month'}
                                                         </span>
                                                     </div>
-                                                    <div className="h-1.5 w-full bg-muted rounded-sm overflow-hidden">
+                                                    <div className="h-1.5 w-full bg-muted rounded-lg overflow-hidden">
                                                         <div
                                                             className={`h-full transition-all duration-1000 ${((userData?.usage?.messages_sent || 0) / (userData?.billing?.monthly_limit || 100)) > 0.9 ? 'bg-red-500' : 'bg-primary'}`}
                                                             style={{ width: `${Math.min(((userData?.usage?.messages_sent || 0) / (userData?.billing?.monthly_limit || 100)) * 100, 100)}%` }}
@@ -196,7 +196,7 @@ export default function SettingsPage() {
                                             </div>
                                             <div className="shrink-0 pt-1">
                                                 <button
-                                                    className="flex items-center gap-2 px-5 py-2.5 bg-muted border border-border rounded-sm text-muted-foreground text-sm font-medium cursor-not-allowed opacity-60 shadow-sm"
+                                                    className="flex items-center gap-2 px-5 py-2.5 bg-muted border border-border rounded-xl text-muted-foreground text-sm font-medium cursor-not-allowed opacity-60 shadow-sm"
                                                     disabled
                                                 >
                                                     View Invoices
@@ -285,10 +285,10 @@ export default function SettingsPage() {
                                             {apiKeys.map((key) => {
                                                 const Icon = getProviderIcon(key.provider);
                                                 return (
-                                                    <Card key={key.id} className="border-border shadow-sm">
+                                                    <Card key={key.id} className="border-border shadow-sm rounded-2xl">
                                                         <CardContent className="flex flex-row items-center justify-between p-6">
                                                             <div className="flex items-center gap-6">
-                                                                <div className="w-10 h-10 bg-muted rounded-sm flex items-center justify-center border border-border">
+                                                                <div className="w-10 h-10 bg-muted rounded-xl flex items-center justify-center border border-border">
                                                                     <Icon className="w-5 h-5 text-secondary" />
                                                                 </div>
                                                                 <div>
@@ -317,8 +317,8 @@ export default function SettingsPage() {
 
                             {/* Other tabs placeholder */}
                             {(activeTab !== "general" && activeTab !== "billing" && activeTab !== "api-keys") && (
-                                <div className="flex flex-col items-center justify-center p-12 bg-white border border-border border-dashed animate-fade-in">
-                                    <div className="w-16 h-16 bg-muted rounded-sm flex items-center justify-center mb-4">
+                                <div className="flex flex-col items-center justify-center p-12 bg-white border border-border border-dashed rounded-2xl animate-fade-in">
+                                    <div className="w-16 h-16 bg-muted rounded-2xl flex items-center justify-center mb-4">
                                         <HiShieldCheck className="w-8 h-8 text-muted-foreground/40" />
                                     </div>
                                     <h3 className="text-secondary font-bold">Coming Soon</h3>

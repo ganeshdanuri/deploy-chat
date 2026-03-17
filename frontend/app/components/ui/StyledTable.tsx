@@ -55,7 +55,7 @@ export function StyledTable<T extends { id: string }>({
     };
 
     return (
-        <div data-slot="table-wrapper" className="bg-white border border-border shadow-sm overflow-hidden w-full">
+        <div data-slot="table-wrapper" className="bg-white border border-border rounded-2xl shadow-sm overflow-hidden w-full" style={{ boxShadow: 'var(--shadow-md)' }}>
             {topContent && (
                 <div data-slot="table-header" className="px-4 md:px-6 py-4 md:py-5 border-b border-border bg-muted flex flex-col md:flex-row md:items-center justify-between gap-4">
                     {topContent}
@@ -114,7 +114,7 @@ export function StyledTable<T extends { id: string }>({
                         <button
                             onClick={handlePrev}
                             disabled={currentPage === 1}
-                            className="p-1.5 rounded-sm border border-border text-muted-foreground hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                            className="p-1.5 rounded-lg border border-border text-muted-foreground hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                         >
                             <HiChevronLeft className="w-4 h-4" />
                         </button>
@@ -124,7 +124,7 @@ export function StyledTable<T extends { id: string }>({
                         <button
                             onClick={handleNext}
                             disabled={currentPage === totalPages}
-                            className="p-1.5 rounded-sm border border-border text-muted-foreground hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                            className="p-1.5 rounded-lg border border-border text-muted-foreground hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                         >
                             <HiChevronRight className="w-4 h-4" />
                         </button>

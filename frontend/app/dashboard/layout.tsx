@@ -63,7 +63,13 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     if (!isAuthenticated) return null;
 
     return (
-        <div className="flex min-h-screen bg-muted text-secondary font-sans overflow-hidden dashboard-theme">
+        <div className="flex min-h-screen bg-white text-secondary font-sans overflow-hidden dashboard-theme relative">
+            {/* Background effects consistent with home page */}
+            <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
+                <div className="radial-glow w-[600px] h-[600px] -top-[200px] -right-[200px] bg-primary/[0.03]" />
+                <div className="radial-glow w-[400px] h-[400px] -bottom-[100px] -left-[100px] bg-primary/[0.02]" />
+            </div>
+
             <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
 
             {/* Mobile Overlay */}
