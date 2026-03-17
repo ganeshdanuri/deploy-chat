@@ -4,50 +4,6 @@ import { useEffect, useRef } from "react";
 import { PLATFORM_FEATURES as features, PAGE_CONTENT } from "../../lib/constants";
 
 export default function FeaturesSection() {
-  const headerRef = useRef<HTMLDivElement>(null);
-  const cardsRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    let ctx: { revert: () => void };
-    (async () => {
-      const { gsap } = await import("gsap");
-      const { ScrollTrigger } = await import("gsap/ScrollTrigger");
-      gsap.registerPlugin(ScrollTrigger);
-
-      ctx = gsap.context(() => {
-        // Header animation
-        gsap.from(headerRef.current, {
-          y: 30,
-          opacity: 0,
-          duration: 0.8,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: headerRef.current,
-            start: "top 85%",
-          }
-        });
-
-        // Cards staggered animation
-        if (cardsRef.current) {
-          const cards = cardsRef.current.children;
-          gsap.from(cards, {
-            y: 50,
-            scale: 0.9,
-            opacity: 0,
-            duration: 0.8,
-            stagger: 0.15,
-            ease: "back.out(1.4)",
-            scrollTrigger: {
-              trigger: cardsRef.current,
-              start: "top 80%",
-            }
-          });
-        }
-      });
-    })();
-    return () => ctx?.revert();
-  }, []);
-
   return (
     <section id="features" className="relative py-16 lg:py-24 bg-white overflow-hidden">
 
@@ -57,7 +13,7 @@ export default function FeaturesSection() {
       <div className="mx-auto max-w-6xl px-6 lg:px-10">
 
         {/* ── Section Header ── */}
-        <div ref={headerRef} className="mb-10 text-center">
+        <div className="mb-10 text-center">
           {/* Section label badge */}
           <div className="flex items-center justify-center mb-6">
             <div className="inline-flex items-center rounded-full border border-border bg-muted/50 px-3 py-1 shadow-sm">
@@ -77,7 +33,7 @@ export default function FeaturesSection() {
         </div>
 
         {/* ── Features Grid — 3-column with elevated cards ── */}
-        <div ref={cardsRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {features.map((feature) => (
             <div
               key={feature.id}

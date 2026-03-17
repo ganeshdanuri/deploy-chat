@@ -331,152 +331,65 @@ function ConnectingLines({
 // ─── Main ─────────────────────────────────────────────────────────────────────
 export default function IntegrationSection() {
     const [activeStep, setActiveStep] = useState(0);
-    const fillTweenRef = useRef<{ kill: () => void } | null>(null);    // GSAP tween for the fill bar
-    const fillBarRef = useRef<HTMLDivElement>(null);   // DOM element for the fill bar
-    const progressTextRef = useRef<HTMLSpanElement>(null);   // progress % text
-    const badgeRef = useRef<HTMLDivElement>(null);
-    const headingRef = useRef<HTMLHeadingElement>(null);
-    const subRef = useRef<HTMLParagraphElement>(null);
-    const contentRef = useRef<HTMLDivElement>(null);
+    const [progress, setProgress] = useState(0);
+
+    const sectionRef = useRef<HTMLElement>(null);
+    const headerRef = useRef<HTMLDivElement>(null);
+    const cardRef = useRef<HTMLDivElement>(null);
 
     // For connecting lines
     const sectionContainerRef = useRef<HTMLDivElement>(null);
     const buttonRefs = useRef<(HTMLButtonElement | null)[]>([]);
     const contentPanelRef = useRef<HTMLDivElement>(null);
 
-    // ── GSAP-powered fill animation (no yoyo, no reverse) ──
-    const startFill = useCallback((idx: number) => {
-        // Kill previous tween
-        if (fillTweenRef.current) {
-            fillTweenRef.current.kill();
-            fillTweenRef.current = null;
-        }
+    const tweenRef = useRef<gsap.core.Tween | null>(null);
 
-        // Instantly reset bar to 0% (no transition / no reverse animation)
-        if (fillBarRef.current) {
-            gsap.set(fillBarRef.current, { width: "0%" });
-        }
-        if (progressTextRef.current) {
-            progressTextRef.current.textContent = "0%";
-        }
-
-        setActiveStep(idx);
-
-        // Wait one frame for React to flush
-        requestAnimationFrame(() => {
-            const obj = { progress: 0 };
-
-            fillTweenRef.current = gsap.to(obj, {
-                progress: 100,
-                duration: FILL_DURATION,
-                ease: "none",
-                repeat: 0,           // NO repeat on this tween
-                yoyo: false,         // NO reverse
-                onUpdate: () => {
-                    const p = Math.round(obj.progress);
-                    if (fillBarRef.current) {
-                        fillBarRef.current.style.width = `${p}%`;
-                    }
-                    if (progressTextRef.current) {
-                        progressTextRef.current.textContent = `${p}%`;
-                    }
-                },
-                onComplete: () => {
-                    fillTweenRef.current = null;
-                    const next = (idx + 1) % STEPS.length;
-                    // Small delay before next step
-                    setTimeout(() => startFill(next), 150);
-                },
-            });
+    const startFill = useCallback((index: number) => {
+        if (tweenRef.current) tweenRef.current.kill();
+        setProgress(0);
+        tweenRef.current = gsap.to({ val: 0 }, {
+            val: 100,
+            duration: FILL_DURATION,
+            ease: "none",
+            onUpdate: function () {
+                setProgress(this.targets()[0].val);
+            },
+            onComplete: () => {
+                setActiveStep((prev) => (prev + 1) % STEPS.length);
+            }
         });
-    }, [STEPS.length]);
-
-    useEffect(() => {
-        startFill(0);
-        return () => {
-            if (fillTweenRef.current) fillTweenRef.current.kill();
-        };
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+    useEffect(() => {
+        startFill(activeStep);
+        return () => { if (tweenRef.current) tweenRef.current.kill(); };
+    }, [activeStep, startFill]);
+
     useGSAP(() => {
-        // Header entrance
-        gsap.fromTo(
-            [badgeRef.current, headingRef.current, subRef.current],
-            { opacity: 0, y: 24 },
-            {
-                opacity: 1,
-                y: 0,
-                duration: 0.8,
-                ease: "power3.out",
-                stagger: 0.15,
-                scrollTrigger: {
-                    trigger: headingRef.current,
-                    start: "top 85%",
-                }
+        if (!headerRef.current || !cardRef.current) return;
+        const tl = gsap.timeline({
+            scrollTrigger: {
+                trigger: sectionRef.current,
+                start: "top 75%",
             }
-        );
-
-        // Step buttons staggered entrance
-        const buttons = buttonRefs.current.filter(Boolean);
-        if (buttons.length > 0) {
-            gsap.from(buttons, {
-                opacity: 0,
-                scale: 0.8,
-                y: 20,
-                duration: 0.6,
-                stagger: 0.1,
-                ease: "back.out(1.7)",
-                scrollTrigger: {
-                    trigger: buttons[0],
-                    start: "top 90%",
-                }
-            });
-        }
-
-        // Content panel entrance
-        if (contentPanelRef.current) {
-            gsap.fromTo(contentPanelRef.current,
-                { y: 60, opacity: 0, scale: 0.98 },
-                {
-                    y: 0,
-                    opacity: 1,
-                    scale: 1,
-                    duration: 1,
-                    ease: "power4.out",
-                    scrollTrigger: {
-                        trigger: contentPanelRef.current,
-                        start: "top 80%",
-                    }
-                }
-            );
-        }
-    }, { scope: sectionContainerRef });
-
-    // Animate content on step change
-    useGSAP(() => {
-        if (contentRef.current) {
-            // Flash animation for the content panel interior on change
-            gsap.fromTo(contentRef.current,
-                { opacity: 0, x: 20 },
-                { opacity: 1, x: 0, duration: 0.5, ease: "power2.out" }
-            );
-        }
-    }, { dependencies: [activeStep], scope: contentPanelRef });
+        });
+        tl.from(headerRef.current.children, { y: 30, opacity: 0, stagger: 0.1, duration: 0.8, ease: "power3.out" })
+            .from(cardRef.current, { y: 40, opacity: 0, duration: 1, ease: "power3.out" }, "-=0.4");
+    }, { scope: sectionRef });
 
     const currentStep = STEPS[activeStep];
     const Icon = currentStep.icon;
 
     return (
-        <section id="integration" aria-labelledby="integration-heading"
+        <section ref={sectionRef} id="integration" aria-labelledby="integration-heading"
             className="relative overflow-hidden bg-background">
 
             {/* ── HEADER ── */}
-            <div className="relative overflow-hidden pt-16 lg:pt-24 pb-0 px-6">
+            <div ref={headerRef} className="relative overflow-hidden pt-16 lg:pt-24 pb-0 px-6">
 
                 {/* Badge + heading + subtitle */}
                 <div className="relative z-10 text-center">
-                    <div ref={badgeRef} className="mb-6 flex items-center justify-center" style={{ opacity: 0 }}>
+                    <div className="mb-6 flex items-center justify-center">
                         <div className="inline-flex items-center rounded-full border border-border bg-muted/50 px-3 py-1 shadow-sm">
                             <span className="text-sm font-medium text-foreground">
                                 {PAGE_CONTENT.integration.badge}
@@ -484,13 +397,12 @@ export default function IntegrationSection() {
                         </div>
                     </div>
 
-                    <h2 ref={headingRef} id="integration-heading"
-                        className="text-3xl md:text-[3.25rem] leading-[1.15] text-foreground mb-4"
-                        style={{ opacity: 0 }}>
+                    <h2 id="integration-heading"
+                        className="text-3xl md:text-[3.25rem] leading-[1.15] text-foreground mb-4">
                         Launch Your AI<br />Agent in <span className="gradient-text">Minutes</span>
                     </h2>
 
-                    <p ref={subRef} className="text-lg text-muted-foreground leading-relaxed mb-0 max-w-lg mx-auto" style={{ opacity: 0 }}>
+                    <p className="text-lg text-muted-foreground leading-relaxed mb-0 max-w-lg mx-auto">
                         Powerful automation, built without<br />technical overhead for your team.
                     </p>
                 </div>
@@ -517,7 +429,7 @@ export default function IntegrationSection() {
                             <div key={step.id} className="relative flex flex-col items-center">
                                 <button
                                     ref={(el) => { buttonRefs.current[idx] = el; }}
-                                    onClick={() => startFill(idx)}
+                                    onClick={() => setActiveStep(idx)}
                                     className={`inline-flex items-center justify-center sm:gap-2 w-10 h-10 sm:w-auto sm:h-auto sm:px-5 sm:py-2.5 rounded-full sm:rounded-xl select-none focus:outline-none transition-all duration-200 active:scale-[0.98] border ${isActive
                                         ? "gradient-bg text-white border-transparent shadow-md"
                                         : isDone
@@ -540,23 +452,19 @@ export default function IntegrationSection() {
                 </div>
 
                 {/* ── CONTENT PANEL: Info left + Visual right ── */}
-                <div ref={contentPanelRef} className="relative z-[2] flex flex-col lg:flex-row border border-border rounded-2xl overflow-hidden mt-8 lg:mt-16 mb-16 lg:mb-24 mx-4 lg:mx-10 lg:h-[480px] lg:min-h-[480px] bg-white lg:bg-transparent shadow-lg" style={{ boxShadow: 'var(--shadow-lg)' }}>
+                <div ref={cardRef} className="relative z-[2] flex flex-col lg:flex-row border border-border rounded-2xl overflow-hidden mt-8 lg:mt-16 mb-16 lg:mb-24 mx-4 lg:mx-10 lg:h-[480px] lg:min-h-[480px] bg-white lg:bg-transparent shadow-lg" style={{ boxShadow: 'var(--shadow-lg)' }}>
 
                     {/* ── LEFT: White panel with background progress fill ── */}
-                    <div className="relative overflow-hidden lg:w-[38%] flex flex-col justify-between p-8 lg:p-12 bg-white border-b lg:border-b-0 lg:border-r border-border min-h-[320px] lg:min-h-0">
+                    <div ref={contentPanelRef} className="relative overflow-hidden lg:w-[38%] flex flex-col justify-between p-8 lg:p-12 bg-white border-b lg:border-b-0 lg:border-r border-border min-h-[320px] lg:min-h-0">
 
-                        {/* Background progress fill — driven by GSAP, no CSS transition (prevents reverse) */}
+                        {/* Background progress fill */}
                         <div
-                            ref={fillBarRef}
-                            className="absolute inset-0 z-0 pointer-events-none"
-                            style={{
-                                background: "var(--primary-bg)",
-                                width: "0%",
-                            }}
+                            className="absolute left-0 bottom-0 top-0 bg-primary/[0.03] border-r border-primary/10 transition-none z-0"
+                            style={{ width: `${progress}%` }}
                         />
 
-                        {/* Step content */}
-                        <div ref={contentRef} className="relative z-10 flex flex-col h-full justify-between">
+                        {/* Current step content */}
+                        <div className="relative z-10 flex flex-col h-full justify-between">
                             <div>
                                 {/* Step number indicator */}
                                 <div className="flex items-center gap-3 mb-6">
@@ -585,11 +493,10 @@ export default function IntegrationSection() {
                             </div>
                         </div>
 
-                        {/* Progress percentage indicator */}
-                        <div className="absolute bottom-4 right-4 z-10">
-                            <span ref={progressTextRef} className="text-[10px] font-mono font-bold text-primary/40">
-                                0%
-                            </span>
+                        {/* Progress Label */}
+                        <div className="relative z-10 mt-8 flex items-center justify-between border-t border-border pt-6">
+                            <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Auto-progress</span>
+                            <span className="font-mono text-[10px] font-bold text-primary">0{activeStep + 1} / 04</span>
                         </div>
                     </div>
 

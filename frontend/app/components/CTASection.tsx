@@ -5,38 +5,10 @@ import { HiArrowRight } from "react-icons/hi";
 import { PAGE_CONTENT, BRAND } from "../../lib/constants";
 
 export default function CTASection({ onGetStarted }: { onGetStarted: () => void }) {
-    const sectionRef = useRef<HTMLDivElement>(null);
-    const contentRef = useRef<HTMLDivElement>(null);
-
-    useEffect(() => {
-        let ctx: { revert: () => void };
-        (async () => {
-            const { gsap } = await import("gsap");
-            const { ScrollTrigger } = await import("gsap/ScrollTrigger");
-            gsap.registerPlugin(ScrollTrigger);
-
-            ctx = gsap.context(() => {
-                gsap.from(contentRef.current, {
-                    y: 40,
-                    opacity: 0,
-                    scale: 0.98,
-                    duration: 0.8,
-                    ease: "power3.out",
-                    scrollTrigger: {
-                        trigger: contentRef.current,
-                        start: "top 85%",
-                    }
-                });
-            });
-        })();
-        return () => ctx?.revert();
-    }, []);
-
     return (
         <section className="py-16 lg:py-24 bg-white">
             <div className="max-w-6xl mx-auto px-6 lg:px-10">
                 <div
-                    ref={contentRef}
                     className="relative overflow-hidden text-center py-14 px-8 md:px-16 rounded-[2rem] bg-foreground"
                 >
                     {/* Dot pattern texture */}

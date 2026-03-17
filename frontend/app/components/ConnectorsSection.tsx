@@ -4,47 +4,6 @@ import { useEffect, useRef } from "react";
 import { AVAILABLE_CONNECTORS as connectors, PAGE_CONTENT } from "../../lib/constants";
 
 export default function ConnectorsSection() {
-    const headerRef = useRef<HTMLDivElement>(null);
-    const gridRef = useRef<HTMLDivElement>(null);
-
-    useEffect(() => {
-        let ctx: { revert: () => void };
-        (async () => {
-            const { gsap } = await import("gsap");
-            const { ScrollTrigger } = await import("gsap/ScrollTrigger");
-            gsap.registerPlugin(ScrollTrigger);
-
-            ctx = gsap.context(() => {
-                gsap.from(headerRef.current, {
-                    y: 30,
-                    opacity: 0,
-                    duration: 0.8,
-                    ease: "power3.out",
-                    scrollTrigger: {
-                        trigger: headerRef.current,
-                        start: "top 85%",
-                    }
-                });
-
-                if (gridRef.current) {
-                    gsap.from(gridRef.current.children, {
-                        y: 40,
-                        scale: 0.95,
-                        opacity: 0,
-                        duration: 0.8,
-                        stagger: 0.1,
-                        ease: "power3.out",
-                        scrollTrigger: {
-                            trigger: gridRef.current,
-                            start: "top 80%",
-                        }
-                    });
-                }
-            });
-        })();
-        return () => ctx?.revert();
-    }, []);
-
     return (
         <section id="connectors" className="relative py-16 lg:py-24 bg-slate-50/50 overflow-hidden border-t border-border/40">
 
@@ -54,7 +13,7 @@ export default function ConnectorsSection() {
             <div className="mx-auto max-w-6xl px-6 lg:px-10 relative z-10">
 
                 {/* ── Section Header ── */}
-                <div ref={headerRef} className="mb-14 text-center">
+                <div className="mb-14 text-center">
                     {/* Section label badge */}
                     <div className="flex items-center justify-center mb-6">
                         <div className="inline-flex items-center rounded-full border border-border bg-white px-3 py-1 shadow-sm">
@@ -74,7 +33,7 @@ export default function ConnectorsSection() {
                 </div>
 
                 {/* ── Connectors Grid ── */}
-                <div ref={gridRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
                     {connectors.map((connector) => {
                         const isActive = connector.status === "active";
                         return (
@@ -98,7 +57,7 @@ export default function ConnectorsSection() {
                                     {/* Status Badge */}
                                     {isActive ? (
                                         <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 border border-emerald-100/50">
-                                            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse-dot" />
+                                            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
                                             <span className="text-[10px] font-semibold tracking-wider uppercase text-emerald-600">Active</span>
                                         </div>
                                     ) : (

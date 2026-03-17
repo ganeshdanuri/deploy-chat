@@ -23,17 +23,6 @@ function LoginContent() {
     const [error, setError] = useState("");
     const [isLoading, setIsLoading] = useState(false);
 
-    const leftSideRef = useRef<HTMLDivElement>(null);
-    const rightSideRef = useRef<HTMLDivElement>(null);
-
-    const validateEmail = (email: string) => {
-        return String(email)
-            .toLowerCase()
-            .match(
-                /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-            );
-    };
-
     useEffect(() => {
         if (isAuthenticated) {
             router.push("/dashboard");
@@ -49,34 +38,13 @@ function LoginContent() {
         }
     }, [searchParams]);
 
-    useEffect(() => {
-        if (!leftSideRef.current) return;
-
-        // GSAP Animation for shapes and texts
-        const shapes = leftSideRef.current.querySelectorAll('.gsap-shape');
-        const texts = leftSideRef.current.querySelectorAll('.gsap-text');
-
-        gsap.fromTo(shapes,
-            { scale: 0, opacity: 0, rotation: -45 },
-            { scale: 1, opacity: 1, rotation: 0, duration: 1.5, stagger: 0.2, ease: "elastic.out(1, 0.5)" }
-        );
-
-        gsap.fromTo(texts,
-            { y: 50, opacity: 0 },
-            { y: 0, opacity: 1, duration: 1, stagger: 0.1, ease: "power3.out", delay: 0.5 }
-        );
-
-        // Floating animation
-        gsap.to(shapes, {
-            y: "-=15",
-            duration: 2,
-            yoyo: true,
-            repeat: -1,
-            ease: "sine.inOut",
-            stagger: 0.3,
-            delay: 1.5
-        });
-    }, []);
+    const validateEmail = (email: string) => {
+        return String(email)
+            .toLowerCase()
+            .match(
+                /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+            );
+    };
 
     const handleVerifyOtp = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -130,7 +98,6 @@ function LoginContent() {
         <div className="min-h-screen flex text-secondary bg-muted">
             {/* Left Side - Illustrations & Information */}
             <div
-                ref={leftSideRef}
                 className="hidden lg:flex lg:w-4/6 relative overflow-hidden flex-col justify-center items-start p-16 bg-secondary"
             >
                 <div className="absolute inset-0 opacity-10" style={{
@@ -144,7 +111,7 @@ function LoginContent() {
                 }} />
 
                 <div className="relative z-10 max-w-2xl px-8">
-                    <div className="gsap-text inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 mb-8 backdrop-blur-md">
+                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 mb-8 backdrop-blur-md">
                         <span className="relative flex h-2 w-2">
                             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
                             <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
@@ -152,18 +119,18 @@ function LoginContent() {
                         <span className="text-xs font-bold tracking-wider text-primary uppercase">Next-Generation Platform</span>
                     </div>
 
-                    <h1 className="text-4xl font-bold mb-8 gsap-text leading-[1.1] tracking-tight text-white">
+                    <h1 className="text-4xl font-bold mb-8 leading-[1.1] tracking-tight text-white">
                         Powering the <br />
                         <span className="text-primary">
                             Autonomous Future
                         </span>
                     </h1>
 
-                    <p className="text-xl mb-12 text-border gsap-text leading-relaxed font-normal max-w-lg">
+                    <p className="text-xl mb-12 text-border leading-relaxed font-normal max-w-lg">
                         Deploy Chat enables teams to build, scale, and monitor intelligent AI agents with production-grade RAG and native dataset connectors.
                     </p>
 
-                    <div className="grid grid-cols-2 gap-8 gsap-text mb-12">
+                    <div className="grid grid-cols-2 gap-8 mb-12">
                         <div className="flex flex-col gap-2">
                             <span className="text-3xl font-bold text-white">99.9%</span>
                             <span className="text-sm text-muted-foreground font-medium">Uptime Guarantee</span>
@@ -174,18 +141,18 @@ function LoginContent() {
                         </div>
                     </div>
 
-                    <div className="flex items-center gap-6 gsap-text">
+                    <div className="flex items-center gap-6">
                         <button className="text-sm font-medium px-8 py-3 rounded-xl bg-secondary border border-white/10 text-white hover:bg-secondary/80 transition-all transform hover:-translate-y-1 shadow-lg shadow-white/5">
                             Platform Overview
                         </button>
-                        <button className="text-sm font-medium text-white hover:text-blue-300 transition-colors flex items-center gap-2 group border-b border-transparent hover:border-blue-300 pb-1">
+                        <button className="text-sm font-medium text-white hover:text-white/70 transition-colors flex items-center gap-2 group border-b border-transparent hover:border-white/30 pb-1">
                             Documentation
                             <span className="transform group-hover:translate-x-1 transition-transform">→</span>
                         </button>
                     </div>
                 </div>
 
-                <div className="absolute bottom-10 left-16 gsap-text">
+                <div className="absolute bottom-10 left-16">
                     <p className="text-xs text-primary/50 font-medium tracking-wider uppercase">
                         Building the autonomous future with <span className="text-white font-bold ml-1">Deploy Chat</span>.
                     </p>
@@ -194,7 +161,6 @@ function LoginContent() {
 
             {/* Right Side - Login Form */}
             <div
-                ref={rightSideRef}
                 className="w-full lg:w-2/6 flex flex-col justify-center px-8 sm:px-16 xl:px-20 bg-white relative overflow-hidden"
             >
                 {/* Fixed Logo Header */}

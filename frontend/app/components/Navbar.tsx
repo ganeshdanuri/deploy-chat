@@ -59,7 +59,7 @@ export default function Navbar() {
 
               <button
                 onClick={handleMainButtonClick}
-                className="text-[14px] font-medium px-5 py-2.5 rounded-lg gradient-bg text-white transition-all duration-200 hover:-translate-y-0.5 hover:brightness-110 active:scale-[0.98]"
+                className="text-[14px] font-medium px-5 py-2.5 rounded-lg gradient-bg text-white transition-all duration-200 hover:brightness-110 active:scale-[0.98]"
                 style={{ boxShadow: 'var(--shadow-accent)' }}
               >
                 Login

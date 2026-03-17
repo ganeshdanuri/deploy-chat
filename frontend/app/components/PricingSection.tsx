@@ -55,7 +55,7 @@ function PlanCard({ plan }: { plan: Plan }) {
     // For popular plan — gradient border wrapper
     if (plan.popular) {
         return (
-            <div className="relative rounded-2xl gradient-bg p-[2px] lg:-translate-y-4 h-full"
+            <div className="relative rounded-2xl gradient-bg p-[2px] h-full"
                 style={{ boxShadow: 'var(--shadow-accent-lg)' }}>
                 <div className="h-full w-full rounded-[calc(1rem-2px)] bg-primary flex flex-col p-8">
                     {/* Popular badge */}
@@ -93,7 +93,7 @@ function PlanCard({ plan }: { plan: Plan }) {
                         href={href}
                         target={isExternal ? "_blank" : undefined}
                         rel={isExternal ? "noopener noreferrer" : undefined}
-                        className="mt-auto flex items-center justify-center gap-2 px-6 py-3.5 rounded-lg text-sm font-medium bg-white text-primary hover:bg-white/90 transition-all duration-200 hover:-translate-y-0.5 active:scale-[0.98] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                        className="mt-auto flex items-center justify-center gap-2 px-6 py-3.5 rounded-lg text-sm font-medium bg-white text-primary hover:bg-white/90 transition-all duration-200 active:scale-[0.98] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
                     >
                         {plan.cta}
                         <HiArrowRight className="h-4 w-4" aria-hidden="true" />
@@ -105,14 +105,8 @@ function PlanCard({ plan }: { plan: Plan }) {
 
     return (
         <div
-            className="relative flex flex-col h-full rounded-2xl border border-border bg-white p-8 transition-all duration-300 hover:-translate-y-1"
+            className="relative flex flex-col h-full rounded-2xl border border-border bg-white p-8 transition-all duration-300"
             style={{ boxShadow: 'var(--shadow-md)' }}
-            onMouseEnter={(e) => {
-                (e.currentTarget as HTMLElement).style.boxShadow = 'var(--shadow-xl)';
-            }}
-            onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.boxShadow = 'var(--shadow-md)';
-            }}
         >
             {/* Plan name */}
             <h3 className="mb-1 text-sm font-medium uppercase tracking-widest text-primary">
@@ -141,7 +135,7 @@ function PlanCard({ plan }: { plan: Plan }) {
                 href={href}
                 target={isExternal ? "_blank" : undefined}
                 rel={isExternal ? "noopener noreferrer" : undefined}
-                className="mt-auto flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl text-sm font-medium bg-muted text-foreground hover:bg-primary/5 hover:text-primary border border-border hover:border-primary/20 transition-all duration-200 hover:-translate-y-0.5 active:scale-[0.98] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                className="mt-auto flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl text-sm font-medium bg-muted text-foreground hover:bg-primary/5 hover:text-primary border border-border hover:border-primary/20 transition-all duration-200 active:scale-[0.98] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
             >
                 {plan.cta}
                 <HiArrowRight className="h-4 w-4" aria-hidden="true" />
@@ -153,46 +147,6 @@ function PlanCard({ plan }: { plan: Plan }) {
 // ─── Main export ─────────────────────────────────────────────────────────────
 
 export default function PricingSection() {
-    const headerRef = useRef<HTMLDivElement>(null);
-    const gridRef = useRef<HTMLDivElement>(null);
-
-    useEffect(() => {
-        let ctx: { revert: () => void };
-        (async () => {
-            const { gsap } = await import("gsap");
-            const { ScrollTrigger } = await import("gsap/ScrollTrigger");
-            gsap.registerPlugin(ScrollTrigger);
-
-            ctx = gsap.context(() => {
-                gsap.from(headerRef.current, {
-                    y: 30,
-                    opacity: 0,
-                    duration: 0.8,
-                    ease: "power3.out",
-                    scrollTrigger: {
-                        trigger: headerRef.current,
-                        start: "top 85%",
-                    }
-                });
-
-                if (gridRef.current) {
-                    gsap.from(gridRef.current.children, {
-                        y: 40,
-                        opacity: 0,
-                        duration: 0.8,
-                        stagger: 0.1,
-                        ease: "power3.out",
-                        scrollTrigger: {
-                            trigger: gridRef.current,
-                            start: "top 80%",
-                        }
-                    });
-                }
-            });
-        })();
-        return () => ctx?.revert();
-    }, []);
-
     return (
         <section
             id="pricing"
@@ -204,7 +158,7 @@ export default function PricingSection() {
 
             <div className="mx-auto max-w-7xl px-4 lg:px-8">
                 {/* Header */}
-                <div ref={headerRef} className="mb-10 text-center">
+                <div className="mb-10 text-center">
                     {/* Section label badge */}
                     <div className="flex items-center justify-center mb-6">
                         <div className="inline-flex items-center rounded-full border border-border bg-muted/50 px-3 py-1 shadow-sm">
@@ -227,7 +181,7 @@ export default function PricingSection() {
                 </div>
 
                 {/* Grid */}
-                <div ref={gridRef} className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4 lg:gap-6 items-stretch">
+                <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4 lg:gap-6 items-stretch">
                     {PLANS.map((plan) => (
                         <PlanCard key={plan.name} plan={plan} />
                     ))}

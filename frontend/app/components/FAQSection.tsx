@@ -5,42 +5,6 @@ import { PAGE_CONTENT, FAQS } from "../../lib/constants";
 
 export default function FAQSection({ faqs = FAQS }) {
     const [openIndex, setOpenIndex] = useState<number | null>(0);
-    const headerRef = useRef<HTMLDivElement>(null);
-    const accordionRef = useRef<HTMLDivElement>(null);
-
-    useEffect(() => {
-        let ctx: { revert: () => void };
-        (async () => {
-            const { gsap } = await import("gsap");
-            const { ScrollTrigger } = await import("gsap/ScrollTrigger");
-            gsap.registerPlugin(ScrollTrigger);
-
-            ctx = gsap.context(() => {
-                gsap.from(headerRef.current, {
-                    y: 30,
-                    opacity: 0,
-                    duration: 0.8,
-                    ease: "power3.out",
-                    scrollTrigger: {
-                        trigger: headerRef.current,
-                        start: "top 85%",
-                    }
-                });
-
-                gsap.from(accordionRef.current, {
-                    y: 40,
-                    opacity: 0,
-                    duration: 0.8,
-                    ease: "power3.out",
-                    scrollTrigger: {
-                        trigger: accordionRef.current,
-                        start: "top 80%",
-                    }
-                });
-            });
-        })();
-        return () => ctx?.revert();
-    }, []);
 
     return (
         <section
@@ -54,7 +18,7 @@ export default function FAQSection({ faqs = FAQS }) {
             <div className="mx-auto max-w-6xl px-6 lg:px-10">
 
                 {/* ── Section Header ── */}
-                <div ref={headerRef} className="mb-10 text-center">
+                <div className="mb-10 text-center">
                     {/* Section label badge */}
                     <div className="flex items-center justify-center mb-6">
                         <div className="inline-flex items-center rounded-full border border-border bg-muted/50 px-3 py-1 shadow-sm">
@@ -75,7 +39,7 @@ export default function FAQSection({ faqs = FAQS }) {
                 </div>
 
                 {/* ── FAQ Accordion ── */}
-                <div ref={accordionRef} className="mx-auto max-w-3xl rounded-2xl border border-border bg-white overflow-hidden"
+                <div className="mx-auto max-w-3xl rounded-2xl border border-border bg-white overflow-hidden"
                     style={{ boxShadow: 'var(--shadow-md)' }}>
                     <dl>
                         {faqs.map((faq, i) => {

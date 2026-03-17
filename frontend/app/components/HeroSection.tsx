@@ -102,7 +102,7 @@ function ChatWidgetVisual() {
             </svg>
           </div>
           <div className="bg-white rounded-lg rounded-tl-sm px-4 py-3 text-[12px] text-foreground leading-relaxed max-w-[280px]" style={{ boxShadow: 'var(--shadow-sm)' }}>
-            Hi! I&apos;m trained on your docs. Ask me anything.
+            Hi! I&apos;m trained Agent. Ask me anything.
           </div>
         </div>
 

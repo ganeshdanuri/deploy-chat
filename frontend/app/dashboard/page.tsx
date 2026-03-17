@@ -48,9 +48,6 @@ export default function DashboardOverview() {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [isInitialLoading, setIsInitialLoading] = useState(true);
 
-  const containerRef = useRef<HTMLDivElement>(null);
-  const cardsRef = useRef<HTMLDivElement>(null);
-
   const loadData = useCallback(
     async (showNotification = false) => {
       setIsRefreshing(true);
@@ -78,20 +75,8 @@ export default function DashboardOverview() {
     loadData();
   }, [loadData]);
 
-  useGSAP(
-    () => {
-      if (!hasData) {
-        const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
-        tl.from(".hero-content", { y: 30, opacity: 0, duration: 0.8 })
-          .from(".step-card", { y: 40, opacity: 0, stagger: 0.15, duration: 0.8 }, "-=0.4")
-          .from(".flow-line", { scaleX: 0, opacity: 0, duration: 1, transformOrigin: "left center" }, "-=0.2");
-      }
-    },
-    { scope: containerRef, dependencies: [hasData] }
-  );
-
   return (
-    <div ref={containerRef} className="min-h-[80vh] flex flex-col items-center justify-center px-4">
+    <div className="min-h-[80vh] flex flex-col items-center justify-center px-4">
       {isInitialLoading ? (
         <DashboardSkeleton />
       ) : hasData ? (
@@ -105,7 +90,7 @@ export default function DashboardOverview() {
           onRefresh={() => loadData(true)}
         />
       ) : (
-        <OnboardingView cardsRef={cardsRef} />
+        <OnboardingView />
       )}
     </div>
   );
@@ -135,7 +120,7 @@ function DashboardSummary({
   const usagePercentage = Math.min((message_count / limit) * 100, 100);
 
   return (
-    <div className="w-full max-w-[1400px] animate-fade-in-up">
+    <div className="w-full max-w-[1400px]">
       {/* Page Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 mb-8">
         <div>
@@ -378,14 +363,14 @@ function RecentActivityPanel() {
                 <div className="flex-1 space-y-2">
                   <div className="flex justify-between">
                     <div className="h-3 w-32 bg-muted rounded-full overflow-hidden relative">
-                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/60 to-transparent animate-shimmer" />
+                      <div className="absolute inset-0 bg-muted" />
                     </div>
                     <div className="h-2 w-16 bg-muted rounded-full overflow-hidden relative">
-                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/60 to-transparent animate-shimmer" />
+                      <div className="absolute inset-0 bg-muted" />
                     </div>
                   </div>
                   <div className="h-2.5 w-full bg-muted rounded-full overflow-hidden relative">
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/60 to-transparent animate-shimmer" />
+                    <div className="absolute inset-0 bg-muted" />
                   </div>
                 </div>
               </div>
@@ -425,7 +410,7 @@ function RecentActivityPanel() {
 
 // ─── Onboarding View ──────────────────────────────────────────────────────────
 
-function OnboardingView({ cardsRef }: { cardsRef: React.RefObject<HTMLDivElement | null> }) {
+function OnboardingView() {
   return (
     <div className="w-full max-w-[1400px] mx-auto flex flex-col items-center">
       <div className="hero-content text-center mb-16 px-4">
@@ -441,13 +426,7 @@ function OnboardingView({ cardsRef }: { cardsRef: React.RefObject<HTMLDivElement
         </p>
       </div>
 
-      <div ref={cardsRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 w-full px-4 relative">
-        {/* Flow Lines */}
-        <div className="hidden lg:block absolute top-[68px] left-[15%] right-[15%] h-[2px] z-0 overflow-hidden">
-          <div className="flow-line w-full h-full bg-border relative">
-            <div className="absolute top-0 left-0 h-full w-[40%] bg-primary shadow-[0_0_10px_rgba(38,46,242,0.5)] animate-shimmer" />
-          </div>
-        </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 w-full px-4 relative">
 
         {ONBOARDING_STEPS.map((step) => (
           <div key={step.id} className="step-card group relative z-10">

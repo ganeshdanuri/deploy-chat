@@ -14,7 +14,7 @@
     token: script.getAttribute("data-token") || "",
     apiBase: script.getAttribute("data-api") || "http://localhost:8000",
     position: script.getAttribute("data-position") || "bottom-right",
-    primaryColor: script.getAttribute("data-color") || "#4f46e5",
+    primaryColor: script.getAttribute("data-color") || "#0052FF",
     secondaryColor: script.getAttribute("data-secondary-color") || "#f1f5f9"
   };
 

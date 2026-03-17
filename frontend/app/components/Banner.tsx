@@ -7,33 +7,8 @@ import { BANNER_KEYWORDS as KEYWORDS } from "../../lib/constants";
 const ITEMS = [...KEYWORDS, ...KEYWORDS, ...KEYWORDS];
 
 export default function Banner() {
-  const bannerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    let ctx: { revert: () => void };
-    (async () => {
-      const { gsap } = await import("gsap");
-      const { ScrollTrigger } = await import("gsap/ScrollTrigger");
-      gsap.registerPlugin(ScrollTrigger);
-
-      ctx = gsap.context(() => {
-        gsap.from(bannerRef.current, {
-          opacity: 0,
-          y: 20,
-          duration: 0.8,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: bannerRef.current,
-            start: "top 95%",
-          }
-        });
-      });
-    })();
-    return () => ctx?.revert();
-  }, []);
-
   return (
-    <div ref={bannerRef} className="relative w-full overflow-hidden bg-white/80 backdrop-blur-sm py-6 border-y border-border/50">
+    <div className="relative w-full overflow-hidden bg-white/80 backdrop-blur-sm py-6 border-y border-border/50">
       {/* Edge fade masks */}
       <div
         className="pointer-events-none absolute inset-y-0 left-0 z-10 w-32"
@@ -48,7 +23,7 @@ export default function Banner() {
 
       {/* Marquee track */}
       <div
-        className="flex w-max animate-marquee items-center gap-0 hover:[animation-play-state:paused]"
+        className="flex w-max items-center gap-0"
         aria-label="Feature highlights"
         role="marquee"
       >
@@ -63,18 +38,6 @@ export default function Banner() {
           </div>
         ))}
       </div>
-
-      {/* Keyframe */}
-      <style>{`
-        @keyframes marquee {
-          from { transform: translateX(0); }
-          to   { transform: translateX(-33.333%); }
-        }
-        .animate-marquee {
-          animation: marquee 40s linear infinite;
-        }
-      `}
-      </style>
     </div>
   );
 }

@@ -6,33 +6,8 @@ import Logo from "./Logo";
 import { FOOTER_LINKS as footerLinks, SOCIAL_LINKS, BRAND } from "../../lib/constants";
 
 export default function Footer() {
-    const footerRef = useRef<HTMLElement>(null);
-
-    useEffect(() => {
-        let ctx: { revert: () => void };
-        (async () => {
-            const { gsap } = await import("gsap");
-            const { ScrollTrigger } = await import("gsap/ScrollTrigger");
-            gsap.registerPlugin(ScrollTrigger);
-
-            ctx = gsap.context(() => {
-                gsap.from(footerRef.current, {
-                    opacity: 0,
-                    y: 20,
-                    duration: 0.8,
-                    ease: "power3.out",
-                    scrollTrigger: {
-                        trigger: footerRef.current,
-                        start: "top 95%",
-                    }
-                });
-            });
-        })();
-        return () => ctx?.revert();
-    }, []);
-
     return (
-        <footer ref={footerRef} className="bg-white border-t border-border">
+        <footer className="bg-white border-t border-border">
             <div className="max-w-6xl mx-auto px-6 lg:px-10 py-10 lg:py-14">
                 <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-12 lg:gap-8">
                     {/* Logo and Tagline */}

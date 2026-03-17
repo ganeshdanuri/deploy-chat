@@ -43,7 +43,7 @@ export const PLATFORM_FEATURES = [
         title: "Easy Integration",
         description: "Add AI chatbots to your website with just a few lines of code. No complex setup required.",
         icon: MdIntegrationInstructions,
-        color: "#262ef2",
+        color: "#0052FF",
         span: "col-span-1 md:col-span-2 lg:col-span-1",
     },
     {
@@ -51,7 +51,7 @@ export const PLATFORM_FEATURES = [
         title: "Custom Training",
         description: "Train your chatbot on your own content, documentation, and knowledge base for accurate responses.",
         icon: FaBrain,
-        color: "#262ef2",
+        color: "#0052FF",
         span: "col-span-1 md:col-span-2 lg:col-span-2",
     },
     {
@@ -59,7 +59,7 @@ export const PLATFORM_FEATURES = [
         title: "24/7 Support",
         description: "Your AI chatbot works around the clock to provide instant answers.",
         icon: HiGlobe,
-        color: "#262ef2",
+        color: "#0052FF",
         span: "col-span-1",
     },
     {
@@ -67,7 +67,7 @@ export const PLATFORM_FEATURES = [
         title: "Analytics Dashboard",
         description: "Track conversations, user satisfaction, and chatbot performance.",
         icon: HiChartBar,
-        color: "#262ef2",
+        color: "#0052FF",
         span: "col-span-1",
     },
     {
@@ -75,7 +75,7 @@ export const PLATFORM_FEATURES = [
         title: "Multi-language",
         description: "Support customers in multiple languages with AI-powered translation.",
         icon: HiUserGroup,
-        color: "#262ef2",
+        color: "#0052FF",
         span: "col-span-1 md:col-span-2 lg:col-span-1",
     },
     {
@@ -83,7 +83,7 @@ export const PLATFORM_FEATURES = [
         title: "Enterprise Security",
         description: "Bank-grade encryption and GDPR compliance out of the box.",
         icon: HiShieldCheck,
-        color: "#262ef2",
+        color: "#0052FF",
         span: "col-span-1 md:col-span-3 lg:col-span-3",
     },
 ];
@@ -417,7 +417,7 @@ export const CONNECTORS_NAV = [
 
 // ─── Embed Colors (EmbedModal) ──────────────────────────────────────────────
 export const PRESET_COLORS = [
-    { label: "Primary", value: "#262ef2" },
+    { label: "Primary", value: "#0052FF" },
     { label: "Dark", value: "#201f32" },
     { label: "Muted", value: "#a1a1a1" },
     { label: "Border", value: "#e3e2e5" },
@@ -497,7 +497,7 @@ export const PAGE_CONTENT = {
         subtitleEnd: " Start your 14-day free trial today.",
         primaryBtn: "Get Started for Free",
         secondaryBtn: "Talk to Sales",
-        footerText: "No credit card required · Instant setup · GPT-4o access",
+        footerText: "No credit card required · Instant setup",
     },
 };
 
