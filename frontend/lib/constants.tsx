@@ -4,9 +4,15 @@ import {
     HiCursorClick, HiChatAlt2, HiHome, HiQuestionMarkCircle, HiUser,
     HiUsers, HiCreditCard, HiKey, HiBell, HiShare
 } from "react-icons/hi";
-import { FaBrain } from "react-icons/fa";
+import { FaBrain, FaMicrosoft } from "react-icons/fa";
 import { MdIntegrationInstructions } from "react-icons/md";
-import { SiNotion, SiGoogledrive, SiSlack, SiGithub, SiIntercom } from "react-icons/si";
+import {
+    SiNotion, SiGoogledrive, SiSlack, SiGithub, SiIntercom,
+    SiConfluence, SiSalesforce, SiHubspot, SiZendesk, SiHelpscout,
+    SiDropbox,
+    SiPostgresql, SiMongodb, SiSnowflake,
+    SiShopify, SiWordpress, SiBitbucket
+} from "react-icons/si";
 
 // ─── Hero Checkmarks ─────────────────────────────────────────────────────────
 export const HERO_CHECKMARKS = [
@@ -269,28 +275,6 @@ export const FOOTER_LINKS = [
     },
 ];
 
-
-// ─── Testimonials ────────────────────────────────────────────────────────────
-export const TESTIMONIALS = [
-    {
-        name: "Sarah Chen",
-        role: "CTO at TechFlow",
-        content: "Deploy Chat transformed our customer support. We reduced response times by 80% in the first week. The RAG engine is incredibly accurate.",
-        image: "https://i.pravatar.cc/150?u=sarah",
-    },
-    {
-        name: "Marcus Wright",
-        role: "VP of Product at ScaleAI",
-        content: "The easiest integration I've ever seen. We had a custom-trained chatbot live on our docs in less than 30 minutes. Absolute game changer.",
-        image: "https://i.pravatar.cc/150?u=marcus",
-    },
-    {
-        name: "Elena Rodriguez",
-        role: "Founder of GrowthBox",
-        content: "Being able to train on our own Notion docs and PDFs without any coding knowledge is what sets Deploy Chat apart. Our customers love it.",
-        image: "https://i.pravatar.cc/150?u=elena",
-    },
-];
 
 // ─── Dashboard Onboarding (DashboardOverview) ────────────────────────────────
 export interface OnboardingStep {
@@ -557,17 +541,53 @@ export const AVAILABLE_CONNECTORS = [
     {
         id: "notion",
         name: "Notion",
-        description: "Sync pages and databases",
+        description: "Sync pages, databases and team wikis automatically.",
         icon: SiNotion,
         color: "text-secondary",
         bgColor: "bg-muted",
         status: "active"
     },
     {
+        id: "confluence",
+        name: "Confluence",
+        description: "Index your entire company space and knowledge base.",
+        icon: SiConfluence,
+        color: "text-primary",
+        bgColor: "bg-primary/5",
+        status: "coming-soon"
+    },
+    {
         id: "google-drive",
         name: "Google Drive",
-        description: "Fetch docs and folders",
+        description: "Fetch documents, spreadsheets and folders.",
         icon: SiGoogledrive,
+        color: "text-primary",
+        bgColor: "bg-primary/5",
+        status: "coming-soon"
+    },
+    {
+        id: "salesforce",
+        name: "Salesforce",
+        description: "Sync case history, accounts and knowledge articles.",
+        icon: SiSalesforce,
+        color: "text-primary",
+        bgColor: "bg-primary/5",
+        status: "coming-soon"
+    },
+    {
+        id: "hubspot",
+        name: "HubSpot",
+        description: "Connect your CRM data and customer interactions.",
+        icon: SiHubspot,
+        color: "text-primary",
+        bgColor: "bg-primary/5",
+        status: "coming-soon"
+    },
+    {
+        id: "zendesk",
+        name: "Zendesk",
+        description: "Import help center articles and ticket history.",
+        icon: SiZendesk,
         color: "text-primary",
         bgColor: "bg-primary/5",
         status: "coming-soon"
@@ -575,7 +595,7 @@ export const AVAILABLE_CONNECTORS = [
     {
         id: "slack",
         name: "Slack",
-        description: "Index channel history",
+        description: "Index channel history and team discussions.",
         icon: SiSlack,
         color: "text-primary",
         bgColor: "bg-primary/5",
@@ -584,17 +604,107 @@ export const AVAILABLE_CONNECTORS = [
     {
         id: "github",
         name: "GitHub",
-        description: "Sync repos and READMEs",
+        description: "Sync repositories, issues and README files.",
         icon: SiGithub,
         color: "text-secondary",
         bgColor: "bg-muted",
         status: "coming-soon"
     },
     {
+        id: "postgresql",
+        name: "PostgreSQL",
+        description: "Connect directly to your SQL databases for RAG.",
+        icon: SiPostgresql,
+        color: "text-primary",
+        bgColor: "bg-primary/5",
+        status: "coming-soon"
+    },
+    {
+        id: "mongodb",
+        name: "MongoDB",
+        description: "Sync collections from your NoSQL database.",
+        icon: SiMongodb,
+        color: "text-primary",
+        bgColor: "bg-primary/5",
+        status: "coming-soon"
+    },
+    {
+        id: "snowflake",
+        name: "Snowflake",
+        description: "Query and index your cloud data warehouse.",
+        icon: SiSnowflake,
+        color: "text-primary",
+        bgColor: "bg-primary/5",
+        status: "coming-soon"
+    },
+    {
+        id: "dropbox",
+        name: "Dropbox",
+        description: "Access and index shared files and documents.",
+        icon: SiDropbox,
+        color: "text-primary",
+        bgColor: "bg-primary/5",
+        status: "coming-soon"
+    },
+    {
         id: "intercom",
         name: "Intercom",
-        description: "Import help articles",
+        description: "Sync your help center and customer support docs.",
         icon: SiIntercom,
+        color: "text-primary",
+        bgColor: "bg-primary/5",
+        status: "coming-soon"
+    },
+    {
+        id: "microsoft-teams",
+        name: "MS Teams",
+        description: "Index team chats and shared documents.",
+        icon: FaMicrosoft,
+        color: "text-primary",
+        bgColor: "bg-primary/5",
+        status: "coming-soon"
+    },
+    {
+        id: "shopify",
+        name: "Shopify",
+        description: "Sync product catalogs and customer data.",
+        icon: SiShopify,
+        color: "text-primary",
+        bgColor: "bg-primary/5",
+        status: "coming-soon"
+    },
+    {
+        id: "wordpress",
+        name: "WordPress",
+        description: "Index your articles, pages and blog content.",
+        icon: SiWordpress,
+        color: "text-primary",
+        bgColor: "bg-primary/5",
+        status: "coming-soon"
+    },
+    {
+        id: "sharepoint",
+        name: "SharePoint",
+        description: "Index enterprise documents and team sites.",
+        icon: FaMicrosoft,
+        color: "text-primary",
+        bgColor: "bg-primary/5",
+        status: "coming-soon"
+    },
+    {
+        id: "bitbucket",
+        name: "Bitbucket",
+        description: "Sync repositories and pull requests.",
+        icon: SiBitbucket,
+        color: "text-primary",
+        bgColor: "bg-primary/5",
+        status: "coming-soon"
+    },
+    {
+        id: "helpscout",
+        name: "Help Scout",
+        description: "Import mailbox history and help articles.",
+        icon: SiHelpscout,
         color: "text-primary",
         bgColor: "bg-primary/5",
         status: "coming-soon"

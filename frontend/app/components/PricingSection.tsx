@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useRef } from "react";
 import { HiCheck, HiArrowRight, HiLightningBolt } from "react-icons/hi";
 import { PRICING_PLANS as PLANS, PricingPlan as Plan, PAGE_CONTENT } from "../../lib/constants";
 

@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useRef } from "react";
 import { AVAILABLE_CONNECTORS as connectors, PAGE_CONTENT } from "../../lib/constants";
 
 export default function ConnectorsSection() {
@@ -33,7 +32,7 @@ export default function ConnectorsSection() {
                 </div>
 
                 {/* ── Connectors Grid ── */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
                     {connectors.map((connector) => {
                         const isActive = connector.status === "active";
                         return (

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { HiCheck, HiArrowRight } from "react-icons/hi";
 import {
   HERO_CHECKMARKS,
@@ -9,17 +9,9 @@ import {
   HERO_RING_DEFS,
   PAGE_CONTENT
 } from "../../lib/constants";
-import gsap from "gsap";
-import { useGSAP } from "@gsap/react";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-
-if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger);
-}
 
 // ── Animated Chat Widget (center of hero visual) ───────────────────────────
 function ChatWidgetVisual() {
-  const widgetRef = useRef<HTMLDivElement>(null);
   const [convoIdx, setConvoIdx] = useState(0);
   const [questionText, setQuestionText] = useState("");
   const [answerText, setAnswerText] = useState("");
@@ -62,14 +54,8 @@ function ChatWidgetVisual() {
     return () => clearTimeout(timer);
   }, [phase, questionText, answerText, convoIdx]);
 
-  // Floating animation via GSAP
-  useGSAP(() => {
-    if (!widgetRef.current) return;
-    gsap.to(widgetRef.current, { y: -8, duration: 3, ease: "sine.inOut", yoyo: true, repeat: -1 });
-  }, { scope: widgetRef });
-
   return (
-    <div ref={widgetRef} className="w-[400px] rounded-2xl bg-white relative"
+    <div className="w-[400px] rounded-2xl bg-white relative"
       style={{ boxShadow: "0 24px 80px rgba(15,23,42,0.16), 0 0 0 1px rgba(0,82,255,0.06)" }}>
       {/* Header */}
       <div className="gradient-bg px-4 py-3 flex items-center gap-2.5 rounded-t-2xl">
@@ -160,7 +146,7 @@ function ChatWidgetVisual() {
         </div>
       </div>
 
-      {/* Floating Chat Icon (separated from widget) */}
+      {/* Floating Chat Icon */}
       <div className="absolute -bottom-[72px] right-0 w-14 h-14 gradient-bg rounded-full flex items-center justify-center shadow-lg" style={{ boxShadow: '0 8px 32px rgba(0,82,255,0.25)' }}>
         <svg viewBox="0 0 24 24" className="w-6 h-6 text-white" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
           <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
@@ -170,31 +156,13 @@ function ChatWidgetVisual() {
   );
 }
 
-// ── Full Hero Visual — Chat widget + static nodes + animated ring arcs ───────
+// ── Full Hero Visual — Chat widget + static nodes + ring arcs ─────────────
 
 function HeroVisual() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const arcRefs = useRef<(SVGCircleElement | null)[]>([]);
-
   const cx = 370, cy = 370;
 
-  useGSAP(() => {
-    // Animate each blue arc sweeping around its ring
-    HERO_RING_DEFS.forEach((ring, i) => {
-      const circ = 2 * Math.PI * ring.radius;
-      if (arcRefs.current[i]) {
-        gsap.to(arcRefs.current[i], {
-          strokeDashoffset: -circ * ring.direction,
-          duration: ring.duration,
-          ease: "none",
-          repeat: -1,
-        });
-      }
-    });
-  }, { scope: containerRef });
-
   return (
-    <div ref={containerRef} className="relative w-full h-full flex items-center justify-center">
+    <div className="relative w-full h-full flex items-center justify-center">
       {/* Background effects */}
       <div className="absolute inset-0 pointer-events-none"
         style={{ backgroundImage: "radial-gradient(circle, rgba(0,82,255,0.03) 1px, transparent 1px)", backgroundSize: "24px 24px" }} />
@@ -207,13 +175,13 @@ function HeroVisual() {
       <svg viewBox="0 0 740 740" className="absolute w-full max-w-[720px] z-0"
         style={{ top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}>
 
-        {/* ── Base rings (always visible, light) ── */}
+        {/* Base rings */}
         {HERO_RING_DEFS.map((ring, i) => (
           <circle key={`base-${i}`} cx={cx} cy={cy} r={ring.radius}
             fill="none" stroke="rgba(0,82,255,0.06)" strokeWidth="1" />
         ))}
 
-        {/* ── Animated blue arcs sweeping around each ring ── */}
+        {/* Static arcs (no animation) */}
         {HERO_RING_DEFS.map((ring, i) => {
           const circ = 2 * Math.PI * ring.radius;
           const arcLen = circ * ring.arcFraction;
@@ -221,7 +189,6 @@ function HeroVisual() {
           return (
             <circle
               key={`arc-${i}`}
-              ref={el => { arcRefs.current[i] = el; }}
               cx={cx} cy={cy} r={ring.radius}
               fill="none"
               stroke="var(--primary-light)"
@@ -233,7 +200,7 @@ function HeroVisual() {
           );
         })}
 
-        {/* ── Connection lines from static nodes to center ── */}
+        {/* Connection lines from nodes to center */}
         {HERO_NODES_DATA.map((node, i) => {
           const rad = (node.angle * Math.PI) / 180;
           const nx = cx + node.radius * Math.cos(rad);
@@ -247,7 +214,7 @@ function HeroVisual() {
           );
         })}
 
-        {/* ── Static data source nodes ── */}
+        {/* Static data source nodes */}
         {HERO_NODES_DATA.map((node, i) => {
           const rad = (node.angle * Math.PI) / 180;
           const nx = cx + node.radius * Math.cos(rad);
@@ -270,7 +237,7 @@ function HeroVisual() {
         })}
       </svg>
 
-      {/* Central chat widget (HTML, overlaid on SVG) */}
+      {/* Central chat widget */}
       <div className="relative z-10">
         <ChatWidgetVisual />
       </div>
@@ -337,57 +304,9 @@ function TypingCycle() {
 interface HeroSectionProps { onGetStarted: () => void; }
 
 export default function HeroSection({ onGetStarted }: HeroSectionProps) {
-  const leftSideRef = useRef<HTMLDivElement>(null);
-  const visualRef = useRef<HTMLDivElement>(null);
-
-  useGSAP(() => {
-    // Entrance animations
-    if (leftSideRef.current) {
-      gsap.from(leftSideRef.current.children, {
-        y: 20,
-        opacity: 0,
-        duration: 0.8,
-        stagger: 0.1,
-        ease: "power3.out",
-        delay: 0.2
-      });
-
-      // Parallax scroll effect
-      gsap.to(leftSideRef.current, {
-        y: -30,
-        scrollTrigger: {
-          trigger: leftSideRef.current,
-          start: "top center",
-          end: "bottom top",
-          scrub: 1
-        }
-      });
-    }
-    if (visualRef.current) {
-      gsap.from(visualRef.current, {
-        x: 40,
-        opacity: 0,
-        duration: 1,
-        ease: "power3.out",
-        delay: 0.4
-      });
-
-      // Parallax scroll effect for visual
-      gsap.to(visualRef.current, {
-        y: 40,
-        scrollTrigger: {
-          trigger: visualRef.current,
-          start: "top center",
-          end: "bottom top",
-          scrub: 1.5
-        }
-      });
-    }
-  }, { scope: leftSideRef }); // Scoping to leftSideRef but applying to both refs inside
-
   return (
     <section className="relative" style={{ minHeight: "calc(100vh - 72px)", background: "transparent" }}>
-      {/* Background container for constrained glow effects */}
+      {/* Background glow effects */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
         <div className="radial-glow w-[600px] h-[600px] -top-[200px] -right-[200px] bg-primary/[0.04]" />
         <div className="radial-glow w-[400px] h-[400px] -bottom-[100px] -left-[100px] bg-primary/[0.03]" />
@@ -396,7 +315,7 @@ export default function HeroSection({ onGetStarted }: HeroSectionProps) {
       <div className="relative mx-auto max-w-7xl px-4 lg:px-8 h-full grid lg:grid-cols-[1.2fr_0.8fr] min-h-[calc(100vh-72px)] gap-10">
 
         {/* ── LEFT ── */}
-        <div ref={leftSideRef} className="flex flex-col justify-center py-14 min-w-0">
+        <div className="flex flex-col justify-center py-14 min-w-0">
 
           {/* Section label badge */}
           <div className="mb-6">
@@ -423,7 +342,7 @@ export default function HeroSection({ onGetStarted }: HeroSectionProps) {
             {PAGE_CONTENT.hero.subtitle}
           </p>
 
-          {/* CTA — Gradient button */}
+          {/* CTA */}
           <div className="flex flex-col sm:flex-row items-start gap-4">
             <button
               onClick={onGetStarted}
@@ -449,7 +368,7 @@ export default function HeroSection({ onGetStarted }: HeroSectionProps) {
         </div>
 
         {/* ── RIGHT: Hero Visual ── */}
-        <div ref={visualRef} className="relative hidden lg:flex items-center justify-center py-12 pb-24 lg:py-6 lg:pb-0 translate-x-4 xl:translate-x-8">
+        <div className="relative hidden lg:flex items-center justify-center py-12 pb-24 lg:py-6 lg:pb-0 translate-x-4 xl:translate-x-8">
           <HeroVisual />
         </div>
 

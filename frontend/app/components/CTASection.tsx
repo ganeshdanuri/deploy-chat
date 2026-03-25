@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useRef } from "react";
 import { HiArrowRight } from "react-icons/hi";
 import { PAGE_CONTENT, BRAND } from "../../lib/constants";
 

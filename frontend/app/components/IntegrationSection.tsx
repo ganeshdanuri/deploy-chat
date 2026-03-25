@@ -68,21 +68,28 @@ function CodeBlock({ code }: { code: string }) {
 }
 
 function OrbitVisual() {
+    const svgRef = useRef<SVGSVGElement>(null);
     const gRef = useRef<SVGGElement>(null);
     const iconsRef = useRef<SVGGElement>(null);
     const centerRef = useRef<SVGGElement>(null);
+
+    // Scope to the top-level SVG so all sibling <g> refs are within the GSAP context
     useGSAP(() => {
-        if (gRef.current) gsap.to(gRef.current, { rotation: 360, duration: 30, ease: "none", repeat: -1, transformOrigin: "200 200" });
+        if (gRef.current) {
+            gsap.to(gRef.current, { rotation: 360, duration: 30, ease: "none", repeat: -1, transformOrigin: "200 200" });
+        }
         if (iconsRef.current) {
             const icons = iconsRef.current.querySelectorAll(".icon-wrap");
             gsap.to(icons, { rotation: -360, duration: 30, ease: "none", repeat: -1, transformOrigin: "50% 50%" });
         }
-        if (centerRef.current) gsap.to(centerRef.current, { scale: 1.06, duration: 2.2, ease: "sine.inOut", repeat: -1, yoyo: true, transformOrigin: "200 200" });
-    }, { scope: gRef });
+        if (centerRef.current) {
+            gsap.to(centerRef.current, { scale: 1.06, duration: 2.2, ease: "sine.inOut", repeat: -1, yoyo: true, transformOrigin: "200 200" });
+        }
+    }, { scope: svgRef });
 
     const r = 140, cx = 200, cy = 200;
     return (
-        <svg viewBox="0 0 400 400" className="w-full max-w-[440px]">
+        <svg ref={svgRef} viewBox="0 0 400 400" className="w-full max-w-[440px]">
             <circle cx={cx} cy={cy} r={r} fill="none" stroke="rgba(0,82,255,0.10)" strokeWidth="1.5" />
             <circle cx={cx} cy={cy} r={r * 0.55} fill="none" stroke="rgba(0,82,255,0.06)" strokeWidth="1" />
             <g ref={gRef}>
@@ -344,7 +351,7 @@ export default function IntegrationSection() {
 
     const tweenRef = useRef<gsap.core.Tween | null>(null);
 
-    const startFill = useCallback((index: number) => {
+    const startFill = useCallback(() => {
         if (tweenRef.current) tweenRef.current.kill();
         setProgress(0);
         tweenRef.current = gsap.to({ val: 0 }, {
@@ -361,7 +368,7 @@ export default function IntegrationSection() {
     }, []);
 
     useEffect(() => {
-        startFill(activeStep);
+        startFill();
         return () => { if (tweenRef.current) tweenRef.current.kill(); };
     }, [activeStep, startFill]);
 

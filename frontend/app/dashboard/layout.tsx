@@ -43,7 +43,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     // Close sidebar on navigation (mobile)
     useEffect(() => {
         if (isSidebarOpen) {
-            // eslint-disable-next-line
             setIsSidebarOpen(false);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps

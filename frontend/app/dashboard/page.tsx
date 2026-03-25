@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { useRef, useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 import { fetchChatbots } from "@/lib/store/slices/chatbotsSlice";
 import { fetchDatasets } from "@/lib/store/slices/datasetsSlice";
@@ -20,8 +20,6 @@ import {
   HiCreditCard,
 } from "react-icons/hi";
 import { Tooltip } from "@/app/components/ui";
-import gsap from "gsap";
-import { useGSAP } from "@gsap/react";
 import showToast from "@/lib/toast";
 import { DashboardSkeleton } from "@/app/components/ui";
 import api from "@/lib/api";

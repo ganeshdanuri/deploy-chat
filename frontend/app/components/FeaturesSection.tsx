@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useRef } from "react";
 import { PLATFORM_FEATURES as features, PAGE_CONTENT } from "../../lib/constants";
 
 export default function FeaturesSection() {
@@ -65,7 +64,7 @@ export default function FeaturesSection() {
 
               {/* Subtle bottom accent on hover */}
               <div
-                className="absolute bottom-0 left-4 right-4 h-[2px] rounded-full w-0 group-hover:w-[calc(100%-2rem)] transition-all duration-300 gradient-bg"
+                className="absolute bottom-0 left-4 right-4 h-[2px] rounded-full origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300 gradient-bg"
               />
             </div>
           ))}

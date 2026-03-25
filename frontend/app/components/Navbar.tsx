@@ -75,9 +75,15 @@ export default function Navbar() {
             </button>
           </div>
 
-          {/* Mobile Navigation */}
-          {isMobileMenuOpen && (
-            <div className="md:hidden py-4 border-t border-border">
+          {/* Mobile Navigation — always rendered, animated via max-h + opacity */}
+          <div
+            className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${
+              isMobileMenuOpen
+                ? "max-h-[400px] opacity-100 border-t border-border"
+                : "max-h-0 opacity-0 border-t-0"
+            }`}
+          >
+            <div className="py-4">
               {navLinks.map((link) => (
                 <a
                   key={link.label}
@@ -100,7 +106,7 @@ export default function Navbar() {
                 </button>
               </div>
             </div>
-          )}
+          </div>
         </div>
       </nav>
     </>
