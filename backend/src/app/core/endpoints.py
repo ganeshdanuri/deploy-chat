@@ -23,6 +23,7 @@ class Endpoints:
 
     # Widget Endpoints
     WIDGET_PREFIX = "/widget"
+    WIDGET_INIT = "/{embed_token}/init"
     WIDGET_CHAT = "/{embed_token}/chat"
     WIDGET_INFO = "/{embed_token}/info"
 

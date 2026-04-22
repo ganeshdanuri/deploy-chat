@@ -1,5 +1,3 @@
--- Incremental update script to align database with latest schema.sql and models.py
-
 -- 1. Create Pricing Tiers table
 CREATE TABLE IF NOT EXISTS pricing_tiers (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -9,10 +7,7 @@ CREATE TABLE IF NOT EXISTS pricing_tiers (
     created_at TIMESTAMP DEFAULT NOW()
 );
 
--- Ensure price_id is removed if it was added previously
 ALTER TABLE pricing_tiers DROP COLUMN IF EXISTS price_id;
-
--- Ensure price is added
 ALTER TABLE pricing_tiers ADD COLUMN IF NOT EXISTS price FLOAT DEFAULT 0.0;
 
 -- 2. Insert Default Tiers if not exists
@@ -26,14 +21,8 @@ ALTER TABLE users ADD COLUMN IF NOT EXISTS is_email_verified BOOLEAN DEFAULT FAL
 ALTER TABLE users ADD COLUMN IF NOT EXISTS google_id VARCHAR UNIQUE;
 ALTER TABLE users ADD COLUMN IF NOT EXISTS profile_image VARCHAR;
 ALTER TABLE users ALTER COLUMN password_hash DROP NOT NULL;
-
--- Explicitly remove old plan column and table plan_id
 ALTER TABLE users DROP COLUMN IF EXISTS current_plan;
 ALTER TABLE users DROP COLUMN IF EXISTS plan_id;
-DROP TABLE IF EXISTS user_pricing_plans CASCADE;
-
--- Migrate existing current_plan data (Optional but good)
--- UPDATE users SET plan_id = (SELECT id FROM pricing_tiers WHERE name = 'Free' LIMIT 1) WHERE current_plan = 'free';
 
 -- 4. Create Email Verifications table
 CREATE TABLE IF NOT EXISTS email_verifications (
@@ -44,21 +33,15 @@ CREATE TABLE IF NOT EXISTS email_verifications (
     created_at TIMESTAMP DEFAULT NOW()
 );
 
--- 3. Update chatbots table with new configuration fields
+-- 5. Update chatbots table
 ALTER TABLE chatbots ADD COLUMN IF NOT EXISTS system_prompt TEXT DEFAULT 'You are a helpful AI assistant.';
 ALTER TABLE chatbots ADD COLUMN IF NOT EXISTS temperature FLOAT DEFAULT 0.7;
 ALTER TABLE chatbots ADD COLUMN IF NOT EXISTS welcome_message TEXT DEFAULT 'Hi! How can I help you today?';
 ALTER TABLE chatbots ADD COLUMN IF NOT EXISTS embed_token VARCHAR UNIQUE;
-
--- Generate tokens for existing chatbots (PostgreSQL specific)
 UPDATE chatbots SET embed_token = gen_random_uuid()::text WHERE embed_token IS NULL;
 ALTER TABLE chatbots ALTER COLUMN embed_token SET NOT NULL;
 
--- 3. Add Cascade deletes for relationships if not already present
--- Note: This might require dropping and recreating constraints if they exist without CASCADE
--- For simplicity, we assume these are new tables or can be safely updated
-
--- 4. Create Platform API Keys table
+-- 6. Create Platform API Keys table
 CREATE TABLE IF NOT EXISTS platform_api_keys (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     provider VARCHAR NOT NULL,
@@ -68,7 +51,7 @@ CREATE TABLE IF NOT EXISTS platform_api_keys (
     updated_at TIMESTAMP DEFAULT NOW()
 );
 
--- 5. Create User API Keys table
+-- 7. Create User API Keys table
 CREATE TABLE IF NOT EXISTS user_api_keys (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
@@ -79,7 +62,7 @@ CREATE TABLE IF NOT EXISTS user_api_keys (
     updated_at TIMESTAMP DEFAULT NOW()
 );
 
--- 6. Create Usage Tracking table
+-- 8. Create Usage Tracking table
 CREATE TABLE IF NOT EXISTS usage_tracking (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
@@ -91,7 +74,7 @@ CREATE TABLE IF NOT EXISTS usage_tracking (
     updated_at TIMESTAMP DEFAULT NOW()
 );
 
--- 7. Create User Pricing Plans table
+-- 9. Create User Pricing Plans table
 CREATE TABLE IF NOT EXISTS user_pricing_plans (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
@@ -103,10 +86,10 @@ CREATE TABLE IF NOT EXISTS user_pricing_plans (
     updated_at TIMESTAMP DEFAULT NOW()
 );
 
--- 8. Add useful indexes
+-- 10. Indexes
 CREATE INDEX IF NOT EXISTS idx_chatbot_embed_token ON chatbots(embed_token);
 
--- 9. Create Recent Activities table
+-- 11. Create Recent Activities table
 CREATE TABLE IF NOT EXISTS recent_activities (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
@@ -115,10 +98,8 @@ CREATE TABLE IF NOT EXISTS recent_activities (
     created_at TIMESTAMP DEFAULT NOW()
 );
 
--- Drop allowed_domains column from chatbots if it exists
+-- 12. Chatbot Allowed Origins
 ALTER TABLE chatbots DROP COLUMN IF EXISTS allowed_domains;
-
--- Chatbot Allowed Origins
 CREATE TABLE IF NOT EXISTS chatbot_allowed_origins (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     chatbot_id UUID NOT NULL REFERENCES chatbots(id) ON DELETE CASCADE,
@@ -127,7 +108,7 @@ CREATE TABLE IF NOT EXISTS chatbot_allowed_origins (
 );
 CREATE INDEX IF NOT EXISTS idx_chatbot_allowed_origins_domain ON chatbot_allowed_origins(domain);
 
--- Add chat_sessions table
+-- 13. Chat Sessions and Messages
 CREATE TABLE IF NOT EXISTS chat_sessions (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     chatbot_id UUID NOT NULL REFERENCES chatbots(id) ON DELETE CASCADE,
@@ -135,8 +116,6 @@ CREATE TABLE IF NOT EXISTS chat_sessions (
     ip_address VARCHAR,
     created_at TIMESTAMP DEFAULT NOW()
 );
-
--- Add chat_messages table
 CREATE TABLE IF NOT EXISTS chat_messages (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     session_id UUID NOT NULL REFERENCES chat_sessions(id) ON DELETE CASCADE,
@@ -145,11 +124,13 @@ CREATE TABLE IF NOT EXISTS chat_messages (
     created_at TIMESTAMP DEFAULT NOW()
 );
 
-
--- Add status column to chatbots
+-- 14. Chatbot status and signing_secret
 ALTER TABLE chatbots ADD COLUMN IF NOT EXISTS status VARCHAR DEFAULT 'creating';
+ALTER TABLE chatbots ADD COLUMN IF NOT EXISTS signing_secret VARCHAR;
+UPDATE chatbots SET signing_secret = encode(gen_random_bytes(32), 'hex') WHERE signing_secret IS NULL;
+ALTER TABLE chatbots ALTER COLUMN signing_secret SET NOT NULL;
 
--- Add connectors table if it doesn't exist
+-- 15. Connectors table
 CREATE TABLE IF NOT EXISTS connectors (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
@@ -164,12 +145,7 @@ CREATE TABLE IF NOT EXISTS connectors (
 CREATE INDEX IF NOT EXISTS idx_connectors_name ON connectors(name);
 CREATE INDEX IF NOT EXISTS idx_connectors_type ON connectors(type);
 
--- Update documents table with new columns for connectors
+-- 16. Documents connector support
 ALTER TABLE documents ADD COLUMN IF NOT EXISTS connector_id UUID REFERENCES connectors(id) ON DELETE SET NULL;
 ALTER TABLE documents ADD COLUMN IF NOT EXISTS external_id VARCHAR;
 CREATE INDEX IF NOT EXISTS idx_documents_external_id ON documents(external_id);
-
--- Add HMAC signing_secret to chatbots (backfill existing rows with a generated secret)
-ALTER TABLE chatbots ADD COLUMN IF NOT EXISTS signing_secret VARCHAR;
-UPDATE chatbots SET signing_secret = encode(gen_random_bytes(32), 'hex') WHERE signing_secret IS NULL;
-ALTER TABLE chatbots ALTER COLUMN signing_secret SET NOT NULL;

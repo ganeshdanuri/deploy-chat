@@ -4,6 +4,7 @@ from sqlalchemy import Column, JSON
 from pgvector.sqlalchemy import Vector
 from sqlmodel import Field, SQLModel
 from datetime import datetime, timedelta
+import secrets
 from app.core.constants import DEFAULT_SYSTEM_PROMPT, DEFAULT_WELCOME_MESSAGE, STATUS_ACTIVE, DEFAULT_PLAN_NAME, CHATBOT_STATUS_CREATING
 
 class PricingTier(SQLModel, table=True):
@@ -167,6 +168,7 @@ class Chatbot(ChatbotBase, table=True):
     __tablename__ = "chatbots"
     id: UUID = Field(default_factory=uuid4, primary_key=True)
     embed_token: str = Field(default_factory=lambda: str(uuid4()), unique=True, index=True)
+    signing_secret: str = Field(default_factory=lambda: secrets.token_hex(32))
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
 
