@@ -27,7 +27,7 @@ import api from "@/lib/api";
 import { ENDPOINTS } from "@/lib/endpoints";
 import { Button } from "@/components/ui/button";
 import showToast from "@/lib/toast";
-import CreateAIAssistantDrawer from "@/app/components/CreateAIAssistantDrawer";
+import AgentFormDrawer from "@/app/components/AgentFormDrawer";
 import { BarChart } from "@/app/components/charts/BarChart";
 
 export default function DashboardOverview() {
@@ -65,7 +65,7 @@ export default function DashboardOverview() {
     return (
       <>
         <EmptyOnboarding onCreate={() => setIsCreateOpen(true)} />
-        <CreateAIAssistantDrawer
+        <AgentFormDrawer
           isOpen={isCreateOpen}
           onClose={() => setIsCreateOpen(false)}
           editBot={null}
@@ -170,7 +170,7 @@ export default function DashboardOverview() {
 
       </div>
 
-      <CreateAIAssistantDrawer
+      <AgentFormDrawer
         isOpen={isCreateOpen}
         onClose={() => setIsCreateOpen(false)}
         editBot={null}

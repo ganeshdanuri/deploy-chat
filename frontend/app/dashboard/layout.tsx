@@ -1,9 +1,10 @@
 "use client";
 
 import { useRouter, usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { Sidebar } from "./components/Sidebar";
 import { TopNav } from "./components/TopNav";
+import { KeyboardShortcutsPanel } from "./components/KeyboardShortcutsPanel";
 import { useAuth } from "../context/AuthContext";
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 import { fetchChatbots } from "@/lib/store/slices/chatbotsSlice";
@@ -11,6 +12,7 @@ import { fetchDatasets } from "@/lib/store/slices/datasetsSlice";
 import { fetchDocuments } from "@/lib/store/slices/documentsSlice";
 import { fetchUsageStats } from "@/lib/store/slices/usageSlice";
 import { fetchUserMe } from "@/lib/store/slices/userSlice";
+import { useKeyboardShortcuts } from "@/lib/hooks/useKeyboardShortcuts";
 import Logo from "../components/Logo";
 
 const loadingScreen = (
@@ -28,6 +30,31 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     const pathname = usePathname();
     const dispatch = useAppDispatch();
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const [shortcutsOpen, setShortcutsOpen] = useState(false);
+
+    useKeyboardShortcuts([
+        {
+            key: "k", meta: true,
+            description: "Focus search",
+            action: useCallback(() => {
+                const el = document.querySelector<HTMLInputElement>('input[type="search"], input[placeholder*="Search"], input[placeholder*="search"]');
+                el?.focus();
+            }, []),
+        },
+        {
+            key: "n", meta: true,
+            description: "New agent",
+            action: useCallback(() => {
+                const btn = document.querySelector<HTMLButtonElement>('[data-shortcut="new"]');
+                btn?.click();
+            }, []),
+        },
+        {
+            key: "?",
+            description: "Show shortcuts",
+            action: useCallback(() => setShortcutsOpen((v) => !v), []),
+        },
+    ]);
 
     const { status: chatbotStatus } = useAppSelector((state) => state.chatbots);
     const { status: datasetStatus } = useAppSelector((state) => state.datasets);
@@ -78,6 +105,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     </div>
                 </main>
             </div>
+
+            <KeyboardShortcutsPanel open={shortcutsOpen} onClose={() => setShortcutsOpen(false)} />
         </div>
     );
 }

@@ -17,7 +17,7 @@ import { BarChart } from "@/app/components/charts/BarChart";
 import {
   DeleteConfirmationModal,
 } from "@/app/components/ui";
-import CreateAIAssistantDrawer from "@/app/components/CreateAIAssistantDrawer";
+import AgentFormDrawer from "@/app/components/AgentFormDrawer";
 import { STATUS } from "@/lib/constants";
 import type { Chatbot } from "@/lib/types";
 
@@ -181,7 +181,7 @@ export default function AgentDetailPage({
         </div>
       </div>
 
-      <CreateAIAssistantDrawer
+      <AgentFormDrawer
         isOpen={editOpen}
         onClose={() => setEditOpen(false)}
         editBot={bot as any}

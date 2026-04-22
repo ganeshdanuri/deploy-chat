@@ -1,14 +1,14 @@
 "use client";
 
-import { ArrowRight, Bot, Plus, RefreshCw, Search, Sparkles } from "lucide-react";
+import { Plus, RefreshCw, Search, Sparkles } from "lucide-react";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
 
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 import { fetchChatbots } from "@/lib/store/slices/chatbotsSlice";
-import CreateAIAssistantDrawer from "@/app/components/CreateAIAssistantDrawer";
+import AgentFormDrawer from "@/app/components/AgentFormDrawer";
+import { AgentCard } from "./components/AgentCard";
 import { Button } from "@/components/ui/button";
 import { PageHeader, ChatbotCardSkeleton, Input } from "@/app/components/ui";
 import type { Chatbot } from "@/lib/types";
@@ -66,7 +66,7 @@ export default function AgentsPage() {
             New agent
           </Button>
         </div>
-        <CreateAIAssistantDrawer
+        <AgentFormDrawer
           isOpen={isModalOpen}
           onClose={() => {
             setIsModalOpen(false);
@@ -139,7 +139,7 @@ export default function AgentsPage() {
         </div>
       </div>
 
-      <CreateAIAssistantDrawer
+      <AgentFormDrawer
         isOpen={isModalOpen}
         onClose={() => {
           setIsModalOpen(false);
@@ -151,56 +151,3 @@ export default function AgentsPage() {
   );
 }
 
-function AgentCard({ bot }: { bot: any }) {
-  const status = (bot.status || STATUS.ACTIVE).toLowerCase();
-  const statusColor =
-    status === STATUS.CREATING ? "var(--accent-gold)" :
-    status === STATUS.FAILED ? "var(--destructive)" :
-"var(--accent-green)";
-  const statusLabel =
-    status === STATUS.CREATING ? "Training" :
-    status === STATUS.FAILED ? "Failed" :
-"Live";
-
-  return (
-    <Link
-      href={`/dashboard/agents/${bot.id}`}
-      className="bg-background border border-border rounded-2xl p-5 flex flex-col gap-3 hover:border-border-medium transition-colors min-h-[220px]"
->
-      <div className="flex items-center justify-between gap-2">
-        <div
-          className="w-9 h-9 rounded-md flex items-center justify-center shrink-0"
-          style={{ background: "var(--agent-bg)", color: "var(--agent)" }}
->
-          <Bot className="w-4 h-4" />
-        </div>
-        <span
-          className="text-[11px] font-medium flex items-center gap-1.5"
-          style={{ color: statusColor }}
->
-          <span
-            className="w-1.5 h-1.5 rounded-full"
-            style={{ background: statusColor }}
-          />
-          {statusLabel}
-        </span>
-      </div>
-      <div>
-        <h3 className="text-[15px] font-medium text-foreground truncate">
-          {bot.name}
-        </h3>
-        <p className="text-xs text-muted-foreground mt-0.5 line-clamp-2 leading-relaxed">
-          {bot.welcome_message ||"No welcome message set"}
-        </p>
-      </div>
-      <div className="mt-auto flex items-center justify-between pt-3 border-t border-border text-xs">
-        <span className="text-muted-foreground tabular-nums">
-          {bot.chunk_count ?? 0} chunks
-        </span>
-        <span className="flex items-center gap-1 text-foreground font-medium">
-          Configure <ArrowRight className="w-3 h-3" />
-        </span>
-      </div>
-    </Link>
-  );
-}
