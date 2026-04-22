@@ -64,10 +64,12 @@ export const FAQS = [
 // ─── EmbedDrawer colour presets ──────────────────────────────────────────────
 
 export const PRESET_COLORS = [
-    { label: "Primary", value: "#0052FF" },
-    { label: "Dark", value: "#201f32" },
-    { label: "Muted", value: "#a1a1a1" },
-    { label: "Border", value: "#e3e2e5" },
+    { label: "Blue",   value: "#0052FF" },
+    { label: "Black",  value: "#09090b" },
+    { label: "Violet", value: "#7c3aed" },
+    { label: "Green",  value: "#16a34a" },
+    { label: "Rose",   value: "#e11d48" },
+    { label: "Orange", value: "#ea580c" },
 ];
 
 // ─── AddAPIKeyDrawer provider list ───────────────────────────────────────────

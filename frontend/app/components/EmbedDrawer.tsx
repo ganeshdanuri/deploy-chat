@@ -19,10 +19,11 @@ interface EmbedDrawerProps {
 type Position ="bottom-right" |"bottom-left";
 
 function buildSnippet(token: string, color: string, position: Position, apiBase: string) {
+    const backendUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
     return `<script
   src="${apiBase}/widget.js"
   data-token="${token}"
-  data-api="http://localhost:8000"
+  data-api="${backendUrl}"
   data-color="${color}"
   data-position="${position}"
   defer

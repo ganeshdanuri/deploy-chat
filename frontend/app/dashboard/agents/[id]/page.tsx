@@ -329,10 +329,41 @@ function ConfigureTab({ bot, onEdit }: { bot: Chatbot; onEdit: () => void }) {
 
 // ─── DEPLOY TAB ──────────────────────────────────────────────────────────────
 
+const DEPLOY_COLORS = [
+  { label: "Blue",   value: "#0052FF" },
+  { label: "Black",  value: "#09090b" },
+  { label: "Violet", value: "#7c3aed" },
+  { label: "Green",  value: "#16a34a" },
+  { label: "Rose",   value: "#e11d48" },
+  { label: "Orange", value: "#ea580c" },
+];
+
+const RADIUS_OPTIONS = [
+  { label: "Square", value: "4px"  },
+  { label: "Rounded", value: "12px" },
+  { label: "Pill",   value: "26px" },
+];
+
 function DeployTab({ bot }: { bot: Chatbot }) {
   const [copied, setCopied] = useState<string | null>(null);
+  const [widgetColor, setWidgetColor] = useState(DEPLOY_COLORS[0].value);
+  const [widgetPosition, setWidgetPosition] = useState<"bottom-right" | "bottom-left">("bottom-right");
+  const [widgetRadius, setWidgetRadius] = useState(RADIUS_OPTIONS[0].value);
+  const [customHex, setCustomHex] = useState("");
+
   const baseUrl = typeof window !== "undefined" ? window.location.origin : "";
-  const embedCode = `<script\n  src="${baseUrl}/widget.js"\n  data-chatbot-id="${bot.id}"\n  async\n></script>`;
+  const backendUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+  const embedCode = [
+    `<script`,
+    `  src="${baseUrl}/widget.js"`,
+    `  data-token="${(bot as any).embed_token}"`,
+    `  data-color="${widgetColor}"`,
+    `  data-position="${widgetPosition}"`,
+    `  data-radius="${widgetRadius}"`,
+    `  data-api="${backendUrl}"`,
+    `  async`,
+    `></script>`,
+  ].join("\n");
   const apiUrl = `${baseUrl}/api/v1/chatbots/${bot.id}/chat`;
 
   const copy = (text: string, key: string) => {
@@ -344,26 +375,177 @@ function DeployTab({ bot }: { bot: Chatbot }) {
   return (
     <div className="space-y-4">
       <InfoCard title="Embed on your website">
-        <p className="text-sm text-muted-foreground mb-4">
-          Copy and paste this one-line snippet into the <code className="text-xs bg-muted px-1.5 py-0.5 rounded">&lt;head&gt;</code> of your site. No framework required.
+        <p className="text-sm text-muted-foreground mb-5">
+          Customise the widget, then paste the snippet into your site&apos;s <code className="text-xs bg-muted px-1.5 py-0.5 rounded">&lt;head&gt;</code>.
         </p>
+
+        {/* ── Customise + live preview side-by-side ── */}
+        <div className="flex flex-col sm:flex-row gap-6 mb-5 pb-5 border-b border-border">
+
+          {/* Controls */}
+          <div className="flex-1 space-y-4">
+
+            {/* Color */}
+            <div className="space-y-2">
+              <p className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider">Color</p>
+
+              {/* Preset swatches */}
+              <div className="flex gap-2 items-center flex-wrap">
+                {DEPLOY_COLORS.map((c) => (
+                  <button
+                    key={c.value}
+                    title={c.label}
+                    onClick={() => { setWidgetColor(c.value); setCustomHex(""); }}
+                    className="w-6 h-6 rounded-md border-2 transition-all hover:scale-110 shrink-0"
+                    style={{
+                      background: c.value,
+                      borderColor: widgetColor === c.value && !customHex ? "#fff" : "transparent",
+                      boxShadow: widgetColor === c.value && !customHex ? `0 0 0 2px ${c.value}` : "none",
+                    }}
+                  />
+                ))}
+              </div>
+
+              {/* Divider */}
+              <div className="flex items-center gap-2 pt-0.5">
+                <div className="h-px flex-1 bg-border" />
+                <span className="text-[10px] text-muted-foreground/60 font-medium uppercase tracking-wider shrink-0">Custom</span>
+                <div className="h-px flex-1 bg-border" />
+              </div>
+
+              {/* Custom color row */}
+              <div className="flex items-center gap-2">
+                <label
+                  className="relative w-7 h-7 rounded-md overflow-hidden border border-border cursor-pointer shrink-0 hover:scale-105 transition-transform"
+                  title="Open color picker"
+                >
+                  <input
+                    type="color"
+                    value={customHex ? `#${customHex}` : widgetColor}
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                    onChange={(e) => {
+                      const hex = e.target.value.replace("#", "");
+                      setCustomHex(hex);
+                      setWidgetColor(e.target.value);
+                    }}
+                  />
+                  <span
+                    className="block w-full h-full"
+                    style={{ background: customHex ? `#${customHex}` : widgetColor }}
+                  />
+                </label>
+                <div className="flex items-center gap-1 flex-1">
+                  <span className="text-[12px] text-muted-foreground font-mono">#</span>
+                  <input
+                    type="text"
+                    maxLength={6}
+                    value={customHex}
+                    placeholder="e.g. 7c3aed"
+                    className="flex-1 h-7 text-[12px] font-mono bg-muted border border-border rounded-md px-2 outline-none focus:border-foreground/30 transition-colors"
+                    onChange={(e) => {
+                      const v = e.target.value.replace(/[^0-9a-fA-F]/g, "");
+                      setCustomHex(v);
+                      if (v.length === 6) setWidgetColor(`#${v}`);
+                    }}
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Shape */}
+            <div className="space-y-2">
+              <p className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider">Shape</p>
+              <div className="flex gap-1.5">
+                {RADIUS_OPTIONS.map((r) => (
+                  <button
+                    key={r.value}
+                    onClick={() => setWidgetRadius(r.value)}
+                    className={`px-3 h-7 text-[12px] font-medium border transition-all ${
+                      widgetRadius === r.value
+                        ? "bg-foreground text-background border-foreground"
+                        : "bg-muted text-muted-foreground border-border hover:text-foreground"
+                    }`}
+                    style={{ borderRadius: r.value }}
+                  >
+                    {r.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Position */}
+            <div className="space-y-2">
+              <p className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider">Position</p>
+              <div className="flex gap-1.5">
+                {(["bottom-right", "bottom-left"] as const).map((pos) => (
+                  <button
+                    key={pos}
+                    onClick={() => setWidgetPosition(pos)}
+                    className={`px-3 h-7 text-[12px] font-medium rounded-md border transition-all ${
+                      widgetPosition === pos
+                        ? "bg-foreground text-background border-foreground"
+                        : "bg-muted text-muted-foreground border-border hover:text-foreground"
+                    }`}
+                  >
+                    {pos === "bottom-right" ? "↘ Right" : "↙ Left"}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Live browser preview */}
+          <div className="space-y-2 shrink-0">
+            <p className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider">Preview</p>
+            <div className="w-44 h-28 bg-muted rounded-xl overflow-hidden border border-border relative">
+              {/* Browser chrome */}
+              <div className="h-6 bg-background border-b border-border flex items-center gap-1.5 px-2.5">
+                <span className="w-2 h-2 rounded-full bg-red-400/70" />
+                <span className="w-2 h-2 rounded-full bg-amber-400/70" />
+                <span className="w-2 h-2 rounded-full bg-green-400/70" />
+                <div className="flex-1 h-3 bg-muted rounded-sm ml-1" />
+              </div>
+              {/* Page content lines */}
+              <div className="px-3 pt-3 space-y-1.5">
+                <div className="h-2 bg-border/60 rounded-sm w-3/4" />
+                <div className="h-2 bg-border/40 rounded-sm w-1/2" />
+                <div className="h-2 bg-border/40 rounded-sm w-2/3" />
+              </div>
+              {/* Widget bubble */}
+              <div
+                className={`absolute bottom-2.5 flex items-center justify-center shadow-md ${
+                  widgetPosition === "bottom-right" ? "right-2.5" : "left-2.5"
+                }`}
+                style={{
+                  width: 30,
+                  height: 30,
+                  background: widgetColor,
+                  borderRadius: widgetRadius,
+                  transition: "all 0.2s",
+                }}
+              >
+                <svg viewBox="0 0 24 24" fill="white" style={{ width: 14, height: 14 }}>
+                  <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* ── Code block ── */}
         <div
-          className="rounded-md p-4 font-mono text-[12px] leading-relaxed whitespace-pre overflow-x-auto relative group"
+          className="rounded-md p-4 font-mono text-[12px] leading-relaxed whitespace-pre overflow-x-auto relative"
           style={{ background: "#1A1A1A", color: "#E5E5E5" }}
->
+        >
           {embedCode}
           <button
-            onClick={() => copy(embedCode,"embed")}
-            className="absolute top-2 right-2 p-1.5 rounded text-xs text-background/70 hover:bg-white/10 hover:text-background transition-colors flex items-center gap-1"
->
+            onClick={() => copy(embedCode, "embed")}
+            className="absolute top-2 right-2 p-1.5 rounded text-xs text-white/50 hover:bg-white/10 hover:text-white transition-colors flex items-center gap-1"
+          >
             {copied === "embed" ? (
-              <>
-                <Check className="w-3 h-3" /> Copied
-              </>
+              <><Check className="w-3 h-3" /> Copied</>
             ) : (
-              <>
-                <Copy className="w-3 h-3" /> Copy
-              </>
+              <><Copy className="w-3 h-3" /> Copy</>
             )}
           </button>
         </div>
