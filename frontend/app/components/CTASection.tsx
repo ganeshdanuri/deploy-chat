@@ -1,16 +1,19 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { useReveal } from "@/lib/hooks/useReveal";
 
 export default function CTASection({
   onGetStarted,
 }: {
   onGetStarted: () => void;
 }) {
+  const sectionRef = useReveal<HTMLDivElement>();
   return (
     <section className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:max-w-full lg:px-12 pb-20 sm:pb-28">
       <div
-        className="relative overflow-hidden rounded-3xl px-6 py-14 sm:py-20 text-center"
+        ref={sectionRef}
+        className="relative overflow-hidden rounded-3xl px-6 py-14 sm:py-20 text-center reveal"
         style={{ background: "#1D2020", color: "#FFFFFF" }}
       >
         {/* Soft lime spotlight from below */}

@@ -86,7 +86,7 @@ function ChatWidget() {
           <span className="text-lg text-muted-foreground">×</span>
         </div>
 
-        <div className="px-4 py-5 flex flex-col gap-2.5 h-[320px] overflow-hidden">
+        <div className="px-4 py-5 flex flex-col gap-2.5 h-[420px] overflow-hidden">
           <div className="self-start max-w-[85%] bg-muted text-foreground px-3 py-2 rounded-xl rounded-tl-sm text-[13px] leading-relaxed">
             Hi! I&apos;m trained on your docs. Ask me anything.
           </div>
@@ -116,9 +116,9 @@ function ChatWidget() {
 
           {phase === "pause" && (
             <div className="self-start flex gap-1 px-3 py-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground" />
-              <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground opacity-60" />
-              <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground opacity-30" />
+              <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground animate-typing-dot" style={{ animationDelay: "0ms" }} />
+              <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground animate-typing-dot" style={{ animationDelay: "150ms" }} />
+              <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground animate-typing-dot" style={{ animationDelay: "300ms" }} />
             </div>
           )}
         </div>
@@ -166,45 +166,62 @@ export default function HeroSection({ onGetStarted }: { onGetStarted: () => void
       />
 
       <div className="relative h-full max-w-[1200px] mx-auto px-4 sm:px-6 lg:max-w-full lg:px-12 flex flex-col" style={{ minHeight: "calc(100vh - 64px)" }}>
-        <div className="flex-1 grid lg:grid-cols-[1.1fr_1fr] gap-10 lg:gap-14 items-center py-12 sm:py-16">
-          <div>
-            <div className="announce-pill mb-6">
+        <div className="flex-1 grid lg:grid-cols-[1.1fr_1fr] gap-10 lg:gap-14 items-center py-16 sm:py-20">
+          <div className="flex flex-col gap-0">
+            {/* announce pill */}
+            <div
+              className="announce-pill mb-6 w-fit animate-fade-in-up"
+              style={{ opacity: 0, animationDelay: "60ms" }}
+            >
               <span className="tag">New</span>
               Open source · v2.0 released
             </div>
 
-            <h1 className="text-4xl sm:text-5xl lg:text-[64px] leading-[1.03] font-semibold tracking-[-0.03em] mb-5">
+            <h1
+              className="text-4xl sm:text-5xl lg:text-[64px] leading-[1.03] font-semibold tracking-[-0.03em] mb-5 animate-fade-in-up"
+              style={{ opacity: 0, animationDelay: "160ms" }}
+            >
               Ship an{" "}
               <span className="hl-marker">AI agent</span>
               <br />
               trained on your data.
             </h1>
 
-            <p className="text-base sm:text-lg text-muted-foreground max-w-xl leading-relaxed mb-6">
+            <p
+              className="text-base sm:text-lg text-muted-foreground max-w-xl leading-relaxed mb-8 animate-fade-in-up"
+              style={{ opacity: 0, animationDelay: "260ms" }}
+            >
               Train an AI agent on your content, customize the look, and embed a
               production-grade chatbot on your site with a single line of code.
             </p>
 
             {/* Feature highlights */}
-            <div className="flex flex-col gap-3 mb-8">
+            <div className="flex flex-col gap-4 mb-10">
               {[
                 {
                   icon: <FolderOpen size={16} />,
                   title: "Train on your knowledge",
                   desc: "Feed it your docs, PDFs, Notion pages, websites, and APIs — your agent learns your business inside out.",
+                  delay: "340ms",
                 },
                 {
                   icon: <Paintbrush size={16} />,
                   title: "Customize the look",
                   desc: "Match your brand — colors, avatar, name, and welcome message. No design skills needed.",
+                  delay: "420ms",
                 },
                 {
                   icon: <Code2 size={16} />,
                   title: "Embed with one line",
                   desc: "Drop a single script tag and your AI chatbot is live on any website or app.",
+                  delay: "500ms",
                 },
               ].map((f) => (
-                <div key={f.title} className="flex items-start gap-3">
+                <div
+                  key={f.title}
+                  className="flex items-start gap-3 animate-fade-in-up"
+                  style={{ opacity: 0, animationDelay: f.delay }}
+                >
                   <span className="mt-0.5 w-8 h-8 rounded-lg bg-muted flex items-center justify-center text-muted-foreground shrink-0" aria-hidden="true">
                     {f.icon}
                   </span>
@@ -216,7 +233,10 @@ export default function HeroSection({ onGetStarted }: { onGetStarted: () => void
               ))}
             </div>
 
-            <div className="flex flex-wrap gap-2.5 mb-6">
+            <div
+              className="flex flex-wrap gap-2.5 mb-8 animate-fade-in-up"
+              style={{ opacity: 0, animationDelay: "580ms" }}
+            >
               <Button size="lg" onClick={onGetStarted} className="btn-pill">
                 Start building →
               </Button>
@@ -225,36 +245,21 @@ export default function HeroSection({ onGetStarted }: { onGetStarted: () => void
               </Button>
             </div>
 
-            <div className="flex flex-wrap gap-x-7 gap-y-2 text-[13px] text-muted-foreground">
+            <div
+              className="flex flex-wrap gap-x-7 gap-y-2 text-[13px] text-muted-foreground animate-fade-in-up"
+              style={{ opacity: 0, animationDelay: "660ms" }}
+            >
               <span>✓  No credit card</span>
               <span>✓  GDPR compliant</span>
               <span>✓  SOC 2 ready</span>
             </div>
           </div>
 
-          <div>
+          <div
+            className="animate-fade-in-up"
+            style={{ opacity: 0, animationDelay: "220ms" }}
+          >
             <ChatWidget />
-          </div>
-        </div>
-
-        {/* Integrations strip — pinned to bottom */}
-        <div className="pb-8 pt-4 border-t border-border flex flex-col sm:flex-row items-start sm:items-center gap-4">
-          <span className="text-[12px] text-muted-foreground whitespace-nowrap shrink-0 font-medium">Works with</span>
-          <div className="flex flex-wrap gap-2">
-            {[
-              "Notion", "Google Drive", "Confluence", "Zendesk",
-              "Intercom", "Slack", "GitHub", "Postgres", "REST API",
-            ].map((name) => (
-              <span
-                key={name}
-                className="text-[12px] px-3 py-1 rounded-full border border-border bg-background text-foreground font-medium"
-              >
-                {name}
-              </span>
-            ))}
-            <span className="text-[12px] px-3 py-1 rounded-full border border-border bg-background text-muted-foreground">
-              + more
-            </span>
           </div>
         </div>
 

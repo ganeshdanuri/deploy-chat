@@ -15,28 +15,38 @@ const LINKS = [
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
+  const [hidden, setHidden] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY> 8);
+    let lastY = window.scrollY;
+    const onScroll = () => {
+      const y = window.scrollY;
+      setScrolled(y > 8);
+      // Hide when scrolling down past 80px, reveal when scrolling up
+      if (y > 80) {
+        setHidden(y > lastY);
+      } else {
+        setHidden(false);
+      }
+      lastY = y;
+    };
     onScroll();
-    window.addEventListener("scroll", onScroll);
+    window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   return (
     <header
-      className={`sticky top-0 z-40 w-full transition-colors border-b border-border ${
-        scrolled
-          ? "bg-background/80 backdrop-blur-md"
-          : "bg-background"
-      }`}
+      className={`sticky top-0 z-40 w-full border-b border-border transition-[transform,background-color,backdrop-filter] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+        scrolled ? "bg-background/80 backdrop-blur-md" : "bg-background"
+      } ${hidden ? "-translate-y-full" : "translate-y-0"}`}
 >
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:max-w-full lg:px-6 h-16 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2.5">
           <Logo className="h-7 w-auto" />
           <span className="text-[15px] font-medium tracking-tight">
-            Deploy Chat
+            Deploy <span className="hl-marker hl-marker--tight">Chat</span>
           </span>
         </Link>
 

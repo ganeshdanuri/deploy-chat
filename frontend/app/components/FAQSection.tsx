@@ -3,13 +3,15 @@
 import { useState } from "react";
 import { Plus, Minus } from "lucide-react";
 import { FAQS } from "@/lib/constants";
+import { useReveal } from "@/lib/hooks/useReveal";
 
 export default function FAQSection() {
   const [openIdx, setOpenIdx] = useState<number | null>(0);
+  const sectionRef = useReveal<HTMLDivElement>();
 
   return (
     <section className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:max-w-full lg:px-12 py-20 sm:py-28">
-      <div className="grid lg:grid-cols-[1fr_1.5fr] gap-10 lg:gap-16">
+      <div ref={sectionRef} className="grid lg:grid-cols-[1fr_1.5fr] gap-10 lg:gap-16 reveal">
         <div>
           <span className="eyebrow-pill">FAQ</span>
           <h2 className="mt-6 text-3xl sm:text-4xl lg:text-[48px] leading-[1.08] font-semibold tracking-[-0.03em] mb-4">

@@ -2,9 +2,10 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlmodel import Session, select
 from app.core.db import get_session
 from app.core.security import create_access_token, create_refresh_token, decode_token, verify_password, get_password_hash
-from app.schemas.models import User, UserCreate, UserLogin, GoogleLogin, EmailVerification
+from app.schemas.models import User, UserCreate, UserLogin, GoogleLogin, GitHubLogin, EmailVerification
 from datetime import datetime, timedelta, timezone
 import random
+import httpx
 from pydantic import BaseModel
 from app.core.emails import send_otp_email
 from app.core.billing import get_user_plan, assign_free_tier
@@ -14,6 +15,8 @@ import os
 from app.core.endpoints import Endpoints
 
 GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
+GITHUB_CLIENT_ID = os.getenv("GITHUB_CLIENT_ID")
+GITHUB_CLIENT_SECRET = os.getenv("GITHUB_CLIENT_SECRET")
 
 router = APIRouter(prefix=Endpoints.AUTH_PREFIX)
 
@@ -170,12 +173,25 @@ def login(login_data: UserLogin, session: Session = Depends(get_session)):
 @router.post(Endpoints.AUTH_GOOGLE)
 def google_login(data: GoogleLogin, session: Session = Depends(get_session)):
     try:
-        # 1. Verify Google Token
-        idinfo = id_token.verify_oauth2_token(data.credential, requests.Request(), GOOGLE_CLIENT_ID)
-        
-        email = idinfo['email']
-        google_id = idinfo['sub']
-        picture = idinfo.get('picture')
+        # Support both id_token (credential) and access_token flows
+        if data.credential.startswith("ya29.") or len(data.credential) < 100:
+            # Looks like an access_token — verify via userinfo endpoint
+            resp = httpx.get(
+                "https://www.googleapis.com/oauth2/v3/userinfo",
+                headers={"Authorization": f"Bearer {data.credential}"},
+            )
+            if resp.status_code != 200:
+                raise HTTPException(status_code=400, detail="Invalid Google access token")
+            idinfo = resp.json()
+            email = idinfo["email"]
+            google_id = idinfo["sub"]
+            picture = idinfo.get("picture")
+        else:
+            # id_token — verify with google-auth library
+            idinfo = id_token.verify_oauth2_token(data.credential, requests.Request(), GOOGLE_CLIENT_ID)
+            email = idinfo["email"]
+            google_id = idinfo["sub"]
+            picture = idinfo.get("picture")
         
         # 2. Check if user exists by email or google_id
         statement = select(User).where((User.email == email) | (User.google_id == google_id))
@@ -270,3 +286,88 @@ def refresh_token(data: RefreshRequest, session: Session = Depends(get_session))
         "token_type": "bearer"
     }
 
+
+@router.post(Endpoints.AUTH_GITHUB)
+def github_login(data: GitHubLogin, session: Session = Depends(get_session)):
+    # 1. Exchange code for access token
+    token_resp = httpx.post(
+        "https://github.com/login/oauth/access_token",
+        json={
+            "client_id": GITHUB_CLIENT_ID,
+            "client_secret": GITHUB_CLIENT_SECRET,
+            "code": data.code,
+        },
+        headers={"Accept": "application/json"},
+    )
+    token_data = token_resp.json()
+    gh_access_token = token_data.get("access_token")
+    if not gh_access_token:
+        raise HTTPException(status_code=400, detail="GitHub OAuth failed: could not exchange code")
+
+    # 2. Fetch GitHub user profile
+    user_resp = httpx.get(
+        "https://api.github.com/user",
+        headers={"Authorization": f"Bearer {gh_access_token}", "Accept": "application/json"},
+    )
+    gh_user = user_resp.json()
+    github_id = str(gh_user.get("id"))
+    picture = gh_user.get("avatar_url")
+    login_name = gh_user.get("login", "")
+
+    # 3. Fetch primary verified email
+    emails_resp = httpx.get(
+        "https://api.github.com/user/emails",
+        headers={"Authorization": f"Bearer {gh_access_token}", "Accept": "application/json"},
+    )
+    emails = emails_resp.json()
+    email = next(
+        (e["email"] for e in emails if e.get("primary") and e.get("verified")),
+        None,
+    )
+    if not email:
+        raise HTTPException(status_code=400, detail="No verified email found on GitHub account")
+
+    # 4. Find or create user
+    statement = select(User).where((User.email == email) | (User.github_id == github_id))
+    user = session.exec(statement).first()
+
+    if not user:
+        username = login_name or email.split("@")[0]
+        existing = session.exec(select(User).where(User.username == username)).first()
+        if existing:
+            username = f"{username}_{random.randint(100, 999)}"
+
+        user = User(
+            username=username,
+            email=email,
+            github_id=github_id,
+            profile_image=picture,
+            is_email_verified=True,
+        )
+        assign_free_tier(user.id, session)
+        session.add(user)
+        session.commit()
+        session.refresh(user)
+    else:
+        user.github_id = github_id
+        if picture:
+            user.profile_image = picture
+        user.is_email_verified = True
+        session.add(user)
+        session.commit()
+        session.refresh(user)
+
+    # 5. Return tokens
+    plan_name, _ = get_user_plan(user.id, session)
+    plan_name = plan_name.lower()
+    access_token = create_access_token(subject=user.id, plan=plan_name)
+    refresh_token = create_refresh_token(subject=user.id)
+    return {
+        "access_token": access_token,
+        "refresh_token": refresh_token,
+        "token_type": "bearer",
+        "username": user.username,
+        "email": user.email,
+        "current_plan": plan_name,
+        "profile_image": user.profile_image,
+    }

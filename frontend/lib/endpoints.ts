@@ -2,6 +2,7 @@ export const ENDPOINTS = {
     AUTH: {
         LOGIN: '/api/auth/login',
         GOOGLE: '/api/auth/google',
+        GITHUB: '/api/auth/github',
         REGISTER: '/api/auth/register',
         VERIFY_OTP: '/api/auth/verify-otp',
         REFRESH: '/api/auth/refresh',

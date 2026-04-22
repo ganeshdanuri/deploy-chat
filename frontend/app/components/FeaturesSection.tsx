@@ -1,9 +1,14 @@
 "use client";
 
+import { useReveal } from "@/lib/hooks/useReveal";
+
 export default function FeaturesSection() {
+  const headerRef = useReveal<HTMLDivElement>();
+  const gridRef = useReveal<HTMLDivElement>();
+
   return (
     <section id="features" className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:max-w-full lg:px-12 py-20 sm:py-28">
-      <div className="text-center mb-14">
+      <div ref={headerRef} className="text-center mb-14 reveal">
         <span className="eyebrow-pill">The platform</span>
         <h2 className="mt-6 text-3xl sm:text-4xl lg:text-[48px] leading-[1.08] font-semibold tracking-[-0.03em] mb-4 max-w-2xl mx-auto">
           Everything you need to run a{" "}
@@ -15,7 +20,7 @@ export default function FeaturesSection() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-6 gap-4">
+      <div ref={gridRef} className="grid grid-cols-1 md:grid-cols-6 gap-4 reveal">
         {/* Ingest — wide left card */}
         <div className="md:col-span-4 bg-background border border-border rounded-2xl p-7 flex flex-col gap-5 min-h-[320px]">
           <div>

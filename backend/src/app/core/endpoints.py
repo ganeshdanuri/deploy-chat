@@ -9,6 +9,7 @@ class Endpoints:
     AUTH_VERIFY_OTP = "/verify-otp"
     AUTH_LOGIN = "/login"
     AUTH_GOOGLE = "/google"
+    AUTH_GITHUB = "/github"
     AUTH_REFRESH = "/refresh"
 
     # User Endpoints

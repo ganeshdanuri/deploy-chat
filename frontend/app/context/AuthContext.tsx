@@ -13,6 +13,7 @@ interface AuthContextType {
   user: { username: string; email: string; plan: string } | null;
   login: (email: string, password: string) => Promise<boolean>;
   continueWithGoogle: (credential: string) => Promise<boolean>;
+  continueWithGithub: (code: string) => Promise<boolean>;
   register: (username: string, email: string, password: string, plan?: string) => Promise<{ success: boolean; email?: string }>;
   verifyOTP: (email: string, otpCode: string) => Promise<boolean>;
   logout: () => void;
@@ -104,6 +105,34 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const continueWithGithub = async (code: string): Promise<boolean> => {
+    try {
+      const response = await api.post(ENDPOINTS.AUTH.GITHUB, { code });
+      if (response.data.access_token) {
+        const userData = {
+          username: response.data.username,
+          email: response.data.email || '',
+          plan: response.data.current_plan || 'free',
+          profile_image: response.data.profile_image,
+        };
+        setUser(userData);
+        setIsAuthenticated(true);
+        localStorage.setItem("user", JSON.stringify(userData));
+        localStorage.setItem("access_token", response.data.access_token);
+        if (response.data.refresh_token) {
+          localStorage.setItem("refresh_token", response.data.refresh_token);
+        }
+        showToast.success(`Welcome, ${userData.username}!`);
+        return true;
+      }
+      return false;
+    } catch (error: unknown) {
+      const err = error as { response?: { data?: { detail?: string } }; message?: string };
+      showToast.error(err.response?.data?.detail || err.message || "GitHub login failed.");
+      return false;
+    }
+  };
+
   const register = async (username: string, email: string, password: string, plan: string ="free") => {
     try {
       const response = await api.post(ENDPOINTS.AUTH.REGISTER, { username, email, password, plan });
@@ -159,7 +188,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, isLoading, user, login, continueWithGoogle, register, verifyOTP, logout }}>
+    <AuthContext.Provider value={{ isAuthenticated, isLoading, user, login, continueWithGoogle, continueWithGithub, register, verifyOTP, logout }}>
       {children}
     </AuthContext.Provider>
   );

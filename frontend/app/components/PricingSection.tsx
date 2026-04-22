@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { useReveal } from "@/lib/hooks/useReveal";
 
 type Tier = {
   name: string;
@@ -75,12 +76,14 @@ const TIERS: Tier[] = [
 ];
 
 export default function PricingSection() {
+  const headerRef = useReveal<HTMLDivElement>();
+  const gridRef = useReveal<HTMLDivElement>();
   return (
     <section
       id="pricing"
       className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:max-w-full lg:px-12 py-20 sm:py-28"
 >
-      <div className="text-center mb-14">
+      <div ref={headerRef} className="text-center mb-14 reveal">
         <span className="eyebrow-pill">Pricing</span>
         <h2 className="mt-6 text-3xl sm:text-4xl lg:text-[48px] leading-[1.08] font-semibold tracking-[-0.03em] mb-4">
           Predictable pricing.{" "}
@@ -91,7 +94,7 @@ export default function PricingSection() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+      <div ref={gridRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 reveal">
         {TIERS.map((tier) => (
           <div
             key={tier.name}

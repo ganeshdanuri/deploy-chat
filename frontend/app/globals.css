@@ -296,6 +296,55 @@ input:disabled {
   border-radius: 6px;
 }
 
+/* ── Scroll-reveal (Intersection Observer driven) ── */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition:
+    opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-right {
+  opacity: 0;
+  transform: translateX(28px);
+  transition:
+    opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.reveal-right.is-visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Stagger helpers — add to children via inline animationDelay */
+.reveal-group > * {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.reveal-group.is-visible > * {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Typing-dots animation (ChatWidget thinking state) ── */
+
+@keyframes typing-dot {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+  30% { transform: translateY(-4px); opacity: 1; }
+}
+.animate-typing-dot {
+  animation: typing-dot 1.2s ease-in-out infinite;
+}
+
 /* ── Reduced motion ── */
 
 @media (prefers-reduced-motion: reduce) {
@@ -305,8 +354,18 @@ input:disabled {
   .animate-scale-in,
   .animate-slide-in-right,
   .animate-slide-in-bottom,
-  .animate-shimmer {
+  .animate-shimmer,
+  .animate-typing-dot,
+  .animate-float {
     animation: none !important;
+  }
+
+  .reveal,
+  .reveal-right,
+  .reveal-group > * {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
   }
 }
 
@@ -406,6 +465,18 @@ input:disabled {
   border-radius: 9999px !important;
   padding-left: 22px !important;
   padding-right: 22px !important;
+  transition: transform 0.15s cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 0.15s cubic-bezier(0.22, 1, 0.36, 1),
+              background-color 0.15s ease,
+              opacity 0.15s ease !important;
+}
+.btn-pill:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(29,32,32,0.14);
+}
+.btn-pill:active {
+  transform: translateY(0) scale(0.97);
+  box-shadow: none;
 }
 
 /* ---- Floating "soft" integration tile used in the integrations grid ---- */

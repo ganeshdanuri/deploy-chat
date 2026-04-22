@@ -35,6 +35,7 @@ class User(UserBase, table=True):
     id: UUID = Field(default_factory=uuid4, primary_key=True)
     password_hash: Optional[str] = Field(default=None)
     google_id: Optional[str] = Field(default=None, unique=True, index=True)
+    github_id: Optional[str] = Field(default=None, unique=True, index=True)
     profile_image: Optional[str] = Field(default=None)
     is_email_verified: bool = Field(default=False)
     created_at: datetime = Field(default_factory=datetime.utcnow)
@@ -53,6 +54,9 @@ class UserLogin(SQLModel):
 
 class GoogleLogin(SQLModel):
     credential: str
+
+class GitHubLogin(SQLModel):
+    code: str
 
 class UserRead(UserBase):
     id: UUID

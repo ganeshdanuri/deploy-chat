@@ -2,89 +2,71 @@
 
 import {
   SiNotion,
-  SiSlack,
-  SiDropbox,
-  SiZendesk,
-  SiIntercom,
-  SiGithub,
-  SiHubspot,
-  SiSalesforce,
-  SiConfluence,
   SiGoogledrive,
-  SiWordpress,
+  SiConfluence,
+  SiGithub,
+  SiDropbox,
   SiPostgresql,
-  SiShopify,
+  SiWordpress,
+  SiGitlab,
+  SiAirtable,
+  SiGooglesheets,
 } from "react-icons/si";
-import { FaMicrosoft } from "react-icons/fa";
 import { ArrowUpRight } from "lucide-react";
 import type { ComponentType, CSSProperties } from "react";
+import { useReveal } from "@/lib/hooks/useReveal";
 
 type Integration = {
   name: string;
   Icon: ComponentType<{ size?: number; color?: string }>;
   color: string;
-  /** column (1–7) */
   col: number;
-  /** vertical offset in px — creates the staggered constellation feel */
   offset: number;
-  /** animation delay for the gentle float */
   delay: string;
-  /** if true, render the soft tile frame; else render the bare icon */
   framed: boolean;
 };
 
-/** Hand-tuned layout to match the screenshot's asymmetric constellation.
- *  Columns 1–7 left→right; offset nudges each tile up or down. */
-const INTEGRATIONS: Integration[] = [
-  // col 1
-  { name: "Zendesk",      Icon: SiZendesk,     color: "#03363D", col: 1, offset: 90,  delay: "0s",   framed: false },
-  // col 2
-  { name: "Google Drive", Icon: SiGoogledrive, color: "#4285F4", col: 2, offset: 20,  delay: "0.4s", framed: true  },
-  { name: "Dropbox",      Icon: SiDropbox,     color: "#0061FF", col: 2, offset: 160, delay: "0.9s", framed: true  },
-  // col 3
-  { name: "Notion",       Icon: SiNotion,      color: "#000000", col: 3, offset: 0,   delay: "0.2s", framed: true  },
-  { name: "Confluence",   Icon: SiConfluence,  color: "#172B4D", col: 3, offset: 120, delay: "0.7s", framed: false },
-  { name: "GitHub",       Icon: SiGithub,      color: "#181717", col: 3, offset: 240, delay: "0.3s", framed: false },
-  // col 4
-  { name: "Slack",        Icon: SiSlack,       color: "#4A154B", col: 4, offset: 60,  delay: "0.5s", framed: true  },
-  { name: "Salesforce",   Icon: SiSalesforce,  color: "#00A1E0", col: 4, offset: 200, delay: "0.1s", framed: false },
-  // col 5
-  { name: "HubSpot",      Icon: SiHubspot,     color: "#48B57B", col: 5, offset: 0,   delay: "0.6s", framed: true  },
-  { name: "Shopify",      Icon: SiShopify,     color: "#7AB55C", col: 5, offset: 140, delay: "0.8s", framed: false },
-  // col 6
-  { name: "Intercom",     Icon: SiIntercom,    color: "#1F8DED", col: 6, offset: 40,  delay: "0.3s", framed: true  },
-  { name: "WordPress",    Icon: SiWordpress,   color: "#21759B", col: 6, offset: 180, delay: "0.5s", framed: false },
-  // col 7
-  { name: "PostgreSQL",   Icon: SiPostgresql,  color: "#4169E1", col: 7, offset: 80,  delay: "0.2s", framed: true  },
-  { name: "SharePoint",   Icon: FaMicrosoft,   color: "#0078D4", col: 7, offset: 220, delay: "0.7s", framed: false },
+const UNIQUE_INTEGRATIONS: Integration[] = [
+  { name: "Notion",         Icon: SiNotion,       color: "#000000", col: 1, offset: 60,  delay: "0s",   framed: true  },
+  { name: "Confluence",     Icon: SiConfluence,   color: "#172B4D", col: 1, offset: 220, delay: "0.6s", framed: false },
+  { name: "Google Drive",   Icon: SiGoogledrive,  color: "#4285F4", col: 2, offset: 20,  delay: "0.3s", framed: true  },
+  { name: "Dropbox",        Icon: SiDropbox,      color: "#0061FF", col: 2, offset: 190, delay: "0.8s", framed: true  },
+  { name: "GitHub",         Icon: SiGithub,       color: "#181717", col: 3, offset: 10,  delay: "0.5s", framed: true  },
+  { name: "GitLab",         Icon: SiGitlab,       color: "#FC6D26", col: 3, offset: 170, delay: "0.1s", framed: false },
+  { name: "PostgreSQL",     Icon: SiPostgresql,   color: "#4169E1", col: 4, offset: 60,  delay: "0.2s", framed: true  },
+  { name: "Google Sheets",  Icon: SiGooglesheets, color: "#34A853", col: 4, offset: 230, delay: "0.7s", framed: false },
+  { name: "Airtable",       Icon: SiAirtable,     color: "#18BFFF", col: 5, offset: 20,  delay: "0.4s", framed: true  },
+  { name: "WordPress",      Icon: SiWordpress,    color: "#21759B", col: 5, offset: 200, delay: "0.9s", framed: false },
 ];
 
 export default function ConnectorsSection() {
+  const sectionRef = useReveal<HTMLElement>();
   return (
     <section
+      ref={sectionRef}
       id="integrations"
-      className="relative max-w-[1200px] mx-auto px-4 sm:px-6 lg:max-w-full lg:px-12 py-20 sm:py-28 overflow-hidden"
+      className="relative max-w-[1200px] mx-auto px-4 sm:px-6 lg:max-w-full lg:px-12 py-20 sm:py-28 overflow-hidden reveal"
     >
       {/* Section eyebrow */}
       <div className="text-center">
-        <span className="eyebrow-pill">Apps &amp; Integrations</span>
+        <span className="eyebrow-pill">Knowledge Sources</span>
       </div>
 
       {/* Headline */}
       <h2 className="text-center text-3xl sm:text-5xl lg:text-[56px] leading-[1.05] font-semibold tracking-[-0.03em] mt-6 mb-4 max-w-3xl mx-auto">
-        Seamless integrations,
+        Train on any
         <br className="hidden sm:block" />
-        <span className="hl-marker">better workflows</span>
+        <span className="hl-marker">knowledge source</span>
       </h2>
 
       {/* ── Staggered logo constellation (desktop) ── */}
-      <div className="relative mt-14 sm:mt-20 mx-auto max-w-[1080px] hidden md:block">
+      <div className="relative mt-14 sm:mt-20 hidden md:block px-16 lg:px-24">
         <LogoConstellation />
       </div>
 
-      {/* Mobile fallback: simple 4-col grid so it still looks intentional */}
+      {/* Mobile fallback */}
       <div className="md:hidden mt-12 grid grid-cols-4 gap-3 mx-auto max-w-sm">
-        {INTEGRATIONS.slice(0, 12).map(({ name, Icon, color }) => (
+        {UNIQUE_INTEGRATIONS.slice(0, 8).map(({ name, Icon, color }) => (
           <div
             key={name}
             className="integration-tile !w-full !h-16 !rounded-2xl"
@@ -98,8 +80,8 @@ export default function ConnectorsSection() {
 
       {/* Supporting copy */}
       <p className="mt-12 sm:mt-16 text-center text-base sm:text-[17px] text-muted-foreground max-w-xl mx-auto leading-relaxed">
-        Connect your knowledge sources in one click — docs, wikis, CRMs,
-        databases, and more — and let your AI stay always up to date.
+        Upload PDFs, sync wikis, crawl websites, or connect databases —
+        your agent re-indexes automatically as content changes.
       </p>
 
       {/* Explore link */}
@@ -108,7 +90,7 @@ export default function ConnectorsSection() {
           href="#"
           className="inline-flex items-center gap-1.5 text-[15px] font-medium text-foreground hover:opacity-70 transition-opacity"
         >
-          Explore all integrations
+          See all supported sources
           <ArrowUpRight className="w-4 h-4" strokeWidth={2} />
         </a>
       </div>
@@ -119,14 +101,14 @@ export default function ConnectorsSection() {
 /* ──────────────────────────────────────────────────────────────────────── */
 
 function LogoConstellation() {
-  const COLS = 7;
-  const CANVAS_H = 360;
+  const COLS = 5;
+  const CANVAS_H = 380;
 
   return (
     <div
-      className="relative mx-auto"
+      className="relative"
       style={{ height: CANVAS_H }}
-      aria-label="Integration partners"
+      aria-label="Supported knowledge sources"
     >
       <div
         className="absolute inset-0 grid"
@@ -134,7 +116,7 @@ function LogoConstellation() {
       >
         {Array.from({ length: COLS }, (_, i) => {
           const colIdx = i + 1;
-          const tiles = INTEGRATIONS.filter((t) => t.col === colIdx);
+          const tiles = UNIQUE_INTEGRATIONS.filter((t) => t.col === colIdx);
           return (
             <div key={colIdx} className="relative">
               {tiles.map(({ name, Icon, color, offset, delay, framed }) => {
@@ -157,8 +139,6 @@ function LogoConstellation() {
                     </div>
                   );
                 }
-                // Bare icon (no tile frame) — matches the screenshot's
-                // organic mix of framed + free-floating icons.
                 return (
                   <div
                     key={name}
@@ -176,7 +156,7 @@ function LogoConstellation() {
         })}
       </div>
 
-      {/* Soft radial spotlight behind the grid for depth */}
+      {/* Soft radial spotlight */}
       <div
         aria-hidden
         className="absolute inset-0 -z-10 pointer-events-none"
