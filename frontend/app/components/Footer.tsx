@@ -1,101 +1,94 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import { FaTwitter, FaGithub, FaLinkedin } from "react-icons/fa";
+import Link from "next/link";
 import Logo from "./Logo";
-import { FOOTER_LINKS as footerLinks, SOCIAL_LINKS, BRAND } from "../../lib/constants";
+
+const COLUMNS = [
+  {
+    title: "Product",
+    links: [
+      { label: "Features", href: "#features" },
+      { label: "Pricing", href: "#pricing" },
+      { label: "Changelog", href: "#" },
+      { label: "Docs", href: "#" },
+    ],
+  },
+  {
+    title: "Resources",
+    links: [
+      { label: "Help Center", href: "#" },
+      { label: "API Reference", href: "#" },
+      { label: "Community", href: "https://x.com/deploychat" },
+      { label: "Status", href: "#" },
+    ],
+  },
+  {
+    title: "Company",
+    links: [
+      { label: "About", href: "#" },
+      { label: "Privacy", href: "#" },
+      { label: "Terms", href: "#" },
+      { label: "Contact", href: "mailto:sales@deploymind.com" },
+    ],
+  },
+];
 
 export default function Footer() {
-    return (
-        <footer className="bg-white border-t border-border">
-            <div className="max-w-6xl mx-auto px-6 lg:px-10 py-10 lg:py-14">
-                <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-12 lg:gap-8">
-                    {/* Logo and Tagline */}
-                    <div className="col-span-2 space-y-6">
-                        <div className="flex items-center gap-2">
-                            <Logo className="h-9 w-auto" />
-                            <span className="text-xl font-bold tracking-tight text-foreground">
-                                {BRAND.first} <span className="gradient-text">{BRAND.second}</span>
-                            </span>
-                        </div>
-                        <p className="max-w-xs text-sm leading-relaxed text-muted-foreground">
-                            Enterprise-grade AI chatbots for modern teams.
-                            Automate your support and delight your customers in minutes.
-                        </p>
-                        <div className="flex gap-3">
-                            {[
-                                { Icon: FaTwitter, href: SOCIAL_LINKS.twitter },
-                                { Icon: FaGithub, href: SOCIAL_LINKS.github },
-                                { Icon: FaLinkedin, href: SOCIAL_LINKS.linkedin }
-                            ].map((social, i) => (
-                                <a
-                                    key={i}
-                                    href={social.href}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="w-9 h-9 bg-muted rounded-xl flex items-center justify-center transition-all duration-200 hover:bg-primary/10 text-muted-foreground hover:text-primary hover:-translate-y-0.5"
-                                >
-                                    <social.Icon className="text-base" />
-                                </a>
-                            ))}
-                        </div>
-                    </div>
+  return (
+    <footer className="border-t border-border bg-background">
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:max-w-full lg:px-12 py-14">
+        <div className="grid grid-cols-2 md:grid-cols-[1.5fr_1fr_1fr_1fr] gap-10">
+          <div className="col-span-2 md:col-span-1">
+            <Link href="/" className="inline-flex items-center gap-2.5 mb-4">
+              <Logo className="h-7 w-auto" />
+              <span className="text-[15px] font-medium tracking-tight">
+                Deploy Chat
+              </span>
+            </Link>
+            <p className="text-sm text-muted-foreground max-w-xs leading-relaxed">
+              Enterprise-grade AI agents for modern teams. Automate support
+              and delight customers in minutes.
+            </p>
+          </div>
 
-                    {/* Links */}
-                    {footerLinks.map((column) => (
-                        <div key={column.title} className="col-span-1 space-y-5">
-                            <h4 className="text-xs font-semibold uppercase tracking-widest text-foreground">
-                                {column.title}
-                            </h4>
-                            <ul className="space-y-3">
-                                {column.links.map((link) => (
-                                    <li key={link.name}>
-                                        <a
-                                            href={link.href}
-                                            className="text-sm transition-colors duration-200 hover:text-primary text-muted-foreground"
-                                        >
-                                            {link.name}
-                                        </a>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-                    ))}
-
-                    {/* Newsletter */}
-                    <div className="col-span-2 lg:col-span-2 space-y-5">
-                        <h4 className="text-xs font-semibold uppercase tracking-widest text-foreground">
-                            Stay Updated
-                        </h4>
-                        <p className="text-sm text-muted-foreground">
-                            Get the latest product updates and AI tips.
-                        </p>
-                        <div className="flex gap-2">
-                            <input
-                                type="email"
-                                placeholder="Email address"
-                                className="text-sm flex-1 px-4 py-2.5 bg-muted rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:ring-offset-2 text-foreground placeholder-muted-foreground border border-border"
-                            />
-                            <button
-                                className="text-sm font-medium px-6 py-2.5 text-white rounded-xl gradient-bg transition-all duration-200 hover:brightness-110 hover:-translate-y-0.5 active:scale-[0.98]"
-                            >
-                                Join
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="mt-10 pt-6 border-t border-border flex flex-col md:flex-row justify-between items-center gap-6">
-                    <p className="text-xs text-muted-foreground">
-                        © {new Date().getFullYear()} Deploy Chat Inc. All rights reserved.
-                    </p>
-                    <div className="flex gap-8">
-                        <a href="#" className="text-xs transition-colors hover:text-primary text-muted-foreground">Status</a>
-                        <a href="#" className="text-xs transition-colors hover:text-primary text-muted-foreground">Security</a>
-                        <a href="#" className="text-xs transition-colors hover:text-primary text-muted-foreground">GDPR</a>
-                    </div>
-                </div>
+          {COLUMNS.map((col) => (
+            <div key={col.title}>
+              <div className="text-[11px] font-medium uppercase tracking-[0.1em] text-muted-foreground mb-4">
+                {col.title}
+              </div>
+              <ul className="flex flex-col gap-2.5">
+                {col.links.map((link) => (
+                  <li key={link.label}>
+                    <Link
+                      href={link.href}
+                      className="text-sm text-foreground hover:text-muted-foreground transition-colors"
+>
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
             </div>
-        </footer>
-    );
+          ))}
+        </div>
+
+        <div className="mt-14 pt-6 border-t border-border flex flex-wrap justify-between items-center gap-3">
+          <span className="text-xs text-muted-foreground">
+            © 2026 Deploy Chat Inc. All rights reserved.
+          </span>
+          <div className="flex gap-5 text-xs text-muted-foreground">
+            <Link href="#" className="hover:text-foreground transition-colors">
+              Security
+            </Link>
+            <Link href="#" className="hover:text-foreground transition-colors">
+              GDPR
+            </Link>
+            <Link href="#" className="hover:text-foreground transition-colors">
+              Status
+            </Link>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
 }

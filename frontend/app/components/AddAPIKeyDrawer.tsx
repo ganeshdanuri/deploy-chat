@@ -1,7 +1,9 @@
 "use client";
+import { KeyRound } from "lucide-react";
+
 
 import { useState } from "react";
-import { HiKey } from "react-icons/hi";
+
 import api from "@/lib/api";
 import { ENDPOINTS } from "@/lib/endpoints";
 import showToast from "@/lib/toast";
@@ -45,7 +47,7 @@ export default function AddAPIKeyDrawer({ isOpen, onClose, onSuccess }: AddAPIKe
             handleClose();
         } catch (err) {
             const error = err as { response?: { data?: { detail?: string } } };
-            showToast.error(error.response?.data?.detail || "Failed to add API key");
+            showToast.error(error.response?.data?.detail ||"Failed to add API key");
         } finally {
             setIsLoading(false);
         }
@@ -59,20 +61,20 @@ export default function AddAPIKeyDrawer({ isOpen, onClose, onSuccess }: AddAPIKe
 
     const footer = (
         <>
-            <Button
-                variant="outline-secondary"
-                onClick={handleClose}
-                className="h-10 px-6"
-            >
+            <button onClick={handleClose} className="text-[13px] font-medium text-muted-foreground hover:text-foreground transition-colors">
                 Cancel
-            </Button>
+            </button>
             <Button
-                variant="primary"
                 onClick={handleSubmit}
                 disabled={isLoading}
-                className="h-10 px-8"
+                className="rounded-xl"
             >
-                {isLoading ? "Processing..." : "Add Key"}
+                {isLoading ? (
+                    <span className="flex items-center gap-2">
+                        <span className="w-3.5 h-3.5 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                        Processing…
+                    </span>
+                ) : "Add key"}
             </Button>
         </>
     );
@@ -83,20 +85,20 @@ export default function AddAPIKeyDrawer({ isOpen, onClose, onSuccess }: AddAPIKe
             onClose={handleClose}
             title="Add Platform Key"
             subtitle="Connect your own model provider for higher limits."
-            icon={HiKey}
+            icon={KeyRound}
             footer={footer}
-        >
+>
             <div className="space-y-6 animate-fade-in">
                 <div className="space-y-2">
-                    <label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest ml-1">Provider</label>
+                    <label className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider ml-1">Provider</label>
                     <Select
                         value={provider}
                         onValueChange={setProvider}
-                    >
-                        <SelectTrigger className="border border-border bg-white h-11 transition-all focus:border-primary outline-none">
+>
+                        <SelectTrigger className="border border-border bg-background h-11 transition-all focus:border-primary outline-none">
                             <SelectValue placeholder="Select provider" />
                         </SelectTrigger>
-                        <SelectContent className="border border-border bg-white">
+                        <SelectContent className="border border-border bg-background">
                             {LLM_PROVIDERS.map((p) => (
                                 <SelectItem key={p.value} value={p.value}>
                                     {p.label}
@@ -107,7 +109,7 @@ export default function AddAPIKeyDrawer({ isOpen, onClose, onSuccess }: AddAPIKe
                 </div>
 
                 <div className="space-y-2">
-                    <label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest ml-1">API Key</label>
+                    <label className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider ml-1">API Key</label>
                     <Input
                         type="password"
                         placeholder="sk-..."

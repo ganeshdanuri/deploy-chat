@@ -142,6 +142,8 @@ class DatasetRead(DatasetBase):
     id: UUID
     created_at: datetime
     updated_at: datetime
+    document_ids: List[UUID] = []
+    document_count: int = 0
 
 # Chatbots
 class ChatbotDatasets(SQLModel, table=True):

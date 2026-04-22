@@ -69,7 +69,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       return false;
     } catch (error: unknown) {
       const err = error as { response?: { data?: { detail?: string } }; message?: string };
-      const errorMessage = err.response?.data?.detail || err.message || "Login failed. Please try again.";
+      const errorMessage = err.response?.data?.detail || err.message ||"Login failed. Please try again.";
       showToast.error(errorMessage);
       return false;
     }
@@ -98,13 +98,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       return false;
     } catch (error: unknown) {
       const err = error as { response?: { data?: { detail?: string } }; message?: string };
-      const errorMessage = err.response?.data?.detail || err.message || "Google login failed.";
+      const errorMessage = err.response?.data?.detail || err.message ||"Google login failed.";
       showToast.error(errorMessage);
       return false;
     }
   };
 
-  const register = async (username: string, email: string, password: string, plan: string = "free") => {
+  const register = async (username: string, email: string, password: string, plan: string ="free") => {
     try {
       const response = await api.post(ENDPOINTS.AUTH.REGISTER, { username, email, password, plan });
       if (response.data.message) {
@@ -114,7 +114,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       return { success: false };
     } catch (error: unknown) {
       const err = error as { response?: { data?: { detail?: string } }; message?: string };
-      const errorMessage = err.response?.data?.detail || err.message || "Registration failed. Please try again.";
+      const errorMessage = err.response?.data?.detail || err.message ||"Registration failed. Please try again.";
       showToast.error(errorMessage);
       return { success: false };
     }
@@ -142,7 +142,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       return false;
     } catch (error: unknown) {
       const err = error as { response?: { data?: { detail?: string } }; message?: string };
-      const errorMessage = err.response?.data?.detail || err.message || "Verification failed. Invalid or expired OTP.";
+      const errorMessage = err.response?.data?.detail || err.message ||"Verification failed. Invalid or expired OTP.";
       showToast.error(errorMessage);
       return false;
     }

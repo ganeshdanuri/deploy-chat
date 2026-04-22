@@ -1,8 +1,10 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
+import { Database, Sparkles, Trash2 } from "lucide-react";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { useState, useEffect } from "react";
-import { HiDatabase, HiSparkles, HiTrash } from "react-icons/hi";
+
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 import { fetchDatasets } from "@/lib/store/slices/datasetsSlice";
 import { createChatbot, fetchChatbots } from "@/lib/store/slices/chatbotsSlice";
@@ -39,8 +41,8 @@ export default function CreateAIAssistantDrawer({ isOpen, onClose, editBot }: Cr
 
     useEffect(() => {
         if (editBot && isOpen) {
-            setName(editBot.name || "");
-            setWelcomeMessage(editBot.welcome_message || "");
+            setName(editBot.name ||"");
+            setWelcomeMessage(editBot.welcome_message ||"");
             setAllowedDomains(editBot.allowed_domains ? editBot.allowed_domains.split(",") : [""]);
         } else if (!editBot && isOpen) {
             setName("");
@@ -51,7 +53,7 @@ export default function CreateAIAssistantDrawer({ isOpen, onClose, editBot }: Cr
     }, [editBot, isOpen]);
 
     useEffect(() => {
-        if (!editBot && name && (!welcomeMessage || welcomeMessage.startsWith("Hi! I am "))) {
+        if (!editBot && name && (!welcomeMessage || welcomeMessage.startsWith("Hi! I am"))) {
             setWelcomeMessage(`Hi! I am ${name}. How can I help you today?`);
         }
     }, [name, welcomeMessage, editBot]);
@@ -76,8 +78,8 @@ export default function CreateAIAssistantDrawer({ isOpen, onClose, editBot }: Cr
         }
 
         const invalidDomains = validDomains.filter(d => !validateDomain(d));
-        if (invalidDomains.length > 0) {
-            showToast.error(`Invalid domain format(s): ${invalidDomains.join(", ")}.`);
+        if (invalidDomains.length> 0) {
+            showToast.error(`Invalid domain format(s): ${invalidDomains.join(",")}.`);
             return;
         }
 
@@ -89,7 +91,7 @@ export default function CreateAIAssistantDrawer({ isOpen, onClose, editBot }: Cr
                     welcome_message: welcomeMessage,
                     allowed_domains: validDomains.join(","),
                 });
-                showToast.success(`AI Assistant "${name}" updated successfully!`);
+                showToast.success(`AI Assistant"${name}" updated successfully!`);
                 dispatch(fetchChatbots());
             } else {
                 await dispatch(createChatbot({
@@ -98,7 +100,7 @@ export default function CreateAIAssistantDrawer({ isOpen, onClose, editBot }: Cr
                     welcome_message: welcomeMessage,
                     allowed_domains: validDomains.join(","),
                 })).unwrap();
-                showToast.success(`AI Assistant "${name}" created successfully!`);
+                showToast.success(`AI Assistant"${name}" created successfully!`);
             }
             onClose();
         } catch (error: any) {
@@ -116,20 +118,20 @@ export default function CreateAIAssistantDrawer({ isOpen, onClose, editBot }: Cr
 
     const footer = (
         <>
-            <Button
-                variant="outline-secondary"
-                onClick={onClose}
-                className="h-10 px-6 whitespace-nowrap"
-            >
+            <button onClick={onClose} className="text-[13px] font-medium text-muted-foreground hover:text-foreground transition-colors">
                 Cancel
-            </Button>
+            </button>
             <Button
-                variant="primary"
                 onClick={handleSubmit}
                 disabled={isSubmitting}
-                className="text-sm h-10 px-8 whitespace-nowrap"
+                className="rounded-xl whitespace-nowrap"
             >
-                {isSubmitting ? "Processing..." : editBot ? "Save Changes" : "Deploy Assistant"}
+                {isSubmitting ? (
+                    <span className="flex items-center gap-2">
+                        <span className="w-3.5 h-3.5 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                        Processing…
+                    </span>
+                ) : editBot ? "Save changes" : "Deploy assistant"}
             </Button>
         </>
     );
@@ -140,13 +142,13 @@ export default function CreateAIAssistantDrawer({ isOpen, onClose, editBot }: Cr
             onClose={onClose}
             title={editBot ? "Edit AI Assistant" : "Deploy Assistant"}
             subtitle={editBot ? "Update your AI persona's configuration." : "Build a new AI persona powered by your knowledge base."}
-            icon={HiSparkles}
+            icon={Sparkles}
             footer={footer}
             size="2xl"
-        >
+>
             <div className="space-y-8 animate-fade-in">
                 <div className="space-y-3">
-                    <label className="text-sm font-bold block text-secondary">Assistant Name</label>
+                    <label className="text-sm font-medium block text-foreground">Assistant Name</label>
                     <p className="text-xs text-muted-foreground">Give your AI a name that reflects its purpose.</p>
                     <Input
                         variant="bordered"
@@ -155,7 +157,7 @@ export default function CreateAIAssistantDrawer({ isOpen, onClose, editBot }: Cr
                         placeholder="e.g. Customer Support Bot"
                         classNames={{
                             inputWrapper: "border border-border h-11 hover:border-primary/50 shadow-none bg-muted transition-all",
-                            input: "font-medium text-sm text-secondary",
+                            input: "font-medium text-sm text-foreground",
                         }}
                     />
                 </div>
@@ -163,8 +165,8 @@ export default function CreateAIAssistantDrawer({ isOpen, onClose, editBot }: Cr
                 {!editBot && (
                     <div className="space-y-4">
                         <div className="flex items-center justify-between">
-                            <label className="text-sm font-bold block text-secondary">Knowledge Bases</label>
-                            <span className="text-[10px] font-black text-muted-foreground uppercase bg-muted px-2 py-0.5 tracking-wider">
+                            <label className="text-sm font-medium block text-foreground">Knowledge Bases</label>
+                            <span className="text-[10px] font-medium text-muted-foreground uppercase bg-muted px-2 py-0.5 tracking-wider">
                                 {selectedDatasets.length} selected
                             </span>
                         </div>
@@ -175,9 +177,9 @@ export default function CreateAIAssistantDrawer({ isOpen, onClose, editBot }: Cr
                                 items={datasetItems}
                                 selectedIds={selectedDatasets}
                                 onToggle={toggleDataset}
-                                defaultIcon={HiDatabase}
+                                defaultIcon={Database}
                                 accentColor="slate"
-                                emptyIcon={HiDatabase}
+                                emptyIcon={Database}
                                 emptyMessage={<>No knowledge bases available.</>}
                             />
                         )}
@@ -186,28 +188,28 @@ export default function CreateAIAssistantDrawer({ isOpen, onClose, editBot }: Cr
 
                 <div className="space-y-6 pt-8 border-t border-border">
                     <div className="space-y-3">
-                        <label className="text-sm font-bold block text-secondary">Welcome Message</label>
+                        <label className="text-sm font-medium block text-foreground">Welcome Message</label>
                         <Input
                             variant="bordered"
                             value={welcomeMessage}
                             onChange={(e) => setWelcomeMessage(e.target.value)}
-                            placeholder="Hi! How can I help you?"
+                            placeholder="Hi! How can I help you? "
                             classNames={{
                                 inputWrapper: "border border-border h-11 hover:border-primary/50 shadow-none bg-muted transition-all font-mono italic",
-                                input: "text-sm text-secondary",
+                                input: "text-sm text-foreground",
                             }}
                         />
                     </div>
 
                     <div className="space-y-3">
                         <div className="flex items-center justify-between">
-                            <label className="text-sm font-bold block text-secondary">Allowed Domains</label>
+                            <label className="text-sm font-medium block text-foreground">Allowed Domains</label>
                             <Button
                                 size="sm"
                                 variant="ghost"
-                                onClick={() => setAllowedDomains([...allowedDomains, ""])}
-                                className="text-primary font-bold text-xs"
-                            >
+                                onClick={() => setAllowedDomains([...allowedDomains,""])}
+                                className="text-primary font-medium text-xs"
+>
                                 + ADD DOMAIN
                             </Button>
                         </div>
@@ -225,7 +227,7 @@ export default function CreateAIAssistantDrawer({ isOpen, onClose, editBot }: Cr
                                         placeholder="e.g., example.com"
                                         classNames={{
                                             inputWrapper: "border border-border h-11 hover:border-primary/50 shadow-none bg-muted",
-                                            input: "font-medium text-sm text-secondary",
+                                            input: "font-medium text-sm text-foreground",
                                         }}
                                     />
                                     <Button
@@ -236,8 +238,8 @@ export default function CreateAIAssistantDrawer({ isOpen, onClose, editBot }: Cr
                                             setAllowedDomains(newDomains.length === 0 ? [""] : newDomains);
                                         }}
                                         className="text-muted-foreground hover:text-red-500 p-0 h-8 w-8"
-                                    >
-                                        <HiTrash className="w-5 h-5" />
+>
+                                        <Trash2 className="w-5 h-5" />
                                     </Button>
                                 </div>
                             ))}

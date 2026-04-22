@@ -12,7 +12,6 @@ export type { TableColumnDef } from "./StyledTable";
 export { DateCell } from "./DateCell";
 export { StatusChip } from "./StatusChip";
 export { default as DeleteConfirmationModal } from "./DeleteConfirmationModal";
-
 export {
     Skeleton,
     TableSkeleton,
@@ -23,6 +22,4 @@ export {
     PlaygroundConfigSkeleton,
     SelectableListSkeleton,
 } from "./Skeleton";
-export { Tooltip } from "./Tooltip";
-export { User } from "./User";
 export { Input } from "./Input";

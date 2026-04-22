@@ -8,20 +8,16 @@ interface PageHeaderProps {
     actions?: React.ReactNode;
 }
 
-/**
- * Reusable header used at the top of every dashboard page.
- * Renders the title, optional description, and an optional action slot (buttons, etc.)
- */
 export function PageHeader({ title, description, actions }: PageHeaderProps) {
     return (
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-border">
             <div>
-                <h1 className="text-2xl font-bold text-secondary tracking-tight">{title}</h1>
+                <h1 className="text-[22px] sm:text-2xl font-semibold tracking-[-0.025em] text-foreground">{title}</h1>
                 {description && (
-                    <p className="text-sm text-muted-foreground mt-1">{description}</p>
+                    <p className="text-sm text-muted-foreground mt-1 leading-relaxed">{description}</p>
                 )}
             </div>
-            {actions && <div className="flex gap-2">{actions}</div>}
+            {actions && <div className="flex gap-2 flex-wrap">{actions}</div>}
         </div>
     );
 }

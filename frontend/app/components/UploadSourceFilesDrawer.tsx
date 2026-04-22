@@ -1,8 +1,10 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
+import { AlertCircle, CheckCircle2, FileText, Upload, X } from "lucide-react";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { useState } from "react";
-import { HiCloudUpload, HiCheckCircle, HiExclamationCircle, HiX, HiDocumentText } from "react-icons/hi";
+
 import api from "@/lib/api";
 import Drawer from "./Drawer";
 import showToast from "@/lib/toast";
@@ -33,13 +35,13 @@ export default function UploadSourceFilesDrawer({ isOpen, onClose, onUploadSucce
     const validateAndAddFiles = (newFiles: File[]) => {
         const validFiles: File[] = [];
         newFiles.forEach(file => {
-            if (file.size > MAX_SIZE_MB * 1024 * 1024) {
-                showToast.error(`File "${file.name}" exceeds ${MAX_SIZE_MB}MB limit`);
+            if (file.size> MAX_SIZE_MB * 1024 * 1024) {
+                showToast.error(`File"${file.name}" exceeds ${MAX_SIZE_MB}MB limit`);
             } else {
                 validFiles.push(file);
             }
         });
-        if (validFiles.length > 0) {
+        if (validFiles.length> 0) {
             setFiles(prev => [...prev, ...validFiles]);
             setError(null);
         }
@@ -57,7 +59,7 @@ export default function UploadSourceFilesDrawer({ isOpen, onClose, onUploadSucce
         files.forEach(file => formData.append("files", file));
         try {
             await api.post(ENDPOINTS.DOCUMENTS.BASE, formData, {
-                headers: { "Content-Type": "multipart/form-data" },
+                headers: {"Content-Type": "multipart/form-data" },
             });
             setUploadStatus('success');
             showToast.success(`${files.length} file(s) imported!`);
@@ -66,7 +68,7 @@ export default function UploadSourceFilesDrawer({ isOpen, onClose, onUploadSucce
                 handleClose();
             }, 1000);
         } catch (err: any) {
-            const msg = err.response?.data?.detail || "Import failed";
+            const msg = err.response?.data?.detail ||"Import failed";
             setError(msg);
             setUploadStatus('error');
         } finally {
@@ -83,16 +85,20 @@ export default function UploadSourceFilesDrawer({ isOpen, onClose, onUploadSucce
 
     const footer = (
         <>
-            <Button variant="outline-secondary" onClick={handleClose} className="h-10 px-6">
+            <button onClick={handleClose} className="text-[13px] font-medium text-muted-foreground hover:text-foreground transition-colors">
                 Cancel
-            </Button>
+            </button>
             <Button
-                variant="primary"
                 onClick={handleSubmit}
                 disabled={files.length === 0 || isUploading}
-                className="h-10 px-8"
+                className="rounded-xl"
             >
-                {isUploading ? "Importing..." : `Import ${files.length} Files`}
+                {isUploading ? (
+                    <span className="flex items-center gap-2">
+                        <span className="w-3.5 h-3.5 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                        Importing…
+                    </span>
+                ) : `Import ${files.length} file${files.length !== 1 ? "s" : ""}`}
             </Button>
         </>
     );
@@ -103,37 +109,37 @@ export default function UploadSourceFilesDrawer({ isOpen, onClose, onUploadSucce
             onClose={handleClose}
             title="Import Sources"
             subtitle="Securely upload documents for your knowledge base."
-            icon={HiCloudUpload}
+            icon={Upload}
             footer={footer}
             size="2xl"
-        >
+>
             <div className="space-y-8 animate-fade-in">
-                <div className={`relative border-2 border-dashed p-8 text-center flex flex-col items-center justify-center transition-all ${files.length > 0 ? 'border-primary/50 bg-primary/5' : 'border-border hover:border-primary/30'}`}>
+                <div className={`relative border-2 border-dashed rounded-xl p-8 text-center flex flex-col items-center justify-center transition-all ${files.length > 0 ? 'border-primary/30 bg-muted/60' : 'border-border hover:border-border-medium hover:bg-muted/40'}`}>
                     <input type="file" multiple onChange={handleFileChange} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" />
-                    <div className="w-14 h-14 bg-white flex items-center justify-center mb-4 border border-border shadow-sm"><HiCloudUpload className="text-3xl text-primary" /></div>
-                    <p className="text-sm font-bold text-secondary">Drop source files here</p>
+                    <div className="w-14 h-14 bg-muted rounded-xl flex items-center justify-center mb-4"><Upload className="w-6 h-6 text-muted-foreground" /></div>
+                    <p className="text-sm font-medium text-foreground">Drop source files here</p>
                     <p className="text-[11px] text-muted-foreground mt-1">Max {MAX_SIZE_MB}MB per file.</p>
                 </div>
 
                 {files.length > 0 && (
                     <div className="space-y-2">
-                        <div className="flex items-center justify-between"><h4 className="text-[11px] font-black uppercase text-muted-foreground">Queue</h4><span className="text-[10px] font-bold text-muted-foreground bg-muted px-2 py-0.5">{files.length}</span></div>
+                        <div className="flex items-center justify-between"><h4 className="text-[11px] font-medium uppercase text-muted-foreground">Queue</h4><span className="text-[10px] font-medium text-muted-foreground bg-muted rounded px-2 py-0.5">{files.length}</span></div>
                         <div className="max-h-60 overflow-y-auto space-y-2 pr-2">
                             {files.map((f, i) => (
-                                <div key={i} className="flex items-center justify-between p-3 bg-white border border-border">
+                                <div key={i} className="flex items-center justify-between p-3 bg-muted rounded-lg">
                                     <div className="flex items-center gap-3 overflow-hidden">
-                                        <HiDocumentText className="text-muted-foreground w-5 h-5 shrink-0" />
-                                        <div className="overflow-hidden"><p className="text-xs font-bold text-muted-foreground truncate">{f.name}</p></div>
+                                        <FileText className="text-muted-foreground w-5 h-5 shrink-0" />
+                                        <div className="overflow-hidden"><p className="text-xs font-medium text-foreground truncate">{f.name}</p></div>
                                     </div>
-                                    <button onClick={() => removeFile(i)} className="text-muted-foreground hover:text-red-500"><HiX className="w-4 h-4" /></button>
+                                    <button onClick={() => removeFile(i)} className="text-muted-foreground hover:text-destructive transition-colors"><X className="w-4 h-4" /></button>
                                 </div>
                             ))}
                         </div>
                     </div>
                 )}
 
-                {error && <div className="p-4 bg-red-50/50 text-red-600 text-[11px] font-bold border border-red-100"><HiExclamationCircle className="inline mr-2" />{error}</div>}
-                {uploadStatus === 'success' && <div className="p-4 bg-emerald-50/50 text-emerald-600 text-[11px] font-bold border border-emerald-100"><HiCheckCircle className="inline mr-2" />Imported!</div>}
+                {error && <div className="p-4 bg-destructive/5 text-destructive text-[11px] font-medium border border-destructive/15 rounded-lg flex items-center gap-2"><AlertCircle className="w-4 h-4 shrink-0" />{error}</div>}
+                {uploadStatus === 'success' && <div className="p-4 bg-emerald-50 text-emerald-700 text-[11px] font-medium border border-emerald-100 rounded-lg flex items-center gap-2"><CheckCircle2 className="w-4 h-4 shrink-0" />Imported successfully!</div>}
             </div>
         </Drawer>
     );

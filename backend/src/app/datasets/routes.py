@@ -4,11 +4,24 @@ from typing import List
 from uuid import UUID
 from app.core.db import get_session
 from app.api.deps import get_current_user
-from app.schemas.models import Dataset, DatasetCreate, DatasetUpdate, DatasetRead, DatasetDocuments, User, Document
+from app.schemas.models import Dataset, DatasetCreate, DatasetUpdate, DatasetRead, DatasetDocuments, User, Document, DocumentRead
 from app.core.endpoints import Endpoints
 from app.core.constants import ACTIVITY_TYPE_DATASET_CREATED
 
 router = APIRouter(prefix=Endpoints.DATASETS_PREFIX)
+
+
+def _enrich(dataset: Dataset, session: Session) -> DatasetRead:
+    """Attach document_ids and document_count to a DatasetRead response."""
+    links = session.exec(
+        select(DatasetDocuments).where(DatasetDocuments.dataset_id == dataset.id)
+    ).all()
+    doc_ids = [link.document_id for link in links]
+    data = dataset.model_dump()
+    data["document_ids"] = doc_ids
+    data["document_count"] = len(doc_ids)
+    return DatasetRead(**data)
+
 
 @router.get(Endpoints.DATASETS_BASE, response_model=List[DatasetRead])
 def get_datasets(
@@ -17,7 +30,38 @@ def get_datasets(
 ):
     statement = select(Dataset).where(Dataset.user_id == current_user.id)
     results = session.exec(statement).all()
-    return results
+    return [_enrich(ds, session) for ds in results]
+
+
+@router.get(Endpoints.DATASETS_BY_ID, response_model=DatasetRead)
+def get_dataset(
+    dataset_id: UUID,
+    session: Session = Depends(get_session),
+    current_user: User = Depends(get_current_user)
+):
+    dataset = session.get(Dataset, dataset_id)
+    if not dataset or dataset.user_id != current_user.id:
+        raise HTTPException(status_code=404, detail="Dataset not found")
+    return _enrich(dataset, session)
+
+
+@router.get(f"{Endpoints.DATASETS_BY_ID}/documents", response_model=List[DocumentRead])
+def get_dataset_documents(
+    dataset_id: UUID,
+    session: Session = Depends(get_session),
+    current_user: User = Depends(get_current_user)
+):
+    """Return the full Document records belonging to a specific dataset."""
+    dataset = session.get(Dataset, dataset_id)
+    if not dataset or dataset.user_id != current_user.id:
+        raise HTTPException(status_code=404, detail="Dataset not found")
+
+    links = session.exec(
+        select(DatasetDocuments).where(DatasetDocuments.dataset_id == dataset_id)
+    ).all()
+    doc_ids = [link.document_id for link in links]
+    docs = [session.get(Document, did) for did in doc_ids]
+    return [d for d in docs if d is not None]
 
 @router.post(Endpoints.DATASETS_BASE, response_model=DatasetRead)
 def create_dataset(
@@ -58,7 +102,7 @@ def create_dataset(
 
         session.commit()
         session.refresh(new_dataset)
-        return new_dataset
+        return _enrich(new_dataset, session)
     except Exception:
         session.rollback()
         raise HTTPException(
@@ -105,7 +149,7 @@ def update_dataset(
     session.add(dataset)
     session.commit()
     session.refresh(dataset)
-    return dataset
+    return _enrich(dataset, session)
 
 @router.delete(Endpoints.DATASETS_BY_ID)
 

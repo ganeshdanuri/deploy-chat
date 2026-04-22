@@ -1,203 +1,159 @@
 "use client";
 
-import { HiCheck, HiArrowRight, HiLightningBolt } from "react-icons/hi";
-import { PRICING_PLANS as PLANS, PricingPlan as Plan, PAGE_CONTENT } from "../../lib/constants";
+import { Button } from "@/components/ui/button";
 
-// ─── Helpers ─────────────────────────────────────────────────────────────────
+type Tier = {
+  name: string;
+  price: string;
+  priceSuffix?: string;
+  tagline: string;
+  cta: string;
+  ctaVariant: "default" |"outline";
+  href: string;
+  highlight?: boolean;
+  featuresLabel: string;
+  features: string[];
+};
 
-function getPlanHref(plan: Plan): string {
-    if (plan.name === "Enterprise") return "mailto:sales@deploymind.com";
-    return `/login?register=true&plan=${plan.name.toLowerCase()}`;
-}
-
-// ─── Sub-components ───────────────────────────────────────────────────────────
-
-function PlanPrice({ price, popular }: { price: string; popular?: boolean }) {
-    if (price === "Custom") {
-        return (
-            <p className={`text-4xl font-semibold tracking-tight ${popular ? "text-white" : "text-foreground"}`}>
-                Custom
-            </p>
-        );
-    }
-    return (
-        <div className="flex items-baseline gap-1">
-            <span className={`text-4xl font-semibold tabular-nums tracking-tight ${popular ? "text-white" : "text-foreground"}`}>
-                ${price}
-            </span>
-            <span className={`text-sm font-normal ${popular ? "text-white/70" : "text-muted-foreground"}`}>/mo</span>
-        </div>
-    );
-}
-
-function FeatureItem({ feature, popular }: { feature: string; popular?: boolean }) {
-    return (
-        <li className="flex items-start gap-3">
-            <span
-                aria-hidden="true"
-                className={`mt-0.5 flex-shrink-0 rounded-full p-0.5 ${popular ? "text-primary bg-white" : "text-white gradient-bg"
-                    }`}
-            >
-                <HiCheck className="h-3.5 w-3.5" />
-            </span>
-            <span className={`text-[15px] leading-relaxed ${popular ? "text-white/90" : "text-muted-foreground"}`}>
-                {feature}
-            </span>
-        </li>
-    );
-}
-
-function PlanCard({ plan }: { plan: Plan }) {
-    const href = getPlanHref(plan);
-    const isExternal = href.startsWith("mailto:");
-
-    // For popular plan — gradient border wrapper
-    if (plan.popular) {
-        return (
-            <div className="relative rounded-2xl gradient-bg p-[2px] h-full"
-                style={{ boxShadow: 'var(--shadow-accent-lg)' }}>
-                <div className="h-full w-full rounded-[calc(1rem-2px)] bg-primary flex flex-col p-8">
-                    {/* Popular badge */}
-                    <div className="mb-6 -mt-2 flex items-center gap-2 self-start bg-white/15 backdrop-blur-sm rounded-full px-4 py-1.5">
-                        <HiLightningBolt className="h-3.5 w-3.5 text-white" aria-hidden="true" />
-                        <span className="font-mono text-[10px] font-medium uppercase tracking-[0.1em] text-white">
-                            Most popular
-                        </span>
-                    </div>
-
-                    {/* Plan name */}
-                    <h3 className="mb-1 text-sm font-medium uppercase tracking-widest text-white/70">
-                        {plan.name}
-                    </h3>
-
-                    {/* Price */}
-                    <div className="mb-3">
-                        <PlanPrice price={plan.price} popular />
-                    </div>
-
-                    {/* Description */}
-                    <p className="mb-8 text-[15px] leading-relaxed text-white/70">
-                        {plan.description}
-                    </p>
-
-                    {/* Features */}
-                    <ul className="mb-10 flex flex-col gap-3" role="list">
-                        {plan.features.map((feature) => (
-                            <FeatureItem key={feature} feature={feature} popular />
-                        ))}
-                    </ul>
-
-                    {/* CTA */}
-                    <a
-                        href={href}
-                        target={isExternal ? "_blank" : undefined}
-                        rel={isExternal ? "noopener noreferrer" : undefined}
-                        className="mt-auto flex items-center justify-center gap-2 px-6 py-3.5 rounded-lg text-sm font-medium bg-white text-primary hover:bg-white/90 transition-all duration-200 active:scale-[0.98] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-                    >
-                        {plan.cta}
-                        <HiArrowRight className="h-4 w-4" aria-hidden="true" />
-                    </a>
-                </div>
-            </div>
-        );
-    }
-
-    return (
-        <div
-            className="relative flex flex-col h-full rounded-2xl border border-border bg-white p-8 transition-all duration-300"
-            style={{ boxShadow: 'var(--shadow-md)' }}
-        >
-            {/* Plan name */}
-            <h3 className="mb-1 text-sm font-medium uppercase tracking-widest text-primary">
-                {plan.name}
-            </h3>
-
-            {/* Price */}
-            <div className="mb-3">
-                <PlanPrice price={plan.price} />
-            </div>
-
-            {/* Description */}
-            <p className="mb-8 text-[15px] leading-relaxed text-muted-foreground">
-                {plan.description}
-            </p>
-
-            {/* Features */}
-            <ul className="mb-10 flex flex-col gap-3" role="list">
-                {plan.features.map((feature) => (
-                    <FeatureItem key={feature} feature={feature} />
-                ))}
-            </ul>
-
-            {/* CTA */}
-            <a
-                href={href}
-                target={isExternal ? "_blank" : undefined}
-                rel={isExternal ? "noopener noreferrer" : undefined}
-                className="mt-auto flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl text-sm font-medium bg-muted text-foreground hover:bg-primary/5 hover:text-primary border border-border hover:border-primary/20 transition-all duration-200 active:scale-[0.98] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-            >
-                {plan.cta}
-                <HiArrowRight className="h-4 w-4" aria-hidden="true" />
-            </a>
-        </div>
-    );
-}
-
-// ─── Main export ─────────────────────────────────────────────────────────────
+const TIERS: Tier[] = [
+  {
+    name: "Free",
+    price: "$0",
+    priceSuffix: "/mo",
+    tagline: "Kick the tires.",
+    cta: "Start free",
+    ctaVariant: "outline",
+    href: "/login?register=true&plan=free",
+    featuresLabel: "INCLUDES",
+    features: ["1 agent","10 messages total","Basic analytics","Community support"],
+  },
+  {
+    name: "Starter",
+    price: "$19",
+    priceSuffix: "/mo",
+    tagline: "Side projects and small sites.",
+    cta: "Get started",
+    ctaVariant: "outline",
+    href: "/login?register=true&plan=starter",
+    featuresLabel: "EVERYTHING IN FREE, PLUS",
+    features: ["1,000 messages / mo","Standard analytics","Email support"],
+  },
+  {
+    name: "Professional",
+    price: "$49",
+    priceSuffix: "/mo",
+    tagline: "Scaling startups with real volume.",
+    cta: "Start Professional →",
+    ctaVariant: "default",
+    href: "/login?register=true&plan=professional",
+    highlight: true,
+    featuresLabel: "EVERYTHING IN STARTER, PLUS",
+    features: [
+"5 agents",
+"10,000 messages / mo",
+"Advanced analytics",
+"Priority support",
+"Remove branding",
+    ],
+  },
+  {
+    name: "Enterprise",
+    price: "Custom",
+    tagline: "White-labeled infrastructure.",
+    cta: "Talk to sales",
+    ctaVariant: "outline",
+    href: "mailto:sales@deploymind.com",
+    featuresLabel: "EVERYTHING IN PRO, PLUS",
+    features: [
+"Unlimited agents",
+"Dedicated infra",
+"SLA support",
+"SSO / SAML",
+"Security audits",
+    ],
+  },
+];
 
 export default function PricingSection() {
-    return (
-        <section
-            id="pricing"
-            aria-labelledby="pricing-heading"
-            className="relative py-16 lg:py-24 overflow-hidden bg-slate-50/50"
-        >
-            {/* Radial glow */}
-            <div className="radial-glow w-[500px] h-[500px] top-0 right-0 bg-primary/[0.04]" />
+  return (
+    <section
+      id="pricing"
+      className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:max-w-full lg:px-12 py-20 sm:py-28"
+>
+      <div className="text-center mb-14">
+        <span className="eyebrow-pill">Pricing</span>
+        <h2 className="mt-6 text-3xl sm:text-4xl lg:text-[48px] leading-[1.08] font-semibold tracking-[-0.03em] mb-4">
+          Predictable pricing.{" "}
+          <span className="hl-marker">No surprises</span>.
+        </h2>
+        <p className="text-base sm:text-[17px] text-muted-foreground max-w-lg mx-auto leading-relaxed">
+          Start free, upgrade when you&apos;re ready. Cancel any time.
+        </p>
+      </div>
 
-            <div className="mx-auto max-w-7xl px-4 lg:px-8">
-                {/* Header */}
-                <div className="mb-10 text-center">
-                    {/* Section label badge */}
-                    <div className="flex items-center justify-center mb-6">
-                        <div className="inline-flex items-center rounded-full border border-border bg-muted/50 px-3 py-1 shadow-sm">
-                            <span className="text-sm font-medium text-foreground">
-                                {PAGE_CONTENT.pricing.badge}
-                            </span>
-                        </div>
-                    </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+        {TIERS.map((tier) => (
+          <div
+            key={tier.name}
+            className="relative bg-background rounded-2xl p-7 flex flex-col"
+            style={{
+              border: tier.highlight
+                ? "2px solid #1D2020"
+                : "1px solid var(--border)",
+              boxShadow: tier.highlight
+                ? "0 8px 24px rgba(29,32,32,0.08)"
+                : "none",
+            }}
+>
+            {tier.highlight && (
+              <div
+                className="absolute -top-3 left-6 text-[11px] font-semibold px-2.5 py-1 rounded-full"
+                style={{ background: "var(--lime)", color: "var(--lime-ink)" }}
+>
+                Most popular
+              </div>
+            )}
 
-                    <h2
-                        id="pricing-heading"
-                        className="text-3xl md:text-[3.25rem] leading-[1.15] text-foreground mb-6"
-                    >
-                        {PAGE_CONTENT.pricing.headline}
-                    </h2>
+            <h3 className="text-[15px] font-semibold mb-1.5">{tier.name}</h3>
+            <p className="text-xs text-muted-foreground leading-relaxed mb-5 min-h-[34px]">
+              {tier.tagline}
+            </p>
 
-                    <p className="text-lg text-muted-foreground max-w-xl mx-auto leading-relaxed">
-                        {PAGE_CONTENT.pricing.subtitle}
-                    </p>
-                </div>
-
-                {/* Grid */}
-                <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4 lg:gap-6 items-stretch">
-                    {PLANS.map((plan) => (
-                        <PlanCard key={plan.name} plan={plan} />
-                    ))}
-                </div>
-
-                {/* Enterprise footnote */}
-                <p className="mt-10 text-center text-sm text-muted-foreground">
-                    Need a custom volume deal or dedicated infrastructure?{" "}
-                    <a
-                        href="mailto:sales@deploymind.com"
-                        className="font-medium underline-offset-2 hover:underline text-primary"
-                    >
-                        Talk to our sales team
-                    </a>
-                    .
-                </p>
+            <div className="flex items-baseline gap-1 mb-5">
+              <span className="text-4xl font-semibold tracking-[-0.03em]">
+                {tier.price}
+              </span>
+              {tier.priceSuffix && (
+                <span className="text-sm text-muted-foreground">
+                  {tier.priceSuffix}
+                </span>
+              )}
             </div>
-        </section>
-    );
+
+            <Button
+              asChild
+              variant={tier.ctaVariant}
+              className="w-full mb-6 btn-pill"
+>
+              <a href={tier.href}>{tier.cta}</a>
+            </Button>
+
+            <div className="text-[11px] font-semibold text-muted-foreground mb-2.5 tracking-[0.08em] uppercase">
+              {tier.featuresLabel}
+            </div>
+            <ul className="flex flex-col gap-2 text-[13px]">
+              {tier.features.map((f) => (
+                <li key={f} className="flex gap-2">
+                  <span className="inline-flex items-center justify-center shrink-0 w-4 h-4 mt-0.5 rounded-full bg-muted text-muted-foreground text-[9px] font-bold">
+                    ✓
+                  </span>
+                  <span>{f}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
 }

@@ -1,7 +1,9 @@
 "use client";
+import { Check } from "lucide-react";
+
 
 import React from "react";
-import { HiCheck } from "react-icons/hi";
+
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -13,7 +15,7 @@ export interface SelectableItem {
     icon?: React.ElementType;
 }
 
-export type SelectableAccentColor = "indigo" | "emerald" | "amber" | "violet" | "rose" | "slate";
+export type SelectableAccentColor ="indigo" |"emerald" |"amber" |"violet" |"rose" |"slate";
 
 /**
  * Fine-grained color override. Provide this instead of `accentColor`
@@ -30,7 +32,7 @@ export interface SelectableColors {
     unselectedRadio: string;
 }
 
-export type SelectableSize = "sm" | "md" | "lg";
+export type SelectableSize ="sm" |"md" |"lg";
 
 interface SelectableItemListProps {
     items: SelectableItem[];
@@ -60,57 +62,57 @@ interface SelectableItemListProps {
 
 const ACCENT_MAP: Record<SelectableAccentColor, SelectableColors> = {
     indigo: {
-        selectedCard: "bg-primary/5 border-primary/20 shadow-sm",
-        unselectedCard: "bg-muted/50 border-border hover:border-primary/30 hover:bg-primary/5 hover:shadow-sm",
-        selectedIcon: "bg-primary border-primary text-white shadow-md",
-        unselectedIcon: "bg-white border-border text-muted-foreground",
-        selectedText: "text-secondary",
+        selectedCard: "bg-muted border-border",
+        unselectedCard: "bg-muted/50 border-border hover:border-border hover:bg-muted hover:shadow-sm",
+        selectedIcon: "bg-primary border-primary text-background shadow-md",
+        unselectedIcon: "bg-background border-border text-muted-foreground",
+        selectedText: "text-foreground",
         unselectedText: "text-muted-foreground",
         selectedRadio: "bg-primary border-primary",
-        unselectedRadio: "bg-white border-border",
+        unselectedRadio: "bg-background border-border",
     },
     emerald: {
-        selectedCard: "bg-emerald-50 border-emerald-200 shadow-sm",
+        selectedCard: "bg-emerald-50 border-emerald-200",
         unselectedCard: "bg-muted/50 border-border hover:border-emerald-100/50 hover:bg-emerald-50/30 hover:shadow-sm",
-        selectedIcon: "bg-emerald-600 border-emerald-600 text-white shadow-md",
-        unselectedIcon: "bg-white border-border text-muted-foreground",
+        selectedIcon: "bg-emerald-600 border-emerald-600 text-background shadow-md",
+        unselectedIcon: "bg-background border-border text-muted-foreground",
         selectedText: "text-emerald-900",
         unselectedText: "text-muted-foreground",
         selectedRadio: "bg-emerald-600 border-emerald-600",
-        unselectedRadio: "bg-white border-border",
+        unselectedRadio: "bg-background border-border",
     },
     amber: {
-        selectedCard: "bg-amber-50 border-amber-300 shadow-sm",
+        selectedCard: "bg-amber-50 border-amber-300",
         unselectedCard: "bg-muted/30 border-border hover:border-amber-200 hover:bg-amber-50/30 hover:shadow-sm",
-        selectedIcon: "bg-amber-500 border-amber-500 text-white shadow-md",
-        unselectedIcon: "bg-white border-border text-muted-foreground/80",
+        selectedIcon: "bg-amber-500 border-amber-500 text-background shadow-md",
+        unselectedIcon: "bg-background border-border text-muted-foreground/80",
         selectedText: "text-amber-900",
         unselectedText: "text-muted-foreground",
         selectedRadio: "bg-amber-500 border-amber-500",
-        unselectedRadio: "bg-white border-border-medium",
+        unselectedRadio: "bg-background border-border-medium",
     },
     violet: {
-        selectedCard: "bg-violet-50 border-violet-300 shadow-sm",
+        selectedCard: "bg-violet-50 border-violet-300",
         unselectedCard: "bg-muted/30 border-border hover:border-violet-200 hover:bg-violet-50/30 hover:shadow-sm",
-        selectedIcon: "bg-violet-600 border-violet-600 text-white shadow-md",
-        unselectedIcon: "bg-white border-border text-muted-foreground/80",
+        selectedIcon: "bg-violet-600 border-violet-600 text-background shadow-md",
+        unselectedIcon: "bg-background border-border text-muted-foreground/80",
         selectedText: "text-violet-900",
         unselectedText: "text-muted-foreground",
         selectedRadio: "bg-violet-600 border-violet-600",
-        unselectedRadio: "bg-white border-border-medium",
+        unselectedRadio: "bg-background border-border-medium",
     },
     rose: {
-        selectedCard: "bg-rose-50 border-rose-300 shadow-sm",
+        selectedCard: "bg-rose-50 border-rose-300",
         unselectedCard: "bg-muted/30 border-border hover:border-rose-200 hover:bg-rose-50/30 hover:shadow-sm",
-        selectedIcon: "bg-rose-600 border-rose-600 text-white shadow-md",
-        unselectedIcon: "bg-white border-border text-muted-foreground/80",
+        selectedIcon: "bg-rose-600 border-rose-600 text-background shadow-md",
+        unselectedIcon: "bg-background border-border text-muted-foreground/80",
         selectedText: "text-rose-900",
         unselectedText: "text-muted-foreground",
         selectedRadio: "bg-rose-600 border-rose-600",
-        unselectedRadio: "bg-white border-border-medium",
+        unselectedRadio: "bg-background border-border-medium",
     },
     slate: {
-        selectedCard: "bg-muted border-border shadow-sm",
+        selectedCard: "bg-muted border-border",
         unselectedCard: "bg-background border-border hover:border-border-medium hover:bg-muted/50 hover:shadow-sm",
         selectedIcon: "bg-foreground border-foreground text-background shadow-md",
         unselectedIcon: "bg-muted border-border text-muted-foreground",
@@ -184,7 +186,7 @@ const SIZE_MAP: Record<SelectableSize, {
  *
  * - `accentColor` — pick from 6 built-in presets (indigo | emerald | amber | violet | rose | slate)
  * - `customColors` — escape hatch for fully custom colours (overrides `accentColor`)
- * - `size` — "sm" | "md" (default) | "lg" controls all internal dimensions dynamically
+ * - `size` —"sm" |"md" (default) |"lg" controls all internal dimensions dynamically
  * - Each item can carry its own `icon` to override `defaultIcon`
  */
 export function SelectableItemList({
@@ -192,19 +194,19 @@ export function SelectableItemList({
     selectedIds,
     onToggle,
     defaultIcon: DefaultIcon,
-    accentColor = "indigo",
+    accentColor ="indigo",
     customColors,
     emptyIcon: EmptyIcon,
     emptyMessage,
-    size = "md",
-    className = "",
+    size ="md",
+    className ="",
 }: SelectableItemListProps) {
     const colors = customColors ?? ACCENT_MAP[accentColor];
     const dim = SIZE_MAP[size];
 
     if (items.length === 0) {
         return (
-            <div className={`${dim.emptyPadding} text-center bg-muted border border-dashed border-border`}>
+            <div className={`${dim.emptyPadding} text-center bg-muted border border-dashed border-border rounded-xl`}>
                 <EmptyIcon className={`${dim.emptyIcon} text-muted-foreground mx-auto mb-3`} />
                 <p className="text-sm text-muted-foreground font-medium leading-relaxed">{emptyMessage}</p>
             </div>
@@ -223,17 +225,17 @@ export function SelectableItemList({
                         key={item.id}
                         type="button"
                         onClick={() => onToggle(item.id)}
-                        className={`w-full flex flex-row items-center justify-between ${dim.cardPadding} border transition-all duration-200 cursor-pointer text-left ${isSelected ? colors.selectedCard : colors.unselectedCard
+                        className={`w-full flex flex-row items-center justify-between ${dim.cardPadding} border rounded-xl transition-all duration-200 cursor-pointer text-left ${isSelected ? colors.selectedCard : colors.unselectedCard
                             }`}
-                    >
+>
                         <div className={`flex items-center ${dim.gap} flex-1 min-w-0`}>
                             {/* Leading icon box */}
                             <div
-                                className={`${dim.iconBox} shrink-0 flex items-center justify-center border transition-all duration-300 ${isSelected ? colors.selectedIcon : colors.unselectedIcon
+                                className={`${dim.iconBox} shrink-0 flex items-center justify-center border rounded-lg transition-all duration-300 ${isSelected ? colors.selectedIcon : colors.unselectedIcon
                                     }`}
-                            >
+>
                                 {isSelected ? (
-                                    <HiCheck className={dim.checkIcon} />
+                                    <Check className={dim.checkIcon} />
                                 ) : (
                                     <ItemIcon className={dim.icon} />
                                 )}
@@ -255,10 +257,10 @@ export function SelectableItemList({
 
                         {/* Radio check indicator */}
                         <div
-                            className={`${dim.radioSize} shrink-0 border-2 flex items-center justify-center transition-all duration-300 ${isSelected ? colors.selectedRadio : colors.unselectedRadio
+                            className={`${dim.radioSize} shrink-0 rounded-md border-2 flex items-center justify-center transition-all duration-300 ${isSelected ? colors.selectedRadio : colors.unselectedRadio
                                 }`}
-                        >
-                            {isSelected && <HiCheck className="w-3.5 h-3.5 text-white" />}
+>
+                            {isSelected && <Check className="w-3.5 h-3.5 text-background" />}
                         </div>
                     </button>
                 );

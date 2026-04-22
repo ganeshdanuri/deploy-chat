@@ -1,5 +1,18 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
+
+import {
+  ArrowDown,
+  ArrowRight,
+  ArrowUp,
+  Code,
+  MessagesSquare,
+  Plus,
+  Sparkles,
+  Upload,
+  TrendingUp,
+  BookOpen,
+} from "lucide-react";
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { useEffect, useState, useCallback } from "react";
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
@@ -8,307 +21,345 @@ import { fetchDatasets } from "@/lib/store/slices/datasetsSlice";
 import { fetchDocuments } from "@/lib/store/slices/documentsSlice";
 import { fetchUsageStats } from "@/lib/store/slices/usageSlice";
 import Link from "next/link";
-import {
-  HiChatAlt2,
-  HiDatabase,
-  HiSparkles,
-  HiTrendingUp,
-  HiDotsVertical,
-  HiArrowRight,
-  HiLightningBolt,
-  HiRefresh,
-  HiCreditCard,
-} from "react-icons/hi";
-import { Tooltip } from "@/app/components/ui";
-import showToast from "@/lib/toast";
+
 import { DashboardSkeleton } from "@/app/components/ui";
 import api from "@/lib/api";
 import { ENDPOINTS } from "@/lib/endpoints";
-import {
-  QUICK_ACTIONS,
-  ONBOARDING_STEPS,
-} from "@/lib/constants";
-
-// ─── Types ────────────────────────────────────────────────────────────────────
-
-
-// ─── Component ────────────────────────────────────────────────────────────────
+import { Button } from "@/components/ui/button";
+import showToast from "@/lib/toast";
+import CreateAIAssistantDrawer from "@/app/components/CreateAIAssistantDrawer";
+import { BarChart } from "@/app/components/charts/BarChart";
 
 export default function DashboardOverview() {
   const dispatch = useAppDispatch();
   const { items: chatbots } = useAppSelector((state) => state.chatbots);
   const { items: datasets } = useAppSelector((state) => state.datasets);
   const { items: documents } = useAppSelector((state) => state.documents);
-  const { message_count, token_count } = useAppSelector((state) => state.usage);
+  const { message_count } = useAppSelector((state) => state.usage);
   const { data: userData } = useAppSelector((state) => state.user);
 
-  const hasData = chatbots.length > 0 || datasets.length > 0 || documents.length > 0;
-  const [isRefreshing, setIsRefreshing] = useState(false);
+  const hasAgents = chatbots.length > 0;
   const [isInitialLoading, setIsInitialLoading] = useState(true);
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
 
-  const loadData = useCallback(
-    async (showNotification = false) => {
-      setIsRefreshing(true);
-      try {
-        await Promise.all([
-          dispatch(fetchChatbots()),
-          dispatch(fetchDatasets()),
-          dispatch(fetchDocuments()),
-          dispatch(fetchUsageStats()),
-        ]);
-        if (showNotification) showToast.success("Dashboard data refreshed");
-      } catch {
-        if (showNotification) showToast.error("Failed to refresh dashboard data");
-      } finally {
-        setTimeout(() => {
-          setIsRefreshing(false);
-          setIsInitialLoading(false);
-        }, 600);
-      }
-    },
-    [dispatch]
-  );
+  const loadData = useCallback(async () => {
+    try {
+      await Promise.all([
+        dispatch(fetchChatbots()),
+        dispatch(fetchDatasets()),
+        dispatch(fetchDocuments()),
+        dispatch(fetchUsageStats()),
+      ]);
+    } finally {
+      setTimeout(() => setIsInitialLoading(false), 300);
+    }
+  }, [dispatch]);
 
   useEffect(() => {
     loadData();
   }, [loadData]);
 
-  return (
-    <div className="min-h-[80vh] flex flex-col items-center justify-center px-4">
-      {isInitialLoading ? (
-        <DashboardSkeleton />
-      ) : hasData ? (
-        <DashboardSummary
-          datasets={datasets}
-          documents={documents}
-          message_count={message_count}
-          token_count={token_count}
-          userData={userData}
-          isRefreshing={isRefreshing}
-          onRefresh={() => loadData(true)}
+  if (isInitialLoading) return <DashboardSkeleton />;
+
+  if (!hasAgents) {
+    return (
+      <>
+        <EmptyOnboarding onCreate={() => setIsCreateOpen(true)} />
+        <CreateAIAssistantDrawer
+          isOpen={isCreateOpen}
+          onClose={() => setIsCreateOpen(false)}
+          editBot={null}
         />
-      ) : (
-        <OnboardingView />
-      )}
-    </div>
-  );
-}
+      </>
+    );
+  }
 
-// ─── Sub-components ───────────────────────────────────────────────────────────
-
-interface DashboardSummaryProps {
-  datasets: any[];
-  documents: any[];
-  message_count: number;
-  token_count: number;
-  userData: any;
-  isRefreshing: boolean;
-  onRefresh: () => void;
-}
-
-function DashboardSummary({
-  datasets,
-  message_count,
-  token_count,
-  userData,
-  isRefreshing,
-  onRefresh,
-}: DashboardSummaryProps) {
+  const firstName = userData?.profile?.username?.split(" ")[0] || "there";
   const limit = userData?.billing?.monthly_limit || 100;
-  const usagePercentage = Math.min((message_count / limit) * 100, 100);
+  const usagePct = Math.min((message_count / limit) * 100, 100);
 
   return (
-    <div className="w-full max-w-[1400px]">
-      {/* Page Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 mb-8">
-        <div>
-          <div className="flex items-center gap-3">
-            <h1 className="text-2xl font-bold text-secondary tracking-tight">Dashboard Overview</h1>
-            <Tooltip content="Refresh Dashboard Data">
-              <button
-                onClick={onRefresh}
-                disabled={isRefreshing}
-                className={`p-1.5 hover:bg-muted text-muted-foreground hover:text-primary transition-all focus:outline-none ${isRefreshing ? "animate-spin text-primary" : ""
-                  }`}
-              >
-                <HiRefresh className="w-5 h-5" />
-              </button>
-            </Tooltip>
-            <span className="bg-primary/5 text-primary text-[10px] font-bold px-2.5 py-1 border border-primary/10 uppercase tracking-widest rounded-lg">
-              {(userData?.billing?.current_plan || 'free').toUpperCase()} plan
-            </span>
+    <>
+      <div className="w-full space-y-5">
+
+        {/* ── Greeting ───────────────────────────────────────────── */}
+        <section className="flex items-center justify-between">
+          <div>
+            <h1 className="text-[28px] font-semibold tracking-[-0.02em] text-foreground leading-tight">
+              Good {greeting()}, {firstName} 👋
+            </h1>
+            <p className="text-sm text-muted-foreground mt-0.5">
+              {new Date().toLocaleDateString(undefined, { weekday: "long", month: "long", day: "numeric" })}
+            </p>
           </div>
-          <p className="text-sm text-muted-foreground mt-2 font-medium">
-            Platform performance and activity summary for{" "}
-            <span className="text-secondary font-semibold">Workspace A</span>
-          </p>
-        </div>
-        <div className="flex gap-2">
           <button
-            disabled
-            className="px-5 py-2.5 bg-secondary text-white/50 text-sm font-medium shadow-sm opacity-60 cursor-not-allowed flex items-center gap-2 rounded-xl"
+            onClick={() => setIsCreateOpen(true)}
+            className="hidden sm:flex items-center gap-2 px-4 py-2 text-[13px] font-semibold rounded-xl bg-foreground text-background hover:bg-foreground/90 transition-colors shrink-0"
           >
-            <HiCreditCard className="w-4 h-4 text-white/50" />
-            Billing & Plans
+            <Plus className="w-3.5 h-3.5" />
+            New agent
           </button>
-        </div>
-      </div>
+        </section>
 
-      {/* Metrics Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <MetricCard
-          icon={HiChatAlt2}
-          label="Message Usage"
-          value={`${message_count.toLocaleString()} / ${limit.toLocaleString()}`}
-          trend={`${usagePercentage.toFixed(1)}% of limit used`}
-          accentClass="text-primary"
-          accentBg="bg-primary/5"
-          ringClass="ring-primary/10"
-          trendPositive={usagePercentage < 80}
-          href={"#"}
-          onClick={(e: any) => e.preventDefault()}
-          isDisabled={true}
-          details={
-            <div className="mt-4 h-1.5 w-full bg-muted rounded-lg overflow-hidden">
-              <div
-                className={`h-full transition-all duration-1000 ${usagePercentage > 90 ? 'bg-red-500' : 'bg-primary'}`}
-                style={{ width: `${usagePercentage}%` }}
-              />
+        {/* ── Stat cards ─────────────────────────────────────────── */}
+        <section className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <StatCard
+            label="Active agents"
+            value={chatbots.length}
+            display={String(chatbots.length).padStart(2, "0")}
+            sub="+1 this week"
+            positive
+            icon={MessagesSquare}
+            iconColor="var(--agent)"
+            iconBg="var(--agent-bg)"
+            href="/dashboard/agents"
+          />
+          <StatCard
+            label="Messages sent"
+            value={message_count}
+            display={message_count.toLocaleString()}
+            sub={`${usagePct.toFixed(0)}% of ${limit.toLocaleString()} used`}
+            progress={usagePct}
+            icon={TrendingUp}
+            iconColor="var(--brand)"
+            iconBg="var(--brand-bg)"
+            href="/dashboard/analytics"
+          />
+          <StatCard
+            label="Knowledge bases"
+            value={datasets.length}
+            display={String(datasets.length).padStart(2, "0")}
+            sub={`${documents.length} ${documents.length === 1 ? "file" : "files"} indexed`}
+            icon={BookOpen}
+            iconColor="var(--knowledge)"
+            iconBg="var(--knowledge-bg)"
+            href="/dashboard/knowledge"
+          />
+        </section>
+
+        {/* ── Agents + Activity ──────────────────────────────────── */}
+        <section className="grid grid-cols-1 lg:grid-cols-[1.6fr_1fr] gap-3">
+          <AgentsPanel
+            chatbots={chatbots.slice(0, 5)}
+            total={chatbots.length}
+            onCreate={() => setIsCreateOpen(true)}
+          />
+          <ActivityPanel />
+        </section>
+
+        {/* ── Message Activity chart (bottom) ────────────────────── */}
+        <section className="bg-background border border-border rounded-2xl overflow-hidden">
+          <div className="flex items-center justify-between px-6 pt-5 pb-2">
+            <div>
+              <p className="text-[13px] font-semibold text-foreground">Message activity</p>
+              <p className="text-sm text-muted-foreground mt-0.5">
+                <span className="font-semibold text-foreground tabular-nums">{message_count.toLocaleString()}</span>
+                {" "}messages this period
+              </p>
             </div>
-          }
-        />
-        <MetricCard
-          icon={HiDatabase}
-          label="Knowledge Bases"
-          value={String(datasets.length)}
-          trend="Active Collections"
-          accentClass="text-emerald-500"
-          accentBg="bg-emerald-500/5"
-          ringClass="ring-emerald-500/10"
-          trendPositive={false}
-          trendNeutral
-          href="/dashboard/datasets"
-        />
-        <MetricCard
-          icon={HiSparkles}
-          label="AI Tokens Used"
-          value={token_count >= 1000 ? `${(token_count / 1000).toFixed(1)}K` : String(token_count)}
-          trend="Across all chatbots"
-          accentClass="text-amber-500"
-          accentBg="bg-amber-500/5"
-          ringClass="ring-amber-500/10"
-          trendPositive={false}
-          trendNeutral
-          href={"#"}
-          onClick={(e: any) => e.preventDefault()}
-          isDisabled={true}
-        />
+            <div className="flex bg-muted p-0.5 rounded-lg text-[12px] font-medium">
+              <span className="px-3 py-1 rounded-md bg-background text-foreground shadow-sm">7d</span>
+              <span className="px-3 py-1 text-muted-foreground cursor-pointer hover:text-foreground transition-colors">30d</span>
+              <span className="px-3 py-1 text-muted-foreground cursor-pointer hover:text-foreground transition-colors">90d</span>
+            </div>
+          </div>
+          <div className="px-4 sm:px-6 pb-6 pt-2">
+            <BarChart data={[]} height={200} emptyLabel="No messages yet" color="var(--brand)" />
+          </div>
+        </section>
+
       </div>
 
-      {/* Content Area */}
-      <div className="flex flex-col lg:grid lg:grid-cols-3 gap-6 mt-8">
-        <QuickActionsPanel />
-        <RecentActivityPanel />
-      </div>
-    </div>
+      <CreateAIAssistantDrawer
+        isOpen={isCreateOpen}
+        onClose={() => setIsCreateOpen(false)}
+        editBot={null}
+      />
+    </>
   );
 }
 
-// ─── Metric Card ──────────────────────────────────────────────────────────────
-
-interface MetricCardProps {
-  icon: React.ElementType;
-  label: string;
-  value: string;
-  trend: string;
-  accentClass: string;
-  accentBg: string;
-  ringClass: string;
-  trendPositive: boolean;
-  trendNeutral?: boolean;
-  href: string;
-  isLocked?: boolean;
-  isDisabled?: boolean;
-  onClick?: (e: any) => void;
-  details?: React.ReactNode;
+function greeting() {
+  const h = new Date().getHours();
+  if (h < 12) return "morning";
+  if (h < 18) return "afternoon";
+  return "evening";
 }
 
-function MetricCard({ icon: Icon, label, value, trend, accentClass, accentBg, ringClass, trendPositive, trendNeutral, href, isLocked, isDisabled, onClick, details }: MetricCardProps) {
+// ─── STAT CARD ────────────────────────────────────────────────────────────────
+
+function StatCard({
+  label,
+  display,
+  sub,
+  positive,
+  progress,
+  icon: Icon,
+  iconColor,
+  iconBg,
+  href,
+}: {
+  label: string;
+  value: number;
+  display: string;
+  sub: string;
+  positive?: boolean;
+  progress?: number;
+  icon: React.ElementType;
+  iconColor: string;
+  iconBg: string;
+  href: string;
+}) {
   return (
     <Link
       href={href}
-      onClick={onClick}
-      className={`dash-card p-6 bg-white border border-border rounded-2xl shadow-sm group relative overflow-hidden block ${isDisabled ? "opacity-75 cursor-default" : "cursor-pointer"}`}
-      style={{ boxShadow: 'var(--shadow-md)' }}
+      className="bg-background border border-border rounded-2xl p-5 flex flex-col gap-4 hover:border-border-medium transition-colors group"
     >
-      <div className="absolute top-0 right-0 p-4 opacity-[0.06] group-hover:opacity-[0.12] transition-opacity">
-        <Icon className={`w-24 h-24 ${accentClass} transform translate-x-4 -translate-y-4`} />
-      </div>
-      <div className={`flex items-center gap-3 mb-5 relative z-10`}>
-        <div className={`p-2.5 ${accentBg} ${accentClass} ring-1 ${ringClass} rounded-xl`}>
-          <Icon className="w-5 h-5" />
-        </div>
-        <div className="flex flex-1 items-center justify-between">
-          <span className="text-sm font-semibold text-muted-foreground">{label}</span>
-          {(isLocked || isDisabled) && (
-            <div className="flex items-center gap-1 text-[10px] font-bold text-amber-500 bg-amber-500/5 px-2 py-0.5 border border-amber-500/10 rounded-lg">
-              <HiLightningBolt className="w-3 h-3" />
-              PRO
-            </div>
-          )}
+      {/* Top row: label + icon */}
+      <div className="flex items-center justify-between">
+        <span className="text-[13px] font-medium text-muted-foreground">{label}</span>
+        <div
+          className="w-8 h-8 rounded-xl flex items-center justify-center"
+          style={{ background: iconBg, color: iconColor }}
+        >
+          <Icon className="w-3.5 h-3.5" />
         </div>
       </div>
-      <div className="text-3xl font-bold text-secondary mb-1.5 relative z-10 font-mono">{value}</div>
-      <div className={`flex items-center gap-1.5 text-xs font-bold w-fit px-2 py-0.5 relative z-10 mt-1 rounded-lg ${trendNeutral ? "text-muted-foreground bg-muted" : "text-emerald-500 bg-emerald-500/5"
-        }`}>
-        {trendPositive && <HiTrendingUp className="w-3.5 h-3.5" />}
-        <span className={trendPositive ? "font-mono" : ""}>{trend}</span>
+
+      {/* Big number */}
+      <div className="text-[42px] font-semibold tracking-[-0.03em] tabular-nums leading-none text-foreground">
+        {display}
       </div>
-      {details && <div className="relative z-10 mt-1">{details}</div>}
+
+      {/* Progress bar (optional) */}
+      {progress !== undefined && (
+        <div className="h-1 bg-muted rounded-full overflow-hidden -mt-1">
+          <div
+            className="h-full rounded-full transition-all"
+            style={{ width: `${progress}%`, background: iconColor }}
+          />
+        </div>
+      )}
+
+      {/* Sub-text */}
+      <div className="flex items-center gap-1 text-[12px] text-muted-foreground -mt-1">
+        {positive && <ArrowUp className="w-3 h-3" style={{ color: "var(--accent-green)" }} />}
+        <span>{sub}</span>
+      </div>
     </Link>
   );
 }
 
-// ─── Quick Actions Panel ──────────────────────────────────────────────────────
+// ─── AGENTS PANEL ────────────────────────────────────────────────────────────
 
-
-function QuickActionsPanel() {
+function AgentsPanel({
+  chatbots,
+  total,
+  onCreate,
+}: {
+  chatbots: any[];
+  total: number;
+  onCreate: () => void;
+}) {
   return (
-    <div className="dash-card bg-white border border-border rounded-2xl shadow-sm lg:col-span-1 h-full flex flex-col overflow-hidden"
-      style={{ boxShadow: 'var(--shadow-md)' }}>
-      <div data-slot="card-header-attached" className="flex items-center justify-between px-6 py-5 border-b border-border">
-        <h3 className="text-sm font-bold text-secondary uppercase tracking-wide">Knowledge Base</h3>
-        <Link href="/dashboard/datasets" className="text-xs text-primary font-semibold hover:underline">Manage →</Link>
-      </div>
-      <div className="p-5 space-y-3 flex-1">
-        {QUICK_ACTIONS.map((action) => (
-          <Link
-            key={action.label}
-            href={action.href}
-            className={`w-full flex items-center gap-4 p-3.5 border border-dashed border-border ${action.hoverBorder} transition-all group text-left block hover:bg-muted`}
+    <div className="bg-background border border-border rounded-2xl overflow-hidden">
+      {/* Header */}
+      <div className="flex items-center justify-between px-5 py-4 border-b border-border">
+        <div className="flex items-center gap-2.5">
+          <h3 className="text-[13px] font-semibold text-foreground">Your agents</h3>
+          <span
+            className="text-[11px] font-semibold px-2 py-0.5 rounded-full tabular-nums"
+            style={{ background: "var(--agent-bg)", color: "var(--agent)" }}
           >
-            <div className={`w-10 h-10 ${action.iconBg} flex items-center justify-center group-hover:scale-110 transition-transform shadow-sm rounded-xl`}>
-              <action.icon className="w-5 h-5" />
-            </div>
-            <div>
-              <h4 className={`text-sm font-semibold text-secondary ${action.hoverText}`}>{action.label}</h4>
-              <p className="text-xs text-muted-foreground mt-0.5">{action.description}</p>
-            </div>
-          </Link>
-        ))}
+            {total}
+          </span>
+        </div>
+        <Link
+          href="/dashboard/agents"
+          className="text-[12px] font-medium text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1"
+        >
+          View all <ArrowRight className="w-3 h-3" />
+        </Link>
+      </div>
+
+      {/* Agent rows */}
+      <div className="divide-y divide-border">
+        {chatbots.map((bot: any) => {
+          const status = (bot.status || "active").toLowerCase();
+          const statusColor =
+            status === "creating" ? "var(--accent-gold)"
+            : status === "failed"  ? "var(--destructive)"
+            : "var(--accent-green)";
+          const statusLabel =
+            status === "creating" ? "Training"
+            : status === "failed"  ? "Failed"
+            : "Live";
+          const initials = bot.name.slice(0, 2).toUpperCase();
+
+          return (
+            <Link
+              key={bot.id}
+              href={`/dashboard/agents/${bot.id}`}
+              className="flex items-center px-5 py-3 gap-3.5 hover:bg-muted/40 transition-colors group"
+            >
+              {/* Avatar */}
+              <div
+                className="w-9 h-9 rounded-xl flex items-center justify-center text-[11px] font-bold shrink-0"
+                style={{ background: "var(--agent-bg)", color: "var(--agent)" }}
+              >
+                {initials}
+              </div>
+
+              {/* Name + meta */}
+              <div className="flex-1 min-w-0">
+                <div className="text-[13px] font-semibold text-foreground truncate">{bot.name}</div>
+                <div className="text-[11px] text-muted-foreground mt-0.5">
+                  {bot.system_prompt
+                    ? bot.system_prompt.slice(0, 40) + (bot.system_prompt.length > 40 ? "…" : "")
+                    : "No system prompt"}
+                </div>
+              </div>
+
+              {/* Status */}
+              <span
+                className="flex items-center gap-1.5 text-[11px] font-semibold shrink-0"
+                style={{ color: statusColor }}
+              >
+                <span className="w-1.5 h-1.5 rounded-full" style={{ background: statusColor }} />
+                {statusLabel}
+              </span>
+
+              <ArrowRight className="w-3.5 h-3.5 text-border group-hover:text-muted-foreground transition-colors shrink-0" />
+            </Link>
+          );
+        })}
+
+        {/* New agent row */}
+        <button
+          onClick={onCreate}
+          className="w-full flex items-center gap-3.5 px-5 py-3 hover:bg-muted/40 transition-colors text-left"
+        >
+          <div className="w-9 h-9 rounded-xl border border-dashed border-border flex items-center justify-center text-muted-foreground shrink-0">
+            <Plus className="w-4 h-4" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <div className="text-[13px] font-semibold text-foreground">New agent</div>
+            <div className="text-[11px] text-muted-foreground">Deploy a new AI assistant</div>
+          </div>
+        </button>
       </div>
     </div>
   );
 }
 
-// ─── Recent Activity Panel ────────────────────────────────────────────────────
+// ─── ACTIVITY PANEL ──────────────────────────────────────────────────────────
 
-function RecentActivityPanel() {
+function ActivityPanel() {
   const [activities, setActivities] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchActivities = async () => {
+    (async () => {
       try {
         const res = await api.get(ENDPOINTS.USERS.RECENT_ACTIVITY);
         setActivities(res.data);
@@ -317,155 +368,161 @@ function RecentActivityPanel() {
       } finally {
         setLoading(false);
       }
-    };
-    fetchActivities();
+    })();
   }, []);
 
-  const getActivityColor = (type: string) => {
-    switch (type) {
-      case 'document_added': return 'bg-primary';
-      case 'dataset_created': return 'bg-emerald-500';
-      case 'chatbot_created': return 'bg-[var(--link)]';
-      case 'message_limit_warning': return 'bg-amber-500';
-      default: return 'bg-muted-foreground';
-    }
-  };
+  const titleOf = (t: string) =>
+    ({ document_added: "Source uploaded", dataset_created: "Collection created", chatbot_created: "Agent deployed", message_limit_warning: "Usage alert" }[t] || "Activity");
 
-  const getActivityTitle = (type: string) => {
-    switch (type) {
-      case 'document_added': return 'New source file uploaded';
-      case 'dataset_created': return 'New knowledge base created';
-      case 'chatbot_created': return 'AI assistant deployed';
-      case 'message_limit_warning': return 'Usage limit alert';
-      default: return 'Activity';
-    }
-  };
+  const iconOf = (t: string) =>
+    ({ document_added: Upload, dataset_created: Sparkles, chatbot_created: MessagesSquare, message_limit_warning: ArrowUp }[t] || Code);
+
+  const colorOf = (t: string) =>
+    ({
+      document_added:      { color: "var(--knowledge)", bg: "var(--knowledge-bg)" },
+      dataset_created:     { color: "var(--knowledge)", bg: "var(--knowledge-bg)" },
+      chatbot_created:     { color: "var(--agent)",     bg: "var(--agent-bg)"     },
+      message_limit_warning: { color: "var(--accent-gold)", bg: "#FFFBEB" },
+    }[t] || { color: "var(--muted-foreground)", bg: "var(--muted)" });
 
   return (
-    <div className="dash-card bg-white border border-border rounded-2xl shadow-sm lg:col-span-2 overflow-hidden"
-      style={{ boxShadow: 'var(--shadow-md)' }}>
-      <div data-slot="card-header-attached" className="flex items-center justify-between px-6 py-5 border-b border-border">
-        <div className="flex items-center gap-3">
-          <h3 className="text-sm font-bold text-secondary uppercase tracking-wide">Recent Activity</h3>
-          <span className="bg-primary/10 text-primary text-[10px] font-bold px-2 py-0.5 rounded-lg">New</span>
-        </div>
-        <button className="p-1.5 hover:bg-white/80 text-muted-foreground hover:text-foreground transition-colors">
-          <HiDotsVertical className="w-4 h-4" />
-        </button>
+    <div className="bg-background border border-border rounded-2xl overflow-hidden">
+      <div className="px-5 py-4 border-b border-border">
+        <h3 className="text-[13px] font-semibold text-foreground">Recent activity</h3>
       </div>
-      <div className="px-6 divide-y divide-muted">
+
+      <div className="px-5 py-4 space-y-4">
         {loading ? (
-          <div className="space-y-4 py-5">
-            {Array.from({ length: 3 }).map((_, i) => (
-              <div key={i} className="flex gap-4 py-3">
-                <div className="w-9 h-9 rounded-full bg-muted flex items-center justify-center border border-border shadow-sm shrink-0">
-                  <div className="w-2.5 h-2.5 bg-border rounded-full" />
-                </div>
-                <div className="flex-1 space-y-2">
-                  <div className="flex justify-between">
-                    <div className="h-3 w-32 bg-muted rounded-full overflow-hidden relative">
-                      <div className="absolute inset-0 bg-muted" />
-                    </div>
-                    <div className="h-2 w-16 bg-muted rounded-full overflow-hidden relative">
-                      <div className="absolute inset-0 bg-muted" />
-                    </div>
-                  </div>
-                  <div className="h-2.5 w-full bg-muted rounded-full overflow-hidden relative">
-                    <div className="absolute inset-0 bg-muted" />
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        ) : activities.length === 0 ? (
-          <div className="text-center py-12 text-muted-foreground text-sm">No recent activity</div>
-        ) : (
-          activities.map((item, idx) => (
-            <div key={item.id} className="flex gap-4 py-4 group hover:bg-muted transition-colors -mx-6 px-6 cursor-pointer">
-              <div className="relative mt-1">
-                <div className="w-9 h-9 bg-muted flex items-center justify-center border border-border shadow-sm z-10 relative rounded-lg">
-                  <div className={`w-2.5 h-2.5 ${getActivityColor(item.activity_type)}`} />
-                </div>
-                {idx < activities.length - 1 && (
-                  <div className="absolute top-9 left-1/2 -translate-x-1/2 w-0.5 h-full bg-border -z-0" />
-                )}
-              </div>
-              <div className="flex-1 min-w-0">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
-                  <p className="text-sm font-semibold text-secondary truncate">{getActivityTitle(item.activity_type)}</p>
-                  <span className="text-[10px] sm:text-xs text-muted-foreground font-medium whitespace-nowrap font-mono">
-                    {new Date(item.created_at).toLocaleDateString()}
-                  </span>
-                </div>
-                <p className="text-xs sm:text-sm text-foreground mt-0.5 leading-relaxed">
-                  {item.details}
-                </p>
+          Array.from({ length: 4 }).map((_, i) => (
+            <div key={i} className="flex gap-3 animate-pulse">
+              <div className="w-7 h-7 rounded-xl bg-muted shrink-0" />
+              <div className="flex-1 space-y-1.5 pt-0.5">
+                <div className="h-3 w-28 bg-muted rounded-full" />
+                <div className="h-2 w-40 bg-muted rounded-full" />
               </div>
             </div>
           ))
+        ) : activities.length === 0 ? (
+          <div className="py-8 text-center">
+            <div className="text-[13px] font-medium text-muted-foreground">Nothing yet</div>
+            <div className="text-xs text-muted-foreground/60 mt-1">Activity will appear here</div>
+          </div>
+        ) : (
+          activities.slice(0, 5).map((item, idx) => {
+            const Icon = iconOf(item.activity_type);
+            const { color, bg } = colorOf(item.activity_type);
+            const isLast = idx === Math.min(activities.length, 5) - 1;
+            return (
+              <div key={item.id} className="flex gap-3 relative">
+                {/* Timeline line */}
+                {!isLast && (
+                  <div className="absolute left-[13px] top-7 bottom-[-12px] w-px bg-border" />
+                )}
+                <div
+                  className="w-7 h-7 rounded-xl flex items-center justify-center shrink-0 z-10"
+                  style={{ background: bg, color }}
+                >
+                  <Icon className="w-3 h-3" />
+                </div>
+                <div className="flex-1 min-w-0 pt-0.5">
+                  <div className="flex items-center justify-between gap-2">
+                    <p className="text-[13px] font-semibold text-foreground truncate">
+                      {titleOf(item.activity_type)}
+                    </p>
+                    <span className="text-[11px] text-muted-foreground whitespace-nowrap shrink-0">
+                      {new Date(item.created_at).toLocaleDateString(undefined, { month: "short", day: "numeric" })}
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-muted-foreground mt-0.5 line-clamp-1">
+                    {item.details}
+                  </p>
+                </div>
+              </div>
+            );
+          })
         )}
       </div>
     </div>
   );
 }
 
-// ─── Onboarding View ──────────────────────────────────────────────────────────
+// ─── EMPTY STATE ─────────────────────────────────────────────────────────────
 
-function OnboardingView() {
+function EmptyOnboarding({ onCreate }: { onCreate: () => void }) {
+  const steps = [
+    {
+      num: 1,
+      title: "Upload your knowledge",
+      desc: "PDFs, websites, Notion — anything your users ask about.",
+      href: "/dashboard/knowledge",
+      cta: "Add sources",
+      color: "var(--knowledge)",
+      bg: "var(--knowledge-bg)",
+    },
+    {
+      num: 2,
+      title: "Create your first agent",
+      desc: "Pick a name, persona, and which knowledge to train on.",
+      onClick: onCreate,
+      cta: "Create agent",
+      color: "var(--agent)",
+      bg: "var(--agent-bg)",
+    },
+    {
+      num: 3,
+      title: "Test & deploy",
+      desc: "Chat with it in the playground, then grab the embed code.",
+      href: "/dashboard/playground",
+      cta: "Open playground",
+      color: "var(--brand)",
+      bg: "var(--brand-bg)",
+    },
+  ];
+
   return (
-    <div className="w-full max-w-[1400px] mx-auto flex flex-col items-center">
-      <div className="hero-content text-center mb-16 px-4">
-        <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/5 text-primary text-[10px] font-bold border border-primary/10 mb-6 rounded-lg uppercase tracking-widest">
-          <HiLightningBolt className="w-3 h-3" />
-          <span>Getting Started</span>
-        </div>
-        <h2 className="text-2xl md:text-3xl font-extrabold text-secondary mb-4 tracking-tight">
-          Build your AI assistant in 4 simple steps
-        </h2>
-        <p className="text-base text-muted-foreground max-w-xl mx-auto leading-relaxed">
-          Connect your data, organize your knowledge, and deploy a chatbot that actually understands your business.
-        </p>
+    <div className="w-full max-w-2xl mx-auto py-8 sm:py-14 text-center">
+      <div
+        className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold mb-5 border"
+        style={{ background: "var(--brand-bg)", color: "var(--brand)", borderColor: "var(--brand)" + "30" }}
+      >
+        Welcome to Deploy Chat
       </div>
+      <h1 className="text-3xl sm:text-[34px] font-semibold tracking-[-0.025em] text-foreground mb-3 leading-tight">
+        Let&apos;s ship your first AI agent.
+      </h1>
+      <p className="text-[15px] text-muted-foreground max-w-md mx-auto leading-relaxed mb-10">
+        Three steps. No code required. You&apos;ll be live in under 5 minutes.
+      </p>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 w-full px-4 relative">
-
-        {ONBOARDING_STEPS.map((step) => (
-          <div key={step.id} className="step-card group relative z-10">
-            <div className="bg-white p-6 md:p-8 border border-border rounded-2xl shadow-sm hover:shadow-2xl hover:border-primary/20 transition-all duration-500 flex flex-col h-full relative overflow-hidden"
-              style={{ boxShadow: 'var(--shadow-md)' }}>
-              <div className={`absolute top-0 left-0 w-full h-1 bg-gradient-to-r ${step.gradientFrom} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
-              <div className={`w-12 h-12 ${step.bgColor} ${step.color} flex items-center justify-center mb-6 shadow-sm ring-1 ring-inset ${step.borderColor} group-hover:scale-110 transition-all duration-500 rounded-xl`}>
-                <step.icon className="w-6 h-6" />
-              </div>
-              <div className="flex items-center gap-2 mb-2">
-                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground font-mono">Step 0{step.id}</span>
-              </div>
-              <h3 className="text-lg font-bold text-secondary mb-2 group-hover:text-primary transition-colors">
-                {step.name}
-              </h3>
-              <p className="text-muted-foreground text-xs md:text-sm leading-relaxed mb-8 flex-1">
-                {step.description}
-              </p>
-              <Link
-                href={step.href}
-                className="flex items-center justify-between w-full px-5 py-2.5 bg-secondary text-white border border-secondary text-[13px] font-medium transition-all duration-300 group/btn shadow-sm hover:shadow-md rounded-xl"
-              >
-                <span>{step.btnText}</span>
-                <HiArrowRight className="w-4 h-4 transform group-hover/btn:translate-x-1 transition-transform" />
-              </Link>
+      <div className="flex flex-col gap-2.5 text-left">
+        {steps.map((step) => (
+          <div
+            key={step.num}
+            className="bg-background border border-border rounded-2xl p-4 flex items-center gap-4 hover:border-border-medium transition-colors"
+          >
+            <div
+              className="w-9 h-9 rounded-xl flex items-center justify-center text-[13px] font-bold shrink-0"
+              style={{ background: step.bg, color: step.color }}
+            >
+              {step.num}
             </div>
+            <div className="flex-1 min-w-0">
+              <h3 className="text-[14px] font-semibold text-foreground">{step.title}</h3>
+              <p className="text-[12px] text-muted-foreground mt-0.5">{step.desc}</p>
+            </div>
+            {step.onClick ? (
+              <Button size="sm" onClick={step.onClick} className="shrink-0">
+                {step.cta}
+              </Button>
+            ) : (
+              <Button size="sm" variant="outline" asChild className="shrink-0">
+                <Link href={step.href!}>{step.cta}</Link>
+              </Button>
+            )}
           </div>
         ))}
-      </div>
-
-      <div className="hero-content mt-16 text-center">
-        <p className="text-[13px] text-muted-foreground">
-          New to Deploy Chat?{" "}
-          <Link href="/dashboard/help" className="font-bold text-primary hover:underline">Watch a 2-minute intro</Link>{" "}
-          or{" "}
-          <Link href="/dashboard/help" className="font-bold text-primary hover:underline">read documentation</Link>
-        </p>
       </div>
     </div>
   );
 }
+

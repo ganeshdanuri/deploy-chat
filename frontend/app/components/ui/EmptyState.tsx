@@ -1,8 +1,10 @@
 "use client";
+import { Plus } from "lucide-react";
+
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { HiPlus } from "react-icons/hi";
+
 
 interface EmptyStateProps {
     icon: React.ElementType;
@@ -10,56 +12,26 @@ interface EmptyStateProps {
     description: string;
     actionLabel?: string;
     onAction?: () => void;
-    accentColor?: "indigo" | "emerald" | "amber" | "slate";
+    accentColor?: "indigo" |"emerald" |"amber" |"slate";
 }
 
-const colorMap = {
-    indigo: {
-        bg: "bg-primary/5",
-        text: "text-primary",
-    },
-    emerald: {
-        bg: "bg-emerald-500/5",
-        text: "text-emerald-500",
-    },
-    amber: {
-        bg: "bg-amber-500/5",
-        text: "text-amber-500",
-    },
-    slate: {
-        bg: "bg-muted",
-        text: "text-muted-foreground",
-    },
-};
-
-/**
- * Reusable empty-state card used when a list has no items.
- * Accepts an icon, title, description, and an optional primary CTA.
- */
 export function EmptyState({
     icon: Icon,
     title,
     description,
     actionLabel,
     onAction,
-    accentColor = "indigo",
 }: EmptyStateProps) {
-    const colors = colorMap[accentColor];
-
     return (
-        <div className="flex flex-col items-center justify-center py-20 bg-white border border-border rounded-2xl shadow-sm" style={{ boxShadow: 'var(--shadow-md)' }}>
-            <div className={`w-16 h-16 ${colors.bg} ${colors.text} flex items-center justify-center mb-4`}>
-                <Icon className="w-8 h-8" />
+        <div className="flex flex-col items-center justify-center py-20 bg-background border border-border rounded-xl">
+            <div className="w-14 h-14 bg-muted text-muted-foreground rounded-full flex items-center justify-center mb-5">
+                <Icon className="w-7 h-7" />
             </div>
-            <h2 className="text-2xl font-semibold text-secondary mb-2">{title}</h2>
-            <p className="text-muted-foreground max-w-sm text-center mb-8 text-sm">{description}</p>
+            <h2 className="text-lg font-medium text-foreground mb-1.5">{title}</h2>
+            <p className="text-muted-foreground max-w-sm text-center mb-6 text-sm leading-relaxed">{description}</p>
             {actionLabel && onAction && (
-                <Button
-                    variant="primary"
-                    onClick={onAction}
-                    className="px-6 h-12 pointer-events-auto"
-                >
-                    <HiPlus className="w-5 h-5 mr-2" />
+                <Button onClick={onAction}>
+                    <Plus className="w-4 h-4 mr-1.5" />
                     {actionLabel}
                 </Button>
             )}

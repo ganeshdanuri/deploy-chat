@@ -1,7 +1,9 @@
 "use client";
+import { Bell, CreditCard, KeyRound, Pencil, Plus, ShieldCheck, Trash2, User, Users } from "lucide-react";
+
 
 import { useState, useEffect } from "react";
-import { HiUser, HiKey, HiCreditCard, HiUsers, HiBell, HiShieldCheck, HiPlus, HiTrash, HiPencil } from "react-icons/hi";
+
 import { SiOpenai, SiAnthropic, SiGooglecloud } from "react-icons/si";
 import { useAppSelector } from "@/lib/store/hooks";
 import { useAuth } from "@/app/context/AuthContext";
@@ -15,11 +17,11 @@ import AddAPIKeyDrawer from "@/app/components/AddAPIKeyDrawer";
 import EditProfileDrawer from "@/app/components/EditProfileDrawer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { EmptyState, DateCell, DeleteConfirmationModal, Input } from "@/app/components/ui";
+import { EmptyState, DateCell, DeleteConfirmationModal, Input, PageHeader } from "@/app/components/ui";
 
 export default function SettingsPage() {
     const searchParams = useSearchParams();
-    const [activeTab, setActiveTab] = useState(searchParams.get("tab") || "general");
+    const [activeTab, setActiveTab] = useState(searchParams.get("tab") ||"general");
     const [apiKeys, setApiKeys] = useState<{ id: string; provider: string; created_at: string }[]>([]);
     const [isApiKeysLoading, setIsApiKeysLoading] = useState(false);
     const [isAddKeyModalOpen, setIsAddKeyModalOpen] = useState(false);
@@ -79,36 +81,30 @@ export default function SettingsPage() {
     const isLoading = userStatus === "loading";
 
     const tabs = [
-        { id: "general", label: "General", icon: HiUser },
-        { id: "team", label: "Team Members", icon: HiUsers },
-        { id: "billing", label: "Billing & Plans", icon: HiCreditCard },
-        { id: "api-keys", label: "API Keys", icon: HiKey },
-        { id: "notifications", label: "Notifications", icon: HiBell },
+        { id: "general", label: "General", icon: User },
+        { id: "team", label: "Team Members", icon: Users },
+        { id: "billing", label: "Billing & Plans", icon: CreditCard },
+        { id: "api-keys", label: "API Keys", icon: KeyRound },
+        { id: "notifications", label: "Notifications", icon: Bell },
     ];
 
-    const currentTabLabel = tabs.find(t => t.id === activeTab)?.label || "Settings";
+    const currentTabLabel = tabs.find(t => t.id === activeTab)?.label ||"Settings";
 
     const getProviderIcon = (provider: string) => {
         switch (provider.toLowerCase()) {
             case 'openai': return SiOpenai;
             case 'anthropic': return SiAnthropic;
             case 'google': return SiGooglecloud;
-            default: return HiKey;
+            default: return KeyRound;
         }
     };
 
     return (
-        <div className="animate-fade-in-up max-w-5xl mx-auto">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8 pb-6">
-                <div>
-                    <h1 className="text-2xl font-bold text-secondary tracking-tight">{currentTabLabel}</h1>
-                    <p className="text-sm text-foreground mt-1.5">Manage your account preferences and system configuration.</p>
-                </div>
-                <div className="flex items-center gap-2 text-xs font-semibold text-muted-foreground bg-muted px-3 py-1.5 border border-border">
-                    <HiShieldCheck className="w-4 h-4 text-primary" />
-                    Secure Settings
-                </div>
-            </div>
+        <div className="animate-fade-in-up max-w-5xl mx-auto space-y-6">
+            <PageHeader
+                title={currentTabLabel}
+                description="Manage your account preferences and system configuration."
+            />
 
             <div className="space-y-6">
                 <div className="w-full">
@@ -117,37 +113,36 @@ export default function SettingsPage() {
                     ) : (
                         <div className="w-full">
                             {activeTab === "general" && (
-                                <div className="dash-card bg-white border border-border rounded-2xl shadow-sm overflow-hidden animate-fade-in" style={{ boxShadow: 'var(--shadow-md)' }}>
-                                    <div data-slot="card-header-attached" className="p-6 border-b border-border flex items-center justify-between font-bold bg-muted">
+                                <div className="bg-background border border-border rounded-xl overflow-hidden animate-fade-in">
+                                    <div className="px-5 py-4 border-b border-border flex items-center justify-between">
                                         <div>
-                                            <h2 className="text-lg font-bold text-secondary">Profile Information</h2>
-                                            <p className="text-sm text-foreground mt-1">Update your account&apos;s profile information and email address.</p>
+                                            <h2 className="text-[15px] font-medium text-foreground">Profile information</h2>
+                                            <p className="text-xs text-muted-foreground mt-0.5">Your account&apos;s profile information and email address.</p>
                                         </div>
                                         <Button
                                             size="sm"
-                                            variant="secondary"
+                                            variant="outline"
                                             onClick={() => setIsEditProfileModalOpen(true)}
-                                            className="bg-muted text-secondary font-bold hover:bg-border border border-border"
-                                        >
-                                            <HiPencil className="w-3.5 h-3.5 mr-2" />
-                                            Edit Profile
+>
+                                            <Pencil className="w-3.5 h-3.5 mr-1.5" />
+                                            Edit
                                         </Button>
                                     </div>
-                                    <div className="p-6 space-y-6">
-                                        <div className="grid grid-cols-2 gap-6">
-                                            <div className="col-span-2 space-y-2">
-                                                <label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest ml-1">Username</label>
-                                                <Input type="text" value={userData?.profile?.username || ""} readOnly disabled className="bg-muted border-border opacity-60" />
+                                    <div className="p-5 space-y-5">
+                                        <div className="grid grid-cols-2 gap-5">
+                                            <div className="col-span-2 space-y-1.5">
+                                                <label className="text-xs font-medium text-muted-foreground">Username</label>
+                                                <Input type="text" value={userData?.profile?.username ||""} readOnly disabled className="bg-muted border-border opacity-70" />
                                             </div>
-                                            <div className="col-span-2 space-y-2">
-                                                <label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest ml-1">Email Address</label>
+                                            <div className="col-span-2 space-y-1.5">
+                                                <label className="text-xs font-medium text-muted-foreground">Email address</label>
                                                 <Input
                                                     type="email"
-                                                    startContent={<HiUser className="w-4 h-4 text-muted-foreground" />}
-                                                    value={userData?.profile?.email || authUser?.email || ""}
+                                                    startContent={<User className="w-4 h-4 text-muted-foreground" />}
+                                                    value={userData?.profile?.email || authUser?.email ||""}
                                                     readOnly
                                                     disabled
-                                                    className="bg-muted border-border opacity-60"
+                                                    className="bg-muted border-border opacity-70"
                                                 />
                                             </div>
                                         </div>
@@ -157,17 +152,17 @@ export default function SettingsPage() {
 
                             {activeTab === "billing" && (
                                 <div className="space-y-4 animate-fade-in">
-                                    <div className="dash-card bg-white border border-border rounded-2xl shadow-sm overflow-hidden" style={{ boxShadow: 'var(--shadow-md)' }}>
+                                    <div className="dash-card bg-background border border-border rounded-xl overflow-hidden">
                                         <div className="p-5 sm:p-6 flex flex-col md:flex-row md:items-start justify-between gap-6">
                                             <div className="flex-1 space-y-4">
                                                 <div className="flex items-center gap-3">
-                                                    <div className="w-10 h-10 bg-secondary/5 rounded-xl flex items-center justify-center border border-border shrink-0">
-                                                        <HiCreditCard className="w-5 h-5 text-primary" />
+                                                    <div className="w-10 h-10 bg-muted rounded-xl flex items-center justify-center border border-border shrink-0">
+                                                        <CreditCard className="w-5 h-5 text-primary" />
                                                     </div>
                                                     <div>
-                                                        <h2 className="text-lg font-bold text-secondary flex items-center gap-2">
+                                                        <h2 className="text-lg font-medium text-foreground flex items-center gap-2">
                                                             {userData?.billing?.current_plan ? userData.billing.current_plan.charAt(0).toUpperCase() + userData.billing.current_plan.slice(1) : 'Free'} plan
-                                                            <span className="bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 text-[10px] font-bold px-2 py-0.5 rounded-lg uppercase tracking-wider">Active</span>
+                                                            <span className="bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 text-[10px] font-medium px-2 py-0.5 rounded-lg uppercase tracking-wider">Active</span>
                                                         </h2>
                                                         <p className="text-sm text-foreground mt-0.5">
                                                             {userData?.billing?.expires_at
@@ -179,7 +174,7 @@ export default function SettingsPage() {
 
                                                 <div className="mt-2 text-foreground max-w-sm">
                                                     <div className="flex justify-between items-end mb-1.5">
-                                                        <span className="text-sm font-semibold text-secondary">
+                                                        <span className="text-sm font-medium text-foreground">
                                                             {userData?.usage?.messages_sent || 0} <span className="text-muted-foreground font-medium">/ {userData?.billing?.monthly_limit || 100} msgs</span>
                                                         </span>
                                                         <span className="text-xs font-medium text-muted-foreground">
@@ -188,7 +183,7 @@ export default function SettingsPage() {
                                                     </div>
                                                     <div className="h-1.5 w-full bg-muted rounded-lg overflow-hidden">
                                                         <div
-                                                            className={`h-full transition-all duration-1000 ${((userData?.usage?.messages_sent || 0) / (userData?.billing?.monthly_limit || 100)) > 0.9 ? 'bg-red-500' : 'bg-primary'}`}
+                                                            className={`h-full transition-all duration-1000 ${((userData?.usage?.messages_sent || 0) / (userData?.billing?.monthly_limit || 100)) > 0.9 ? 'bg-red-500' : 'bg-foreground'}`}
                                                             style={{ width: `${Math.min(((userData?.usage?.messages_sent || 0) / (userData?.billing?.monthly_limit || 100)) * 100, 100)}%` }}
                                                         />
                                                     </div>
@@ -196,9 +191,9 @@ export default function SettingsPage() {
                                             </div>
                                             <div className="shrink-0 pt-1">
                                                 <button
-                                                    className="flex items-center gap-2 px-5 py-2.5 bg-muted border border-border rounded-xl text-muted-foreground text-sm font-medium cursor-not-allowed opacity-60 shadow-sm"
+                                                    className="flex items-center gap-2 px-5 py-2.5 bg-muted border border-border rounded-xl text-muted-foreground text-sm font-medium cursor-not-allowed opacity-60"
                                                     disabled
-                                                >
+>
                                                     View Invoices
                                                 </button>
                                             </div>
@@ -211,10 +206,10 @@ export default function SettingsPage() {
                                             price="19"
                                             interval="/month"
                                             features={[
-                                                "1,000 Messages / month",
-                                                "1 AI Chatbot",
-                                                "Standard Analytics",
-                                                "Email Support"
+"1,000 Messages / month",
+"1 AI Chatbot",
+"Standard Analytics",
+"Email Support"
                                             ]}
                                             buttonText="Upgrade"
                                             onButtonClick={() => { }}
@@ -225,11 +220,11 @@ export default function SettingsPage() {
                                             price="49"
                                             interval="/month"
                                             features={[
-                                                "10,000 Messages / month",
-                                                "5 AI Chatbots",
-                                                "Advanced Analytics",
-                                                "Priority Support",
-                                                "Remove Branding"
+"10,000 Messages / month",
+"5 AI Chatbots",
+"Advanced Analytics",
+"Priority Support",
+"Remove Branding"
                                             ]}
                                             buttonText="Get Started"
                                             isPopular={true}
@@ -240,11 +235,11 @@ export default function SettingsPage() {
                                             title="Enterprise"
                                             price="Custom"
                                             features={[
-                                                "Unlimited everything",
-                                                "Dedicated Azure Server",
-                                                "SLA Guarantees",
-                                                "Custom Integrations",
-                                                "Single Sign-On (SSO)"
+"Unlimited everything",
+"Dedicated Azure Server",
+"SLA Guarantees",
+"Custom Integrations",
+"Single Sign-On (SSO)"
                                             ]}
                                             buttonText="Contact Sales"
                                             onButtonClick={() => { }}
@@ -258,14 +253,14 @@ export default function SettingsPage() {
                                 <div className="space-y-6 animate-fade-in">
                                     <div className="flex items-center justify-between">
                                         <div>
-                                            <h2 className="text-lg font-bold text-secondary">API Keys</h2>
+                                            <h2 className="text-lg font-medium text-foreground">API Keys</h2>
                                             <p className="text-sm text-foreground mt-1">Manage platform keys for model providers.</p>
                                         </div>
                                         <Button
                                             onClick={() => setIsAddKeyModalOpen(true)}
-                                            className="bg-secondary text-white font-bold hover:bg-secondary/90 shadow-lg shadow-secondary/10"
-                                        >
-                                            <HiPlus className="w-4 h-4 mr-2" />
+                                            
+>
+                                            <Plus className="w-4 h-4 mr-2" />
                                             Add Key
                                         </Button>
                                     </div>
@@ -274,7 +269,7 @@ export default function SettingsPage() {
                                         <TableSkeleton rows={3} columns={3} />
                                     ) : apiKeys.length === 0 ? (
                                         <EmptyState
-                                            icon={HiPlus}
+                                            icon={Plus}
                                             title="No API keys yet"
                                             description="Add your OpenAI or Anthropic key to use your own model quotas."
                                             actionLabel="Add your first key"
@@ -285,14 +280,14 @@ export default function SettingsPage() {
                                             {apiKeys.map((key) => {
                                                 const Icon = getProviderIcon(key.provider);
                                                 return (
-                                                    <Card key={key.id} className="border-border shadow-sm rounded-2xl">
+                                                    <Card key={key.id} className="border-border rounded-xl">
                                                         <CardContent className="flex flex-row items-center justify-between p-6">
                                                             <div className="flex items-center gap-6">
                                                                 <div className="w-10 h-10 bg-muted rounded-xl flex items-center justify-center border border-border">
-                                                                    <Icon className="w-5 h-5 text-secondary" />
+                                                                    <Icon className="w-5 h-5 text-foreground" />
                                                                 </div>
                                                                 <div>
-                                                                    <h4 className="text-sm font-bold text-secondary uppercase tracking-tight">{key.provider}</h4>
+                                                                    <h4 className="text-sm font-medium text-foreground">{key.provider}</h4>
                                                                     <p className="text-xs text-muted-foreground font-mono">••••••••••••••••</p>
                                                                 </div>
                                                             </div>
@@ -302,8 +297,8 @@ export default function SettingsPage() {
                                                                     variant="ghost"
                                                                     onClick={() => handleDeleteClick(key.id, key.provider)}
                                                                     className="text-muted-foreground hover:text-red-500 h-8 w-8 p-0"
-                                                                >
-                                                                    <HiTrash className="w-4 h-4" />
+>
+                                                                    <Trash2 className="w-4 h-4" />
                                                                 </Button>
                                                             </div>
                                                         </CardContent>
@@ -317,11 +312,11 @@ export default function SettingsPage() {
 
                             {/* Other tabs placeholder */}
                             {(activeTab !== "general" && activeTab !== "billing" && activeTab !== "api-keys") && (
-                                <div className="flex flex-col items-center justify-center p-12 bg-white border border-border border-dashed rounded-2xl animate-fade-in">
-                                    <div className="w-16 h-16 bg-muted rounded-2xl flex items-center justify-center mb-4">
-                                        <HiShieldCheck className="w-8 h-8 text-muted-foreground/40" />
+                                <div className="flex flex-col items-center justify-center p-12 bg-background border border-border border-dashed rounded-xl animate-fade-in">
+                                    <div className="w-16 h-16 bg-muted rounded-xl flex items-center justify-center mb-4">
+                                        <ShieldCheck className="w-8 h-8 text-muted-foreground/40" />
                                     </div>
-                                    <h3 className="text-secondary font-bold">Coming Soon</h3>
+                                    <h3 className="text-foreground font-medium">Coming Soon</h3>
                                     <p className="text-foreground text-sm mt-1 font-medium">This settings panel is under construction.</p>
                                 </div>
                             )}
@@ -339,8 +334,8 @@ export default function SettingsPage() {
             <EditProfileDrawer
                 isOpen={isEditProfileModalOpen}
                 onClose={() => setIsEditProfileModalOpen(false)}
-                currentUsername={userData?.profile?.username || ""}
-                currentEmail={userData?.profile?.email || authUser?.email || ""}
+                currentUsername={userData?.profile?.username ||""}
+                currentEmail={userData?.profile?.email || authUser?.email ||""}
                 onSuccess={() => {
                     window.location.reload(); // Quick way to refresh user data context
                 }}
@@ -355,6 +350,6 @@ export default function SettingsPage() {
                 description={`Are you sure you want to remove your ${itemToDelete?.name} API key?`}
                 itemName={itemToDelete?.name}
             />
-        </div >
+        </div>
     );
 }

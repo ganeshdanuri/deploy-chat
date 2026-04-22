@@ -1,375 +1,258 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { HiCheck, HiArrowRight } from "react-icons/hi";
-import {
-  HERO_CHECKMARKS,
-  HERO_CHAT_CONVERSATIONS,
-  HERO_NODES_DATA,
-  HERO_RING_DEFS,
-  PAGE_CONTENT
-} from "../../lib/constants";
+import { Button } from "@/components/ui/button";
+import { FolderOpen, Paintbrush, Code2 } from "lucide-react";
 
-// ── Animated Chat Widget (center of hero visual) ───────────────────────────
-function ChatWidgetVisual() {
+const CONVERSATIONS = [
+  {
+    q: "How do I embed the widget on a Next.js site? ",
+    a: "Add this to your root layout — that's it.",
+    code: '<Script src="https://cdn.deploychat.in/w.js" />',
+  },
+  {
+    q: "What data sources can I connect? ",
+    a: "PDFs, websites, Notion, Google Drive, CSV, and your API.",
+    code: null,
+  },
+  {
+    q: "Will it use my data to train base models? ",
+    a: "Never. Your content stays private and encrypted at rest.",
+    code: null,
+  },
+];
+
+function ChatWidget() {
   const [convoIdx, setConvoIdx] = useState(0);
-  const [questionText, setQuestionText] = useState("");
-  const [answerText, setAnswerText] = useState("");
-  const [phase, setPhase] = useState<"typing-q" | "pause" | "typing-a" | "display" | "reset">("typing-q");
+  const [qText, setQText] = useState("");
+  const [aText, setAText] = useState("");
+  const [phase, setPhase] = useState<"q" |"pause" |"a" |"hold" |"reset">("q");
 
-  // Typing effect for question and answer
   useEffect(() => {
-    const convo = HERO_CHAT_CONVERSATIONS[convoIdx];
-    let timer: ReturnType<typeof setTimeout>;
-
+    const convo = CONVERSATIONS[convoIdx];
+    let t: ReturnType<typeof setTimeout>;
     switch (phase) {
-      case "typing-q":
-        if (questionText.length < convo.question.length) {
-          timer = setTimeout(() => setQuestionText(convo.question.slice(0, questionText.length + 1)), 50);
+      case "q":
+        if (qText.length < convo.q.length) {
+          t = setTimeout(() => setQText(convo.q.slice(0, qText.length + 1)), 40);
         } else {
-          timer = setTimeout(() => setPhase("pause"), 400);
+          t = setTimeout(() => setPhase("pause"), 500);
         }
         break;
       case "pause":
-        timer = setTimeout(() => setPhase("typing-a"), 600);
+        t = setTimeout(() => setPhase("a"), 600);
         break;
-      case "typing-a":
-        if (answerText.length < convo.answer.length) {
-          timer = setTimeout(() => setAnswerText(convo.answer.slice(0, answerText.length + 1)), 20);
+      case "a":
+        if (aText.length < convo.a.length) {
+          t = setTimeout(() => setAText(convo.a.slice(0, aText.length + 1)), 20);
         } else {
-          timer = setTimeout(() => setPhase("display"), 3000);
+          t = setTimeout(() => setPhase("hold"), 3200);
         }
         break;
-      case "display":
-        timer = setTimeout(() => setPhase("reset"), 200);
+      case "hold":
+        t = setTimeout(() => setPhase("reset"), 200);
         break;
       case "reset":
-        setQuestionText("");
-        setAnswerText("");
-        setConvoIdx((convoIdx + 1) % HERO_CHAT_CONVERSATIONS.length);
-        setPhase("typing-q");
+        setQText("");
+        setAText("");
+        setConvoIdx((convoIdx + 1) % CONVERSATIONS.length);
+        setPhase("q");
         break;
     }
+    return () => clearTimeout(t);
+  }, [phase, qText, aText, convoIdx]);
 
-    return () => clearTimeout(timer);
-  }, [phase, questionText, answerText, convoIdx]);
-
-  return (
-    <div className="w-[400px] rounded-2xl bg-white relative"
-      style={{ boxShadow: "0 24px 80px rgba(15,23,42,0.16), 0 0 0 1px rgba(0,82,255,0.06)" }}>
-      {/* Header */}
-      <div className="gradient-bg px-4 py-3 flex items-center gap-2.5 rounded-t-2xl">
-        <div className="w-7 h-7 bg-white/20 rounded-lg flex items-center justify-center">
-          <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
-          </svg>
-        </div>
-        <div className="flex-1">
-          <div className="text-[11px] font-semibold text-white leading-none">AI Assistant</div>
-          <div className="text-[9px] text-emerald-300 mt-0.5 flex items-center gap-1">
-            <span className="w-1 h-1 rounded-full bg-emerald-300 inline-block animate-pulse-dot" />
-            Online
-          </div>
-        </div>
-        <div className="flex gap-1">
-          <div className="w-1.5 h-1.5 rounded-full bg-white/30" />
-          <div className="w-1.5 h-1.5 rounded-full bg-white/30" />
-          <div className="w-1.5 h-1.5 rounded-full bg-white/30" />
-        </div>
-      </div>
-
-      {/* Messages */}
-      <div className="px-4 py-4 space-y-4 min-h-[380px] bg-muted/80">
-        {/* Welcome message */}
-        <div className="flex gap-2">
-          <div className="w-5 h-5 rounded-xl flex-shrink-0 flex items-center justify-center mt-0.5">
-            <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="var(--primary)" strokeWidth="2">
-              <path d="M13 10V3L4 14h7v7l9-11h-7z" />
-            </svg>
-          </div>
-          <div className="bg-white rounded-xl rounded-tl-none px-4 py-3 text-[12px] text-foreground leading-relaxed max-w-[280px]" style={{ boxShadow: 'var(--shadow-sm)' }}>
-            Hi! I&apos;m trained Agent. Ask me anything.
-          </div>
-        </div>
-
-        {/* User question (typing) */}
-        {questionText && (
-          <div className="flex justify-end">
-            <div className="gradient-bg rounded-xl rounded-tr-none px-4 py-3 text-[12px] text-white leading-relaxed max-w-[260px]">
-              {questionText}
-              {phase === "typing-q" && <span className="inline-block w-[2px] h-[10px] bg-white/60 ml-0.5 animate-pulse" />}
-            </div>
-          </div>
-        )}
-
-        {/* AI answer (typing) */}
-        {answerText && (
-          <div className="flex gap-2">
-            <div className="w-5 h-5 rounded-xl flex-shrink-0 flex items-center justify-center mt-0.5">
-              <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="var(--primary)" strokeWidth="2">
-                <path d="M13 10V3L4 14h7v7l9-11h-7z" />
-              </svg>
-            </div>
-            <div className="bg-white rounded-xl rounded-tl-none px-4 py-3 text-[12px] text-foreground leading-relaxed max-w-[280px]" style={{ boxShadow: 'var(--shadow-sm)' }}>
-              {answerText}
-              {phase === "typing-a" && <span className="inline-block w-[2px] h-[10px] bg-primary/50 ml-0.5 animate-pulse" />}
-            </div>
-          </div>
-        )}
-
-        {/* Thinking indicator */}
-        {phase === "pause" && (
-          <div className="flex gap-2">
-            <div className="w-5 h-5 rounded-xl flex-shrink-0 flex items-center justify-center mt-0.5">
-              <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="var(--primary)" strokeWidth="2">
-                <path d="M13 10V3L4 14h7v7l9-11h-7z" />
-              </svg>
-            </div>
-            <div className="bg-white rounded-lg px-2.5 py-1.5 flex items-center gap-1" style={{ boxShadow: 'var(--shadow-sm)' }}>
-              <span className="w-1.5 h-1.5 rounded-full bg-primary/40 animate-bounce" style={{ animationDelay: "0ms" }} />
-              <span className="w-1.5 h-1.5 rounded-full bg-primary/40 animate-bounce" style={{ animationDelay: "150ms" }} />
-              <span className="w-1.5 h-1.5 rounded-full bg-primary/40 animate-bounce" style={{ animationDelay: "300ms" }} />
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* Input bar */}
-      <div className="px-3 py-2.5 border-t border-border bg-white flex items-center gap-2 rounded-b-2xl">
-        <div className="flex-1 h-8 bg-muted rounded-lg border border-border px-3 flex items-center">
-          <span className="text-[10px] text-muted-foreground">Ask a question...</span>
-        </div>
-        <div className="w-7 h-7 gradient-bg rounded-lg flex items-center justify-center">
-          <svg viewBox="0 0 24 24" className="w-3.5 h-3.5" fill="none" stroke="white" strokeWidth="2.5">
-            <path d="M5 12h14M12 5l7 7-7 7" />
-          </svg>
-        </div>
-      </div>
-
-      {/* Floating Chat Icon */}
-      <div className="absolute -bottom-[72px] right-0 w-14 h-14 gradient-bg rounded-full flex items-center justify-center shadow-lg" style={{ boxShadow: '0 8px 32px rgba(0,82,255,0.25)' }}>
-        <svg viewBox="0 0 24 24" className="w-6 h-6 text-white" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-        </svg>
-      </div>
-    </div>
-  );
-}
-
-// ── Full Hero Visual — Chat widget + static nodes + ring arcs ─────────────
-
-function HeroVisual() {
-  const cx = 370, cy = 370;
+  const convo = CONVERSATIONS[convoIdx];
 
   return (
-    <div className="relative w-full h-full flex items-center justify-center">
-      {/* Background effects */}
-      <div className="absolute inset-0 pointer-events-none"
-        style={{ backgroundImage: "radial-gradient(circle, rgba(0,82,255,0.03) 1px, transparent 1px)", backgroundSize: "24px 24px" }} />
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-        <div className="w-[720px] h-[720px] rounded-full"
-          style={{ background: "radial-gradient(circle, rgba(0,82,255,0.05) 0%, transparent 70%)" }} />
-      </div>
-
-      {/* SVG layer */}
-      <svg viewBox="0 0 740 740" className="absolute w-full max-w-[720px] z-0"
-        style={{ top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}>
-
-        {/* Base rings */}
-        {HERO_RING_DEFS.map((ring, i) => (
-          <circle key={`base-${i}`} cx={cx} cy={cy} r={ring.radius}
-            fill="none" stroke="rgba(0,82,255,0.06)" strokeWidth="1" />
-        ))}
-
-        {/* Static arcs (no animation) */}
-        {HERO_RING_DEFS.map((ring, i) => {
-          const circ = 2 * Math.PI * ring.radius;
-          const arcLen = circ * ring.arcFraction;
-          const gapLen = circ - arcLen;
-          return (
-            <circle
-              key={`arc-${i}`}
-              cx={cx} cy={cy} r={ring.radius}
-              fill="none"
-              stroke="var(--primary-light)"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeDasharray={`${arcLen} ${gapLen}`}
-              strokeDashoffset="0"
-            />
-          );
-        })}
-
-        {/* Connection lines from nodes to center */}
-        {HERO_NODES_DATA.map((node, i) => {
-          const rad = (node.angle * Math.PI) / 180;
-          const nx = cx + node.radius * Math.cos(rad);
-          const ny = cy + node.radius * Math.sin(rad);
-          return (
-            <line key={`line-${i}`}
-              x1={nx} y1={ny} x2={cx} y2={cy}
-              stroke={node.src.color} strokeWidth="0.8"
-              strokeDasharray="4 6" opacity="0.15"
-            />
-          );
-        })}
-
-        {/* Static data source nodes */}
-        {HERO_NODES_DATA.map((node, i) => {
-          const rad = (node.angle * Math.PI) / 180;
-          const nx = cx + node.radius * Math.cos(rad);
-          const ny = cy + node.radius * Math.sin(rad);
-          return (
-            <g key={i} transform={`translate(${nx}, ${ny})`}>
-              <circle r={26} fill="white" stroke={node.src.color} strokeWidth="1.5" opacity="0.95"
-                rx="8"
-                style={{ filter: "drop-shadow(0 4px 14px rgba(15,23,42,0.10))" }} />
-              <svg x={-11} y={-15} width={22} height={22} viewBox="0 0 24 24"
-                fill="none" stroke={node.src.color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                <path d={node.src.icon} />
-              </svg>
-              <text x={0} y={17} textAnchor="middle" fill={node.src.color} fontSize="8" fontWeight="700"
-                style={{ fontFamily: "Inter, system-ui, sans-serif" }}>
-                {node.src.label}
-              </text>
-            </g>
-          );
-        })}
-      </svg>
-
-      {/* Central chat widget */}
-      <div className="relative z-10">
-        <ChatWidgetVisual />
-      </div>
-    </div>
-  );
-}
-
-// ── Typing animation — cycles through phrases ─────────────────────────────
-const TYPING_PHRASES = [
-  "Answers Your Customers",
-  "Learns From Your Data",
-  "Works 24/7 for You",
-  "Boosts Your Conversions",
-];
-
-function TypingCycle() {
-  const [phraseIdx, setPhraseIdx] = useState(0);
-  const [displayed, setDisplayed] = useState("");
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [showCursor, setShowCursor] = useState(true);
-
-  useEffect(() => {
-    const cursorIv = setInterval(() => setShowCursor(c => !c), 530);
-    return () => clearInterval(cursorIv);
-  }, []);
-
-  useEffect(() => {
-    const phrase = TYPING_PHRASES[phraseIdx];
-    let timer: ReturnType<typeof setTimeout>;
-
-    if (!isDeleting) {
-      if (displayed.length < phrase.length) {
-        timer = setTimeout(() => {
-          setDisplayed(phrase.slice(0, displayed.length + 1));
-        }, 70);
-      } else {
-        timer = setTimeout(() => setIsDeleting(true), 2000);
-      }
-    } else {
-      if (displayed.length > 0) {
-        timer = setTimeout(() => {
-          setDisplayed(displayed.slice(0, -1));
-        }, 40);
-      } else {
-        // eslint-disable-next-line
-        setIsDeleting(false);
-        setPhraseIdx((phraseIdx + 1) % TYPING_PHRASES.length);
-      }
-    }
-
-    return () => clearTimeout(timer);
-  }, [displayed, isDeleting, phraseIdx]);
-
-  return (
-    <span className="gradient-text">
-      {displayed}
-      <span className="inline-block w-[3px] h-[0.85em] bg-primary ml-0.5 align-middle rounded-full"
-        style={{ opacity: showCursor ? 1 : 0, transition: "opacity 0.1s" }} />
-    </span>
-  );
-}
-
-// ── Hero Section ───────────────────────────────────────────────────────────
-interface HeroSectionProps { onGetStarted: () => void; }
-
-export default function HeroSection({ onGetStarted }: HeroSectionProps) {
-  return (
-    <section className="relative" style={{ minHeight: "calc(100vh - 72px)", background: "transparent" }}>
-      {/* Background glow effects */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
-        <div className="radial-glow w-[600px] h-[600px] -top-[200px] -right-[200px] bg-primary/[0.04]" />
-        <div className="radial-glow w-[400px] h-[400px] -bottom-[100px] -left-[100px] bg-primary/[0.03]" />
-      </div>
-
-      <div className="relative mx-auto max-w-7xl px-4 lg:px-8 h-full grid lg:grid-cols-[1.2fr_0.8fr] min-h-[calc(100vh-72px)] gap-10">
-
-        {/* ── LEFT ── */}
-        <div className="flex flex-col justify-center py-14 min-w-0">
-
-          {/* Section label badge */}
-          <div className="mb-6">
-            <div className="inline-flex items-center rounded-full border border-border bg-muted/50 px-3 py-1 shadow-sm">
-              <span className="text-sm font-medium text-foreground">
-                {PAGE_CONTENT.hero.badge}
-              </span>
+    <div className="w-full bg-muted rounded-xl p-4">
+      <div className="bg-background rounded-xl border border-border overflow-hidden">
+        <div className="flex items-center justify-between px-4 py-3 border-b border-border">
+          <div className="flex items-center gap-2.5">
+            <div
+              className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold"
+              style={{ background: "#1D2020", color: "#D4FB5F" }}
+>
+              AI
+            </div>
+            <div>
+              <div className="text-[13px] font-medium leading-tight">Acme Support</div>
+              <div className="text-[11px] text-muted-foreground flex items-center gap-1.5 mt-0.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse-dot" />
+                Online · replies instantly
+              </div>
             </div>
           </div>
+          <span className="text-lg text-muted-foreground">×</span>
+        </div>
 
-          {/* Headline */}
-          <h1 className="text-[2.5rem] leading-[1.1] sm:text-5xl lg:text-[3.5rem] xl:text-[4rem] tracking-[-0.02em] text-foreground mb-5">
-            {PAGE_CONTENT.hero.headlineStart}
-            <br className="hidden sm:block" />
-            <span className="sm:inline-block whitespace-normal sm:whitespace-nowrap sm:pl-3 lg:pl-0" style={{ minHeight: "1.15em" }}>
-              <TypingCycle />
-            </span>
-            <br />
-            {PAGE_CONTENT.hero.headlineEnd}
-          </h1>
-
-          {/* Subtitle */}
-          <p className="text-lg text-muted-foreground leading-relaxed max-w-[480px] mb-8">
-            {PAGE_CONTENT.hero.subtitle}
-          </p>
-
-          {/* CTA */}
-          <div className="flex flex-col sm:flex-row items-start gap-4">
-            <button
-              onClick={onGetStarted}
-              className="group inline-flex items-center gap-3 gradient-bg text-white text-base font-medium px-8 py-3.5 rounded-xl transition-all duration-200 hover:-translate-y-0.5 hover:brightness-110 active:scale-[0.98]"
-              style={{ boxShadow: 'var(--shadow-accent)' }}
-            >
-              {PAGE_CONTENT.hero.ctaStandard}
-              <HiArrowRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" />
-            </button>
+        <div className="px-4 py-5 flex flex-col gap-2.5 h-[320px] overflow-hidden">
+          <div className="self-start max-w-[85%] bg-muted text-foreground px-3 py-2 rounded-xl rounded-tl-sm text-[13px] leading-relaxed">
+            Hi! I&apos;m trained on your docs. Ask me anything.
           </div>
 
-          {/* Checkmarks */}
-          {HERO_CHECKMARKS && (
-            <div className="mt-8 flex flex-wrap gap-x-6 gap-y-3">
-              {HERO_CHECKMARKS.map((item: string, idx: number) => (
-                <div key={idx} className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <HiCheck className="text-emerald-500 flex-shrink-0" />
-                  {item}
+          {qText && (
+            <div className="self-end max-w-[85%] bg-foreground text-background px-3 py-2 rounded-xl rounded-tr-sm text-[13px] leading-relaxed">
+              {qText}
+              {phase === "q" && (
+                <span className="inline-block w-[2px] h-[12px] bg-background/60 ml-0.5 align-middle animate-pulse" />
+              )}
+            </div>
+          )}
+
+          {aText && (
+            <div className="self-start max-w-[90%] bg-muted text-foreground px-3 py-2 rounded-xl rounded-tl-sm text-[13px] leading-relaxed">
+              {aText}
+              {phase === "a" && (
+                <span className="inline-block w-[2px] h-[12px] bg-foreground/60 ml-0.5 align-middle animate-pulse" />
+              )}
+              {phase !== "a" && convo.code && aText === convo.a && (
+                <div className="mt-2 bg-foreground text-background rounded-md px-2.5 py-2 font-mono text-[11px] leading-relaxed overflow-x-auto">
+                  {convo.code}
                 </div>
-              ))}
+              )}
+            </div>
+          )}
+
+          {phase === "pause" && (
+            <div className="self-start flex gap-1 px-3 py-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground" />
+              <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground opacity-60" />
+              <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground opacity-30" />
             </div>
           )}
         </div>
 
-        {/* ── RIGHT: Hero Visual ── */}
-        <div className="relative hidden lg:flex items-center justify-center py-12 pb-24 lg:py-6 lg:pb-0 translate-x-4 xl:translate-x-8">
-          <HeroVisual />
+        <div className="px-3 py-2.5 border-t border-border flex items-center gap-2">
+          <div className="flex-1 text-[12px] text-muted-foreground px-3 py-1.5 bg-muted rounded-full">
+            Ask a question...
+          </div>
+          <div className="w-7 h-7 rounded-full bg-foreground text-background flex items-center justify-center text-sm">
+            ↑
+          </div>
+        </div>
+      </div>
+
+      <div className="flex gap-1.5 mt-4 flex-wrap">
+        {["PDF","Notion","Website crawl","API","CSV"].map((s) => (
+          <span
+            key={s}
+            className="text-[11px] px-2.5 py-1 bg-background border border-border rounded-full text-muted-foreground"
+>
+            {s}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export default function HeroSection({ onGetStarted }: { onGetStarted: () => void }) {
+  return (
+    <section className="relative overflow-hidden" style={{ minHeight: "calc(100vh - 64px)" }}>
+      {/* Dot-grid atmosphere */}
+      <div
+        aria-hidden
+        className="absolute inset-0 bg-dot-grid pointer-events-none opacity-70"
+        style={{
+          maskImage:
+            "radial-gradient(ellipse 70% 80% at 50% 30%, black 40%, transparent 75%)",
+          WebkitMaskImage:
+            "radial-gradient(ellipse 70% 80% at 50% 30%, black 40%, transparent 75%)",
+        }}
+      />
+
+      <div className="relative h-full max-w-[1200px] mx-auto px-4 sm:px-6 lg:max-w-full lg:px-12 flex flex-col" style={{ minHeight: "calc(100vh - 64px)" }}>
+        <div className="flex-1 grid lg:grid-cols-[1.1fr_1fr] gap-10 lg:gap-14 items-center py-12 sm:py-16">
+          <div>
+            <div className="announce-pill mb-6">
+              <span className="tag">New</span>
+              Open source · v2.0 released
+            </div>
+
+            <h1 className="text-4xl sm:text-5xl lg:text-[64px] leading-[1.03] font-semibold tracking-[-0.03em] mb-5">
+              Ship an{" "}
+              <span className="hl-marker">AI agent</span>
+              <br />
+              trained on your data.
+            </h1>
+
+            <p className="text-base sm:text-lg text-muted-foreground max-w-xl leading-relaxed mb-6">
+              Train an AI agent on your content, customize the look, and embed a
+              production-grade chatbot on your site with a single line of code.
+            </p>
+
+            {/* Feature highlights */}
+            <div className="flex flex-col gap-3 mb-8">
+              {[
+                {
+                  icon: <FolderOpen size={16} />,
+                  title: "Train on your knowledge",
+                  desc: "Feed it your docs, PDFs, Notion pages, websites, and APIs — your agent learns your business inside out.",
+                },
+                {
+                  icon: <Paintbrush size={16} />,
+                  title: "Customize the look",
+                  desc: "Match your brand — colors, avatar, name, and welcome message. No design skills needed.",
+                },
+                {
+                  icon: <Code2 size={16} />,
+                  title: "Embed with one line",
+                  desc: "Drop a single script tag and your AI chatbot is live on any website or app.",
+                },
+              ].map((f) => (
+                <div key={f.title} className="flex items-start gap-3">
+                  <span className="mt-0.5 w-8 h-8 rounded-lg bg-muted flex items-center justify-center text-muted-foreground shrink-0">
+                    {f.icon}
+                  </span>
+                  <div>
+                    <p className="text-[14px] font-semibold text-foreground leading-snug">{f.title}</p>
+                    <p className="text-[13px] text-muted-foreground leading-relaxed">{f.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="flex flex-wrap gap-2.5 mb-6">
+              <Button size="lg" onClick={onGetStarted} className="btn-pill">
+                Start building →
+              </Button>
+              <Button size="lg" variant="outline" asChild className="btn-pill">
+                <a href="mailto:sales@deploymind.com">Talk to sales</a>
+              </Button>
+            </div>
+
+            <div className="flex flex-wrap gap-x-7 gap-y-2 text-[13px] text-muted-foreground">
+              <span>✓  No credit card</span>
+              <span>✓  GDPR compliant</span>
+              <span>✓  SOC 2 ready</span>
+            </div>
+          </div>
+
+          <div>
+            <ChatWidget />
+          </div>
+        </div>
+
+        {/* Integrations strip — pinned to bottom */}
+        <div className="pb-8 pt-4 border-t border-border flex flex-col sm:flex-row items-start sm:items-center gap-4">
+          <span className="text-[12px] text-muted-foreground whitespace-nowrap shrink-0 font-medium">Works with</span>
+          <div className="flex flex-wrap gap-2">
+            {[
+              "Notion", "Google Drive", "Confluence", "Zendesk",
+              "Intercom", "Slack", "GitHub", "Postgres", "REST API",
+            ].map((name) => (
+              <span
+                key={name}
+                className="text-[12px] px-3 py-1 rounded-full border border-border bg-background text-foreground font-medium"
+              >
+                {name}
+              </span>
+            ))}
+            <span className="text-[12px] px-3 py-1 rounded-full border border-border bg-background text-muted-foreground">
+              + more
+            </span>
+          </div>
         </div>
 
       </div>

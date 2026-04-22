@@ -3,7 +3,7 @@ import { STATUS } from "@/lib/constants";
 
 
 interface StatusChipProps {
-    status?: "active" | "creating" | "failed" | string;
+    status?: "active" |"creating" |"failed" | string;
 }
 
 /**
@@ -18,7 +18,7 @@ export function StatusChip({ status = STATUS.ACTIVE }: StatusChipProps) {
     const label = isCreating ? "Creating" : isFailed ? "Failed" : "Active";
 
     return (
-        <div className={`inline-flex items-center px-2 py-0.5 border text-[10px] font-bold uppercase tracking-wider rounded-lg ${bgClass} ${textClass}`}>
+        <div className={`inline-flex items-center px-2 py-0.5 border text-[10px] font-medium uppercase tracking-wider rounded-lg ${bgClass} ${textClass}`}>
             <span className={`w-1.5 h-1.5 mr-1.5 rounded-full ${isCreating ? "bg-amber-500 animate-pulse" : isFailed ? "bg-red-500" : "bg-emerald-500"}`} />
             {label}
         </div>

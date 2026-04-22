@@ -1,7 +1,9 @@
 "use client";
+import { CheckCircle2, Info } from "lucide-react";
+
 
 import { useState } from "react";
-import { HiCheckCircle, HiInformationCircle } from "react-icons/hi";
+
 import api from "@/lib/api";
 import { ENDPOINTS } from "@/lib/endpoints";
 import showToast from "@/lib/toast";
@@ -80,32 +82,32 @@ export function NotionConnectionDrawer({ isOpen, onClose, onConnected }: NotionC
         <div className="flex flex-col gap-6 animate-fade-in">
             {step === 1 ? (
                 <div className="space-y-6">
-                    <div className="bg-primary/5 border border-primary/10 p-5 rounded-2xl flex gap-4">
-                        <HiInformationCircle className="w-5 h-5 text-primary shrink-0 mt-0.5" />
-                        <div className="text-sm text-secondary leading-relaxed">
+                    <div className="bg-muted border border-border p-5 rounded-xl flex gap-4">
+                        <Info className="w-5 h-5 text-primary shrink-0 mt-0.5" />
+                        <div className="text-sm text-foreground leading-relaxed">
                             Create an <strong>Internal Integration Token</strong> in Notion and share pages with it.
                         </div>
                     </div>
 
                     <div className="space-y-5">
                         <div className="space-y-2">
-                            <label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest">Connection Name</label>
+                            <label className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider">Connection Name</label>
                             <input
                                 type="text"
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
                                 placeholder="e.g. Marketing Docs"
-                                className="w-full px-4 py-3 bg-muted border border-border rounded-xl text-sm text-secondary outline-none focus:border-primary transition-colors"
+                                className="w-full px-4 py-3 bg-muted border border-border rounded-xl text-sm text-foreground outline-none focus:border-primary transition-colors"
                             />
                         </div>
                         <div className="space-y-2">
-                            <label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest">Integration Token</label>
+                            <label className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider">Integration Token</label>
                             <input
                                 type="password"
                                 value={token}
                                 onChange={(e) => setToken(e.target.value)}
                                 placeholder="secret_..."
-                                className="w-full px-4 py-3 bg-muted border border-border rounded-xl text-sm font-mono text-secondary outline-none focus:border-primary transition-colors"
+                                className="w-full px-4 py-3 bg-muted border border-border rounded-xl text-sm font-mono text-foreground outline-none focus:border-primary transition-colors"
                             />
                         </div>
                     </div>
@@ -114,8 +116,8 @@ export function NotionConnectionDrawer({ isOpen, onClose, onConnected }: NotionC
             ) : (
                 <div className="space-y-6">
                     <div className="flex items-center justify-between">
-                        <h4 className="text-sm font-bold text-secondary">Select Pages ({selectedPages.length})</h4>
-                        <button onClick={() => setStep(1)} className="text-xs text-primary font-bold">Change Token</button>
+                        <h4 className="text-sm font-medium text-foreground">Select Pages ({selectedPages.length})</h4>
+                        <button onClick={() => setStep(1)} className="text-xs text-primary font-medium">Change Token</button>
                     </div>
 
                     <div className="space-y-2 max-h-[50vh] overflow-y-auto pr-3">
@@ -126,13 +128,13 @@ export function NotionConnectionDrawer({ isOpen, onClose, onConnected }: NotionC
                                 <div
                                     key={page.id}
                                     onClick={() => togglePage(page.id)}
-                                    className={`p-4 rounded-2xl border transition-all cursor-pointer flex items-center justify-between ${selectedPages.includes(page.id) ? "border-primary bg-primary/5 ring-1 ring-primary shadow-sm" : "border-border hover:bg-muted"}`}
-                                >
+                                    className={`p-4 rounded-xl border transition-all cursor-pointer flex items-center justify-between ${selectedPages.includes(page.id) ? "border-primary bg-muted ring-1 ring-primary" : "border-border hover:bg-muted"}`}
+>
                                     <div className="flex-1 min-w-0 mr-4">
-                                        <div className="text-sm font-bold text-secondary truncate">{page.title}</div>
+                                        <div className="text-sm font-medium text-foreground truncate">{page.title}</div>
                                         <div className="text-[10px] text-muted-foreground truncate font-mono mt-0.5">{page.url}</div>
                                     </div>
-                                    {selectedPages.includes(page.id) && <HiCheckCircle className="w-6 h-6 text-primary shrink-0" />}
+                                    {selectedPages.includes(page.id) && <CheckCircle2 className="w-6 h-6 text-primary shrink-0" />}
                                 </div>
                             ))
                         )}
@@ -146,27 +148,27 @@ export function NotionConnectionDrawer({ isOpen, onClose, onConnected }: NotionC
     const footer = (
         <div className="flex gap-3">
             <Button
-                variant="outline-secondary"
+                variant="outline"
                 onClick={onClose}
                 className="rounded-lg h-10 px-6"
-            >
+>
                 Cancel
             </Button>
             {step === 1 ? (
                 <Button
                     onClick={handleFetchPages}
                     disabled={isLoading || !token}
-                    className="py-4 bg-secondary text-white rounded-lg h-10 px-8 text-sm font-bold hover:bg-secondary/90 disabled:opacity-50 transition-all shadow-xl"
-                >
+                    className="py-4 bg-foreground text-background rounded-lg h-10 px-8 text-sm font-medium hover:bg-foreground/90 disabled:opacity-50 transition-all"
+>
                     {isLoading ? "Fetching..." : "Continue"}
                 </Button>
             ) : (
                 <Button
-                    variant="primary"
+                    variant="default"
                     onClick={handleConnect}
                     disabled={isLoading || selectedPages.length === 0}
                     className="rounded-lg h-10 px-8 text-sm"
-                >
+>
                     {isLoading ? "Connecting..." : "Connect Pages"}
                 </Button>
             )}
@@ -179,10 +181,10 @@ export function NotionConnectionDrawer({ isOpen, onClose, onConnected }: NotionC
             onClose={onClose}
             title="Connect Notion"
             subtitle="Sync your workspace documentation automatically"
-            icon={() => <div className="font-bold">N</div>}
+            icon={() => <div className="font-medium">N</div>}
             footer={footer}
             size="2xl"
-        >
+>
             {content}
         </Drawer>
     );

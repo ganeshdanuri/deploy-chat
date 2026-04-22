@@ -26,6 +26,8 @@ export interface Dataset {
     created_at: string;
     updated_at: string;
     user_id: string;
+    document_ids?: string[];
+    document_count?: number;
 }
 
 export interface Chatbot {

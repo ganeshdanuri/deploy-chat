@@ -18,6 +18,7 @@ export const ENDPOINTS = {
         BY_ID: (id: string | number) => `/api/chatbots/${id}`,
         CHAT: (id: string | number) => `/api/chatbots/${id}/chat`,
         RESUME: (id: string | number) => `/api/chatbots/${id}/resume`,
+        ANALYTICS: (id: string | number) => `/api/chatbots/${id}/analytics`,
     },
     USERS: {
         ME: '/api/users/me',
@@ -26,6 +27,7 @@ export const ENDPOINTS = {
     DATASETS: {
         BASE: '/api/datasets/',
         BY_ID: (id: string | number) => `/api/datasets/${id}`,
+        DOCUMENTS: (id: string | number) => `/api/datasets/${id}/documents`,
     },
     CONNECTORS: {
         BASE: '/api/connectors/',

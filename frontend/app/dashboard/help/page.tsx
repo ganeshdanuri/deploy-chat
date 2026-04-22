@@ -1,76 +1,110 @@
 "use client";
+import { ArrowRight, BookOpen, LifeBuoy, MessageSquare } from "lucide-react";
 
-import { HiQuestionMarkCircle, HiBookOpen, HiSupport, HiChatAlt } from "react-icons/hi";
+
+import Link from "next/link";
+
+import { PageHeader } from "@/app/components/ui";
+import { Button } from "@/components/ui/button";
+
+const HELP_SECTIONS = [
+    {
+        title: "Documentation",
+        description: "Guides and API references for building with Deploy Chat.",
+        icon: BookOpen,
+        href: "#",
+        cta: "Read docs",
+        color: "var(--brand)",
+        bg: "var(--brand-bg)",
+    },
+    {
+        title: "Support",
+        description: "Open a ticket and our team will get back within 1 business day.",
+        icon: LifeBuoy,
+        href: "mailto:support@deploymind.com",
+        cta: "Contact support",
+        color: "var(--agent)",
+        bg: "var(--agent-bg)",
+    },
+    {
+        title: "Community",
+        description: "Chat with other builders, share tips, and hear what's coming.",
+        icon: MessageSquare,
+        href: "https://x.com/deploychat",
+        cta: "Join community",
+        color: "var(--knowledge)",
+        bg: "var(--knowledge-bg)",
+    },
+];
 
 export default function HelpPage() {
-    const helpSections = [
-        {
-            title: "Documentation",
-            description: "Detailed guides and API references to help you build faster.",
-            icon: HiBookOpen,
-            color: "text-primary",
-            bgColor: "bg-primary/5"
-        },
-        {
-            title: "Support Tickets",
-            description: "Need technical help? Open a ticket and our team will assist you.",
-            icon: HiSupport,
-            color: "text-primary",
-            bgColor: "bg-primary/5"
-        },
-        {
-            title: "Community Discord",
-            description: "Join our community to share ideas and get help from other builders.",
-            icon: HiChatAlt,
-            color: "text-primary",
-            bgColor: "bg-primary/5"
-        }
-    ];
-
     return (
-        <div className="animate-fade-in-up">
-            <div className="flex items-center gap-3 mb-8">
-                <div className="p-3 bg-primary/5 text-primary ring-1 ring-primary/10">
-                    <HiQuestionMarkCircle className="w-8 h-8" />
-                </div>
-                <div>
-                    <h1 className="text-3xl font-extrabold text-secondary tracking-tight">Help Center</h1>
-                    <p className="text-foreground font-medium">How can we help you today?</p>
-                </div>
-            </div>
+        <div className="animate-fade-in-up space-y-6">
+            <PageHeader
+                title="Help & resources"
+                description="Everything you need to build, deploy, and scale your agents."
+            />
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {helpSections.map((section, idx) => {
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                {HELP_SECTIONS.map((section) => {
                     const Icon = section.icon;
                     return (
-                        <div key={idx} className="dash-card p-8 bg-white border border-border shadow-sm group cursor-pointer">
-                            <div className={`w-14 h-14 ${section.bgColor} ${section.color} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform`}>
-                                <Icon className="w-7 h-7" />
+                        <Link
+                            key={section.title}
+                            href={section.href}
+                            className="bg-background border border-border rounded-xl p-5 hover:border-border-medium transition-colors group flex flex-col"
+>
+                            <div
+                                className="w-10 h-10 rounded-md flex items-center justify-center mb-4"
+                                style={{ background: section.bg, color: section.color }}
+>
+                                <Icon className="w-5 h-5" />
                             </div>
-                            <h3 className="text-xl font-bold text-secondary mb-3">{section.title}</h3>
-                            <p className="text-foreground leading-relaxed text-sm">
+                            <h3 className="text-[15px] font-medium text-foreground mb-1.5">{section.title}</h3>
+                            <p className="text-sm text-muted-foreground leading-relaxed mb-4 flex-1">
                                 {section.description}
                             </p>
-                            <button className="mt-8 text-sm font-bold text-primary hover:underline flex items-center gap-2">
-                                Get Started
-                                <span className="group-hover:translate-x-1 transition-transform">→</span>
-                            </button>
-                        </div>
+                            <span className="text-sm font-medium text-foreground flex items-center gap-1">
+                                {section.cta}
+                                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+                            </span>
+                        </Link>
                     );
                 })}
             </div>
 
-            <div className="mt-12 p-8 bg-secondary text-white overflow-hidden relative">
-                <div className="relative z-10">
-                    <h2 className="text-2xl font-bold mb-4">Enterprise Support</h2>
-                    <p className="text-muted-foreground max-w-xl mb-8 leading-relaxed">
-                        Looking for dedicated support, custom integrations, or on-premise deployment? Our enterprise team is here to help.
+            {/* Enterprise CTA */}
+            <div
+                className="rounded-xl p-6 sm:p-8 relative overflow-hidden"
+                style={{ background: "var(--foreground)" }}
+>
+                <div className="relative z-10 max-w-lg">
+                    <div
+                        className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium mb-4"
+                        style={{
+                            background: "rgba(255,255,255,0.08)",
+                            color: "rgba(255,255,255,0.85)",
+                        }}
+>
+                        Enterprise
+                    </div>
+                    <h2 className="text-2xl font-medium tracking-tight text-background mb-3">
+                        Need dedicated support?
+                    </h2>
+                    <p
+                        className="text-sm leading-relaxed mb-5"
+                        style={{ color: "rgba(255,255,255,0.65)" }}
+>
+                        Custom integrations, on-premise deployment, SSO, SLA guarantees —
+                        our enterprise team is here to help.
                     </p>
-                    <button className="px-6 py-1.5 bg-white text-secondary font-bold hover:bg-muted transition-colors shadow-lg">
-                        Contact Sales
-                    </button>
+                    <Button
+                        asChild
+                        className="bg-white text-foreground hover:bg-white/90"
+>
+                        <a href="mailto:sales@deploymind.com">Talk to sales →</a>
+                    </Button>
                 </div>
-                <HiSupport className="absolute -right-12 -bottom-12 w-64 h-64 text-white/5 rotate-12" />
             </div>
         </div>
     );

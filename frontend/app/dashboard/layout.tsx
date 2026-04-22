@@ -40,20 +40,17 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         }
     }, [isLoading, isAuthenticated, router, dispatch, chatbotStatus, datasetStatus, documentStatus, usageStatus, userStatus]);
 
-    // Close sidebar on navigation (mobile)
     useEffect(() => {
-        if (isSidebarOpen) {
-            setIsSidebarOpen(false);
-        }
+        if (isSidebarOpen) setIsSidebarOpen(false);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [pathname]);
 
     if (isLoading) {
         return (
-            <div className="flex min-h-screen items-center justify-center bg-muted">
-                <div className="animate-pulse flex flex-col items-center gap-4">
-                    <Logo className="h-16 w-auto animate-bounce" />
-                    <div className="h-2 w-24 bg-border" />
+            <div className="flex min-h-screen items-center justify-center bg-background">
+                <div className="flex flex-col items-center gap-3 animate-pulse">
+                    <Logo className="h-10 w-auto" />
+                    <div className="h-1 w-20 bg-border rounded-full" />
                 </div>
             </div>
         );
@@ -62,27 +59,20 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     if (!isAuthenticated) return null;
 
     return (
-        <div className="flex min-h-screen bg-white text-secondary font-sans overflow-hidden dashboard-theme relative">
-            {/* Background effects consistent with home page */}
-            <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
-                <div className="radial-glow w-[600px] h-[600px] -top-[200px] -right-[200px] bg-primary/[0.03]" />
-                <div className="radial-glow w-[400px] h-[400px] -bottom-[100px] -left-[100px] bg-primary/[0.02]" />
-            </div>
-
+        <div className="flex min-h-screen bg-background text-foreground font-sans overflow-hidden dashboard-theme">
             <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
 
-            {/* Mobile Overlay */}
             {isSidebarOpen && (
                 <div
-                    className="fixed inset-0 bg-secondary/40 backdrop-blur-sm z-40 lg:hidden"
+                    className="fixed inset-0 bg-foreground/30 backdrop-blur-sm z-40 lg:hidden"
                     onClick={() => setIsSidebarOpen(false)}
                 />
             )}
 
             <div className="flex-1 flex flex-col min-w-0 h-screen overflow-hidden">
                 <TopNav onMenuClick={() => setIsSidebarOpen(true)} />
-                <main className="flex-1 overflow-y-auto px-4 sm:px-6">
-                    <div className="max-w-[1400px] mx-auto space-y-4 sm:space-y-6 py-10">
+                <main className="flex-1 overflow-y-auto">
+                    <div className="max-w-[1280px] mx-auto px-5 sm:px-8 py-8 space-y-6">
                         {children}
                     </div>
                 </main>

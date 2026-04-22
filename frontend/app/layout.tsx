@@ -1,33 +1,23 @@
-import { Inter, JetBrains_Mono } from "next/font/google";
+import type { Metadata } from "next";
+import { Onest } from "next/font/google";
+import { GeistMono } from "geist/font/mono";
 import "./globals.css";
 import { AuthProvider } from "./context/AuthContext";
 import ReduxProvider from "./components/ReduxProvider";
 import ToastProvider from "./components/ToastProvider";
 import GoogleOAuthWrapper from "./components/GoogleOAuthWrapper";
-import { Analytics } from "@vercel/analytics/next"
+import { Analytics } from "@vercel/analytics/next";
 
-
-const inter = Inter({
-  variable: "--font-inter",
+const onest = Onest({
+  variable: "--font-onest",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
+  weight: ["400", "500", "600", "700"],
   display: "swap",
 });
-
-
-
-const jetbrainsMono = JetBrains_Mono({
-  variable: "--font-jetbrains-mono",
-  subsets: ["latin"],
-  weight: ["400", "500"],
-  display: "swap",
-});
-
-import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Deploy Chat - Open Source Chatbot",
-  description: "An open-source chatbot platform built for developers.",
+  title: "Deploy Chat — Open source chatbot platform",
+  description: "Ship an AI agent trained on your data in minutes.",
 };
 
 export default function RootLayout({
@@ -36,13 +26,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable}`}>
-      <head>
-      </head>
-      <body
-        className="antialiased font-sans"
-      >
-        <div className="mesh-gradient" />
+    <html
+      lang="en"
+      className={`${onest.variable} ${GeistMono.variable}`}
+>
+      <head />
+      <body className="antialiased font-sans">
         <ReduxProvider>
           <GoogleOAuthWrapper>
             <AuthProvider>

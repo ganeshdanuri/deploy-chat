@@ -1,23 +1,24 @@
 @import "tailwindcss";
 
-
 @theme {
-  --font-sans: var(--font-inter), "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-calistoga), "Calistoga", Georgia, serif;
-  --font-mono: var(--font-jetbrains-mono), "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-sans: var(--font-onest), "Onest Placeholder", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-display: var(--font-onest), "Onest Placeholder", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
 * {
   box-sizing: border-box;
 }
 
+html,
 body {
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  letter-spacing: -0.005em;
+  font-feature-settings: "ss01", "cv11";
 }
 
-/* Global Clickable UX Improvements */
 button,
 a,
 input[type="submit"],
@@ -35,268 +36,58 @@ input:disabled {
   cursor: not-allowed;
 }
 
-/* ── Animation Keyframes ── */
-
-@keyframes shimmer {
-  0% {
-    transform: translateX(-100%);
-  }
-
-  100% {
-    transform: translateX(100%);
-  }
-}
-
-.animate-shimmer {
-  animation: shimmer 2s infinite linear;
-}
-
-@keyframes pulse-subtle {
-
-  0%,
-  100% {
-    opacity: 1;
-  }
-
-  50% {
-    opacity: 0.7;
-  }
-}
-
-.animate-pulse-subtle {
-  animation: pulse-subtle 2s ease-in-out infinite;
-}
-
-@keyframes fade-in-up {
-  from {
-    opacity: 0;
-    transform: translateY(28px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.animate-fade-in-up {
-  animation: fade-in-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
+/* ── Animations (minimal set) ── */
 
 @keyframes fade-in {
-  from {
-    opacity: 0;
-  }
-
-  to {
-    opacity: 1;
-  }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
+.animate-fade-in { animation: fade-in 0.4s ease forwards; }
 
-.animate-fade-in {
-  animation: fade-in 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
 }
+.animate-fade-in-up { animation: fade-in-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
 
-@keyframes scale-in {
-  from {
-    opacity: 0;
-    transform: scale(0.95) translateY(-10px);
-  }
-
-  to {
-    opacity: 1;
-    transform: scale(1) translateY(0);
-  }
+@keyframes pulse-dot {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.3); opacity: 0.6; }
 }
-
-.animate-scale-in {
-  animation: scale-in 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
+.animate-pulse-dot { animation: pulse-dot 2s ease-in-out infinite; }
 
 @keyframes slide-in-right {
-  from {
-    transform: translateX(100%);
-  }
-
-  to {
-    transform: translateX(0);
-  }
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
 }
-
-.animate-slide-in-right {
-  animation: slide-in-right 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
+.animate-slide-in-right { animation: slide-in-right 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
 
 @keyframes slide-in-bottom {
-  from {
-    transform: translateY(100%);
-  }
-
-  to {
-    transform: translateY(0);
-  }
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
 }
+.animate-slide-in-bottom { animation: slide-in-bottom 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
 
-.animate-slide-in-bottom {
-  animation: slide-in-bottom 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+@keyframes scale-in {
+  from { opacity: 0; transform: scale(0.97); }
+  to { opacity: 1; transform: scale(1); }
 }
+.animate-scale-in { animation: scale-in 0.2s ease forwards; }
 
-/* ── Pulsing Dot (section badges) ── */
-@keyframes pulse-dot {
-
-  0%,
-  100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-
-  50% {
-    transform: scale(1.4);
-    opacity: 0.6;
-  }
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
 }
+.animate-shimmer { animation: shimmer 2s infinite linear; }
 
-.animate-pulse-dot {
-  animation: pulse-dot 2s ease-in-out infinite;
-}
+/* ── Tailwind theme bridge ── */
 
-/* ── Slow Rotate (hero decorative ring) ── */
-@keyframes slow-rotate {
-  from {
-    transform: rotate(0deg);
-  }
-
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.animate-slow-rotate {
-  animation: slow-rotate 60s linear infinite;
-}
-
-/* ── Float (hero cards) ── */
-@keyframes float-y {
-
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-
-  50% {
-    transform: translateY(-10px);
-  }
-}
-
-.animate-float {
-  animation: float-y 5s ease-in-out infinite;
-}
-
-.animate-float-slow {
-  animation: float-y 4s ease-in-out infinite;
-}
-
-/* ── Mesh Background ── */
-@keyframes mesh-move {
-  0% {
-    transform: translate(0, 0) rotate(0deg) scale(1);
-  }
-
-  33% {
-    transform: translate(2%, 2%) rotate(1deg) scale(1.05);
-  }
-
-  66% {
-    transform: translate(-1%, 3%) rotate(-1deg) scale(0.95);
-  }
-
-  100% {
-    transform: translate(0, 0) rotate(0deg) scale(1);
-  }
-}
-
-.mesh-gradient {
-  position: fixed;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  z-index: -1;
-  background-color: var(--background);
-  background-image:
-    radial-gradient(at 0% 0%, color-mix(in srgb, var(--primary) 4%, transparent) 0, transparent 50%),
-    radial-gradient(at 50% 0%, color-mix(in srgb, var(--secondary) 3%, transparent) 0, transparent 50%),
-    radial-gradient(at 100% 0%, color-mix(in srgb, var(--primary) 3%, transparent) 0, transparent 50%),
-    radial-gradient(at 0% 50%, color-mix(in srgb, var(--secondary) 2%, transparent) 0, transparent 50%),
-    radial-gradient(at 100% 50%, color-mix(in srgb, var(--primary) 2%, transparent) 0, transparent 50%),
-    radial-gradient(at 0% 100%, color-mix(in srgb, var(--primary) 3%, transparent) 0, transparent 50%),
-    radial-gradient(at 100% 100%, color-mix(in srgb, var(--secondary) 4%, transparent) 0, transparent 50%);
-  filter: blur(80px);
-  pointer-events: none;
-  animation: mesh-move 30s ease-in-out infinite;
-}
-
-.mesh-gradient::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  opacity: 0.03;
-  z-index: 1;
-  pointer-events: none;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-}
-
-/* ── Design System Utility Classes ── */
-
-/* Gradient text effect — apply to key words in headlines */
-.gradient-text {
-  background: linear-gradient(to right, #0052FF, #4D7CFF);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
-/* Gradient background — for buttons, icon containers */
-.gradient-bg {
-  background: linear-gradient(135deg, #0052FF, #4D7CFF);
-}
-
-/* Gradient border — featured cards */
-.gradient-border {
-  background: linear-gradient(135deg, #0052FF, #4D7CFF);
-  padding: 2px;
-}
-
-.gradient-border>* {
-  background: white;
-}
-
-/* Dot pattern overlay — for inverted (dark) sections */
-.dot-pattern {
-  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-  background-size: 32px 32px;
-}
-
-/* Radial glow — positioned absolutely inside sections */
-.radial-glow {
-  position: absolute;
-  border-radius: 9999px;
-  filter: blur(150px);
-  pointer-events: none;
-}
-
-/* ── Tailwind Theme Inline ── */
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
   --radius-2xl: calc(var(--radius) + 8px);
-  --radius-3xl: calc(var(--radius) + 12px);
-  --radius-4xl: calc(var(--radius) + 16px);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -318,201 +109,329 @@ input:disabled {
 }
 
 :root {
-  --radius: 0.75rem;
+  --radius: 0.625rem;
 
-  /* ── Core Colors (Minimalist Modern) ── */
+  /* Surfaces */
   --background: #FFFFFF;
-  --foreground: #0F172A;
+  --foreground: #1D2020;
   --card: #FFFFFF;
-  --card-foreground: #0F172A;
+  --card-foreground: #1D2020;
   --popover: #FFFFFF;
-  --popover-foreground: #0F172A;
+  --popover-foreground: #1D2020;
 
-  /* Primary — Electric Blue */
-  --primary: #0052FF;
-  --primary-light: #4D7CFF;
+  /* Primary (near-black — confirmed from --token-54fbe6ca-...-788c) */
+  --primary: #1D2020;
   --primary-foreground: #FFFFFF;
 
-  /* Secondary — Deep Slate */
-  --secondary: #0F172A;
+  /* Secondary (legacy alias for near-black) */
+  --secondary: #1D2020;
   --secondary-foreground: #FFFFFF;
 
-  /* Muted */
-  --muted: #F8FAFC;
-  --muted-foreground: #64748B;
+  --muted: #F5F5F4;
+  --muted-foreground: #6B6E6E;
 
-  /* Accent */
-  --accent: #F8FAFC;
-  --accent-foreground: #0052FF;
+  --accent: #F5F5F4;
+  --accent-foreground: #1D2020;
 
-  /* Destructive */
-  --destructive: #EF4444;
+  --destructive: #DC2626;
 
-  /* ── Borders & Input ── */
-  --border: #E2E8F0;
-  --border-medium: #CBD5E1;
-  --border-light: #E2E8F0;
-  --input: #E2E8F0;
+  --border: #E7E5E4;
+  --border-medium: #D6D3D1;
+  --border-light: #F0EEEC;
+  --input: #E7E5E4;
 
-  /* ── Focus Ring ── */
-  --ring: #0052FF;
+  --ring: #1D2020;
+  --link: #1D2020;
 
-  /* ── Primary Opacity Variants ── */
-  --primary-ghost: rgba(0, 82, 255, 0.1);
-  --primary-5: rgba(0, 82, 255, 0.05);
-  --primary-25: rgba(0, 82, 255, 0.15);
-  --primary-bg: rgba(0, 82, 255, 0.06);
+  /* ── Brand accent: LIME (Remote-by-Modula signature) ── */
 
-  /* ── Secondary Opacity Variants ── */
-  --secondary-overlay: rgba(15, 23, 42, 0.5);
-  --secondary-ghost: rgba(15, 23, 42, 0.2);
+  --lime:        #D4FB5F;   /* primary accent — highlighter, badges, dots */
+  --lime-soft:   #EEFCC1;   /* soft tint for pill backgrounds */
+  --lime-strong: #A8DC3A;   /* hover / darker accent */
+  --lime-ink:    #1D2020;   /* text on lime bg (always ink, never white) */
 
-  /* ── Foreground Opacity Variants ── */
-  --foreground-ghost: rgba(15, 23, 42, 0.04);
-  --foreground-muted: rgba(15, 23, 42, 0.75);
+  /* ── Semantic zone accents (retained for dashboard use) ── */
 
-  /* ── White Opacity Variants ── */
-  --white-4: rgba(255, 255, 255, 0.04);
-  --white-10: rgba(255, 255, 255, 0.1);
-  --white-40: rgba(255, 255, 255, 0.4);
-  --white-50: rgba(255, 255, 255, 0.5);
-  --white-60: rgba(255, 255, 255, 0.6);
-  --white-80: rgba(255, 255, 255, 0.8);
+  --brand:        #1D2020;        /* landing-page "brand" is ink, not blue */
+  --brand-bg:     #F5F5F4;
+  --brand-border: #E7E5E4;
 
-  /* ── Accent Palette ── */
-  --accent-orange: #F97316;
-  --accent-purple: #8B5CF6;
-  --accent-green: #22C55E;
-  --accent-green-dark: #16A34A;
-  --accent-violet: #A855F7;
-  --accent-gold: #EAB308;
-  --accent-burnt: #F97316;
-  --accent-emerald: #10B981;
-  --accent-lime: #84CC16;
-  --accent-teal: #14B8A6;
-  --accent-navy: #1E40AF;
-  --link: #0052FF;
+  --agent: #7C3AED;
+  --agent-bg: #F5F3FF;
+  --agent-border: #DDD6FE;
 
-  /* ── Status Backgrounds ── */
-  --violet-bg: #F5F3FF;
-  --gold-bg: #FEFCE8;
-  --burnt-bg: #FFF7ED;
-  --emerald-bg: #ECFDF5;
-  --lime-bg: #F7FEE7;
-  --teal-bg: #F0FDFA;
-  --sky-bg: #F0F9FF;
-  --muted-blue: #EFF6FF;
+  --knowledge: #D97706;
+  --knowledge-bg: #FFFBEB;
+  --knowledge-border: #FDE68A;
 
-  /* ── Status Ghost ── */
-  --destructive-ghost: rgba(239, 68, 68, 0.1);
-  --success-ghost: rgba(34, 197, 94, 0.1);
+  /* ── Status colours ── */
 
-  /* ── Shadows ── */
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
-  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
-  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.08);
-  --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.1);
-  --shadow-accent: 0 4px 14px rgba(0, 82, 255, 0.25);
-  --shadow-accent-lg: 0 8px 24px rgba(0, 82, 255, 0.35);
+  --accent-green: #16A34A;
+  --accent-gold: #CA8A04;
+  --accent-violet: #8B5CF6;
+
+  /* ── Shadows (subtle — Remote is almost shadowless) ── */
+
+  --shadow-sm:   0 1px 2px rgba(29,32,32,0.04);
+  --shadow-md:   0 2px 4px rgba(29,32,32,0.04);
+  --shadow-lg:   0 4px 12px rgba(29,32,32,0.05);
+  --shadow-card: 0 1px 2px rgba(29,32,32,0.04), 0 8px 24px rgba(29,32,32,0.05);
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
+  --background: #0A0A0A;
+  --foreground: #FAFAFA;
+  --card: #141414;
+  --card-foreground: #FAFAFA;
+  --popover: #141414;
+  --popover-foreground: #FAFAFA;
+  --primary: #FAFAFA;
+  --primary-foreground: #0A0A0A;
+  --secondary: #1F1F1F;
+  --secondary-foreground: #FAFAFA;
+  --muted: #1F1F1F;
+  --muted-foreground: #A3A3A3;
+  --accent: #1F1F1F;
+  --accent-foreground: #FAFAFA;
+  --destructive: #F87171;
+  --border: rgba(255, 255, 255, 0.08);
+  --input: rgba(255, 255, 255, 0.12);
+  --ring: #60A5FA;
 }
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
-
   body {
     @apply bg-background text-foreground;
   }
 }
 
-/* ── Dashboard Section Specific Styles ── */
+/* ── Dashboard theme (premium, unified with landing) ── */
+
 .dashboard-theme {
-  --app-border-radius: 1rem; /* Matches rounded-2xl roughly in this setup */
+  --app-border-radius: 12px;
+  font-family: var(--font-sans);
+  letter-spacing: -0.005em;
+
+  /* Preserve the dashboard's original blue brand so charts, links, and KPI
+     accents don't flip to the landing-page ink tone. Landing renders OUTSIDE
+     .dashboard-theme and uses the :root values defined above. */
+  --brand:        #2563EB;
+  --brand-bg:     #EFF6FF;
+  --brand-border: #BFDBFE;
+  --ring:         #2563EB;
+  --link:         #2563EB;
 }
 
+.dashboard-theme h1,
+.dashboard-theme h2,
+.dashboard-theme h3,
+.dashboard-theme h4 {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--foreground);
+}
+
+.dashboard-theme h1 { font-size: 26px; line-height: 1.15; letter-spacing: -0.025em; }
+.dashboard-theme h2 { font-size: 19px; line-height: 1.25; letter-spacing: -0.02em; }
+.dashboard-theme h3 { font-size: 15px; line-height: 1.3; letter-spacing: -0.015em; font-weight: 600; }
+.dashboard-theme h4 { font-size: 13px; line-height: 1.35; font-weight: 600; }
+
+/* Body text inside dashboard stays relaxed at 14px */
+.dashboard-theme,
+.dashboard-theme p,
+.dashboard-theme span,
 .dashboard-theme button,
+.dashboard-theme a,
+.dashboard-theme label,
 .dashboard-theme input,
 .dashboard-theme textarea,
-.dashboard-theme select,
-.dashboard-theme [role="button"] {
-  border-radius: 0.75rem !important; /* rounded-xl for smaller elements */
+.dashboard-theme select {
+  font-size: 14px;
 }
 
-/* Top-only radius for containers that have content below */
-.dashboard-theme .rounded-t-container,
-.dashboard-theme .rounded-t-container *,
-.dashboard-theme .rounded-t-container *::before,
-.dashboard-theme .rounded-t-container *::after {
-  border-bottom-left-radius: 0 !important;
-  border-bottom-right-radius: 0 !important;
-}
-
-/* Table wrapper */
 .dashboard-theme [data-slot="table-wrapper"] {
-  border-top-left-radius: 1rem !important;
-  border-top-right-radius: 1rem !important;
-  border-bottom-left-radius: 1rem !important;
-  border-bottom-right-radius: 1rem !important;
+  border-radius: var(--app-border-radius);
   overflow: hidden;
 }
 
-/* Table header row */
-.dashboard-theme [data-slot="table-header"] {
-  border-top-left-radius: 12px !important;
-  border-top-right-radius: 12px !important;
-  border-bottom-left-radius: 0 !important;
-  border-bottom-right-radius: 0 !important;
-}
-
-/* Card container with a header section */
-.dashboard-theme [data-slot="card-header-attached"] {
-  border-top-left-radius: 1rem !important;
-  border-top-right-radius: 1rem !important;
-  border-bottom-left-radius: 0 !important;
-  border-bottom-right-radius: 0 !important;
-}
-
-/* Smooth card shadow on hover in dashboard */
 .dashboard-theme .dash-card {
-  transition: box-shadow 0.3s ease, border-color 0.3s ease, transform 0.2s ease;
+  border-radius: var(--app-border-radius);
+  transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
 }
 
 .dashboard-theme .dash-card:hover {
-  box-shadow: var(--shadow-accent-lg), 0 1px 3px rgba(0, 0, 0, 0.04);
-  border-color: var(--primary-light);
-  transform: translateY(-2px);
+  border-color: var(--border-medium);
 }
 
-/* ── Reduced Motion ── */
-@media (prefers-reduced-motion: reduce) {
+/* Unified pill badge inside dashboard */
+.dashboard-theme .dash-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border-radius: 9999px;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: -0.005em;
+}
 
+/* Section eyebrow inside dashboard (tiny all-caps) */
+.dashboard-theme .dash-eyebrow {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+}
+
+/* Consistent focus ring for keyboard users */
+.dashboard-theme *:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* ── Reduced motion ── */
+
+@media (prefers-reduced-motion: reduce) {
   .animate-pulse-dot,
-  .animate-slow-rotate,
-  .animate-float,
-  .animate-float-slow,
-  .mesh-gradient {
+  .animate-fade-in,
+  .animate-fade-in-up,
+  .animate-scale-in,
+  .animate-slide-in-right,
+  .animate-slide-in-bottom,
+  .animate-shimmer {
     animation: none !important;
   }
+}
+
+/* ============================================================================
+   REMOTE-BY-MODULA SIGNATURE UTILITIES  (landing-page aesthetic)
+   These are scoped to marketing surfaces; dashboard is untouched.
+   ============================================================================ */
+
+/* ---- Highlighter marker behind key words ----
+   Usage:  <h1>Ship a <span class="hl-marker">smarter</span> agent</h1>
+   The ::before stroke is angled & has uneven radii for a painted feel. */
+.hl-marker {
+  position: relative;
+  display: inline-block;
+  padding: 0 0.1em;
+  isolation: isolate;
+  white-space: nowrap;
+}
+.hl-marker::before {
+  content: "";
+  position: absolute;
+  inset: 20% -6% 8% -6%;
+  background: var(--lime);
+  transform: skew(-4deg) rotate(-1.2deg);
+  border-radius: 6px 12px 8px 14px;
+  z-index: -1;
+}
+/* Slightly more concentrated stroke for smaller headings */
+.hl-marker--tight::before {
+  inset: 35% -4% 10% -4%;
+  border-radius: 4px 8px 6px 10px;
+}
+
+/* ---- Dot-grid bg (hero atmosphere) ---- */
+.bg-dot-grid {
+  background-image: radial-gradient(circle, rgba(29,32,32,0.09) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+.bg-dot-grid-fade {
+  background-image: radial-gradient(circle, rgba(29,32,32,0.08) 1px, transparent 1px),
+                    radial-gradient(ellipse at center, rgba(255,255,255,0) 0%, rgba(255,255,255,0.85) 75%);
+  background-size: 22px 22px, 100% 100%;
+}
+
+/* ---- Announcement pill (eyebrow w/ a colored chip inside) ----
+   Usage: .announce-pill > .tag  */
+.announce-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 14px 4px 6px;
+  background: #FFFFFF;
+  border: 1px solid var(--border);
+  border-radius: 9999px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #3F4242;
+  box-shadow: var(--shadow-sm);
+}
+.announce-pill .tag {
+  display: inline-flex;
+  align-items: center;
+  background: var(--lime);
+  color: var(--lime-ink);
+  padding: 3px 10px;
+  border-radius: 9999px;
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: -0.01em;
+}
+
+/* ---- Eyebrow dot-pill (the "· Apps & Integrations" style) ---- */
+.eyebrow-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  background: #FFFFFF;
+  border: 1px solid var(--border);
+  border-radius: 9999px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--foreground);
+  box-shadow: var(--shadow-sm);
+}
+.eyebrow-pill::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  background: var(--lime-strong);
+  box-shadow: 0 0 0 3px var(--lime-soft);
+}
+
+/* ---- Pill button override (for landing CTAs only) ---- */
+.btn-pill {
+  border-radius: 9999px !important;
+  padding-left: 22px !important;
+  padding-right: 22px !important;
+}
+
+/* ---- Floating "soft" integration tile used in the integrations grid ---- */
+.integration-tile {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 84px;
+  height: 84px;
+  border-radius: 20px;
+  background: #FFFFFF;
+  border: 1px solid var(--border-light);
+  box-shadow: 0 1px 2px rgba(29,32,32,0.03), 0 8px 24px rgba(29,32,32,0.04);
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.integration-tile:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(29,32,32,0.06), 0 16px 36px rgba(29,32,32,0.08);
+}
+
+/* Subtle float animation for logo constellation */
+@keyframes float-y {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-6px); }
+}
+.animate-float {
+  animation: float-y 5s ease-in-out infinite;
 }

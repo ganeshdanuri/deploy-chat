@@ -1,163 +1,224 @@
 "use client";
 
-import { HiTrendingUp, HiLockClosed } from "react-icons/hi";
-import { useAppSelector } from "@/lib/store/hooks";
-import { TOOLTIP_STYLE_CLASSES, TOOLTIP_ARROW_CLASSES, PLANS } from "@/lib/constants";
-import { AnalyticsSkeleton } from "@/app/components/ui";
+import { ArrowDown, ArrowRight, ArrowUp, Lock } from "lucide-react";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { useEffect, useState } from "react";
+import Link from "next/link";
+
+import { useAppSelector } from "@/lib/store/hooks";
+import { PLANS } from "@/lib/constants";
+import { AnalyticsSkeleton } from "@/app/components/ui";
+import { Button } from "@/components/ui/button";
+import { BarChart } from "@/app/components/charts/BarChart";
+import { BarList } from "@/app/components/charts/BarList";
+
+type Range ="7d" |"30d" |"90d";
 
 export default function AnalyticsPage() {
-    const [loading, setLoading] = useState(true);
-    const { data: userData } = useAppSelector((state) => state.user);
+  const [loading, setLoading] = useState(true);
+  const [range, setRange] = useState<Range>("7d");
+  const { data: userData } = useAppSelector((state) => state.user);
+  const { items: chatbots } = useAppSelector((state) => state.chatbots);
 
-    useEffect(() => {
-        const timer = setTimeout(() => setLoading(false), 800);
-        return () => clearTimeout(timer);
-    }, []);
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 300);
+    return () => clearTimeout(timer);
+  }, []);
 
-    const isFreePlan = !userData?.billing?.current_plan ||
-        userData?.billing?.current_plan.toLowerCase() === PLANS.FREE ||
-        userData?.billing?.current_plan.toLowerCase() === PLANS.TRIAL;
+  const isFreePlan =
+    !userData?.billing?.current_plan ||
+    userData?.billing?.current_plan.toLowerCase() === PLANS.FREE ||
+    userData?.billing?.current_plan.toLowerCase() === PLANS.TRIAL;
 
-    if (loading) {
-        return <AnalyticsSkeleton />;
-    }
+  if (loading) return <AnalyticsSkeleton />;
 
-    if (isFreePlan) {
-        return (
-            <div className="flex flex-col items-center justify-center h-[calc(100vh-12rem)] text-center animate-fade-in-up">
-                <div className="w-16 h-16 bg-primary/5 flex items-center justify-center mb-6 shadow-sm border border-primary/10">
-                    <HiLockClosed className="w-8 h-8 text-primary" />
-                </div>
-                <h1 className="text-2xl font-bold text-secondary mb-2">Analytics Pro</h1>
-                <p className="text-foreground mb-6 max-w-sm">
-                    Detailed analytics and usage metrics are only available on higher plans.
-                </p>
-                <button
-                    disabled
-                    className="px-6 py-1.5 bg-muted border border-border text-muted-foreground text-sm font-medium shadow-sm cursor-not-allowed opacity-60"
-                >
-                    Upgrade Plan
-                </button>
-            </div>
-        );
-    }
-
+  if (isFreePlan) {
     return (
-        <div className="space-y-6 animate-fade-in-up">
-            <div className="flex items-center justify-between">
-                <div>
-                    <h1 className="text-2xl font-bold text-secondary tracking-tight">Analytics</h1>
-                    <p className="text-sm text-foreground mt-1">Usage trends and performance metrics.</p>
-                </div>
-                <div className="flex bg-white p-1 border border-border shadow-sm">
-                    <button className="px-3 py-1.5 bg-muted text-secondary text-xs font-semibold shadow-sm">7 Days</button>
-                    <button className="px-3 py-1.5 text-muted-foreground hover:bg-muted text-xs font-semibold">30 Days</button>
-                    <button className="px-3 py-1.5 text-muted-foreground hover:bg-muted text-xs font-semibold">90 Days</button>
-                </div>
-            </div>
-
-            {/* Summary Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                {/* Card 1 */}
-                <div className="dash-card bg-white p-4 border border-border shadow-sm">
-                    <div className="text-sm font-medium text-muted-foreground mb-1">Total Conversations</div>
-                    <div className="text-2xl font-bold text-secondary">12,405</div>
-                    <div className="flex items-center gap-1 text-emerald-500 text-xs font-bold mt-2">
-                        <HiTrendingUp className="w-3 h-3" />
-                        12.5%
-                    </div>
-                </div>
-                {/* Card 2 */}
-                <div className="dash-card bg-white p-4 border border-border shadow-sm">
-                    <div className="text-sm font-medium text-muted-foreground mb-1">Avg. Response Time</div>
-                    <div className="text-2xl font-bold text-secondary">1.2s</div>
-                    <div className="flex items-center gap-1 text-emerald-500 text-xs font-bold mt-2">
-                        <HiTrendingUp className="w-3 h-3 rotate-180" />
-                        -0.3s
-                    </div>
-                </div>
-                {/* Card 3 */}
-                <div className="dash-card bg-white p-4 border border-border shadow-sm">
-                    <div className="text-sm font-medium text-muted-foreground mb-1">User Satisfaction</div>
-                    <div className="text-2xl font-bold text-secondary">4.8/5</div>
-                    <div className="flex items-center gap-1 text-emerald-500 text-xs font-bold mt-2">
-                        <HiTrendingUp className="w-3 h-3" />
-                        +0.2
-                    </div>
-                </div>
-                {/* Card 4 */}
-                <div className="dash-card bg-white p-4 border border-border shadow-sm">
-                    <div className="text-sm font-medium text-muted-foreground mb-1">Tokens Consumed</div>
-                    <div className="text-2xl font-bold text-secondary">8.4M</div>
-                    <div className="flex items-center gap-1 text-amber-500 text-xs font-bold mt-2">
-                        <HiTrendingUp className="w-3 h-3" />
-                        High Usage
-                    </div>
-                </div>
-            </div>
-
-            {/* Charts Section */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {/* Usage Chart */}
-                <div className="dash-card bg-white p-6 border border-border shadow-sm h-80 flex flex-col">
-                    <h3 className="text-sm font-bold text-secondary mb-6">Daily Conversations</h3>
-                    <div className="flex-1 flex items-end justify-between gap-2 px-2">
-                        {[40, 65, 45, 80, 55, 90, 70, 85, 60, 75, 50, 95].map((h, i) => (
-                            <div key={i} className="w-full bg-primary/5 rounded-t-sm relative group">
-                                <div
-                                    className="absolute bottom-0 left-0 w-full bg-primary rounded-t-sm transition-all duration-500 hover:bg-secondary"
-                                    style={{ height: `${h}%` }}
-                                ></div>
-                                {/* Tooltip */}
-                                <div className={`absolute -top-9 left-1/2 -translate-x-1/2 px-2 py-1 opacity-0 group-hover:opacity-100 ${TOOLTIP_STYLE_CLASSES} translate-y-1 group-hover:translate-y-0 text-[9px]`}>
-                                    {h * 12} chats
-                                    <div className={`absolute bottom-[-4px] left-1/2 -translate-x-1/2 w-2 h-2 border-r border-b ${TOOLTIP_ARROW_CLASSES}`} />
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                    <div className="flex justify-between mt-2 pt-2 border-t border-border text-xs text-muted-foreground">
-                        <span>Mon</span>
-                        <span>Tue</span>
-                        <span>Wed</span>
-                        <span>Thu</span>
-                        <span>Fri</span>
-                        <span>Sat</span>
-                        <span>Sun</span>
-                    </div>
-                </div>
-
-                {/* Token Usage Chart */}
-                <div className="dash-card bg-white p-6 border border-border shadow-sm h-80 flex flex-col">
-                    <h3 className="text-sm font-bold text-secondary mb-6">Cost Estimation ($)</h3>
-                    <div className="flex-1 flex items-end justify-between gap-4 px-4 border-l border-border relative">
-                        {/* Grid Lines */}
-                        <div className="absolute w-full h-full top-0 left-0 flex flex-col justify-between pointer-events-none">
-                            <div className="border-t border-muted w-full"></div>
-                            <div className="border-t border-muted w-full"></div>
-                            <div className="border-t border-muted w-full"></div>
-                            <div className="border-t border-muted w-full"></div>
-                        </div>
-
-                        {[30, 45, 35, 60, 80].map((h, i) => (
-                            <div key={i} className="flex-1 flex flex-col justify-end group">
-                                <div
-                                    className="w-full bg-gradient-to-t from-emerald-500 to-emerald-500/50 rounded-t-md hover:opacity-90 transition-all shadow-md shadow-emerald-500/10"
-                                    style={{ height: `${h}%` }}
-                                ></div>
-                            </div>
-                        ))}
-                    </div>
-                    <div className="flex justify-between mt-2 pt-2 border-t border-border text-xs text-muted-foreground px-4">
-                        <span>Week 1</span>
-                        <span>Week 2</span>
-                        <span>Week 3</span>
-                        <span>Week 4</span>
-                        <span>Current</span>
-                    </div>
-                </div>
-            </div>
+      <div className="w-full max-w-2xl mx-auto py-12 text-center">
+        <div className="w-14 h-14 rounded-full bg-muted flex items-center justify-center mx-auto mb-5">
+          <Lock className="w-6 h-6 text-muted-foreground" />
         </div>
+        <div
+          className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium mb-4"
+          style={{ background: "var(--brand-bg)", color: "var(--brand)" }}
+>
+          Pro feature
+        </div>
+        <h1 className="text-2xl font-medium tracking-tight mb-2">
+          Unlock detailed analytics
+        </h1>
+        <p className="text-muted-foreground max-w-md mx-auto mb-6 leading-relaxed">
+          See resolution rates, response times, knowledge gaps, and per-agent
+          breakdowns. Available on Professional and Enterprise plans.
+        </p>
+        <Button disabled className="opacity-50 cursor-not-allowed">
+          Upgrade to Pro
+        </Button>
+      </div>
     );
+  }
+
+  return (
+    <div className="space-y-8 animate-fade-in-up">
+      {/* Header */}
+      <section>
+        <div className="flex items-center gap-2 text-xs text-muted-foreground font-mono tracking-normal mb-3">
+          <span>Analytics</span>
+          <span className="w-1 h-1 rounded-full bg-border-medium" />
+          <span>Last {range === "7d" ? "7 days" : range === "30d" ? "30 days" : "90 days"}</span>
+        </div>
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+          <h1 className="text-4xl sm:text-[42px] font-medium tracking-[-0.025em] text-foreground leading-[1.02]">
+            Performance
+          </h1>
+          <div className="flex bg-muted p-0.5 rounded-md text-xs font-medium font-mono">
+            {[
+              { id: "7d", label: "7d" },
+              { id: "30d", label: "30d" },
+              { id: "90d", label: "90d" },
+            ].map((r) => (
+              <button
+                key={r.id}
+                onClick={() => setRange(r.id as Range)}
+                className={`px-3 py-1.5 rounded transition-colors ${
+                  range === r.id
+                    ? "bg-background text-foreground"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+>
+                {r.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Big-number metrics */}
+      <section className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        <HeroStat label="Conversations" value="0" delta="No data yet" neutral />
+        <HeroStat label="Resolution rate" value="—" delta="No data yet" neutral />
+        <HeroStat label="Avg response" value="—" delta="No data yet" neutral />
+        <HeroStat label="Unique users" value="0" delta="No data yet" neutral />
+      </section>
+
+      {/* Hero bar chart */}
+      <section className="bg-background border border-border rounded-xl overflow-hidden">
+        <div className="flex items-center justify-between px-6 pt-5 pb-1">
+          <div>
+            <div className="text-xs text-muted-foreground font-mono tracking-normal mb-1">
+              Conversation volume
+            </div>
+            <div className="text-[28px] font-medium tracking-tight tabular-nums">
+              0
+              <span className="text-sm text-muted-foreground font-normal ml-2">
+                messages · {range === "7d" ? "7 days" : range === "30d" ? "30 days" : "90 days"}
+              </span>
+            </div>
+          </div>
+        </div>
+        <div className="px-4 sm:px-6 pb-6 pt-4">
+          <BarChart
+            data={[]}
+            height={260}
+            emptyLabel="No conversations yet"
+            color="var(--brand)"
+          />
+        </div>
+      </section>
+
+      {/* Per-agent performance */}
+      <section className="bg-background border border-border rounded-xl overflow-hidden">
+        <div className="flex items-center justify-between px-5 py-4 border-b border-border">
+          <div>
+            <h3 className="text-[13px] font-medium text-foreground">By agent</h3>
+            <p className="text-xs text-muted-foreground mt-0.5 font-mono">
+              {chatbots.length} {chatbots.length === 1 ? "agent" : "agents"} tracked
+            </p>
+          </div>
+          <Link
+            href="/dashboard/agents"
+            className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+>
+            View all →
+          </Link>
+        </div>
+        {chatbots.length === 0 ? (
+          <div className="py-12 text-center text-sm text-muted-foreground">
+            No agents yet.{""}
+            <Link href="/dashboard/agents" className="underline text-foreground">
+              Create one
+            </Link>
+          </div>
+        ) : (
+          <div className="px-5 py-2">
+            <BarList
+              items={chatbots.slice(0, 10).map((bot: any) => ({
+                label: bot.name,
+                value: 0,
+                subtitle: "No data yet",
+                active: false,
+              }))}
+              color="var(--agent)"
+              max={100}
+              valueFormat={() =>"—"}
+            />
+          </div>
+        )}
+      </section>
+
+      {/* Knowledge gaps */}
+      <section className="bg-background border border-border rounded-xl overflow-hidden">
+        <div className="px-5 py-4 border-b border-border">
+          <h3 className="text-[13px] font-medium text-foreground">Knowledge gaps</h3>
+          <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">
+            Questions your agents couldn&apos;t answer well. Add these topics to your knowledge base.
+          </p>
+        </div>
+        <div className="py-12 px-5 text-center text-sm text-muted-foreground">
+          <div>No gaps detected yet</div>
+          <div className="text-xs text-muted-foreground/70 mt-1">
+            Data will appear as your agents receive questions
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}
+
+// ─── HERO STAT ───────────────────────────────────────────────────────────────
+
+function HeroStat({
+  label,
+  value,
+  delta,
+  positive,
+  neutral,
+}: {
+  label: string;
+  value: string;
+  delta: string;
+  positive?: boolean;
+  neutral?: boolean;
+}) {
+  const color = positive
+    ? "var(--accent-green)"
+    : neutral
+    ? "var(--muted-foreground)"
+    : "var(--destructive)";
+  return (
+    <div className="bg-background border border-border rounded-xl p-5 flex flex-col gap-4">
+      <div className="text-xs text-muted-foreground font-mono tracking-normal">
+        {label}
+      </div>
+      <div className="text-[40px] font-medium tracking-[-0.02em] tabular-nums leading-[1] text-foreground">
+        {value}
+      </div>
+      <div className="text-xs font-mono flex items-center gap-1" style={{ color }}>
+        {positive && <ArrowUp className="w-3 h-3" />}
+        {!positive && !neutral && <ArrowDown className="w-3 h-3" />}
+        <span>{delta}</span>
+      </div>
+    </div>
+  );
 }

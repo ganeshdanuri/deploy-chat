@@ -3,12 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "../../context/AuthContext";
-import {
-    HiLogout,
-    HiX,
-    HiChevronLeft,
-    HiChevronRight,
-} from "react-icons/hi";
+import { LogOut, X, ChevronLeft, ChevronRight } from "lucide-react";
 import { useState } from "react";
 import Logo from "../../components/Logo";
 import { useAppSelector } from "@/lib/store/hooks";
@@ -16,10 +11,7 @@ import {
     SIDEBAR_MAIN_NAV as mainNavItems,
     SIDEBAR_SECONDARY_NAV as secondaryNavItems,
     SIDEBAR_SETTINGS_NAV as settingsNavItems,
-    TOOLTIP_STYLE_CLASSES,
-    TOOLTIP_ARROW_CLASSES
 } from "@/lib/constants";
-
 
 interface SidebarProps {
     isOpen?: boolean;
@@ -30,58 +22,72 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
     const pathname = usePathname();
     const router = useRouter();
     const searchParams = useSearchParams();
-    const currentTab = searchParams.get("tab") || "general";
+    const currentTab = searchParams.get("tab") ||"general";
     const { logout } = useAuth();
     const [isCollapsed, setIsCollapsed] = useState(false);
     const { data: userData } = useAppSelector((state) => state.user);
 
+    const plan = userData?.billing?.current_plan ||"Free";
+    const isFreePlan = plan.toLowerCase() === "free" || plan.toLowerCase() === "trial";
+
     return (
         <aside
             className={`
-                fixed lg:static inset-y-0 left-0 z-50 bg-white border-r border-border flex flex-col transition-all duration-300 transform
-                ${isOpen ? "translate-x-0 shadow-2xl" : "-translate-x-full lg:translate-x-0"}
-                ${isCollapsed ? "lg:w-[72px]" : "lg:w-64"}
-                w-64
+                fixed lg:static inset-y-0 left-0 z-50 bg-background border-r border-border
+                flex flex-col transition-all duration-200
+                ${isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
+                ${isCollapsed ? "lg:w-[68px]" : "lg:w-60"}
+                w-60
             `}
-        >
-            {/* Workspace Selector / Brand */}
-            <div className="h-16 flex items-center px-3 border-b border-border justify-between shrink-0">
+>
+            {/* Brand */}
+            <div className="h-14 flex items-center px-3 border-b border-border justify-between shrink-0">
                 <div
-                    className={`flex items-center gap-3 p-1.5 hover:bg-muted rounded-xl cursor-pointer transition-colors group ${isCollapsed ? "justify-center w-full" : "flex-1 min-w-0"}`}
+                    className={`flex items-center gap-2.5 p-1.5 hover:bg-muted rounded-md cursor-pointer transition-colors ${
+                        isCollapsed ? "justify-center w-full" : "flex-1 min-w-0"
+                    }`}
                     onClick={() => !isCollapsed && router.push("/dashboard")}
-                >
-                    <div className="shrink-0">
-                        <Logo className="h-8 w-auto" />
-                    </div>
+>
+                    <Logo className="h-7 w-auto shrink-0" />
                     {!isCollapsed && (
-                        <div className="flex-1 min-w-0 text-secondary">
-                            <h2 className="text-sm font-black tracking-tight truncate">
-                                DEPLOY <span className="text-primary">CHAT</span>
+                        <div className="flex-1 min-w-0">
+                            <h2 className="text-[13px] font-medium tracking-tight truncate">
+                                Deploy Chat
                             </h2>
-                            <p className="text-[10px] font-bold uppercase tracking-tighter text-primary">
-                                {userData?.billing?.current_plan || "Free"}
-                            </p>
                         </div>
                     )}
                 </div>
 
-                {/* Mobile Close Button */}
+                {/* Mobile close */}
                 <button
-                    className="lg:hidden p-2 text-muted-foreground hover:text-secondary hover:bg-muted shrink-0"
+                    className="lg:hidden p-1.5 text-muted-foreground hover:text-foreground hover:bg-muted rounded-md"
                     onClick={onClose}
-                >
-                    <HiX className="w-5 h-5" />
+>
+                    <X className="w-5 h-5" strokeWidth={1.75} />
+                </button>
+
+                {/* Desktop collapse toggle — lives inside the header */}
+                <button
+                    className="hidden lg:flex p-1.5 text-muted-foreground hover:text-foreground hover:bg-muted rounded-md transition-colors shrink-0"
+                    onClick={() => setIsCollapsed(!isCollapsed)}
+                    title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+>
+                    {isCollapsed
+                        ? <ChevronRight className="w-4 h-4" strokeWidth={1.75} />
+                        : <ChevronLeft className="w-4 h-4" strokeWidth={1.75} />
+                    }
                 </button>
             </div>
 
-            {/* Main Navigation */}
-            <div className="flex-1 overflow-y-auto py-4 px-2 space-y-6">
-                {/* Primary Links */}
+            {/* Main nav */}
+            <div className="flex-1 overflow-y-auto py-4 px-2 space-y-5">
                 <nav className="space-y-0.5">
                     {mainNavItems.map((item) => {
                         const Icon = item.icon;
-                        const isActive = pathname === item.path;
-                        const isFreePlan = !userData?.billing?.current_plan || userData?.billing?.current_plan.toLowerCase() === "free" || userData?.billing?.current_plan.toLowerCase() === "trial";
+                        const isActive =
+                            item.path === "/dashboard"
+                                ? pathname === "/dashboard"
+                                : pathname === item.path || pathname.startsWith(item.path +"/");
                         const isDisabled = item.id === "analytics" && isFreePlan;
 
                         return (
@@ -91,35 +97,41 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                                 onClick={isDisabled ? (e) => e.preventDefault() : undefined}
                                 title={isCollapsed ? (isDisabled ? `${item.label} (Pro)` : item.label) : undefined}
                                 className={`
-                                        relative group flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all
-                                        ${isCollapsed ? "justify-center" : ""}
-                                        ${isDisabled
+                                    group flex items-center gap-2.5 px-2.5 py-2 rounded-md text-[13px] font-medium transition-colors relative
+                                    ${isCollapsed ? "justify-center" : ""}
+                                    ${isDisabled
                                         ? "opacity-50 cursor-not-allowed text-muted-foreground"
                                         : isActive
-                                            ? "bg-muted text-secondary"
-                                            : "text-foreground hover:text-secondary hover:bg-muted"
+                                            ? "bg-muted text-foreground"
+                                            : "text-muted-foreground hover:text-foreground hover:bg-muted"
                                     }
-                                    `}
-                                style={{}}
-                            >
+                                `}
+                                style={
+                                    isActive && !isDisabled
+                                        ? {
+                                              color: "var(--brand)",
+                                              background: "var(--brand-bg)",
+                                          }
+                                        : undefined
+                                }
+>
                                 <Icon
-                                    className={`w-5 h-5 shrink-0 transition-colors ${isActive && !isDisabled ? "text-secondary" : "text-muted-foreground group-hover:text-foreground"}`}
+                                    className="w-4 h-4 shrink-0"
+                                    strokeWidth={1.75}
+                                    style={
+                                        isActive && !isDisabled
+                                            ? { color: "var(--brand)" }
+                                            : undefined
+                                    }
                                 />
                                 {!isCollapsed && (
                                     <div className="flex flex-1 items-center justify-between">
                                         <span>{item.label}</span>
                                         {isDisabled && (
-                                            <span className="text-[9px] font-bold bg-muted text-muted-foreground px-1.5 py-0.5 rounded-xl uppercase tracking-wider">Pro</span>
+                                            <span className="text-[9px] font-medium text-muted-foreground border border-border px-1.5 py-0.5 rounded uppercase tracking-wider">
+                                                Pro
+                                            </span>
                                         )}
-                                    </div>
-                                )}
-
-
-                                {/* Tooltip for collapsed state */}
-                                {isCollapsed && (
-                                    <div className={`absolute left-full ml-3 px-3 py-1.5 opacity-0 group-hover:opacity-100 transition-all ${TOOLTIP_STYLE_CLASSES} translate-x-1 group-hover:translate-x-0`}>
-                                        {isDisabled ? `${item.label} (Pro)` : item.label}
-                                        <div className={`absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1 w-2 h-2 border-l border-b ${TOOLTIP_ARROW_CLASSES}`} />
                                     </div>
                                 )}
                             </Link>
@@ -127,9 +139,13 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                     })}
                 </nav>
 
-                {/* Settings Section */}
-                <div className={`${isCollapsed ? "px-2" : "px-3"}`}>
-                    {!isCollapsed && <div className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-2">Settings</div>}
+                {/* Settings */}
+                <div>
+                    {!isCollapsed && (
+                        <div className="text-[10px] font-medium text-muted-foreground mb-2 px-2.5">
+                            Settings
+                        </div>
+                    )}
                     <nav className="space-y-0.5">
                         {settingsNavItems.map((item) => {
                             const Icon = item.icon;
@@ -139,29 +155,19 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                             return (
                                 <Link
                                     key={item.id}
-                                    href={item.path || "#"}
+                                    href={item.path ||"#"}
                                     className={`
-                                        relative group flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-all
+                                        group flex items-center gap-2.5 px-2.5 py-2 rounded-md text-[13px] font-medium transition-colors
                                         ${isCollapsed ? "justify-center" : ""}
                                         ${isActive
-                                            ? "bg-muted text-secondary"
-                                            : "text-foreground hover:text-secondary hover:bg-muted"
+                                            ? "bg-muted text-foreground"
+                                            : "text-muted-foreground hover:text-foreground hover:bg-muted"
                                         }
                                     `}
-                                    style={{}}
-                                >
-                                    <Icon
-                                        className={`w-4 h-4 shrink-0 transition-colors ${isActive ? "text-secondary" : "text-muted-foreground group-hover:text-foreground"}`}
-                                    />
-                                    {!isCollapsed && <span className="text-[13px]">{item.label}</span>}
-
-                                    {/* Tooltip for collapsed state */}
-                                    {isCollapsed && (
-                                        <div className={`absolute left-full ml-3 px-3 py-1.5 opacity-0 group-hover:opacity-100 transition-all ${TOOLTIP_STYLE_CLASSES} translate-x-1 group-hover:translate-x-0`}>
-                                            {item.label}
-                                            <div className={`absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1 w-2 h-2 border-l border-b ${TOOLTIP_ARROW_CLASSES}`} />
-                                        </div>
-                                    )}
+                                    title={isCollapsed ? item.label : undefined}
+>
+                                    <Icon className="w-4 h-4 shrink-0" strokeWidth={1.75} />
+                                    {!isCollapsed && <span>{item.label}</span>}
                                 </Link>
                             );
                         })}
@@ -169,8 +175,8 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                 </div>
             </div>
 
-            {/* Footer Navigation */}
-            <div className="p-2 border-t border-border space-y-0.5 shrink-0">
+            {/* Footer */}
+            <div className="p-2 border-t border-border shrink-0 space-y-0.5">
                 {secondaryNavItems.map((item) => {
                     const Icon = item.icon;
                     const isActive = pathname === item.path;
@@ -180,84 +186,60 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                             href={item.path}
                             title={isCollapsed ? item.label : undefined}
                             className={`
-                                    relative group flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all
-                                    ${isCollapsed ? "justify-center" : ""}
-                                    ${isActive
-                                    ? "bg-muted text-secondary"
-                                    : "text-foreground hover:text-secondary hover:bg-muted"
+                                group flex items-center gap-2.5 px-2.5 py-2 rounded-md text-[13px] font-medium transition-colors
+                                ${isCollapsed ? "justify-center" : ""}
+                                ${isActive
+                                    ? "bg-muted text-foreground"
+                                    : "text-muted-foreground hover:text-foreground hover:bg-muted"
                                 }
-                                `}
-                            style={{}}
-                        >
-                            <Icon
-                                className={`w-5 h-5 shrink-0 transition-colors ${isActive ? "text-secondary" : "text-muted-foreground"}`}
-                            />
+                            `}
+>
+                            <Icon className="w-4 h-4 shrink-0" strokeWidth={1.75} />
                             {!isCollapsed && <span>{item.label}</span>}
-
-                            {/* Tooltip for collapsed state */}
-                            {isCollapsed && (
-                                <div className={`absolute left-full ml-3 px-3 py-1.5 opacity-0 group-hover:opacity-100 transition-all ${TOOLTIP_STYLE_CLASSES} translate-x-1 group-hover:translate-x-0`}>
-                                    {item.label}
-                                    <div className={`absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1 w-2 h-2 border-l border-b ${TOOLTIP_ARROW_CLASSES}`} />
-                                </div>
-                            )}
                         </Link>
                     );
                 })}
 
-                {/* User Profile Mini */}
+                {/* User */}
                 <div className="mt-2 pt-2 border-t border-border">
                     <div
-                        className={`flex items-center gap-3 px-2 py-2 rounded-xl hover:bg-muted cursor-pointer transition-colors ${isCollapsed ? "justify-center" : ""}`}
+                        className={`flex items-center gap-2.5 px-1.5 py-1.5 rounded-md hover:bg-muted cursor-pointer transition-colors ${
+                            isCollapsed ? "justify-center" : ""
+                        }`}
                         onClick={() => router.push("/dashboard/settings")}
-                    >
+>
                         <div className="relative shrink-0">
-                            <div className="w-8 h-8 bg-gradient-to-tr from-primary to-secondary flex items-center justify-center text-xs font-bold text-white shadow-sm ring-2 ring-white rounded-xl">
+                            <div className="w-8 h-8 bg-foreground text-background flex items-center justify-center text-[11px] font-medium rounded-md">
                                 {userData?.profile?.username?.substring(0, 2).toUpperCase() || "??"}
                             </div>
-                            <div className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-green-500 border-2 border-white rounded-xl"></div>
+                            <div className="absolute -bottom-0.5 -right-0.5 w-2 h-2 bg-green-500 rounded-full ring-2 ring-background" />
                         </div>
                         {!isCollapsed && (
-                            <div className="flex-1 min-w-0">
-                                <div className="text-sm font-medium text-secondary truncate">
-                                    {userData?.profile?.username || "User"}
+                            <>
+                                <div className="flex-1 min-w-0">
+                                    <div className="text-[13px] font-medium text-foreground truncate">
+                                        {userData?.profile?.username ||"User"}
+                                    </div>
+                                    <div className="text-[11px] text-muted-foreground truncate capitalize">
+                                        {plan} Plan
+                                    </div>
                                 </div>
-                                <div className="text-xs text-muted-foreground truncate capitalize">
-                                    {userData?.billing?.current_plan || "free"} Plan
-                                </div>
-                            </div>
-                        )}
-                        {!isCollapsed && (
-                            <button
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    logout();
-                                }}
-                                className="relative group p-1 hover:bg-muted transition-colors text-muted-foreground hover:text-red-400 shrink-0"
-                            >
-                                <HiLogout className="w-4 h-4" />
-                                <div className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1 opacity-0 group-hover:opacity-100 transition-all ${TOOLTIP_STYLE_CLASSES} translate-y-1 group-hover:translate-y-0`}>
-                                    Logout
-                                    <div className={`absolute top-full left-1/2 -translate-x-1/2 -translate-y-1 w-2 h-2 border-r border-b ${TOOLTIP_ARROW_CLASSES}`} />
-                                </div>
-                            </button>
+                                <button
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        logout();
+                                    }}
+                                    className="p-1 hover:bg-background rounded-md text-muted-foreground hover:text-destructive transition-colors shrink-0"
+                                    title="Logout"
+>
+                                    <LogOut className="w-4 h-4" strokeWidth={1.75} />
+                                </button>
+                            </>
                         )}
                     </div>
                 </div>
             </div>
 
-            {/* Desktop Collapse Toggle — fixed arrow tab on the right edge */}
-            <button
-                className="hidden lg:flex absolute -right-3.5 top-1/2 -translate-y-1/2 w-7 h-7 items-center justify-center bg-white border border-border shadow-md text-muted-foreground hover:text-primary hover:border-primary/30 transition-all z-10 rounded-xl"
-                onClick={() => setIsCollapsed(!isCollapsed)}
-                title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
-            >
-                {isCollapsed ? (
-                    <HiChevronRight className="w-4 h-4" />
-                ) : (
-                    <HiChevronLeft className="w-4 h-4" />
-                )}
-            </button>
         </aside>
     );
 }

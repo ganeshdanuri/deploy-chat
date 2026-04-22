@@ -1,10 +1,19 @@
 "use client";
-
-import { useState, useEffect } from "react";
 import {
-    HiSparkles, HiPaperAirplane, HiRefresh, HiCog,
-    HiUser, HiChatAlt2,
-} from "react-icons/hi";
+    Bot,
+    MessagesSquare,
+    RefreshCw,
+    Send,
+    Settings2,
+    Sparkles,
+    Thermometer,
+    User,
+    Zap,
+} from "lucide-react";
+
+
+import { useEffect, useRef, useState } from "react";
+
 import { useSearchParams, useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 import { fetchChatbots } from "@/lib/store/slices/chatbotsSlice";
@@ -27,7 +36,7 @@ import { STATUS, ROLES } from "@/lib/constants";
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 const INITIAL_MESSAGES: ChatMessage[] = [
-    { id: 1, text: "Hello! I'm your AI assistant. How can I help you today?", isBot: true },
+    { id: 1, text: "Hello! I'm your AI assistant. How can I help you today? ", isBot: true },
 ];
 
 // ─── Main Component ───────────────────────────────────────────────────────────
@@ -61,7 +70,7 @@ export default function PlaygroundPage() {
         const userMessage = input;
         setInput("");
         const chatHistory = messages
-            .filter(m => !m.isThinking && m.id !== 1) // Exclude "Thinking..." and initial greeting
+            .filter(m => !m.isThinking && m.id !== 1) // Exclude"Thinking..." and initial greeting
             .map(m => ({
                 role: m.isBot ? ROLES.ASSISTANT : ROLES.USER,
                 content: m.text
@@ -87,8 +96,8 @@ export default function PlaygroundPage() {
             const err = error as { response?: { status?: number, data?: { detail?: string } }; message?: string };
             const isUsageError = err.response?.status === 403;
             const errorMessage = isUsageError
-                ? err.response?.data?.detail || "Usage limit reached."
-                : (err.response?.data?.detail || err.message || "Something went wrong. Please try again later.");
+                ? err.response?.data?.detail ||"Usage limit reached."
+                : (err.response?.data?.detail || err.message ||"Something went wrong. Please try again later.");
 
             setMessages((prev) => [
                 ...prev.filter((m) => !m.isThinking),
@@ -108,17 +117,17 @@ export default function PlaygroundPage() {
     };
 
     const handleResetChat = () => {
-        setMessages([{ id: Date.now(), text: "Chat history cleared. How can I help you?", isBot: true }]);
+        setMessages([{ id: Date.now(), text: "Chat cleared. How can I help you?", isBot: true }]);
         showToast.info("Chat history cleared");
     };
 
     return (
-        <div className="h-[calc(100vh-8rem)] flex gap-6 animate-fade-in-up">
-            {/* Configuration Sidebar — shows skeleton while chatbots are fetching */}
+        <div className="h-[calc(100vh-8rem)] flex gap-4 animate-fade-in-up">
+            {/* Left: Config panel */}
             {status === "loading" ? (
                 <PlaygroundConfigSkeleton />
             ) : (
-                <ConfigurationPanel
+                <ConfigPanel
                     chatbots={chatbots}
                     chatbotId={chatbotId}
                     chatbot={chatbot}
@@ -128,14 +137,14 @@ export default function PlaygroundPage() {
                 />
             )}
 
-            {/* Main Chat Area */}
-            <div className="flex-1 flex flex-col bg-white border border-border rounded-2xl shadow-sm overflow-hidden relative" style={{ boxShadow: 'var(--shadow-md)' }}>
+            {/* Right: Chat */}
+            <div className="flex-1 flex flex-col rounded-2xl overflow-hidden border border-border bg-background">
                 <ChatHeader chatbot={chatbot} onReset={handleResetChat} />
 
                 {chatbotId ? (
-                    <ChatMessages messages={messages} />
+                    <ChatMessages messages={messages} chatbot={chatbot} />
                 ) : (
-                    <NoChatbotSelected />
+                    <NoChatbotSelected chatbots={chatbots} onSelect={handleChatbotChange} />
                 )}
 
                 {chatbotId && (
@@ -151,9 +160,9 @@ export default function PlaygroundPage() {
     );
 }
 
-// ─── Configuration Panel ──────────────────────────────────────────────────────
+// ─── Config Panel ─────────────────────────────────────────────────────────────
 
-interface ConfigurationPanelProps {
+interface ConfigPanelProps {
     chatbots: Chatbot[];
     chatbotId: string | null;
     chatbot: Chatbot | undefined;
@@ -162,97 +171,128 @@ interface ConfigurationPanelProps {
     onTemperatureChange: (val: number) => void;
 }
 
-function ConfigurationPanel({
-    chatbots,
-    chatbotId,
-    chatbot,
-    temperature,
-    onChatbotChange,
-    onTemperatureChange,
-}: ConfigurationPanelProps) {
+function ConfigPanel({ chatbots, chatbotId, chatbot, temperature, onChatbotChange, onTemperatureChange }: ConfigPanelProps) {
+    const tempLabel = temperature <= 0.3 ? "Precise" : temperature <= 0.6 ? "Balanced" : "Creative";
+    const tempColor =
+        temperature <= 0.3
+            ? "var(--accent-green)"
+            : temperature <= 0.6
+            ? "var(--brand)"
+            : "var(--accent-gold)";
+
     return (
-        <div className="w-80 bg-white border border-border rounded-2xl shadow-sm p-6 flex flex-col h-full overflow-y-auto" style={{ boxShadow: 'var(--shadow-md)' }}>
-            <div className="flex items-center gap-2 mb-8">
-                <div className="w-8 h-8 rounded-xl bg-primary/5 flex items-center justify-center text-primary">
-                    <HiCog className="w-5 h-5" />
+        <div className="w-[264px] shrink-0 flex flex-col gap-3 h-full">
+            {/* Header */}
+            <div className="bg-background border border-border rounded-2xl px-4 py-3.5 flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-xl bg-muted flex items-center justify-center">
+                    <Settings2 className="w-3.5 h-3.5 text-muted-foreground" />
                 </div>
-                <h3 className="text-lg font-bold text-secondary">Configuration</h3>
+                <div>
+                    <p className="text-[13px] font-semibold text-foreground leading-none">Playground</p>
+                    <p className="text-[11px] text-muted-foreground mt-0.5 font-mono">Configure &amp; test</p>
+                </div>
             </div>
 
-            <div className="space-y-8 flex-1">
-                {/* Chatbot Selector */}
-                <div className="space-y-3">
-                    <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
-                        Select Chatbot
-                    </label>
-                    <Select
-                        value={chatbotId || ""}
-                        onValueChange={(value) => {
-                            if (value) onChatbotChange(value);
-                        }}
-                        aria-label="Select chatbot"
-                    >
-                        <SelectTrigger className="border-border bg-muted/50 hover:bg-white hover:border-primary/30 h-11 shadow-none transition-all rounded-xl text-sm font-medium text-secondary outline-none focus:ring-0">
-                            <SelectValue placeholder="Select a chatbot..." />
-                        </SelectTrigger>
-                        <SelectContent className="rounded-xl bg-white border border-border shadow-lg p-1">
-                            {chatbots.map((bot) => (
-                                <SelectItem
-                                    key={bot.id}
-                                    value={bot.id}
-                                    className="hover:bg-primary/5 data-[state=selected]:bg-primary/10 data-[state=selected]:text-primary text-sm font-medium cursor-pointer"
-                                >
-                                    {bot.name}
-                                </SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
-                </div>
+            {/* Agent selector */}
+            <div className="bg-background border border-border rounded-2xl p-4 space-y-3">
+                <p className="text-[11px] font-semibold text-muted-foreground tracking-normal">Agent</p>
+                <Select
+                    value={chatbotId || ""}
+                    onValueChange={(v) => { if (v) onChatbotChange(v); }}
+                >
+                    <SelectTrigger className="w-full h-9 bg-muted border-transparent text-[13px] font-medium rounded-xl shadow-none focus:ring-0 hover:bg-muted/80 transition-colors">
+                        <SelectValue placeholder="Choose an agent…" />
+                    </SelectTrigger>
+                    <SelectContent className="rounded-xl border border-border bg-background p-1 shadow-lg">
+                        {chatbots.map((bot) => (
+                            <SelectItem
+                                key={bot.id}
+                                value={bot.id}
+                                className="rounded-lg text-[13px] font-medium cursor-pointer"
+                            >
+                                {bot.name}
+                            </SelectItem>
+                        ))}
+                        {chatbots.length === 0 && (
+                            <div className="px-3 py-4 text-center text-xs text-muted-foreground">
+                                No agents found
+                            </div>
+                        )}
+                    </SelectContent>
+                </Select>
 
-                {/* Model Stats */}
                 {chatbot && (
-                    <div className="space-y-4">
-                        <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Model Stats</label>
-                        <div className="p-4 bg-muted/50 rounded-xl border border-border space-y-2.5">
-                            <div className="flex justify-between">
-                                <span className="text-[10px] font-bold text-muted-foreground uppercase">Provider</span>
-                                <span className="text-[10px] font-bold text-secondary bg-white px-2 py-0.5 rounded-lg border border-border uppercase tracking-wider">
-                                    Gemini 2.5 Flash
-                                </span>
-                            </div>
-                            <div className="flex justify-between">
-                                <span className="text-[10px] font-bold text-muted-foreground uppercase">Knowledge</span>
-                                <span className="text-[10px] font-bold text-primary">Document Context</span>
-                            </div>
+                    <div className="pt-1 space-y-2 border-t border-border">
+                        <div className="flex items-center justify-between pt-2">
+                            <span className="text-[11px] text-muted-foreground font-mono">Status</span>
+                            <span className="flex items-center gap-1.5 text-[11px] font-semibold" style={{ color: "var(--accent-green)" }}>
+                                <span className="w-1.5 h-1.5 rounded-full bg-current" />
+                                Live
+                            </span>
+                        </div>
+                        <div className="flex items-center justify-between">
+                            <span className="text-[11px] text-muted-foreground font-mono">Context</span>
+                            <span className="text-[10px] font-semibold text-foreground bg-muted px-2 py-0.5 rounded-lg border border-border">
+                                Documents
+                            </span>
+                        </div>
+                        <div className="flex items-center justify-between">
+                            <span className="text-[11px] text-muted-foreground font-mono">Model</span>
+                            <span className="text-[10px] font-semibold text-foreground bg-muted px-2 py-0.5 rounded-lg border border-border">
+                                Gemini 2.5
+                            </span>
                         </div>
                     </div>
                 )}
+            </div>
 
-                {/* Temperature Slider */}
-                <div className="space-y-5 pt-8 border-t border-border">
-                    <div className="flex items-center justify-between">
-                        <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Creativity (Temp)</label>
-                        <span className="text-sm font-mono font-bold text-primary bg-primary/5 px-2 py-0.5 border border-primary/10 rounded-lg">
-                            {temperature}
-                        </span>
+            {/* Temperature */}
+            <div className="bg-background border border-border rounded-2xl p-4 space-y-4">
+                <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-1.5">
+                        <Thermometer className="w-3.5 h-3.5 text-muted-foreground" />
+                        <p className="text-[11px] font-semibold text-muted-foreground tracking-normal">Temperature</p>
                     </div>
-                    <div className="relative pt-1">
-                        <input
-                            type="range"
-                            min="0"
-                            max="1"
-                            step="0.1"
-                            value={temperature}
-                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => onTemperatureChange(parseFloat(e.target.value))}
-                            className="w-full accent-primary h-1.5 bg-muted appearance-none cursor-pointer hover:bg-border transition-colors"
-                        />
-                        <div className="flex justify-between text-[10px] font-bold text-muted-foreground mt-2 uppercase tracking-tighter">
-                            <span>Precise</span>
-                            <span>Balanced</span>
-                            <span>Creative</span>
-                        </div>
+                    <span
+                        className="text-[10px] font-semibold px-2 py-0.5 rounded-full border"
+                        style={{ color: tempColor, borderColor: tempColor + "40", background: tempColor + "15" }}
+                    >
+                        {tempLabel}
+                    </span>
+                </div>
+
+                <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                        <span className="text-[11px] text-muted-foreground font-mono">0.0</span>
+                        <span className="text-[26px] font-semibold tabular-nums tracking-tight" style={{ color: tempColor }}>
+                            {temperature.toFixed(1)}
+                        </span>
+                        <span className="text-[11px] text-muted-foreground font-mono">1.0</span>
+                    </div>
+                    <input
+                        type="range"
+                        min="0"
+                        max="1"
+                        step="0.1"
+                        value={temperature}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => onTemperatureChange(parseFloat(e.target.value))}
+                        className="w-full h-1.5 rounded-full appearance-none cursor-pointer bg-muted"
+                        style={{ accentColor: tempColor }}
+                    />
+                    <div className="flex justify-between text-[9px] font-medium text-muted-foreground tracking-wide">
+                        <span>Precise</span>
+                        <span>Balanced</span>
+                        <span>Creative</span>
                     </div>
                 </div>
+            </div>
+
+            {/* Footer */}
+            <div className="mt-auto bg-background border border-border rounded-2xl px-4 py-3 flex items-center gap-2">
+                <Zap className="w-3.5 h-3.5 shrink-0" style={{ color: "var(--brand)" }} />
+                <p className="text-[11px] text-muted-foreground leading-tight">
+                    Powered by <span className="font-semibold text-foreground">Deploy Chat</span>
+                </p>
             </div>
         </div>
     );
@@ -262,31 +302,39 @@ function ConfigurationPanel({
 
 function ChatHeader({ chatbot, onReset }: { chatbot: Chatbot | undefined; onReset: () => void }) {
     return (
-        <div className="px-6 py-4 border-b border-border flex justify-between items-center bg-white/80 backdrop-blur-md z-10 sticky top-0">
-            <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-gradient-to-br from-primary to-secondary p-[1px] shadow-lg shadow-primary/10 rounded-xl">
-                    <div className="w-full h-full bg-white flex items-center justify-center text-primary rounded-xl">
-                        <HiSparkles className="w-6 h-6" />
-                    </div>
+        <div className="flex items-center justify-between px-5 py-3.5 border-b border-border bg-background shrink-0">
+            <div className="flex items-center gap-3">
+                <div
+                    className="w-9 h-9 rounded-xl flex items-center justify-center text-[12px] font-bold shrink-0"
+                    style={
+                        chatbot
+                            ? { background: "var(--agent-bg)", color: "var(--agent)" }
+                            : { background: "var(--muted)", color: "var(--muted-foreground)" }
+                    }
+                >
+                    {chatbot ? chatbot.name.slice(0, 2).toUpperCase() : <Bot className="w-4 h-4" />}
                 </div>
                 <div>
-                    <h2 className="text-lg font-bold text-secondary tracking-tight">
-                        {chatbot ? chatbot.name : "Select a Chatbot"}
-                    </h2>
-                    <div className="flex items-center gap-1.5">
-                        <span className={`w-2 h-2 rounded-full ${chatbot ? "bg-emerald-500 animate-pulse" : "bg-muted-foreground/30"}`} />
-                        <span className="text-[11px] text-muted-foreground font-bold uppercase tracking-wider">
-                            {chatbot ? "Online • Intelligent Mode" : "Select from left to start"}
+                    <p className="text-[14px] font-semibold text-foreground leading-none">
+                        {chatbot ? chatbot.name : "No agent selected"}
+                    </p>
+                    <div className="flex items-center gap-1.5 mt-1">
+                        <span
+                            className="w-1.5 h-1.5 rounded-full"
+                            style={{ background: chatbot ? "var(--accent-green)" : "var(--muted-foreground)" }}
+                        />
+                        <span className="text-[11px] text-muted-foreground">
+                            {chatbot ? "Online · Gemini 2.5 Flash" : "Select an agent to start"}
                         </span>
                     </div>
                 </div>
             </div>
             <button
                 onClick={onReset}
-                className="p-2.5 text-muted-foreground hover:text-primary hover:bg-primary/5 rounded-xl transition-all"
-                title="Reset Chat"
+                className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+                title="Clear chat"
             >
-                <HiRefresh className="w-5 h-5" />
+                <RefreshCw className="w-4 h-4" />
             </button>
         </div>
     );
@@ -294,37 +342,64 @@ function ChatHeader({ chatbot, onReset }: { chatbot: Chatbot | undefined; onRese
 
 // ─── Chat Messages ────────────────────────────────────────────────────────────
 
-function ChatMessages({ messages }: { messages: ChatMessage[] }) {
+function ChatMessages({ messages, chatbot }: { messages: ChatMessage[]; chatbot: Chatbot | undefined }) {
+    const bottomRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, [messages]);
+
     return (
-        <div className="flex-1 p-6 bg-muted/30 space-y-4 overflow-y-auto scroll-smooth">
+        <div className="flex-1 overflow-y-auto px-5 py-6 space-y-5" style={{ background: "var(--muted)" }}>
             {messages.map((msg) => (
-                <MessageBubble key={msg.id} message={msg} />
+                <MessageBubble key={msg.id} message={msg} agentName={chatbot?.name} />
             ))}
+            <div ref={bottomRef} />
         </div>
     );
 }
 
-function MessageBubble({ message: msg }: { message: ChatMessage }) {
+function MessageBubble({ message: msg, agentName }: { message: ChatMessage; agentName?: string }) {
+    const isBot = msg.isBot;
     return (
-        <div className={`flex gap-3 ${!msg.isBot ? "flex-row-reverse" : ""}`}>
-            <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 border shadow-sm transition-transform hover:scale-105 ${msg.isBot ? "bg-white border-border text-primary" : "bg-primary border-primary text-white"
-                }`}>
-                {msg.isBot ? <HiChatAlt2 className="w-5 h-5" /> : <HiUser className="w-5 h-5" />}
+        <div className={`flex gap-3 ${!isBot ? "flex-row-reverse" : ""}`}>
+            {/* Avatar */}
+            <div
+                className="w-7 h-7 rounded-xl flex items-center justify-center text-[10px] font-bold shrink-0 mt-1"
+                style={
+                    isBot
+                        ? { background: "var(--agent-bg)", color: "var(--agent)" }
+                        : { background: "var(--foreground)", color: "var(--background)" }
+                }
+            >
+                {isBot
+                    ? (agentName ? agentName.slice(0, 2).toUpperCase() : <Sparkles className="w-3 h-3" />)
+                    : <User className="w-3 h-3" />
+                }
             </div>
 
-            <div className={`max-w-[75%] space-y-2 ${!msg.isBot ? "items-end flex flex-col" : ""}`}>
-                <div className={`px-4 py-2.5 rounded-2xl text-[14px] leading-relaxed shadow-sm transition-all ${msg.isBot
-                    ? "bg-white border border-border text-secondary rounded-tl-none font-medium"
-                    : "bg-primary text-white rounded-tr-none font-medium"
-                    }`}>
+            {/* Content */}
+            <div className={`flex flex-col gap-1 max-w-[72%] ${!isBot ? "items-end" : "items-start"}`}>
+                <span className="text-[11px] font-semibold text-muted-foreground px-1">
+                    {isBot ? (agentName ?? "AI") : "You"}
+                </span>
+
+                <div
+                    className={`px-4 py-2.5 text-[13.5px] leading-relaxed ${
+                        isBot
+                            ? "bg-background border border-border text-foreground rounded-2xl rounded-tl-sm"
+                            : "rounded-2xl rounded-tr-sm"
+                    }`}
+                    style={!isBot ? { background: "var(--foreground)", color: "var(--background)" } : undefined}
+                >
                     {msg.isThinking ? (
-                        <div className="flex gap-2 py-2">
-                            <div className="w-2 h-2 bg-primary/20 rounded-full animate-bounce" />
-                            <div className="w-2 h-2 bg-primary/40 rounded-full animate-bounce [animation-delay:-.3s]" />
-                            <div className="w-2 h-2 bg-primary/60 rounded-full animate-bounce [animation-delay:-.5s]" />
+                        <div className="flex items-center gap-1.5 py-0.5 px-1">
+                            <div className="w-1.5 h-1.5 rounded-full bg-current opacity-40 animate-bounce" />
+                            <div className="w-1.5 h-1.5 rounded-full bg-current opacity-60 animate-bounce [animation-delay:0.15s]" />
+                            <div className="w-1.5 h-1.5 rounded-full bg-current opacity-80 animate-bounce [animation-delay:0.3s]" />
                         </div>
                     ) : (
-                        <div className={`prose prose-sm max-w-none ${msg.isBot ? "prose-secondary" : "prose-invert"}`}>
+                        <div className={`prose prose-sm max-w-none ${isBot ? "" : "prose-invert"}`}>
                             <ReactMarkdown
                                 remarkPlugins={[remarkGfm]}
                                 components={{
@@ -335,23 +410,23 @@ function MessageBubble({ message: msg }: { message: ChatMessage }) {
                                     code: ({ className, children, ...props }: React.HTMLAttributes<HTMLElement>) => {
                                         const match = /language-(\w+)/.exec(className || "");
                                         return !match ? (
-                                            <code className="bg-muted px-1 rounded text-pink-600 font-mono text-[13px]" {...props}>
+                                            <code className="bg-muted px-1.5 py-0.5 rounded-md text-pink-500 font-mono text-[12px]" {...props}>
                                                 {children}
                                             </code>
                                         ) : (
-                                            <pre className="bg-secondary text-white p-4 rounded-xl overflow-x-auto my-4 font-mono text-[13px]">
+                                            <pre className="bg-foreground text-background p-4 rounded-xl overflow-x-auto my-3 font-mono text-[12px]">
                                                 <code className={className} {...props}>{children}</code>
                                             </pre>
                                         );
                                     },
                                     a: ({ href, children }) => (
-                                        <a href={href} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
+                                        <a href={href} target="_blank" rel="noopener noreferrer" className="text-primary underline underline-offset-2 hover:opacity-80">
                                             {children}
                                         </a>
                                     ),
-                                    h1: ({ children }) => <h1 className="text-xl font-bold mb-2">{children}</h1>,
-                                    h2: ({ children }) => <h2 className="text-lg font-bold mb-2">{children}</h2>,
-                                    h3: ({ children }) => <h3 className="text-base font-bold mb-2">{children}</h3>,
+                                    h1: ({ children }) => <h1 className="text-lg font-semibold mb-2">{children}</h1>,
+                                    h2: ({ children }) => <h2 className="text-base font-semibold mb-2">{children}</h2>,
+                                    h3: ({ children }) => <h3 className="text-sm font-semibold mb-2">{children}</h3>,
                                 }}
                             >
                                 {msg.text}
@@ -359,8 +434,9 @@ function MessageBubble({ message: msg }: { message: ChatMessage }) {
                         </div>
                     )}
                 </div>
+
                 {!msg.isThinking && (
-                    <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest px-1">
+                    <span className="text-[10px] text-muted-foreground font-mono px-1">
                         {new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                     </span>
                 )}
@@ -371,18 +447,46 @@ function MessageBubble({ message: msg }: { message: ChatMessage }) {
 
 // ─── No Chatbot Selected ──────────────────────────────────────────────────────
 
-function NoChatbotSelected() {
+function NoChatbotSelected({ chatbots, onSelect }: { chatbots: Chatbot[]; onSelect: (id: string) => void }) {
     return (
-        <div className="flex-1 flex items-center justify-center bg-muted/30">
-            <div className="text-center max-w-md px-8">
-                <div className="w-20 h-20 bg-primary/5 flex items-center justify-center mx-auto mb-6 border border-primary/10 rounded-2xl">
-                    <HiChatAlt2 className="w-10 h-10 text-primary/40" />
-                </div>
-                <h3 className="text-xl font-bold text-secondary mb-2">Select a Chatbot</h3>
-                <p className="text-sm text-foreground leading-relaxed">
-                    Choose a chatbot from the configuration panel on the left to start testing your AI assistant.
-                </p>
+        <div className="flex-1 flex flex-col items-center justify-center px-8" style={{ background: "var(--muted)" }}>
+            <div
+                className="w-14 h-14 rounded-2xl flex items-center justify-center mb-5 border border-border bg-background"
+            >
+                <MessagesSquare className="w-6 h-6 text-muted-foreground" />
             </div>
+
+            <h3 className="text-[17px] font-semibold text-foreground mb-2 tracking-tight">
+                Pick an agent to begin
+            </h3>
+            <p className="text-sm text-muted-foreground text-center max-w-xs leading-relaxed mb-7">
+                Select one of your deployed agents from the panel on the left to start a live conversation.
+            </p>
+
+            {chatbots.length > 0 && (
+                <div className="flex flex-wrap gap-2 justify-center">
+                    {chatbots.slice(0, 4).map((bot) => (
+                        <button
+                            key={bot.id}
+                            onClick={() => onSelect(bot.id)}
+                            className="flex items-center gap-2 px-3 py-2 bg-background border border-border rounded-xl text-[13px] font-medium text-foreground hover:border-border-medium transition-all"
+                        >
+                            <span
+                                className="w-5 h-5 rounded-md text-[9px] font-bold flex items-center justify-center shrink-0"
+                                style={{ background: "var(--agent-bg)", color: "var(--agent)" }}
+                            >
+                                {bot.name.slice(0, 2).toUpperCase()}
+                            </span>
+                            {bot.name}
+                        </button>
+                    ))}
+                    {chatbots.length > 4 && (
+                        <span className="flex items-center px-3 py-2 text-[12px] text-muted-foreground font-mono">
+                            +{chatbots.length - 4} more
+                        </span>
+                    )}
+                </div>
+            )}
         </div>
     );
 }
@@ -397,12 +501,20 @@ interface ChatInputProps {
 }
 
 function ChatInput({ input, chatbotName, onChange, onSend }: ChatInputProps) {
+    const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+    useEffect(() => {
+        const el = textareaRef.current;
+        if (!el) return;
+        el.style.height = "auto";
+        el.style.height = Math.min(el.scrollHeight, 160) + "px";
+    }, [input]);
+
     return (
-        <div className="p-4 bg-white border-t border-muted">
-            <div className="flex items-center gap-3 w-full border border-border px-2 py-1 bg-white hover:border-muted-foreground/40 transition-all focus-within:border-primary focus-within:ring-4 focus-within:ring-primary/5 rounded-2xl">
+        <div className="px-4 py-3.5 bg-background border-t border-border">
+            <div className="flex items-end gap-2.5 bg-muted rounded-2xl px-4 py-3 border border-transparent focus-within:border-border-medium focus-within:bg-background transition-all">
                 <textarea
-                    className="flex-1 max-h-40 bg-transparent border-none focus:outline-none focus:ring-0 p-3 text-[14px] font-medium text-secondary placeholder:text-muted-foreground resize-none leading-relaxed"
-                    placeholder={`Ask ${chatbotName} anything...`}
+                    ref={textareaRef}
                     rows={1}
                     value={input}
                     onChange={(e) => onChange(e.target.value)}
@@ -412,20 +524,26 @@ function ChatInput({ input, chatbotName, onChange, onSend }: ChatInputProps) {
                             onSend();
                         }
                     }}
+                    placeholder={`Message ${chatbotName}…`}
+                    className="flex-1 bg-transparent text-[14px] text-foreground placeholder:text-muted-foreground resize-none border-none outline-none ring-0 leading-relaxed max-h-40 py-0.5"
                 />
                 <button
                     onClick={onSend}
                     disabled={!input.trim()}
-                    className="bg-primary text-white p-2.5 hover:bg-secondary shadow-md shadow-primary/10 disabled:opacity-30 disabled:cursor-not-allowed transition-all shrink-0 rounded-xl"
+                    className="w-8 h-8 mb-0.5 flex items-center justify-center rounded-xl shrink-0 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                    style={{ background: "var(--foreground)" }}
                 >
-                    <HiPaperAirplane className="w-5 h-5 transform rotate-90" />
+                    <Send className="w-3.5 h-3.5 rotate-90" style={{ color: "var(--background)" }} />
                 </button>
             </div>
-            <div className="text-center mt-2.5">
-                <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-tighter">
-                    Powered by Gemini 2.5 Flash • Context: Documents
-                </p>
+            <div className="flex items-center justify-between mt-2 px-1">
+                <span className="text-[10px] text-muted-foreground font-mono">↵ Send · ⇧↵ New line</span>
+                <span className="flex items-center gap-1 text-[10px] text-muted-foreground font-mono">
+                    <Zap className="w-2.5 h-2.5" />
+                    Gemini 2.5 Flash
+                </span>
             </div>
         </div>
     );
 }
+

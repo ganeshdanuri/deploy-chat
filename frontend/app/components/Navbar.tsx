@@ -1,114 +1,128 @@
 "use client";
 
-import { useState } from "react";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { HiMenu, HiX } from "react-icons/hi";
-import { useAuth } from "../context/AuthContext";
-
+import { Menu, X } from "lucide-react";
 import Logo from "./Logo";
-import { NAV_LINKS as navLinks, BRAND } from "../../lib/constants";
+import { Button } from "@/components/ui/button";
+
+const LINKS = [
+  { href: "#features", label: "Features" },
+  { href: "#pricing", label: "Pricing" },
+  { href: "#faq", label: "FAQ" },
+  { href: "#", label: "Docs" },
+];
 
 export default function Navbar() {
-  const { isAuthenticated } = useAuth();
   const router = useRouter();
+  const [scrolled, setScrolled] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
-  const handleMainButtonClick = () => {
-    if (isAuthenticated) {
-      router.push("/dashboard");
-    } else {
-      window.open("/login", "_blank", "noopener,noreferrer");
-    }
-  };
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY> 8);
+    onScroll();
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   return (
-    <>
-      <nav
-        className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
-        style={{
-          backgroundColor: "var(--white-80)",
-          backdropFilter: "blur(16px)",
-          WebkitBackdropFilter: "blur(16px)",
-          borderBottom: "1px solid var(--foreground-ghost)",
-        }}
-      >
-        <div className="max-w-7xl mx-auto px-4 lg:px-8">
-          <div className="flex items-center justify-between h-[72px]">
-            {/* Logo */}
-            <div className="flex items-center gap-3 cursor-pointer" onClick={() => router.push("/")}>
-              <Logo className="h-9 w-auto" />
-              <span className="text-2xl font-extrabold tracking-tight text-foreground">
-                {BRAND.first} <span className="gradient-text">{BRAND.second}</span>
-              </span>
-            </div>
+    <header
+      className={`sticky top-0 z-40 w-full transition-colors border-b border-border ${
+        scrolled
+          ? "bg-background/80 backdrop-blur-md"
+          : "bg-background"
+      }`}
+>
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:max-w-full lg:px-6 h-16 flex items-center justify-between">
+        <Link href="/" className="flex items-center gap-2.5">
+          <Logo className="h-7 w-auto" />
+          <span className="text-[15px] font-medium tracking-tight">
+            Deploy Chat
+          </span>
+        </Link>
 
-            {/* Right Side — Nav Links + Login */}
-            <div className="hidden md:flex items-center gap-1">
-              {navLinks.map((link) => (
-                <a
-                  key={link.label}
-                  href={link.href}
-                  className="relative text-[14px] font-medium px-5 py-2 text-muted-foreground transition-colors duration-200 hover:text-foreground after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-0 after:h-[2px] after:rounded-full after:bg-primary after:transition-all after:duration-200 hover:after:w-5"
-                >
-                  {link.label}
-                </a>
-              ))}
+        <nav className="hidden md:flex items-center gap-8">
+          {LINKS.map((link) => (
+            <Link
+              key={link.label}
+              href={link.href}
+              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+>
+              {link.label}
+            </Link>
+          ))}
+        </nav>
 
-              <div className="w-px h-5 bg-border mx-3" />
+        <div className="hidden md:flex items-center gap-2">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => router.push("/login")}
+>
+            Sign in
+          </Button>
+          <Button
+            size="sm"
+            className="btn-pill"
+            onClick={() =>
+              window.open(
+"/login?register=true",
+"_blank",
+"noopener,noreferrer"
+              )
+            }
+>
+            Start free →
+          </Button>
+        </div>
 
-              <button
-                onClick={handleMainButtonClick}
-                className="text-[14px] font-medium px-5 py-2.5 rounded-lg gradient-bg text-white transition-all duration-200 hover:brightness-110 active:scale-[0.98]"
-                style={{ boxShadow: 'var(--shadow-accent)' }}
-              >
-                Login
-              </button>
-            </div>
+        <button
+          className="md:hidden p-2 -mr-2 text-foreground"
+          onClick={() => setMobileOpen(!mobileOpen)}
+          aria-label="Menu"
+>
+          {mobileOpen ? <X className="w-5 h-5" strokeWidth={1.75} /> : <Menu className="w-5 h-5" strokeWidth={1.75} />}
+        </button>
+      </div>
 
-            {/* Mobile Menu Button */}
-            <button
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="md:hidden p-2 rounded-lg text-foreground hover:text-primary hover:bg-primary/5 transition-colors"
-            >
-              {isMobileMenuOpen ? <HiX size={24} /> : <HiMenu size={24} />}
-            </button>
-          </div>
-
-          {/* Mobile Navigation — always rendered, animated via max-h + opacity */}
-          <div
-            className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${
-              isMobileMenuOpen
-                ? "max-h-[400px] opacity-100 border-t border-border"
-                : "max-h-0 opacity-0 border-t-0"
-            }`}
-          >
-            <div className="py-4">
-              {navLinks.map((link) => (
-                <a
-                  key={link.label}
-                  href={link.href}
-                  className="block py-3 px-4 text-sm font-medium text-muted-foreground hover:text-primary transition-colors rounded-lg"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  {link.label}
-                </a>
-              ))}
-              <div className="mt-4 px-4 pt-4 border-t border-border">
-                <button
-                  onClick={() => {
-                    handleMainButtonClick();
-                    setIsMobileMenuOpen(false);
-                  }}
-                  className="w-full py-3 text-sm font-medium rounded-xl gradient-bg text-white hover:brightness-110 transition-all"
-                >
-                  Login
-                </button>
-              </div>
-            </div>
+      {mobileOpen && (
+        <div className="md:hidden border-t border-border bg-background px-5 py-4 space-y-3">
+          {LINKS.map((link) => (
+            <Link
+              key={link.label}
+              href={link.href}
+              className="block text-sm text-muted-foreground hover:text-foreground py-1"
+              onClick={() => setMobileOpen(false)}
+>
+              {link.label}
+            </Link>
+          ))}
+          <div className="pt-3 border-t border-border flex gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              className="flex-1"
+              onClick={() => router.push("/login")}
+>
+              Sign in
+            </Button>
+            <Button
+              size="sm"
+              className="flex-1"
+              onClick={() =>
+                window.open(
+"/login?register=true",
+"_blank",
+"noopener,noreferrer"
+                )
+              }
+>
+              Start free
+            </Button>
           </div>
         </div>
-      </nav>
-    </>
+      )}
+    </header>
   );
 }

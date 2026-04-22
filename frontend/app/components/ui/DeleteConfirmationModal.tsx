@@ -1,7 +1,15 @@
 "use client";
+import { AlertTriangle } from "lucide-react";
 
-import { HiTrash, HiExclamation } from "react-icons/hi";
-import Modal from "../Modal";
+
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogDescription,
+    DialogFooter,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 
 interface DeleteConfirmationModalProps {
@@ -23,75 +31,58 @@ export default function DeleteConfirmationModal({
     itemName,
     isLoading = false,
 }: DeleteConfirmationModalProps) {
-    const footer = (
-        <div className="flex gap-3 justify-end w-full">
-            <Button
-                onClick={onClose}
-                variant="outline"
-                className="border-border text-muted-foreground text-xs sm:text-sm font-bold h-10 px-6 hover:bg-muted transition-all shadow-sm"
-                disabled={isLoading}
-            >
-                Cancel
-            </Button>
-            <Button
-                onClick={onConfirm}
-                className="bg-red-600 text-white text-xs sm:text-sm font-bold h-10 px-8 shadow-lg shadow-red-500/10 hover:bg-red-700 transition-all"
-                disabled={isLoading}
-            >
-                {isLoading ? "Deleting..." : "Confirm Removal"}
-            </Button>
-        </div>
-    );
-
     return (
-        <Modal
-            isOpen={isOpen}
-            onClose={onClose}
-            title={title}
-            subtitle="Please review the implications of this action."
-            icon={HiTrash}
-            iconColor="text-red-600"
-            iconBgColor="bg-red-50"
-            footer={footer}
-            size="md"
-        >
-            <div className="space-y-6 animate-fade-in">
-                <div className="flex flex-col gap-4 p-6 bg-red-50/50 border border-red-100">
-                    <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-white flex items-center justify-center shadow-sm shrink-0">
-                            <HiExclamation className="w-6 h-6 text-red-500" />
-                        </div>
-                        <h4 className="text-sm font-black text-red-900 uppercase tracking-wider">Critical Warning</h4>
+        <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
+            <DialogContent className="sm:max-w-md">
+                <DialogHeader>
+                    <div
+                        className="w-10 h-10 rounded-md flex items-center justify-center mb-3"
+                        style={{
+                            background: "rgba(220, 38, 38, 0.08)",
+                            color: "var(--destructive)",
+                        }}
+                    >
+                        <AlertTriangle className="w-5 h-5" />
                     </div>
-                    <div className="space-y-2">
-                        <p className="text-sm text-red-800 leading-relaxed font-medium">
-                            {description}
-                        </p>
-                        {itemName && (
-                            <div className="inline-block px-3 py-1.5 bg-white border border-red-100 text-sm font-bold text-red-900 shadow-sm">
-                                &quot;{itemName}&quot;
-                            </div>
-                        )}
+                    <DialogTitle className="text-[17px] font-medium tracking-tight">
+                        {title}
+                    </DialogTitle>
+                    <DialogDescription className="text-sm text-muted-foreground leading-relaxed">
+                        {description}
+                    </DialogDescription>
+                </DialogHeader>
+
+                {itemName && (
+                    <div className="my-1 p-3 bg-muted/60 border border-border rounded-md text-sm font-medium text-foreground truncate">
+                        {itemName}
                     </div>
-                </div>
+                )}
 
-                <div className="p-4 bg-muted border border-border">
-                    <ul className="space-y-2">
-                        <li className="flex items-start gap-2 text-xs text-muted-foreground font-medium italic">
-                            <span className="shrink-0 mt-0.5">•</span>
-                            <span>This action is permanent and irreversible.</span>
-                        </li>
-                        <li className="flex items-start gap-2 text-xs text-muted-foreground font-medium italic">
-                            <span className="shrink-0 mt-0.5">•</span>
-                            <span>All associated analytics and logs will be purged.</span>
-                        </li>
-                    </ul>
-                </div>
-
-                <p className="text-xs text-muted-foreground text-center px-4 font-medium italic">
-                    Type confirmed in your mind before clicking the red button.
+                <p className="text-xs text-muted-foreground">
+                    This action is permanent and cannot be undone.
                 </p>
-            </div>
-        </Modal>
+
+                <DialogFooter className="mt-4 gap-2 sm:gap-2">
+                    <Button
+                        onClick={onClose}
+                        variant="outline"
+                        disabled={isLoading}
+                    >
+                        Cancel
+                    </Button>
+                    <Button
+                        onClick={onConfirm}
+                        disabled={isLoading}
+                        style={{
+                            background: "var(--destructive)",
+                            color: "var(--background)",
+                        }}
+                        className="hover:opacity-90"
+                    >
+                        {isLoading ? "Deleting..." : "Delete"}
+                    </Button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
     );
 }

@@ -32,6 +32,14 @@ export const deleteDataset = createAsyncThunk(
     }
 );
 
+export const updateDataset = createAsyncThunk(
+    'datasets/updateDataset',
+    async ({ id, name, document_ids }: { id: string; name?: string; document_ids?: string[] }) => {
+        const response = await api.patch(ENDPOINTS.DATASETS.BY_ID(id), { name, document_ids });
+        return response.data as Dataset;
+    }
+);
+
 const datasetsSlice = createSlice({
     name: 'datasets',
     initialState,
@@ -52,6 +60,10 @@ const datasetsSlice = createSlice({
             })
             .addCase(deleteDataset.fulfilled, (state, action: PayloadAction<string>) => {
                 state.items = state.items.filter(item => item.id !== action.payload);
+            })
+            .addCase(updateDataset.fulfilled, (state, action: PayloadAction<Dataset>) => {
+                const idx = state.items.findIndex(item => item.id === action.payload.id);
+                if (idx !== -1) state.items[idx] = action.payload;
             });
     },
 });
