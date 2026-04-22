@@ -13,6 +13,15 @@ import { fetchUsageStats } from "@/lib/store/slices/usageSlice";
 import { fetchUserMe } from "@/lib/store/slices/userSlice";
 import Logo from "../components/Logo";
 
+const loadingScreen = (
+    <div className="flex min-h-screen items-center justify-center bg-background">
+        <div className="flex flex-col items-center gap-3 animate-pulse">
+            <Logo className="h-10 w-auto" />
+            <div className="h-1 w-20 bg-border rounded-full" />
+        </div>
+    </div>
+);
+
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
     const { isAuthenticated, isLoading } = useAuth();
     const router = useRouter();
@@ -41,19 +50,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     }, [isLoading, isAuthenticated, router, dispatch, chatbotStatus, datasetStatus, documentStatus, usageStatus, userStatus]);
 
     useEffect(() => {
-        if (isSidebarOpen) setIsSidebarOpen(false);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        setIsSidebarOpen(false);
     }, [pathname]);
 
     if (isLoading) {
-        return (
-            <div className="flex min-h-screen items-center justify-center bg-background">
-                <div className="flex flex-col items-center gap-3 animate-pulse">
-                    <Logo className="h-10 w-auto" />
-                    <div className="h-1 w-20 bg-border rounded-full" />
-                </div>
-            </div>
-        );
+        return loadingScreen;
     }
 
     if (!isAuthenticated) return null;

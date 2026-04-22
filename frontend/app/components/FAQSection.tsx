@@ -36,13 +36,14 @@ export default function FAQSection() {
               <button
                 key={i}
                 onClick={() => setOpenIdx(isOpen ? null : i)}
+                aria-expanded={isOpen}
                 className="text-left py-5 flex flex-col gap-3 group"
 >
                 <div className="flex items-start justify-between gap-4">
                   <span className="text-[15px] font-medium text-foreground leading-snug">
                     {faq.question}
                   </span>
-                  <span className="shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-muted-foreground group-hover:text-foreground transition-colors">
+                  <span aria-hidden="true" className="shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-muted-foreground group-hover:text-foreground transition-colors">
                     {isOpen ? (
                       <Minus className="w-4 h-4" strokeWidth={1.75} />
                     ) : (

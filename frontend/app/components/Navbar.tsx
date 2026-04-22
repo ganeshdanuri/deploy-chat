@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import Logo from "./Logo";
 import { Button } from "@/components/ui/button";
@@ -15,7 +14,6 @@ const LINKS = [
 ];
 
 export default function Navbar() {
-  const router = useRouter();
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -55,32 +53,21 @@ export default function Navbar() {
         </nav>
 
         <div className="hidden md:flex items-center gap-2">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => router.push("/login")}
->
-            Sign in
+          <Button variant="ghost" size="sm" asChild>
+            <Link href="/login">Sign in</Link>
           </Button>
-          <Button
-            size="sm"
-            className="btn-pill"
-            onClick={() =>
-              window.open(
-"/login?register=true",
-"_blank",
-"noopener,noreferrer"
-              )
-            }
->
-            Start free →
+          <Button size="sm" className="btn-pill" asChild>
+            <a href="/login?register=true" target="_blank" rel="noopener noreferrer">
+              Start free →
+            </a>
           </Button>
         </div>
 
         <button
-          className="md:hidden p-2 -mr-2 text-foreground"
+          className="md:hidden p-2 -mr-2 text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           onClick={() => setMobileOpen(!mobileOpen)}
-          aria-label="Menu"
+          aria-label={mobileOpen ? "Close menu" : "Open menu"}
+          aria-expanded={mobileOpen}
 >
           {mobileOpen ? <X className="w-5 h-5" strokeWidth={1.75} /> : <Menu className="w-5 h-5" strokeWidth={1.75} />}
         </button>
@@ -99,26 +86,18 @@ export default function Navbar() {
             </Link>
           ))}
           <div className="pt-3 border-t border-border flex gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              className="flex-1"
-              onClick={() => router.push("/login")}
->
-              Sign in
+            <Button variant="outline" size="sm" className="flex-1" asChild>
+              <Link href="/login" onClick={() => setMobileOpen(false)}>Sign in</Link>
             </Button>
-            <Button
-              size="sm"
-              className="flex-1"
-              onClick={() =>
-                window.open(
-"/login?register=true",
-"_blank",
-"noopener,noreferrer"
-                )
-              }
->
-              Start free
+            <Button size="sm" className="flex-1" asChild>
+              <a
+                href="/login?register=true"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => setMobileOpen(false)}
+              >
+                Start free
+              </a>
             </Button>
           </div>
         </div>

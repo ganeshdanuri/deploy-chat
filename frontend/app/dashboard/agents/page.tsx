@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight, MessagesSquare, Plus, RefreshCw, Search, Sparkles } from "lucide-react";
+import { ArrowRight, Bot, Plus, RefreshCw, Search, Sparkles } from "lucide-react";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { useEffect, useState } from "react";
@@ -24,8 +24,8 @@ export default function AgentsPage() {
   const isLoading = status === "loading";
 
   useEffect(() => {
-    dispatch(fetchChatbots());
-  }, [dispatch]);
+    if (status === "idle") dispatch(fetchChatbots());
+  }, [dispatch, status]);
 
   const filtered = chatbots.filter((bot) =>
     bot.name.toLowerCase().includes(filterValue.toLowerCase())
@@ -129,7 +129,7 @@ export default function AgentsPage() {
           ))}
           <button
             onClick={() => setIsModalOpen(true)}
-            className="border border-dashed border-border rounded-xl p-5 flex flex-col items-center justify-center gap-2 min-h-[180px] text-muted-foreground hover:border-border-medium hover:bg-muted/50 hover:text-foreground transition-colors"
+            className="border border-dashed border-border rounded-2xl p-5 flex flex-col items-center justify-center gap-2 min-h-[220px] text-muted-foreground hover:border-border-medium hover:bg-muted/50 hover:text-foreground transition-colors"
 >
             <div className="w-10 h-10 rounded-md bg-muted flex items-center justify-center">
               <Plus className="w-5 h-5" />
@@ -165,14 +165,14 @@ function AgentCard({ bot }: { bot: any }) {
   return (
     <Link
       href={`/dashboard/agents/${bot.id}`}
-      className="bg-background border border-border rounded-xl p-5 flex flex-col gap-3 hover:border-border-medium transition-colors min-h-[180px]"
+      className="bg-background border border-border rounded-2xl p-5 flex flex-col gap-3 hover:border-border-medium transition-colors min-h-[220px]"
 >
-      <div className="flex items-start justify-between gap-2">
+      <div className="flex items-center justify-between gap-2">
         <div
           className="w-9 h-9 rounded-md flex items-center justify-center shrink-0"
           style={{ background: "var(--agent-bg)", color: "var(--agent)" }}
 >
-          <MessagesSquare className="w-4 h-4" />
+          <Bot className="w-4 h-4" />
         </div>
         <span
           className="text-[11px] font-medium flex items-center gap-1.5"

@@ -154,6 +154,8 @@ function LoginContent() {
 
                         {error && (
                             <div
+                                role="alert"
+                                aria-live="polite"
                                 className="mb-5 p-3 rounded-md text-sm border"
                                 style={{
                                     background: "rgba(220, 38, 38, 0.05)",
@@ -175,10 +177,12 @@ function LoginContent() {
                                     onChange={(e) => setOtp(e.target.value.replace(/\D/g,""))}
                                     className="w-full rounded-md border border-border px-4 py-4 text-center text-2xl font-medium tracking-[0.5em] focus:outline-none focus:ring-2 focus:ring-ring/40 focus:border-foreground/30 bg-background placeholder:text-muted-foreground transition-colors"
                                     placeholder="000000"
+                                    autoComplete="one-time-code"
+                                    name="otp"
                                     autoFocus
                                 />
                                 <Button type="submit" disabled={isLoading} className="w-full h-11">
-                                    {isLoading ? "Verifying..." : "Verify email →"}
+                                    {isLoading ? "Verifying…" : "Verify email →"}
                                 </Button>
                                 <Button
                                     type="button"
@@ -193,23 +197,27 @@ function LoginContent() {
                             <form onSubmit={handleSubmit} className="space-y-4">
                                 {isRegister && (
                                     <div>
-                                        <label className="text-sm font-medium mb-1.5 block text-foreground">
+                                        <label htmlFor="username" className="text-sm font-medium mb-1.5 block text-foreground">
                                             Your name
                                         </label>
                                         <Input
+                                            id="username"
                                             type="text"
                                             required
                                             value={username}
                                             onChange={(e) => setUsername(e.target.value)}
                                             placeholder="Jane Doe"
+                                            autoComplete="name"
+                                            name="username"
                                         />
                                     </div>
                                 )}
                                 <div>
-                                    <label className="text-sm font-medium mb-1.5 block text-foreground">
+                                    <label htmlFor="email" className="text-sm font-medium mb-1.5 block text-foreground">
                                         Work email
                                     </label>
                                     <Input
+                                        id="email"
                                         type="email"
                                         required
                                         value={isRegister ? email : username}
@@ -217,11 +225,14 @@ function LoginContent() {
                                             isRegister ? setEmail(e.target.value) : setUsername(e.target.value)
                                         }
                                         placeholder="you@company.com"
+                                        autoComplete="email"
+                                        name="email"
+                                        spellCheck={false}
                                     />
                                 </div>
                                 <div>
                                     <div className="flex items-center justify-between mb-1.5">
-                                        <label className="text-sm font-medium text-foreground">Password</label>
+                                        <label htmlFor="password" className="text-sm font-medium text-foreground">Password</label>
                                         {!isRegister && (
                                             <button
                                                 type="button"
@@ -232,17 +243,20 @@ function LoginContent() {
                                         )}
                                     </div>
                                     <Input
+                                        id="password"
                                         type="password"
                                         required
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)}
                                         placeholder="••••••••"
+                                        autoComplete={isRegister ? "new-password" : "current-password"}
+                                        name="password"
                                     />
                                 </div>
 
                                 <Button type="submit" disabled={isLoading} className="w-full h-11 mt-2">
                                     {isLoading
-                                        ? "Loading..."
+                                        ? "Loading…"
                                         : isRegister
                                         ? "Create free account →"
                                         : "Sign in →"}

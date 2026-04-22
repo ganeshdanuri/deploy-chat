@@ -141,12 +141,6 @@ export default function KnowledgePage() {
   const filteredDocs = documents.filter((d) => d.name.toLowerCase().includes(q));
   const filteredDatasets = datasets.filter((d) => d.name.toLowerCase().includes(q));
 
-  const counts: Record<TabId, number | undefined> = {
-    sources: undefined,
-    files: documents.length,
-    collections: datasets.length,
-  };
-
   return (
     <>
       <div className="w-full space-y-6 animate-fade-in-up">
@@ -179,7 +173,6 @@ export default function KnowledgePage() {
         <div className="flex items-center gap-1 border-b border-border -mx-1 overflow-x-auto">
           {TABS.map(({ id, label, icon: Icon }) => {
             const isActive = tab === id;
-            const count = counts[id];
             return (
               <button
                 key={id}
@@ -195,16 +188,6 @@ export default function KnowledgePage() {
               >
                 <Icon className="w-4 h-4" strokeWidth={1.75} />
                 {label}
-                {count !== undefined && (
-                  <span
-                    className={`ml-0.5 text-[11px] px-1.5 py-0.5 rounded-full font-semibold tabular-nums
-                      ${isActive
-                        ? "bg-foreground text-background"
-                        : "bg-muted text-muted-foreground"}`}
-                  >
-                    {count}
-                  </span>
-                )}
                 {isActive && (
                   <span className="absolute -bottom-px left-1 right-1 h-0.5 bg-foreground rounded-full" />
                 )}

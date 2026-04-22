@@ -90,12 +90,12 @@ export default function AddAPIKeyDrawer({ isOpen, onClose, onSuccess }: AddAPIKe
 >
             <div className="space-y-6 animate-fade-in">
                 <div className="space-y-2">
-                    <label className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider ml-1">Provider</label>
+                    <label htmlFor="provider-select" className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider ml-1">Provider</label>
                     <Select
                         value={provider}
                         onValueChange={setProvider}
 >
-                        <SelectTrigger className="border border-border bg-background h-11 transition-all focus:border-primary outline-none">
+                        <SelectTrigger id="provider-select" className="border border-border bg-background h-11 transition-all focus:border-primary outline-none">
                             <SelectValue placeholder="Select provider" />
                         </SelectTrigger>
                         <SelectContent className="border border-border bg-background">
@@ -109,12 +109,15 @@ export default function AddAPIKeyDrawer({ isOpen, onClose, onSuccess }: AddAPIKe
                 </div>
 
                 <div className="space-y-2">
-                    <label className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider ml-1">API Key</label>
+                    <label htmlFor="api-key-input" className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider ml-1">API Key</label>
                     <Input
+                        id="api-key-input"
                         type="password"
-                        placeholder="sk-..."
+                        placeholder="sk-…"
                         value={apiKey}
                         onValueChange={setApiKey}
+                        spellCheck={false}
+                        autoComplete="off"
                     />
                     <p className="text-[10px] text-muted-foreground font-medium px-1">
                         Your keys are encrypted at rest.

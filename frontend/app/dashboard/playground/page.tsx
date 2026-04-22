@@ -53,6 +53,7 @@ export default function PlaygroundPage() {
     const [messages, setMessages] = useState<ChatMessage[]>(INITIAL_MESSAGES);
     const [input, setInput] = useState("");
     const [temperature, setTemperature] = useState(0.7);
+    const [showConfig, setShowConfig] = useState(false);
 
     useEffect(() => {
         if (status === STATUS.ACTIVE || status === "idle") dispatch(fetchChatbots());
@@ -122,24 +123,47 @@ export default function PlaygroundPage() {
     };
 
     return (
-        <div className="h-[calc(100vh-8rem)] flex gap-4 animate-fade-in-up">
-            {/* Left: Config panel */}
-            {status === "loading" ? (
-                <PlaygroundConfigSkeleton />
-            ) : (
-                <ConfigPanel
-                    chatbots={chatbots}
-                    chatbotId={chatbotId}
-                    chatbot={chatbot}
-                    temperature={temperature}
-                    onChatbotChange={handleChatbotChange}
-                    onTemperatureChange={setTemperature}
+        <div className="h-[calc(100vh-8rem)] flex gap-4 animate-fade-in-up relative">
+            {/* Mobile config overlay backdrop */}
+            {showConfig && (
+                <div
+                    className="fixed inset-0 z-20 bg-black/40 md:hidden"
+                    onClick={() => setShowConfig(false)}
                 />
             )}
 
+            {/* Left: Config panel */}
+            <div
+                className={`
+                    fixed md:static inset-y-0 left-0 z-30 md:z-auto
+                    w-[280px] md:w-auto md:shrink-0
+                    transition-transform duration-300 ease-in-out md:transform-none
+                    ${showConfig ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
+                    flex flex-col h-full md:h-auto pt-4 md:pt-0 px-3 md:px-0 pb-4 md:pb-0
+                    bg-background md:bg-transparent overflow-y-auto md:overflow-visible
+                `}
+            >
+                {status === "loading" ? (
+                    <PlaygroundConfigSkeleton />
+                ) : (
+                    <ConfigPanel
+                        chatbots={chatbots}
+                        chatbotId={chatbotId}
+                        chatbot={chatbot}
+                        temperature={temperature}
+                        onChatbotChange={(id) => { handleChatbotChange(id); setShowConfig(false); }}
+                        onTemperatureChange={setTemperature}
+                    />
+                )}
+            </div>
+
             {/* Right: Chat */}
-            <div className="flex-1 flex flex-col rounded-2xl overflow-hidden border border-border bg-background">
-                <ChatHeader chatbot={chatbot} onReset={handleResetChat} />
+            <div className="flex-1 flex flex-col rounded-2xl overflow-hidden border border-border bg-background min-w-0">
+                <ChatHeader
+                    chatbot={chatbot}
+                    onReset={handleResetChat}
+                    onToggleConfig={() => setShowConfig((v) => !v)}
+                />
 
                 {chatbotId ? (
                     <ChatMessages messages={messages} chatbot={chatbot} />
@@ -300,10 +324,18 @@ function ConfigPanel({ chatbots, chatbotId, chatbot, temperature, onChatbotChang
 
 // ─── Chat Header ──────────────────────────────────────────────────────────────
 
-function ChatHeader({ chatbot, onReset }: { chatbot: Chatbot | undefined; onReset: () => void }) {
+function ChatHeader({ chatbot, onReset, onToggleConfig }: { chatbot: Chatbot | undefined; onReset: () => void; onToggleConfig: () => void }) {
     return (
         <div className="flex items-center justify-between px-5 py-3.5 border-b border-border bg-background shrink-0">
             <div className="flex items-center gap-3">
+                {/* Mobile config toggle */}
+                <button
+                    onClick={onToggleConfig}
+                    className="md:hidden p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+                    title="Configure"
+                >
+                    <Settings2 className="w-4 h-4" />
+                </button>
                 <div
                     className="w-9 h-9 rounded-xl flex items-center justify-center text-[12px] font-bold shrink-0"
                     style={
@@ -379,7 +411,7 @@ function MessageBubble({ message: msg, agentName }: { message: ChatMessage; agen
             </div>
 
             {/* Content */}
-            <div className={`flex flex-col gap-1 max-w-[72%] ${!isBot ? "items-end" : "items-start"}`}>
+            <div className={`flex flex-col gap-1 max-w-[85%] md:max-w-[72%] ${!isBot ? "items-end" : "items-start"}`}>
                 <span className="text-[11px] font-semibold text-muted-foreground px-1">
                     {isBot ? (agentName ?? "AI") : "You"}
                 </span>
@@ -537,8 +569,8 @@ function ChatInput({ input, chatbotName, onChange, onSend }: ChatInputProps) {
                 </button>
             </div>
             <div className="flex items-center justify-between mt-2 px-1">
-                <span className="text-[10px] text-muted-foreground font-mono">↵ Send · ⇧↵ New line</span>
-                <span className="flex items-center gap-1 text-[10px] text-muted-foreground font-mono">
+                <span className="hidden sm:block text-[10px] text-muted-foreground font-mono">↵ Send · ⇧↵ New line</span>
+                <span className="flex items-center gap-1 text-[10px] text-muted-foreground font-mono ml-auto">
                     <Zap className="w-2.5 h-2.5" />
                     Gemini 2.5 Flash
                 </span>

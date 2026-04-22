@@ -55,7 +55,7 @@ function ChatWidget() {
       case "reset":
         setQText("");
         setAText("");
-        setConvoIdx((convoIdx + 1) % CONVERSATIONS.length);
+        setConvoIdx((i) => (i + 1) % CONVERSATIONS.length);
         setPhase("q");
         break;
     }
@@ -125,11 +125,14 @@ function ChatWidget() {
 
         <div className="px-3 py-2.5 border-t border-border flex items-center gap-2">
           <div className="flex-1 text-[12px] text-muted-foreground px-3 py-1.5 bg-muted rounded-full">
-            Ask a question...
+            Ask a question…
           </div>
-          <div className="w-7 h-7 rounded-full bg-foreground text-background flex items-center justify-center text-sm">
+          <button
+            aria-label="Send message"
+            className="w-7 h-7 rounded-full bg-foreground text-background flex items-center justify-center text-sm focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+          >
             ↑
-          </div>
+          </button>
         </div>
       </div>
 
@@ -202,7 +205,7 @@ export default function HeroSection({ onGetStarted }: { onGetStarted: () => void
                 },
               ].map((f) => (
                 <div key={f.title} className="flex items-start gap-3">
-                  <span className="mt-0.5 w-8 h-8 rounded-lg bg-muted flex items-center justify-center text-muted-foreground shrink-0">
+                  <span className="mt-0.5 w-8 h-8 rounded-lg bg-muted flex items-center justify-center text-muted-foreground shrink-0" aria-hidden="true">
                     {f.icon}
                   </span>
                   <div>
