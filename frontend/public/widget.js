@@ -480,7 +480,7 @@
             <div class="dm-header-left">
               <div class="dm-header-avatar">${ICONS.BOT}</div>
               <div>
-                <div class="dm-header-name">${this.botName}</div>
+                <div class="dm-header-name">${Utils.escHtml(this.botName)}</div>
                 <div class="dm-header-status">
                   <span class="dm-status-dot"></span>Online
                 </div>
@@ -590,7 +590,6 @@
           body: JSON.stringify({
             message: text,
             session_id: this.sessionId,
-            history: this.chatHistory.slice(0, -1),
             widget_token: token,
           }),
         });

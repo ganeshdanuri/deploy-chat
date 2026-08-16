@@ -3,7 +3,7 @@ import hashlib
 import time
 from fastapi import APIRouter, Depends, HTTPException, status, Request
 from sqlmodel import Session, select
-from pydantic import BaseModel
+from pydantic import BaseModel, Field as PydField
 from app.core.db import get_session
 from app.schemas.models import Chatbot, User
 from app.core.billing import verify_plan_limits, increment_usage
@@ -14,6 +14,22 @@ from app.core.limiter import limiter
 
 router = APIRouter(prefix=Endpoints.WIDGET_PREFIX)
 
+
+def _chatbot_key(request: Request) -> str:
+    """
+    Rate-limit key scoped to the agent rather than the caller.
+
+    The per-IP limits below are trivially sidestepped by spreading traffic
+    across addresses. This one bounds how fast any single agent can be driven
+    no matter where the requests come from, which is what actually caps the
+    owner's exposure to token spend.
+    """
+    # embed_token is a PATH param (/widget/{embed_token}/chat). Reading it from
+    # query_params yields None for every request, which silently collapses this
+    # into one global bucket shared by all agents.
+    token = request.path_params.get("embed_token") or request.query_params.get("embed_token")
+    return f"chatbot:{token or 'unknown'}"
+
 from typing import List
 from urllib.parse import urlparse
 from app.schemas.models import ChatMessageItem, ChatbotAllowedOrigin
@@ -21,8 +37,13 @@ from app.schemas.models import ChatMessageItem, ChatbotAllowedOrigin
 
 def verify_widget_origin(session: Session, chatbot: Chatbot, request: Request):
     allowed_db = session.exec(select(ChatbotAllowedOrigin).where(ChatbotAllowedOrigin.chatbot_id == chatbot.id)).all()
+    # Fail closed. An agent with no configured origins previously accepted
+    # requests from anywhere, which is the opposite of what "no origins" means.
     if not allowed_db:
-        return
+        raise HTTPException(
+            status_code=403,
+            detail="This agent has no allowed domains configured.",
+        )
 
     allowed = [d.domain.strip().lower() for d in allowed_db]
     if "*" in allowed:
@@ -64,15 +85,59 @@ def verify_widget_token(signing_secret: str, session_id: str, token: str) -> boo
     return False
 
 
+MAX_MESSAGE_CHARS = 4000
+
+
 class WidgetChatRequest(BaseModel):
-    message: str
-    session_id: str = None
-    history: List[ChatMessageItem] = []
-    widget_token: str
+    # Unbounded input is a direct spend amplifier: one request can carry
+    # megabytes straight into a paid model call.
+    message: str = PydField(..., min_length=1, max_length=MAX_MESSAGE_CHARS)
+    session_id: str = PydField(None, max_length=200)
+    widget_token: str = PydField(..., max_length=200)
+    # NOTE: `history` is deliberately NOT accepted. It used to come from the
+    # client and was replayed to the model as genuine assistant turns, which let
+    # anyone forge a conversation where the agent had already agreed to ignore
+    # its instructions. History is now rebuilt server-side from ChatMessage.
+
+
+MAX_HISTORY_TURNS = 20
+
+
+def _load_session_history(session: Session, chatbot_id, session_token: str | None) -> List[ChatMessageItem]:
+    """
+    Server-authoritative conversation history.
+
+    Scoped by chatbot_id as well as session token so a token harvested from one
+    agent can't replay another agent's transcript. Capped so a long-running
+    session can't grow the prompt without bound.
+    """
+    if not session_token:
+        return []
+
+    from app.schemas.models import ChatSession, ChatMessage
+
+    chat_session = session.exec(
+        select(ChatSession).where(
+            ChatSession.session_token == session_token,
+            ChatSession.chatbot_id == chatbot_id,
+        )
+    ).first()
+    if not chat_session:
+        return []
+
+    rows = session.exec(
+        select(ChatMessage)
+        .where(ChatMessage.session_id == chat_session.id)
+        .order_by(ChatMessage.created_at.desc())
+        .limit(MAX_HISTORY_TURNS)
+    ).all()
+
+    return [ChatMessageItem(role=m.role, content=m.content) for m in reversed(rows)]
 
 
 @router.get(Endpoints.WIDGET_INIT)
 @limiter.limit("20/minute")
+@limiter.limit("300/hour", key_func=_chatbot_key)
 def widget_init(
     embed_token: str,
     session_id: str,
@@ -97,6 +162,7 @@ def widget_init(
 
 @router.post(Endpoints.WIDGET_CHAT)
 @limiter.limit("10/minute")
+@limiter.limit("200/hour", key_func=_chatbot_key)
 async def widget_chat(
     request: Request,
     embed_token: str,
@@ -126,10 +192,14 @@ async def widget_chat(
     # 5. Verify usage limits
     usage = verify_plan_limits(owner, session)
 
+    # 5b. Rebuild history from what the server actually recorded for this
+    # session, so a caller can't dictate what the assistant "previously said".
+    history = _load_session_history(session, chatbot.id, body.session_id)
+
     # 6. Get AI response
     try:
         response, token_count = await get_ai_response(
-            session, chatbot, body.message, history=body.history, temperature=chatbot.temperature
+            session, chatbot, body.message, history=history, temperature=chatbot.temperature
         )
     except Exception:
         raise HTTPException(
@@ -165,6 +235,7 @@ async def widget_chat(
 
 @router.get(Endpoints.WIDGET_INFO)
 @limiter.limit("30/minute")
+@limiter.limit("600/hour", key_func=_chatbot_key)
 def widget_info(
     request: Request,
     embed_token: str,

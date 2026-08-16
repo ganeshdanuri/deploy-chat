@@ -178,6 +178,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const logout = () => {
+    // Revoke server-side first. Clearing storage alone left the refresh token
+    // valid for its full window, so a copy captured earlier still worked.
+    const refreshToken = localStorage.getItem("refresh_token");
+    if (refreshToken) {
+      api
+        .post(ENDPOINTS.AUTH.LOGOUT, { refresh_token: refreshToken })
+        .catch(() => {
+          /* best effort — never block the user from logging out locally */
+        });
+    }
+
     setUser(null);
     setIsAuthenticated(false);
     localStorage.removeItem("user");

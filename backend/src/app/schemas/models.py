@@ -5,7 +5,7 @@ from pgvector.sqlalchemy import Vector
 from sqlmodel import Field, SQLModel
 from datetime import datetime, timedelta
 import secrets
-from app.core.constants import DEFAULT_SYSTEM_PROMPT, DEFAULT_WELCOME_MESSAGE, STATUS_ACTIVE, DEFAULT_PLAN_NAME, CHATBOT_STATUS_CREATING
+from app.core.constants import DEFAULT_SYSTEM_PROMPT, DEFAULT_WELCOME_MESSAGE, STATUS_ACTIVE, DEFAULT_PLAN_NAME, CHATBOT_STATUS_CREATING, DEFAULT_AI_MODEL
 
 class PricingTier(SQLModel, table=True):
     __tablename__ = "pricing_tiers"
@@ -39,6 +39,9 @@ class User(UserBase, table=True):
     github_id: Optional[str] = Field(default=None, unique=True, index=True)
     profile_image: Optional[str] = Field(default=None)
     is_email_verified: bool = Field(default=False)
+    # Refresh tokens issued before this instant are refused wholesale —
+    # used for logout-everywhere and password changes.
+    sessions_valid_from: Optional[datetime] = Field(default=None)
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
 class UserCreate(UserBase):
@@ -96,6 +99,25 @@ class Connector(SQLModel, table=True):
     last_sync_at: Optional[datetime] = Field(default=None)
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
+
+class ConnectorRead(SQLModel):
+    """
+    Client-safe view of a Connector.
+
+    Deliberately omits `config`, which holds the provider access token. The
+    table model was previously used as the response_model, which shipped live
+    Notion tokens to the browser on every dashboard load.
+    """
+    id: UUID
+    name: str
+    type: str
+    status: str
+    last_sync_at: Optional[datetime] = None
+    created_at: datetime
+    updated_at: datetime
+    # Count only — never the token or any other config value.
+    synced_item_count: int = 0
+
 
 class DocumentContent(SQLModel, table=True):
     __tablename__ = "document_contents"
@@ -181,7 +203,10 @@ class ChatbotAllowedOrigin(SQLModel, table=True):
 
 class ChatbotCreate(SQLModel):
     name: str
-    dataset_ids: List[UUID]
+    dataset_ids: List[UUID] = []
+    # Loose documents to wrap in a collection created alongside the chatbot,
+    # so callers don't have to make one first (and can't strand one on failure).
+    document_ids: List[UUID] = []
     system_prompt: Optional[str] = None
     temperature: Optional[float] = 0.7
     welcome_message: str
@@ -200,6 +225,10 @@ class ChatbotRead(ChatbotBase):
     embed_token: str
     status: str
     chunk_count: int = 0
+    # Response-only for now: the model is platform-wide, not per-agent. Served
+    # from here so the UI can't drift from what actually answers requests.
+    # Becomes a real column the day per-agent model selection ships.
+    model: str = DEFAULT_AI_MODEL
     created_at: datetime
     updated_at: datetime
 
@@ -223,11 +252,14 @@ class ChatMessage(SQLModel, table=True):
 # API Configs
 class ChatMessageItem(SQLModel):
     role: str
-    content: str
+    content: str = Field(max_length=8000)
 
 class ChatRequest(SQLModel):
-    message: str
-    history: List[ChatMessageItem] = []
+    # Bounded so a single call can't push an unlimited payload into a paid model.
+    message: str = Field(min_length=1, max_length=4000)
+    # Owner-authenticated playground only; the public widget rebuilds history
+    # server-side and does not accept this field at all.
+    history: List[ChatMessageItem] = Field(default=[], max_length=20)
 class PlatformAPIKey(SQLModel, table=True):
     __tablename__ = "platform_api_keys"
     id: UUID = Field(default_factory=uuid4, primary_key=True)
@@ -237,26 +269,25 @@ class PlatformAPIKey(SQLModel, table=True):
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
 
-class UserAPIKeyBase(SQLModel):
-    provider: str
-    is_active: bool = Field(default=True)
+# UserAPIKey removed: the pipeline only ever read PlatformAPIKey, so this
+# stored third-party secrets in plaintext that nothing consumed.
 
-class UserAPIKey(UserAPIKeyBase, table=True):
-    __tablename__ = "user_api_keys"
-    id: UUID = Field(default_factory=uuid4, primary_key=True)
-    user_id: UUID = Field(foreign_key="users.id")
-    api_key: str
-    created_at: datetime = Field(default_factory=datetime.utcnow)
-    updated_at: datetime = Field(default_factory=datetime.utcnow)
 
-class UserAPIKeyCreate(SQLModel):
-    provider: str
-    api_key: str
+class RevokedRefreshToken(SQLModel, table=True):
+    """
+    Denylist of refresh tokens killed before their natural expiry.
 
-class UserAPIKeyRead(UserAPIKeyBase):
-    id: UUID
-    user_id: UUID
-    created_at: datetime
+    Absence means valid: the JWT signature already proves we issued it, so
+    there is no reason to record every token — only the exceptions. Rows can be
+    purged once `expires_at` passes, since an expired token fails signature
+    validation regardless.
+    """
+    __tablename__ = "revoked_refresh_tokens"
+    jti: UUID = Field(primary_key=True)
+    user_id: UUID = Field(foreign_key="users.id", ondelete="CASCADE", index=True)
+    expires_at: datetime
+    revoked_at: datetime = Field(default_factory=datetime.utcnow)
+
 
 # Usage Tracking
 class UsageTracking(SQLModel, table=True):

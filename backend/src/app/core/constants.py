@@ -63,3 +63,7 @@ ACTIVITY_TYPE_LIMIT_WARNING = "message_limit_warning"
 # Chat Roles
 ROLE_USER = "user"
 ROLE_ASSISTANT = "assistant"
+
+# Upload allow-list. Must match what the UI advertises; the parser stack
+# should never be handed arbitrary bytes with an arbitrary name.
+ALLOWED_DOCUMENT_EXTENSIONS = {".pdf", ".doc", ".docx", ".txt", ".md", ".markdown", ".csv"}

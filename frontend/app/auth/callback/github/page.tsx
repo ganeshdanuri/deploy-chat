@@ -16,9 +16,20 @@ function GitHubCallbackContent() {
     if (handled.current) return;
     const code = searchParams.get("code");
     const error = searchParams.get("error");
+    const state = searchParams.get("state");
 
     if (error || !code) {
       router.replace("/login?error=github_denied");
+      return;
+    }
+
+    // CSRF guard: only accept a callback we started. Without this, an attacker
+    // can hand a victim a link carrying the attacker's authorization code and
+    // silently bind the victim's session to the attacker's GitHub account.
+    const expected = sessionStorage.getItem("github_oauth_state");
+    sessionStorage.removeItem("github_oauth_state");
+    if (!state || !expected || state !== expected) {
+      router.replace("/login?error=github_state_mismatch");
       return;
     }
 

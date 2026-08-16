@@ -4,20 +4,36 @@ from typing import List, Optional
 from uuid import UUID
 from app.core.db import get_session
 from app.api.deps import get_current_user
-from app.schemas.models import Connector, User, Document
+from app.schemas.models import Connector, ConnectorRead, User, Document
 from app.services.notion import NotionService
 
 router = APIRouter()
 
-@router.get("/", response_model=List[Connector])
+def _to_read(connector: Connector) -> ConnectorRead:
+    """Strip `config` (holds the provider token) before anything reaches a client."""
+    cfg = connector.config or {}
+    return ConnectorRead(
+        id=connector.id,
+        name=connector.name,
+        type=connector.type,
+        status=connector.status,
+        last_sync_at=connector.last_sync_at,
+        created_at=connector.created_at,
+        updated_at=connector.updated_at,
+        synced_item_count=len(cfg.get("selected_pages") or []),
+    )
+
+
+
+@router.get("/", response_model=List[ConnectorRead])
 def get_connectors(
     session: Session = Depends(get_session),
     current_user: User = Depends(get_current_user)
 ):
     statement = select(Connector).where(Connector.user_id == current_user.id)
-    return session.exec(statement).all()
+    return [_to_read(c) for c in session.exec(statement).all()]
 
-@router.post("/")
+@router.post("/", response_model=ConnectorRead)
 async def create_connector(
     name: str = Body(...),
     type: str = Body(...), # 'notion'
@@ -34,13 +50,10 @@ async def create_connector(
     session.add(new_connector)
     session.commit()
     session.refresh(new_connector)
-    
-    # Trigger initial sync? Maybe async in background
-    # await NotionService.sync_connector(new_connector.id)
-    
-    return new_connector
 
-@router.get("/{connector_id}")
+    return _to_read(new_connector)
+
+@router.get("/{connector_id}", response_model=ConnectorRead)
 def get_connector(
     connector_id: UUID,
     session: Session = Depends(get_session),
@@ -49,7 +62,7 @@ def get_connector(
     connector = session.get(Connector, connector_id)
     if not connector or connector.user_id != current_user.id:
         raise HTTPException(status_code=404, detail="Connector not found")
-    return connector
+    return _to_read(connector)
 
 @router.delete("/{connector_id}")
 def delete_connector(

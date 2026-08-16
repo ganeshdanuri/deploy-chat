@@ -6,6 +6,7 @@ export const ENDPOINTS = {
         REGISTER: '/api/auth/register',
         VERIFY_OTP: '/api/auth/verify-otp',
         REFRESH: '/api/auth/refresh',
+        LOGOUT: '/api/auth/logout',
     },
     USAGE: {
         STATS: '/api/usage/stats',
@@ -35,9 +36,5 @@ export const ENDPOINTS = {
         BY_ID: (id: string | number) => `/api/connectors/${id}`,
         SYNC: (id: string | number) => `/api/connectors/${id}/sync`,
         NOTION_PAGES: '/api/connectors/notion/pages',
-    },
-    API_KEYS: {
-        BASE: '/api/api-keys/',
-        BY_ID: (id: string | number) => `/api/api-keys/${id}`,
     }
 };

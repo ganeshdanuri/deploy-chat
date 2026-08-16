@@ -25,13 +25,25 @@ async def upload_documents(
     session: Session = Depends(get_session),
     current_user: User = Depends(get_current_user)
 ):
-    from app.core.constants import MAX_DOCUMENT_SIZE_MB, ACTIVITY_TYPE_DOCUMENT_ADDED
+    from app.core.constants import MAX_DOCUMENT_SIZE_MB, ACTIVITY_TYPE_DOCUMENT_ADDED, ALLOWED_DOCUMENT_EXTENSIONS
+    import os.path
     max_bytes = MAX_DOCUMENT_SIZE_MB * 1024 * 1024
     
     uploaded_docs = []
     
     for file in files:
         try:
+            # Reject anything outside the advertised formats, and never trust the
+            # client-supplied path: keep only the basename.
+            safe_name = os.path.basename(file.filename or "").strip() or "untitled"
+            ext = os.path.splitext(safe_name)[1].lower()
+            if ext not in ALLOWED_DOCUMENT_EXTENSIONS:
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail=f"Unsupported file type '{ext or safe_name}'. Allowed: "
+                           + ", ".join(sorted(ALLOWED_DOCUMENT_EXTENSIONS)),
+                )
+
             # Check file size
             content_bytes = await file.read()
             if len(content_bytes) > max_bytes:
@@ -41,11 +53,11 @@ async def upload_documents(
                 )
             
             # 1. Convert to markdown
-            markdown_text = convert_to_markdown(content_bytes, file.filename)
+            markdown_text = convert_to_markdown(content_bytes, safe_name)
             
             # 2. Save Document record (linked to current_user)
             new_doc = Document(
-                name=file.filename,
+                name=safe_name,
                 user_id=current_user.id
             )
             session.add(new_doc)
