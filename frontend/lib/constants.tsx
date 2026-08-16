@@ -8,7 +8,6 @@ import {
     User,
     Users,
     CreditCard,
-    KeyRound,
     Bell,
     Plug,
 } from "lucide-react";
@@ -32,7 +31,6 @@ export const SIDEBAR_SETTINGS_NAV = [
     { id: "general", label: "Profile", path: "/dashboard/settings?tab=general", icon: User },
     { id: "team", label: "Team Members", path: "/dashboard/settings?tab=team", icon: Users },
     { id: "billing", label: "Billing & Plans", path: "/dashboard/settings?tab=billing", icon: CreditCard },
-    { id: "api-keys", label: "API Keys", path: "/dashboard/settings?tab=api-keys", icon: KeyRound },
     { id: "notifications", label: "Notifications", icon: Bell },
 ];
 
@@ -72,7 +70,7 @@ export const PRESET_COLORS = [
     { label: "Orange", value: "#ea580c" },
 ];
 
-// ─── AddAPIKeyDrawer provider list ───────────────────────────────────────────
+// ─── Model provider list ─────────────────────────────────────────────────────
 
 export const LLM_PROVIDERS = [
     { label: "OpenAI", value: "openai" },

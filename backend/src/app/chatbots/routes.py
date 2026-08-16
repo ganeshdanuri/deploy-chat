@@ -4,7 +4,7 @@ from typing import List
 from uuid import UUID
 from app.core.db import get_session
 from app.api.deps import get_current_user
-from app.schemas.models import Chatbot, ChatbotCreate, ChatbotUpdate, ChatbotRead, ChatbotDatasets, User, Dataset, DatasetDocuments, DocumentChunk, ChatRequest
+from app.schemas.models import Chatbot, ChatbotCreate, ChatbotUpdate, ChatbotRead, ChatbotDatasets, User, Dataset, DatasetDocuments, Document, DocumentChunk, ChatRequest
 from app.core.billing import verify_plan_limits, increment_usage
 from app.core.ai import get_ai_response
 from app.core.endpoints import Endpoints
@@ -49,9 +49,74 @@ def create_chatbot(
 ):
     if not chatbot_in.welcome_message.strip() or not chatbot_in.allowed_domains.strip():
         raise HTTPException(status_code=400, detail="All fields must be provided and cannot be empty.")
-        
+
+    if not chatbot_in.dataset_ids and not chatbot_in.document_ids:
+        raise HTTPException(
+            status_code=400,
+            detail="Pick at least one file or collection for this agent to learn from."
+        )
+
     try:
-        # 1. Create Chatbot record
+        # Everything below builds a single transaction and commits once at the
+        # end. Validate before writing so a rejected request leaves nothing
+        # behind — an early commit here used to strand half-built chatbots.
+
+        # 1. Validate domains up front
+        # Accepts a valid host or origin (e.g. https://example.com, localhost:3000).
+        # Domains and IPs with optional port only — no wildcards.
+        domain_regex = re.compile(
+            r'^(?:https?:\/\/)?' # scheme
+            r'(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+[A-Z]{2,63}|' # domain
+            r'localhost|' # localhost
+            r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})' # ip
+            r'(?::\d+)?' # port
+            r'(?:\/?)$', re.IGNORECASE)
+
+        domains = [d.strip() for d in chatbot_in.allowed_domains.split(",") if d.strip()]
+        for domain in domains:
+            if not domain_regex.match(domain) or domain == "*":
+                raise HTTPException(status_code=400, detail=f"Invalid domain format: {domain}")
+
+        # 2. Resolve the knowledge this agent will be trained on
+        linked_dataset_ids = []
+        for ds_id in chatbot_in.dataset_ids:
+            ds = session.get(Dataset, ds_id)
+            if ds and ds.user_id == current_user.id:
+                linked_dataset_ids.append(ds_id)
+
+        if chatbot_in.document_ids:
+            owned_doc_ids = session.exec(
+                select(Document.id).where(
+                    Document.id.in_(chatbot_in.document_ids),
+                    Document.user_id == current_user.id,
+                )
+            ).all()
+            if owned_doc_ids:
+                # Collections are an implementation detail for callers who just
+                # picked files — build one for them in the same transaction.
+                auto_dataset = Dataset(
+                    name=f"{chatbot_in.name} knowledge",
+                    user_id=current_user.id
+                )
+                session.add(auto_dataset)
+                # Link tables declare foreign_key but no ORM Relationship, so
+                # SQLAlchemy can't infer insert order and may emit the link row
+                # first. Flush the parent (same transaction, not a commit).
+                session.flush()
+                for doc_id in owned_doc_ids:
+                    session.add(DatasetDocuments(
+                        dataset_id=auto_dataset.id,
+                        document_id=doc_id
+                    ))
+                linked_dataset_ids.append(auto_dataset.id)
+
+        if not linked_dataset_ids:
+            raise HTTPException(
+                status_code=400,
+                detail="None of the selected files or collections could be found."
+            )
+
+        # 3. Create the chatbot and everything hanging off it
         default_prompt = SYSTEM_PROMPT_TEMPLATE.format(name=chatbot_in.name)
 
         # Personalize welcome message if using default
@@ -67,57 +132,28 @@ def create_chatbot(
             welcome_message=welcome_msg,
         )
         session.add(new_chatbot)
-        session.commit()
-        session.refresh(new_chatbot)
-        
-        # Insert allowed domains
-        if chatbot_in.allowed_domains:
-            from app.schemas.models import ChatbotAllowedOrigin
-            # Validates that it's a valid host or origin (e.g. https://example.com or localhost:3000)
-            # This regex allows valid domains and IPs with optional port, but no wildcards or random garbage
-            domain_regex = re.compile(
-                r'^(?:https?:\/\/)?' # scheme
-                r'(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+[A-Z]{2,63}|' # domain
-                r'localhost|' # localhost
-                r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})' # ip
-                r'(?::\d+)?' # port
-                r'(?:\/?)$', re.IGNORECASE)
-            
-            domains = [d.strip() for d in chatbot_in.allowed_domains.split(",") if d.strip()]
-            for domain in domains:
-                if not domain_regex.match(domain) or domain == "*":
-                    raise HTTPException(status_code=400, detail=f"Invalid domain format: {domain}")
-                    
-                origin = ChatbotAllowedOrigin(chatbot_id=new_chatbot.id, domain=domain)
-                session.add(origin)
-        
-        # 2. Link datasets
-        for ds_id in chatbot_in.dataset_ids:
-            # Verify dataset exists and belongs to user
-            ds = session.get(Dataset, ds_id)
-            if not ds or ds.user_id != current_user.id:
-                continue
-                
-            link = ChatbotDatasets(
-                chatbot_id=new_chatbot.id,
-                dataset_id=ds_id
-            )
-            session.add(link)
-            
+        session.flush()  # parent must exist before its origins/dataset links
+
+        from app.schemas.models import ChatbotAllowedOrigin
+        for domain in domains:
+            session.add(ChatbotAllowedOrigin(chatbot_id=new_chatbot.id, domain=domain))
+
+        for ds_id in linked_dataset_ids:
+            session.add(ChatbotDatasets(chatbot_id=new_chatbot.id, dataset_id=ds_id))
+
         from app.schemas.models import RecentActivity
-        activity = RecentActivity(
+        session.add(RecentActivity(
             user_id=current_user.id,
             activity_type=ACTIVITY_TYPE_CHATBOT_CREATED,
             details=f"Created chatbot: {new_chatbot.name}"
-        )
-        session.add(activity)
+        ))
 
         session.commit()
         session.refresh(new_chatbot)
-        
+
         # Trigger background chunking
         background_tasks.add_task(process_chatbot_documents, new_chatbot.id)
-        
+
         return new_chatbot
     except HTTPException:
         session.rollback()

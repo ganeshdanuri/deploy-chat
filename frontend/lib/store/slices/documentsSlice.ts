@@ -8,6 +8,7 @@ type DocumentsState = AsyncSliceState<Document>;
 const initialState: DocumentsState = {
     items: [],
     status: 'idle',
+    hasLoaded: false,
     error: null,
 };
 
@@ -39,10 +40,12 @@ const documentsSlice = createSlice({
         builder
             .addCase(fetchDocuments.pending, (state) => { state.status = 'loading'; })
             .addCase(fetchDocuments.fulfilled, (state, action: PayloadAction<Document[]>) => {
+                state.hasLoaded = true;
                 state.status = 'succeeded';
                 state.items = action.payload;
             })
             .addCase(fetchDocuments.rejected, (state, action) => {
+                state.hasLoaded = true;
                 state.status = 'failed';
                 state.error = action.error.message || 'Failed to fetch documents';
             })

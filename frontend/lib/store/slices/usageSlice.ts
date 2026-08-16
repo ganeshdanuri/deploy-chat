@@ -6,6 +6,7 @@ interface UsageState {
     message_count: number;
     token_count: number;
     status: 'idle' | 'loading' | 'succeeded' | 'failed';
+    hasLoaded: boolean;
     error: string | null;
 }
 
@@ -13,6 +14,7 @@ const initialState: UsageState = {
     message_count: 0,
     token_count: 0,
     status: 'idle',
+    hasLoaded: false,
     error: null,
 };
 
@@ -31,11 +33,13 @@ const usageSlice = createSlice({
                 state.status = 'loading';
             })
             .addCase(fetchUsageStats.fulfilled, (state, action) => {
+                state.hasLoaded = true;
                 state.status = 'succeeded';
                 state.message_count = action.payload.message_count || 0;
                 state.token_count = action.payload.token_count || 0;
             })
             .addCase(fetchUsageStats.rejected, (state, action) => {
+                state.hasLoaded = true;
                 state.status = 'failed';
                 state.error = action.error.message || 'Failed to fetch usage stats';
             });

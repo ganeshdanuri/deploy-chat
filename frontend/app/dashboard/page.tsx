@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  ArrowDown,
   ArrowRight,
   ArrowUp,
   Code,
@@ -14,12 +13,8 @@ import {
 } from "lucide-react";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { useEffect, useState, useCallback } from "react";
-import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
-import { fetchChatbots } from "@/lib/store/slices/chatbotsSlice";
-import { fetchDatasets } from "@/lib/store/slices/datasetsSlice";
-import { fetchDocuments } from "@/lib/store/slices/documentsSlice";
-import { fetchUsageStats } from "@/lib/store/slices/usageSlice";
+import { useEffect, useState } from "react";
+import { useAppSelector } from "@/lib/store/hooks";
 import Link from "next/link";
 
 import { DashboardSkeleton } from "@/app/components/ui";
@@ -31,35 +26,23 @@ import AgentFormDrawer from "@/app/components/AgentFormDrawer";
 import { BarChart } from "@/app/components/charts/BarChart";
 
 export default function DashboardOverview() {
-  const dispatch = useAppDispatch();
-  const { items: chatbots } = useAppSelector((state) => state.chatbots);
-  const { items: datasets } = useAppSelector((state) => state.datasets);
-  const { items: documents } = useAppSelector((state) => state.documents);
-  const { message_count } = useAppSelector((state) => state.usage);
+  const { items: chatbots, hasLoaded: chatbotsReady } = useAppSelector((state) => state.chatbots);
+  const { items: datasets, hasLoaded: datasetsReady } = useAppSelector((state) => state.datasets);
+  const { items: documents, hasLoaded: documentsReady } = useAppSelector((state) => state.documents);
+  const { message_count, hasLoaded: usageReady } = useAppSelector((state) => state.usage);
   const { data: userData } = useAppSelector((state) => state.user);
 
   const hasAgents = chatbots.length > 0;
-  const [isInitialLoading, setIsInitialLoading] = useState(true);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
 
-  const loadData = useCallback(async () => {
-    try {
-      await Promise.all([
-        dispatch(fetchChatbots()),
-        dispatch(fetchDatasets()),
-        dispatch(fetchDocuments()),
-        dispatch(fetchUsageStats()),
-      ]);
-    } finally {
-      setTimeout(() => setIsInitialLoading(false), 300);
-    }
-  }, [dispatch]);
+  // The dashboard layout already fetches all of this on mount, so we only
+  // watch for it to arrive. Gate on hasLoaded, never on `status`: a background
+  // refetch (uploading a file inside the create wizard, for one) flips status
+  // back to "loading", and skeletoning the page would unmount the open wizard
+  // out from under the user.
+  const ready = chatbotsReady && datasetsReady && documentsReady && usageReady;
 
-  useEffect(() => {
-    loadData();
-  }, [loadData]);
-
-  if (isInitialLoading) return <DashboardSkeleton />;
+  if (!ready) return <DashboardSkeleton />;
 
   if (!hasAgents) {
     return (
@@ -126,7 +109,7 @@ export default function DashboardOverview() {
             href="/dashboard/analytics"
           />
           <StatCard
-            label="Knowledge bases"
+            label="Collections"
             value={datasets.length}
             display={String(datasets.length).padStart(2, "0")}
             sub={`${documents.length} ${documents.length === 1 ? "file" : "files"} indexed`}
@@ -449,31 +432,28 @@ function ActivityPanel() {
 // ─── EMPTY STATE ─────────────────────────────────────────────────────────────
 
 function EmptyOnboarding({ onCreate }: { onCreate: () => void }) {
+  // These describe what the create wizard walks you through — they are not
+  // separate destinations. Sending people off to other pages first is what
+  // used to strand them.
   const steps = [
     {
       num: 1,
-      title: "Upload your knowledge",
-      desc: "PDFs, websites, Notion — anything your users ask about.",
-      href: "/dashboard/knowledge",
-      cta: "Add sources",
-      color: "var(--knowledge)",
-      bg: "var(--knowledge-bg)",
-    },
-    {
-      num: 2,
-      title: "Create your first agent",
-      desc: "Pick a name, persona, and which knowledge to train on.",
-      onClick: onCreate,
-      cta: "Create agent",
+      title: "Name your agent",
+      desc: "What it's called and how it greets people.",
       color: "var(--agent)",
       bg: "var(--agent-bg)",
     },
     {
+      num: 2,
+      title: "Give it something to read",
+      desc: "Drop in PDFs, docs, or notes — right inside the wizard.",
+      color: "var(--knowledge)",
+      bg: "var(--knowledge-bg)",
+    },
+    {
       num: 3,
-      title: "Test & deploy",
-      desc: "Chat with it in the playground, then grab the embed code.",
-      href: "/dashboard/playground",
-      cta: "Open playground",
+      title: "Pick where it runs",
+      desc: "Keep it in testing, or lock it to your domain and embed it.",
       color: "var(--brand)",
       bg: "var(--brand-bg)",
     },
@@ -490,15 +470,20 @@ function EmptyOnboarding({ onCreate }: { onCreate: () => void }) {
       <h1 className="text-3xl sm:text-[34px] font-semibold tracking-[-0.025em] text-foreground mb-3 leading-tight">
         Let&apos;s ship your first AI agent.
       </h1>
-      <p className="text-[15px] text-muted-foreground max-w-md mx-auto leading-relaxed mb-10">
-        Three steps. No code required. You&apos;ll be live in under 5 minutes.
+      <p className="text-[15px] text-muted-foreground max-w-md mx-auto leading-relaxed mb-8">
+        Three steps, all in one place. No code required.
       </p>
+
+      <Button size="lg" onClick={onCreate} className="mb-10">
+        <Plus className="w-4 h-4 mr-1.5" />
+        Create your first agent
+      </Button>
 
       <div className="flex flex-col gap-2.5 text-left">
         {steps.map((step) => (
           <div
             key={step.num}
-            className="bg-background border border-border rounded-2xl p-4 flex items-center gap-4 hover:border-border-medium transition-colors"
+            className="bg-background border border-border rounded-2xl p-4 flex items-center gap-4"
           >
             <div
               className="w-9 h-9 rounded-xl flex items-center justify-center text-[13px] font-bold shrink-0"
@@ -510,18 +495,16 @@ function EmptyOnboarding({ onCreate }: { onCreate: () => void }) {
               <h3 className="text-[14px] font-semibold text-foreground">{step.title}</h3>
               <p className="text-[12px] text-muted-foreground mt-0.5">{step.desc}</p>
             </div>
-            {step.onClick ? (
-              <Button size="sm" onClick={step.onClick} className="shrink-0">
-                {step.cta}
-              </Button>
-            ) : (
-              <Button size="sm" variant="outline" asChild className="shrink-0">
-                <Link href={step.href!}>{step.cta}</Link>
-              </Button>
-            )}
           </div>
         ))}
       </div>
+
+      <p className="text-[12px] text-muted-foreground mt-6">
+        Already uploaded files?{" "}
+        <Link href="/dashboard/knowledge" className="underline underline-offset-2 hover:text-foreground transition-colors">
+          Manage your knowledge
+        </Link>
+      </p>
     </div>
   );
 }

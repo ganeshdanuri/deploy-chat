@@ -61,16 +61,16 @@ export default function KnowledgeBaseFormDrawer({
     try {
       if (editDataset) {
         await api.patch(ENDPOINTS.DATASETS.BY_ID(editDataset.id), { name });
-        showToast.success(`Knowledge base "${name}" updated successfully!`);
+        showToast.success(`Collection "${name}" updated`);
         dispatch(fetchDatasets());
       } else {
         await dispatch(createDataset({ name, document_ids: selectedDocs })).unwrap();
-        showToast.success(`Knowledge base "${name}" created successfully!`);
+        showToast.success(`Collection "${name}" created`);
       }
       onClose();
     } catch (error: any) {
       showToast.error(
-        error?.message || `Failed to ${editDataset ? "update" : "create"} knowledge base.`
+        error?.message || `Failed to ${editDataset ? "update" : "create"} collection.`
       );
     } finally {
       setIsSubmitting(false);
@@ -95,7 +95,7 @@ export default function KnowledgeBaseFormDrawer({
             <span className="w-3.5 h-3.5 border-2 border-current border-t-transparent rounded-full animate-spin" />
             Processing…
           </span>
-        ) : editDataset ? "Save changes" : "Create knowledge base"}
+        ) : editDataset ? "Save changes" : "Create collection"}
       </Button>
     </>
   );
@@ -104,11 +104,11 @@ export default function KnowledgeBaseFormDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={onClose}
-      title={editDataset ? "Edit Knowledge Base" : "New Knowledge Base"}
+      title={editDataset ? "Edit Collection" : "New Collection"}
       subtitle={
         editDataset
-          ? "Update your knowledge collection details."
-          : "Connect and organize your knowledge sources."
+          ? "Update this collection's details."
+          : "Group files so agents can train on a specific set."
       }
       icon={Database}
       iconBgColor="bg-emerald-50/50"
@@ -119,8 +119,8 @@ export default function KnowledgeBaseFormDrawer({
       <div className="space-y-6 animate-fade-in">
         {/* Name */}
         <div className="space-y-2">
-          <label className="text-sm font-medium block text-foreground">Knowledge Base Name</label>
-          <p className="text-xs text-muted-foreground">Identify this collection for your AI agents.</p>
+          <label className="text-sm font-medium block text-foreground">Collection name</label>
+          <p className="text-xs text-muted-foreground">Name this group of files so you can reuse it across agents.</p>
           <Input
             value={name}
             onChange={(e) => setName(e.target.value)}
