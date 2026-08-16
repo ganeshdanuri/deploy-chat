@@ -332,8 +332,8 @@ function ActiveConnections({
         <div className="bg-background border border-border rounded-xl overflow-hidden divide-y divide-border">
             {connectors.map((connector) => {
                 const { Icon, color } = getIntegrationIcon(connector.type);
-                const syncedItems =
-                    ((connector.config as { selected_pages?: string[] })?.selected_pages)?.length || 0;
+                // config is no longer sent to clients (it holds the provider token)
+                const syncedItems = connector.synced_item_count ?? 0;
                 return (
                     <div
                         key={connector.id}
