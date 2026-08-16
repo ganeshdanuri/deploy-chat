@@ -13,19 +13,14 @@ load_dotenv()
 
 from app.api.router import api_router  # noqa: E402
 
-from app.core.db import init_db, engine  # noqa: E402
-from app.core.migrations import run_migrations  # noqa: E402
-
 app = FastAPI()
 
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 app.add_middleware(SlowAPIMiddleware)
 
-@app.on_event("startup")
-def on_startup():
-    init_db()
-    run_migrations(engine)
+# Schema setup is a deployment step, not a runtime one -- see app/core/bootstrap.py.
+# Running DDL on startup races across Cloud Run instances.
 
 # Add CORS middleware
 app.add_middleware(
