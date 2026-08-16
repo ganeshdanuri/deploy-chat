@@ -10,7 +10,6 @@ const LINKS = [
   { href: "#features", label: "Features" },
   { href: "#integrations", label: "Integrations" },
   { href: "#faq", label: "FAQ" },
-  { href: "#", label: "Docs" },
 ];
 
 export default function Navbar() {

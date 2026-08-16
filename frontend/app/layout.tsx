@@ -16,8 +16,8 @@ const onest = Onest({
 });
 
 export const metadata: Metadata = {
-  title: "Deploy Chat — AI agents trained on your data",
-  description: "Ship an AI agent trained on your data in minutes.",
+  title: "Deploy Chat — Turn any knowledge base into a 24/7 AI support agent",
+  description: "Connect your docs, wikis, websites, and APIs in minutes. We learn your business context and embed on your site with a single line of code.",
 };
 
 export default function RootLayout({

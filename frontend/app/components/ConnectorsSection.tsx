@@ -12,160 +12,202 @@ import {
   SiAirtable,
   SiGooglesheets,
 } from "react-icons/si";
-import { ArrowUpRight } from "lucide-react";
+import { MessageSquare } from "lucide-react";
 import type { ComponentType, CSSProperties } from "react";
 import { useReveal } from "@/lib/hooks/useReveal";
+import { useInView } from "@/lib/hooks/useInView";
 
-type Integration = {
+type Source = {
   name: string;
-  Icon: ComponentType<{ size?: number; color?: string }>;
+  Icon: ComponentType<{ size?: number }>;
   color: string;
-  col: number;
-  offset: number;
-  delay: string;
+  y: number;
 };
 
-/* The tile exposes its vendor colour as a custom property so CSS can hold the
-   logo at muted weight and reveal the real colour on hover. */
-type TileStyle = CSSProperties & { "--logo": string };
+type PillStyle = CSSProperties & { "--logo": string };
 
-const UNIQUE_INTEGRATIONS: Integration[] = [
-  { name: "Notion",         Icon: SiNotion,       color: "#000000", col: 1, offset: 60,  delay: "0s" },
-  { name: "Confluence",     Icon: SiConfluence,   color: "#172B4D", col: 1, offset: 220, delay: "0.6s" },
-  { name: "Google Drive",   Icon: SiGoogledrive,  color: "#4285F4", col: 2, offset: 20,  delay: "0.3s" },
-  { name: "Dropbox",        Icon: SiDropbox,      color: "#0061FF", col: 2, offset: 190, delay: "0.8s" },
-  { name: "GitHub",         Icon: SiGithub,       color: "#181717", col: 3, offset: 10,  delay: "0.5s" },
-  { name: "GitLab",         Icon: SiGitlab,       color: "#FC6D26", col: 3, offset: 170, delay: "0.1s" },
-  { name: "PostgreSQL",     Icon: SiPostgresql,   color: "#4169E1", col: 4, offset: 60,  delay: "0.2s" },
-  { name: "Google Sheets",  Icon: SiGooglesheets, color: "#34A853", col: 4, offset: 230, delay: "0.7s" },
-  { name: "Airtable",       Icon: SiAirtable,     color: "#18BFFF", col: 5, offset: 20,  delay: "0.4s" },
-  { name: "WordPress",      Icon: SiWordpress,    color: "#21759B", col: 5, offset: 200, delay: "0.9s" },
+/* Diagram coordinate space. Tiles are positioned as percentages of the same
+   box the SVG uses, so lines and pills stay aligned at any width. */
+const VB = { w: 1000, h: 420 };
+const NODE = { x: 500, y: 210 };
+const COL = { left: 120, right: 880 };
+const ROWS = [40, 125, 210, 295, 380];
+
+const LEFT: Source[] = [
+  { name: "Notion", Icon: SiNotion, color: "#000000", y: ROWS[0] },
+  { name: "Google Drive", Icon: SiGoogledrive, color: "#4285F4", y: ROWS[1] },
+  { name: "Confluence", Icon: SiConfluence, color: "#172B4D", y: ROWS[2] },
+  { name: "Dropbox", Icon: SiDropbox, color: "#0061FF", y: ROWS[3] },
+  { name: "WordPress", Icon: SiWordpress, color: "#21759B", y: ROWS[4] },
 ];
 
+const RIGHT: Source[] = [
+  { name: "GitHub", Icon: SiGithub, color: "#181717", y: ROWS[0] },
+  { name: "GitLab", Icon: SiGitlab, color: "#FC6D26", y: ROWS[1] },
+  { name: "PostgreSQL", Icon: SiPostgresql, color: "#4169E1", y: ROWS[2] },
+  { name: "Google Sheets", Icon: SiGooglesheets, color: "#34A853", y: ROWS[3] },
+  { name: "Airtable", Icon: SiAirtable, color: "#18BFFF", y: ROWS[4] },
+];
+
+/** Both ends sit under an opaque pill, so the join is hidden at every scale. */
+function pathFor(fromX: number, fromY: number) {
+  const c1 = fromX + (NODE.x - fromX) * 0.42;
+  const c2 = fromX + (NODE.x - fromX) * 0.62;
+  return `M ${fromX} ${fromY} C ${c1} ${fromY}, ${c2} ${NODE.y}, ${NODE.x} ${NODE.y}`;
+}
+
 export default function ConnectorsSection() {
-  /* Parts reveal individually. Revealing the whole section as one slab left no
-     room for the logos to stagger inside it. */
   const headerRef = useReveal<HTMLDivElement>();
-  const mobileRef = useReveal<HTMLDivElement>();
   const outroRef = useReveal<HTMLDivElement>();
+  const [gridRef, gridIn] = useInView<HTMLDivElement>({ threshold: 0.3 });
+  const [mobileRef, mobileIn] = useInView<HTMLDivElement>();
+
+  const all = [...LEFT, ...RIGHT];
 
   return (
     <section id="integrations" className="relative overflow-hidden">
       <div className="container-page py-24 sm:py-32">
         <div ref={headerRef} className="reveal text-center">
-          <span className="eyebrow-pill">Knowledge Sources</span>
+          <span className="eyebrow-pill">Knowledge sources</span>
           <h2 className="h-section mt-6 mb-4 max-w-3xl mx-auto">
-            Train on any
-            <br className="hidden sm:block" /> knowledge source
+            Connect everything.
+            <br className="hidden sm:block" /> Answer from all of it.
           </h2>
         </div>
 
-        {/* ── Staggered logo constellation (desktop) ── */}
-        <div className="relative mt-14 sm:mt-20 hidden md:block px-16 lg:px-24">
-          <LogoConstellation />
+        {/* ── Convergence diagram (desktop) ── */}
+        <div
+          ref={gridRef}
+          data-flowing={gridIn ? "" : undefined}
+          className="relative mx-auto mt-16 hidden lg:block w-full max-w-[1000px]"
+          style={{ aspectRatio: `${VB.w} / ${VB.h}` }}
+        >
+          <svg
+            viewBox={`0 0 ${VB.w} ${VB.h}`}
+            className="absolute inset-0 w-full h-full"
+            aria-hidden="true"
+          >
+            {all.map((s, i) => {
+              const x = i < LEFT.length ? COL.left : COL.right;
+              const d = pathFor(x, s.y);
+              return (
+                <g key={s.name}>
+                  <path
+                    d={d}
+                    className="flow-base"
+                    style={{ animationDelay: `${i * 70}ms` }}
+                  />
+                  <path
+                    d={d}
+                    className="flow-line"
+                    style={{ transitionDelay: `${600 + i * 70}ms` }}
+                  />
+                </g>
+              );
+            })}
+          </svg>
+
+          {all.map((s, i) => {
+            const x = i < LEFT.length ? COL.left : COL.right;
+            return (
+              <SourcePill
+                key={s.name}
+                source={s}
+                left={`${(x / VB.w) * 100}%`}
+                top={`${(s.y / VB.h) * 100}%`}
+                delay={i * 70}
+                shown={gridIn}
+              />
+            );
+          })}
+
+          <div
+            className="absolute z-10"
+            style={{
+              left: `${(NODE.x / VB.w) * 100}%`,
+              top: `${(NODE.y / VB.h) * 100}%`,
+              transform: "translate(-50%, -50%)",
+            }}
+          >
+            <div className="agent-node">
+              <span
+                className="w-10 h-10 rounded-xl flex items-center justify-center mx-auto mb-2.5"
+                style={{ background: "var(--blue)", color: "var(--blue-ink)" }}
+              >
+                <MessageSquare className="w-5 h-5" strokeWidth={1.9} />
+              </span>
+              <div className="text-[13px] font-semibold leading-tight">
+                Your agent
+              </div>
+              <div className="text-[11px] text-muted-foreground mt-1 leading-snug">
+                It knows all of them
+              </div>
+            </div>
+          </div>
         </div>
 
-        {/* Mobile fallback */}
+        {/* ── Stacked fallback ── */}
         <div
           ref={mobileRef}
-          className="md:hidden mt-12 grid grid-cols-4 gap-3 mx-auto max-w-sm reveal-group"
+          data-in={mobileIn ? "" : undefined}
+          className="lg:hidden mt-12 grid grid-cols-2 sm:grid-cols-3 gap-2.5 mech-group"
         >
-          {UNIQUE_INTEGRATIONS.slice(0, 8).map(({ name, Icon, color }) => (
+          {all.map((s) => (
             <div
-              key={name}
-              className="integration-tile !w-full !h-16 !rounded-2xl"
-              style={{ "--logo": color } as TileStyle}
-              title={name}
-              aria-label={name}
+              key={s.name}
+              className="source-pill !w-full"
+              style={{ "--logo": s.color } as PillStyle}
             >
-              <Icon size={24} />
+              <s.Icon size={15} />
+              <span className="truncate">{s.name}</span>
             </div>
           ))}
         </div>
 
         <div ref={outroRef} className="reveal">
-          <p className="mt-12 sm:mt-16 text-center text-base sm:text-[17px] text-muted-foreground max-w-xl mx-auto leading-relaxed">
+          <p className="mt-14 sm:mt-16 text-center text-base sm:text-[17px] text-muted-foreground max-w-xl mx-auto leading-relaxed">
             Upload PDFs, sync wikis, crawl websites, or connect databases —
-            your agent re-indexes automatically as content changes.
+            your agent picks up changes on its own, so answers never go stale.
           </p>
 
-          <div className="mt-6 text-center">
-            <a
-              href="#"
-              className="inline-flex items-center gap-1.5 text-[15px] font-medium text-foreground hover:opacity-70 transition-opacity"
-            >
-              See all supported sources
-              <ArrowUpRight className="w-4 h-4" strokeWidth={2} />
-            </a>
-          </div>
         </div>
       </div>
     </section>
   );
 }
 
-/* ──────────────────────────────────────────────────────────────────────── */
-
-function LogoConstellation() {
-  const COLS = 5;
-  const CANVAS_H = 380;
-  /* Stagger sits on the column grid, not the tiles — the tiles carry an inline
-     translateX(-50%) that a reveal transform would overwrite. */
-  const gridRef = useReveal<HTMLDivElement>();
-
+function SourcePill({
+  source,
+  left,
+  top,
+  delay,
+  shown,
+}: {
+  source: Source;
+  left: string;
+  top: string;
+  delay: number;
+  shown: boolean;
+}) {
+  const { name, Icon, color } = source;
   return (
     <div
-      className="relative"
-      style={{ height: CANVAS_H }}
-      aria-label="Supported knowledge sources"
+      className="absolute z-10"
+      style={{ left, top, transform: "translate(-50%, -50%)" }}
     >
       <div
-        ref={gridRef}
-        className="absolute inset-0 grid reveal-group"
-        style={{ gridTemplateColumns: `repeat(${COLS}, 1fr)` }}
+        className="source-pill"
+        data-in={shown ? "" : undefined}
+        style={
+          {
+            "--logo": color,
+            transitionDelay: `${delay}ms`,
+          } as PillStyle
+        }
       >
-        {Array.from({ length: COLS }, (_, i) => {
-          const colIdx = i + 1;
-          const tiles = UNIQUE_INTEGRATIONS.filter((t) => t.col === colIdx);
-          return (
-            <div key={colIdx} className="relative">
-              {tiles.map(({ name, Icon, color, offset, delay }) => (
-                /* Outer element owns the position, inner owns the drift. A CSS
-                   animation overrides inline styles, so a single element would
-                   lose its translateX(-50%) the moment the float started. */
-                <div
-                  key={name}
-                  className="absolute"
-                  style={{
-                    top: offset,
-                    left: "50%",
-                    transform: "translateX(-50%)",
-                  }}
-                >
-                  <div
-                    className="integration-tile animate-float"
-                    style={{ animationDelay: delay, "--logo": color } as TileStyle}
-                    title={name}
-                    aria-label={name}
-                  >
-                    <Icon size={36} />
-                  </div>
-                </div>
-              ))}
-            </div>
-          );
-        })}
+        <Icon size={15} />
+        <span>{name}</span>
       </div>
-
-      {/* Soft radial spotlight */}
-      <div
-        aria-hidden
-        className="absolute inset-0 -z-10 pointer-events-none"
-        style={{
-          background:
-            "radial-gradient(ellipse 60% 55% at 50% 50%, rgba(0,82,255,0.06) 0%, rgba(255,255,255,0) 70%)",
-        }}
-      />
     </div>
   );
 }

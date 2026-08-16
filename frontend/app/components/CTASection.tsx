@@ -73,7 +73,7 @@ export default function CTASection() {
               asChild
               className="btn-pill btn-on-dark bg-transparent border-white/20 text-white hover:bg-white/5 hover:text-white"
             >
-              <a href="#">Read the docs</a>
+              <a href="mailto:sales@deploymind.com">Talk to sales</a>
             </Button>
           </div>
         </div>

@@ -345,8 +345,7 @@ input:disabled {
   .animate-fade-in-up,
   .animate-scale-in,
   .animate-shimmer,
-  .animate-typing-dot,
-  .animate-float {
+  .animate-typing-dot {
     animation: none !important;
   }
 
@@ -425,14 +424,14 @@ section[id] {
 .hl-marker {
   position: relative;
   display: inline-block;
-  padding: 0 0.1em;
+  padding: 0 0.04em;
   isolation: isolate;
   white-space: nowrap;
 }
 .hl-marker::before {
   content: "";
   position: absolute;
-  inset: 18% -6% 8% -6%;
+  inset: 16% -2.5% 8% -2.5%;
   background: var(--blue-swipe);
   transform: skew(-4deg) rotate(-1.2deg);
   border-radius: 6px 12px 8px 14px;
@@ -476,6 +475,165 @@ section[id] {
   }
 }
 
+/* ---- Feature card ----
+   Defined after .reveal-group so the hover transform wins once the stagger has
+   settled — equal specificity, so source order decides. */
+.feature-card {
+  transition:
+    border-color 0.25s ease,
+    box-shadow 0.25s ease,
+    transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.feature-card:hover {
+  border-color: var(--border-medium);
+  box-shadow: 0 1px 2px rgba(29, 32, 32, 0.04), 0 12px 28px rgba(29, 32, 32, 0.06);
+  transform: translateY(-2px);
+}
+@media (prefers-reduced-motion: reduce) {
+  .feature-card,
+  .feature-card:hover { transition: none; transform: none; }
+}
+
+/* ---- Hero pointer arrow ----
+   Draws itself once, then the head lands. Points from the hero's bottom-right
+   annotation down to the live chat bubble. */
+.hero-arrow-line {
+  stroke-dasharray: 200;
+  stroke-dashoffset: 200;
+  animation: arrow-draw 0.9s cubic-bezier(0.33, 1, 0.68, 1) 0.95s forwards;
+}
+@keyframes arrow-draw {
+  to { stroke-dashoffset: 0; }
+}
+.hero-arrow-head {
+  opacity: 0;
+  animation: arrow-head 0.25s ease 1.75s forwards;
+}
+@keyframes arrow-head {
+  to { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-arrow-line { animation: none; stroke-dashoffset: 0; }
+  .hero-arrow-head { animation: none; opacity: 1; }
+}
+
+/* ---- Scroll rail (hero bottom-left) ---- */
+.hero-scroll-rail {
+  position: relative;
+  width: 1px;
+  height: 30px;
+  background: var(--border);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.hero-scroll-rail::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  width: 1px;
+  height: 40%;
+  background: var(--blue);
+  animation: scroll-rail 2.1s ease-in-out infinite;
+}
+@keyframes scroll-rail {
+  0%   { top: -40%; }
+  100% { top: 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-scroll-rail::after { animation: none; top: 0; }
+}
+
+/* ---- Demo chat launcher ----
+   Geometry copied from public/widget.js so the landing page shows exactly what
+   a customer installs: 50px launcher at 12px radius, 20px from each edge, a
+   370x560 panel at 18px radius, same shadows and spring.
+
+   Divergence: the panel is absolutely positioned instead of sitting in the
+   root's flex column. The shipped widget leaves the closed panel in flow at
+   full height, which is invisible and harmless there — but here it would push
+   the teaser hundreds of pixels above the launcher. */
+.dm-demo-root {
+  position: fixed;
+  right: var(--launcher-right, 20px);
+  left: var(--launcher-left, auto);
+  bottom: 20px;
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  align-items: var(--launcher-align, flex-end);
+  gap: 12px;
+}
+
+.dm-demo-launcher {
+  width: 50px;
+  height: 50px;
+  border-radius: var(--launcher-radius, 50%);
+  border: none;
+  transition-property: transform, box-shadow, background-color, border-radius;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--launcher-color, var(--blue));
+  color: var(--blue-ink);
+  box-shadow: 0 2px 8px rgba(29, 32, 32, 0.06), 0 0 0 1px rgba(29, 32, 32, 0.05);
+  transition:
+    transform 0.16s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.16s ease;
+}
+.dm-demo-launcher:hover {
+  transform: scale(1.07);
+  box-shadow: 0 8px 32px rgba(29, 32, 32, 0.1), 0 0 0 1px rgba(29, 32, 32, 0.06);
+}
+.dm-demo-launcher:active {
+  transform: scale(0.93);
+}
+.dm-demo-launcher:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 3px;
+}
+
+.dm-demo-panel {
+  position: absolute;
+  right: var(--panel-right, 0);
+  left: var(--panel-left, auto);
+  bottom: 62px; /* launcher 50 + gap 12 */
+  width: 370px;
+  height: min(560px, calc(100dvh - 120px));
+  border-radius: 18px;
+  background: var(--background);
+  border: 1px solid var(--border);
+  box-shadow: 0 8px 32px rgba(29, 32, 32, 0.1), 0 0 0 1px rgba(29, 32, 32, 0.06);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(10px) scale(0.97);
+  pointer-events: none;
+  transition:
+    opacity 0.18s ease,
+    transform 0.2s cubic-bezier(0.34, 1.2, 0.64, 1);
+}
+.dm-demo-panel[data-open] {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+
+@media (max-width: 430px) {
+  .dm-demo-panel {
+    width: calc(100vw - 28px);
+    height: min(72dvh, calc(100dvh - 100px));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dm-demo-launcher,
+  .dm-demo-panel { transition: none; }
+}
+
 /* ---- Mechanism stagger ----
    Interior contents of a bento card arriving in sequence. Driven by a data
    attribute rather than a class, so the same in-view boolean that starts the
@@ -491,22 +649,13 @@ section[id] {
   opacity: 1;
   transform: none;
 }
-/* Circular swatches read better popping than sliding — slight overshoot. */
-.mech-group.is-pop > * {
-  transform: scale(0.7);
-  transition-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-.mech-group.is-pop[data-in] > * {
-  transform: scale(1);
-}
 .mech-group > *:nth-child(2) { transition-delay: 110ms; }
 .mech-group > *:nth-child(3) { transition-delay: 220ms; }
 .mech-group > *:nth-child(4) { transition-delay: 330ms; }
 .mech-group > *:nth-child(5) { transition-delay: 440ms; }
 .mech-group > *:nth-child(n + 6) { transition-delay: 550ms; }
 @media (prefers-reduced-motion: reduce) {
-  .mech-group > *,
-  .mech-group.is-pop > * {
+  .mech-group > * {
     opacity: 1 !important;
     transform: none !important;
     transition: none !important;
@@ -544,11 +693,6 @@ section[id] {
 .bg-dot-grid {
   background-image: radial-gradient(circle, rgba(29,32,32,0.09) 1px, transparent 1px);
   background-size: 22px 22px;
-}
-.bg-dot-grid-fade {
-  background-image: radial-gradient(circle, rgba(29,32,32,0.08) 1px, transparent 1px),
-                    radial-gradient(ellipse at center, rgba(255,255,255,0) 0%, rgba(255,255,255,0.85) 75%);
-  background-size: 22px 22px, 100% 100%;
 }
 
 /* ---- Announcement pill (eyebrow w/ a colored chip inside) ----
@@ -620,46 +764,111 @@ section[id] {
   box-shadow: none;
 }
 
-/* ---- Floating "soft" integration tile used in the integrations grid ---- */
-.integration-tile {
+
+/* ============================================================================
+   KNOWLEDGE-SOURCE CONVERGENCE DIAGRAM
+   Sources funnel into one agent. Both ends of every line sit beneath an opaque
+   element, so the joins stay clean whatever the container scales to.
+   ============================================================================ */
+
+.source-pill {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  width: 84px;
-  height: 84px;
-  border-radius: 20px;
-  background: #FFFFFF;
+  gap: 8px;
+  padding: 7px 12px;
+  border-radius: 10px;
+  background: var(--background);
   border: 1px solid var(--border-light);
-  box-shadow: 0 1px 2px rgba(29,32,32,0.03), 0 8px 24px rgba(29,32,32,0.04);
-  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-              box-shadow 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  box-shadow: 0 1px 2px rgba(29, 32, 32, 0.03), 0 6px 18px rgba(29, 32, 32, 0.04);
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateY(6px);
+  transition:
+    opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
 }
-.integration-tile:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 4px 12px rgba(29,32,32,0.06), 0 16px 36px rgba(29,32,32,0.08);
+.source-pill[data-in],
+.mech-group[data-in] .source-pill {
+  opacity: 1;
+  transform: none;
 }
-
-/* Vendor logos rest at muted weight so ten third-party brands don't out-shout
-   our own accent; true colour is the reward for hovering. Touch devices get
-   colour immediately — there is no hover there to discover it with. */
-.integration-tile svg {
+.source-pill:hover {
+  border-color: var(--border-medium);
+  box-shadow: 0 4px 12px rgba(29, 32, 32, 0.06), 0 14px 30px rgba(29, 32, 32, 0.07);
+}
+/* Vendor marks rest muted so ten third-party brands don't out-shout ours. */
+.source-pill svg {
   color: var(--muted-foreground);
-  transition: color 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: color 0.25s ease;
+  flex-shrink: 0;
 }
-.integration-tile:hover svg {
-  color: var(--logo);
-}
+.source-pill:hover svg { color: var(--logo); }
 @media (hover: none) {
-  .integration-tile svg { color: var(--logo); }
+  .source-pill svg { color: var(--logo); }
 }
 
-/* Subtle float animation for logo constellation */
-@keyframes float-y {
-  0%, 100% { transform: translateY(0); }
-  50%      { transform: translateY(-4px); }
+.agent-node {
+  width: 172px;
+  padding: 18px 16px;
+  border-radius: 18px;
+  text-align: center;
+  background: var(--background);
+  border: 1.5px solid var(--blue);
+  box-shadow: 0 4px 14px rgba(0, 82, 255, 0.10), 0 18px 44px rgba(0, 82, 255, 0.08);
 }
-/* Slow and shallow — ten tiles drifting in the middle of the page competes
-   with reading if it moves any faster. */
-.animate-float {
-  animation: float-y 9s ease-in-out infinite;
+
+/* Static rail: draws itself in on entry. */
+.flow-base {
+  fill: none;
+  stroke: var(--border);
+  stroke-width: 1.5;
+  stroke-dasharray: 600;
+  stroke-dashoffset: 600;
+}
+[data-flowing] .flow-base {
+  animation: flow-draw 1s cubic-bezier(0.33, 1, 0.68, 1) forwards;
+}
+@keyframes flow-draw {
+  to { stroke-dashoffset: 0; }
+}
+
+/* Travelling dashes on top of the rail — the sense of content moving inward. */
+.flow-line {
+  fill: none;
+  stroke: var(--blue);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-dasharray: 3 13;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  animation: flow-dash 1.3s linear infinite;
+}
+[data-flowing] .flow-line { opacity: 0.9; }
+@keyframes flow-dash {
+  to { stroke-dashoffset: -32; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .source-pill {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  .flow-base { animation: none; stroke-dashoffset: 0; }
+  .flow-line { animation: none; transition: none; }
+}
+
+/* ---- Footer signature wordmark ----
+   SVG rather than CSS: textLength forces the string to exactly the viewBox
+   width, so it lands flush on both edges regardless of the font's real metrics
+   (and regardless of whether the webfont has loaded yet). A vw-based font-size
+   can only ever approximate that. Decorative — the real wordmark is above. */
+.footer-wordmark {
+  font-family: var(--font-sans);
+  font-size: 178px;
+  font-weight: 600;
 }

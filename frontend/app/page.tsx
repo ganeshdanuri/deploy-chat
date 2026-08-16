@@ -1,5 +1,6 @@
 import Navbar from "./components/Navbar";
 import HeroSection from "./components/HeroSection";
+import ChatLauncher from "./components/ChatLauncher";
 import FeaturesSection from "./components/FeaturesSection";
 import ConnectorsSection from "./components/ConnectorsSection";
 import FAQSection from "./components/FAQSection";
@@ -18,6 +19,7 @@ export default function LandingPage() {
       <FAQSection />
       <CTASection />
       <Footer />
+      <ChatLauncher />
     </main>
   );
 }

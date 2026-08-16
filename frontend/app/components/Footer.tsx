@@ -8,32 +8,22 @@ const SOCIALS = [
   { label: "X", href: "https://x.com/deploychat", Icon: SiX },
 ];
 
+/* Every href here resolves. Changelog, Docs, Help Center, API Reference,
+   Status, About, Privacy, Terms, Security and GDPR were all pointing at "#" —
+   removed rather than shipped as dead ends. Add them back with real URLs when
+   the pages exist; Privacy and Terms in particular are expected before launch. */
 const COLUMNS = [
   {
     title: "Product",
     links: [
       { label: "Features", href: "#features" },
       { label: "Integrations", href: "#integrations" },
-      { label: "Changelog", href: "#" },
-      { label: "Docs", href: "#" },
-    ],
-  },
-  {
-    title: "Resources",
-    links: [
-      { label: "Help Center", href: "#" },
-      { label: "API Reference", href: "#" },
-      { label: "Status", href: "#" },
+      { label: "FAQ", href: "#faq" },
     ],
   },
   {
     title: "Company",
-    links: [
-      { label: "About", href: "#" },
-      { label: "Privacy", href: "#" },
-      { label: "Terms", href: "#" },
-      { label: "Contact", href: "mailto:sales@deploymind.com" },
-    ],
+    links: [{ label: "Contact sales", href: "mailto:sales@deploymind.com" }],
   },
 ];
 
@@ -41,7 +31,7 @@ export default function Footer() {
   return (
     <footer className="border-t border-border bg-background">
       <div className="container-page py-14">
-        <div className="grid grid-cols-2 md:grid-cols-[1.5fr_1fr_1fr_1fr] gap-10">
+        <div className="grid grid-cols-2 md:grid-cols-[2fr_1fr_1fr] gap-10">
           <div className="col-span-2 md:col-span-1">
             <Link href="/" className="inline-flex items-center gap-2.5 mb-4">
               <Logo className="h-7 w-auto" />
@@ -94,14 +84,34 @@ export default function Footer() {
           <span className="text-xs text-muted-foreground">
             © {new Date().getFullYear()} Deploy Chat Inc. All rights reserved.
           </span>
-          <div className="flex gap-5 text-xs text-muted-foreground">
-            <Link href="#" className="hover:text-foreground transition-colors">
-              Security
-            </Link>
-            <Link href="#" className="hover:text-foreground transition-colors">
-              GDPR
-            </Link>
-          </div>
+        </div>
+
+        {/* Oversized signature. aria-hidden — the name is already above. */}
+        <div className="mt-12" aria-hidden="true">
+          <svg
+            viewBox="0 0 1000 176"
+            className="w-full h-auto block select-none overflow-visible"
+            role="presentation"
+            focusable="false"
+          >
+            <defs>
+              <linearGradient id="wordmark-fade" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="var(--border-medium)" />
+                <stop offset="45%" stopColor="var(--border)" />
+                <stop offset="95%" stopColor="var(--background)" />
+              </linearGradient>
+            </defs>
+            <text
+              x="0"
+              y="132"
+              textLength="1000"
+              lengthAdjust="spacing"
+              fill="url(#wordmark-fade)"
+              className="footer-wordmark"
+            >
+              Deploy Chat
+            </text>
+          </svg>
         </div>
       </div>
     </footer>
