@@ -16,12 +16,14 @@ export interface Connector {
 interface ConnectorsState {
     items: Connector[];
     status: 'idle' | 'loading' | 'succeeded' | 'failed';
+    hasLoaded: boolean;
     error: string | null;
 }
 
 const initialState: ConnectorsState = {
     items: [],
     status: 'idle',
+    hasLoaded: false,
     error: null,
 };
 
@@ -64,10 +66,12 @@ const connectorsSlice = createSlice({
                 state.status = 'loading';
             })
             .addCase(fetchConnectors.fulfilled, (state, action) => {
+                state.hasLoaded = true;
                 state.status = 'succeeded';
                 state.items = action.payload;
             })
             .addCase(fetchConnectors.rejected, (state, action) => {
+                state.hasLoaded = true;
                 state.status = 'failed';
                 state.error = action.error.message || 'Failed to fetch connectors';
             })

@@ -8,6 +8,7 @@ type DatasetsState = AsyncSliceState<Dataset>;
 const initialState: DatasetsState = {
     items: [],
     status: 'idle',
+    hasLoaded: false,
     error: null,
 };
 
@@ -48,10 +49,12 @@ const datasetsSlice = createSlice({
         builder
             .addCase(fetchDatasets.pending, (state) => { state.status = 'loading'; })
             .addCase(fetchDatasets.fulfilled, (state, action: PayloadAction<Dataset[]>) => {
+                state.hasLoaded = true;
                 state.status = 'succeeded';
                 state.items = action.payload;
             })
             .addCase(fetchDatasets.rejected, (state, action) => {
+                state.hasLoaded = true;
                 state.status = 'failed';
                 state.error = action.error.message || 'Failed to fetch datasets';
             })

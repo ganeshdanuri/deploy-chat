@@ -13,6 +13,7 @@ import { fetchDocuments } from "@/lib/store/slices/documentsSlice";
 import { fetchUsageStats } from "@/lib/store/slices/usageSlice";
 import { fetchUserMe } from "@/lib/store/slices/userSlice";
 import { useKeyboardShortcuts } from "@/lib/hooks/useKeyboardShortcuts";
+import { useAgentStatusPolling } from "@/lib/hooks/useAgentStatusPolling";
 import Logo from "../components/Logo";
 
 const loadingScreen = (
@@ -31,6 +32,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     const dispatch = useAppDispatch();
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [shortcutsOpen, setShortcutsOpen] = useState(false);
+
+    // Keeps "Training" badges live without the user hitting refresh.
+    useAgentStatusPolling();
 
     useKeyboardShortcuts([
         {
