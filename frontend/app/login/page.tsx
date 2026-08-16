@@ -307,10 +307,15 @@ function LoginContent() {
                                         <button
                                             type="button"
                                             onClick={() => {
+                                                // CSRF guard: the callback must echo this back, else
+                                                // an attacker can feed us their own authorization code.
+                                                const state = crypto.randomUUID();
+                                                sessionStorage.setItem("github_oauth_state", state);
                                                 const params = new URLSearchParams({
                                                     client_id: process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID!,
                                                     redirect_uri: `${window.location.origin}/auth/callback/github`,
                                                     scope: "user:email",
+                                                    state,
                                                 });
                                                 window.location.href = `https://github.com/login/oauth/authorize?${params}`;
                                             }}

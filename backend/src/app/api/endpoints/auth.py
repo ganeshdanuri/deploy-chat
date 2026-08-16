@@ -1,10 +1,12 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Request, status
 from sqlmodel import Session, select
 from app.core.db import get_session
-from app.core.security import create_access_token, create_refresh_token, decode_token, verify_password, get_password_hash
+from app.core.security import (create_access_token, create_refresh_token, decode_token, decode_refresh_token,
+                               refresh_token_is_active, revoke_refresh_token, verify_password, get_password_hash)
 from app.schemas.models import User, UserCreate, UserLogin, GoogleLogin, GitHubLogin, EmailVerification
 from datetime import datetime, timedelta, timezone
 import random
+import secrets
 import httpx
 from pydantic import BaseModel
 from app.core.emails import send_otp_email
@@ -12,6 +14,7 @@ from app.core.billing import get_user_plan, assign_free_tier
 from google.oauth2 import id_token
 from google.auth.transport import requests
 import os
+from app.core.limiter import limiter
 from app.core.endpoints import Endpoints
 
 GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
@@ -28,7 +31,8 @@ class RefreshRequest(BaseModel):
     refresh_token: str
 
 @router.post(Endpoints.AUTH_REGISTER)
-def register(user_data: UserCreate, session: Session = Depends(get_session)):
+@limiter.limit("5/minute")
+def register(request: Request, user_data: UserCreate, session: Session = Depends(get_session)):
     # 1. Check if email exists
     statement = select(User).where(User.email == user_data.email)
     existing_user = session.exec(statement).first()
@@ -72,7 +76,9 @@ def register(user_data: UserCreate, session: Session = Depends(get_session)):
         session.delete(old_otp)
     
     # 4. Generate & Save New OTP
-    otp_code = str(random.randint(100000, 999999))
+    # secrets, not random: Mersenne Twister output is predictable from prior
+    # draws, and this code is the only thing guarding account verification.
+    otp_code = f"{secrets.randbelow(1_000_000):06d}"
     verification = EmailVerification(
         email=user_data.email,
         otp_code=otp_code,
@@ -90,7 +96,8 @@ def register(user_data: UserCreate, session: Session = Depends(get_session)):
     }
 
 @router.post(Endpoints.AUTH_VERIFY_OTP)
-def verify_otp(data: OTPVerify, session: Session = Depends(get_session)):
+@limiter.limit("5/minute")
+def verify_otp(request: Request, data: OTPVerify, session: Session = Depends(get_session)):
     # 1. Check OTP
     statement = select(EmailVerification).where(
         EmailVerification.email == data.email,
@@ -133,7 +140,8 @@ def verify_otp(data: OTPVerify, session: Session = Depends(get_session)):
     }
 
 @router.post(Endpoints.AUTH_LOGIN)
-def login(login_data: UserLogin, session: Session = Depends(get_session)):
+@limiter.limit("5/minute")
+def login(request: Request, login_data: UserLogin, session: Session = Depends(get_session)):
     # Login via email as requested
     statement = select(User).where(User.email == login_data.email)
     user = session.exec(statement).first()
@@ -257,12 +265,23 @@ def google_login(data: GoogleLogin, session: Session = Depends(get_session)):
         raise HTTPException(status_code=400, detail="Invalid Google token")
 
 @router.post(Endpoints.AUTH_REFRESH)
-def refresh_token(data: RefreshRequest, session: Session = Depends(get_session)):
-    user_id = decode_token(data.refresh_token, verify_type="refresh")
-    if not user_id:
+@limiter.limit("20/minute")
+def refresh_token(request: Request, data: RefreshRequest, session: Session = Depends(get_session)):
+    payload = decode_refresh_token(data.refresh_token)
+    if not payload:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid or expired refresh token"
+        )
+
+    user_id = payload.get("sub")
+
+    # A signature-valid token is not enough: it must still be one we issued and
+    # have not revoked. Without this, a stolen token works for its full lifetime.
+    if not refresh_token_is_active(session, payload):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Refresh token has been revoked"
         )
         
     statement = select(User).where(User.id == user_id)
@@ -277,14 +296,32 @@ def refresh_token(data: RefreshRequest, session: Session = Depends(get_session))
     plan_name, _ = get_user_plan(user.id, session)
     plan_name = plan_name.lower()
         
+    # Rotate: the presented token dies with this exchange, so a leaked copy is
+    # useful only until the legitimate client next refreshes.
+    revoke_refresh_token(session, payload)
+
     new_access_token = create_access_token(subject=user.id, plan=plan_name)
     new_refresh_token = create_refresh_token(subject=user.id)
-    
+
     return {
         "access_token": new_access_token,
         "refresh_token": new_refresh_token,
         "token_type": "bearer"
     }
+
+
+@router.post(Endpoints.AUTH_LOGOUT)
+@limiter.limit("20/minute")
+def logout(request: Request, data: RefreshRequest, session: Session = Depends(get_session)):
+    """
+    Server-side logout. Clearing localStorage alone left the refresh token
+    valid for its full window, so a copy captured beforehand still worked.
+    """
+    payload = decode_refresh_token(data.refresh_token)
+    if payload:
+        revoke_refresh_token(session, payload)
+    # Always 200: whether the token was valid isn't the caller's business.
+    return {"message": "Logged out"}
 
 
 @router.post(Endpoints.AUTH_GITHUB)
