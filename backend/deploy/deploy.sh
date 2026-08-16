@@ -22,7 +22,11 @@ RUNTIME_SA="${PROJECT_NUMBER}-compute@developer.gserviceaccount.com"
 # Override per-invocation if needed:
 #   FRONTEND_ORIGINS="https://staging.example.com" ./deploy/deploy.sh
 ENVIRONMENT="${ENVIRONMENT:-production}"
-FRONTEND_ORIGINS="${FRONTEND_ORIGINS:-https://www.deploychat.in,https://deploychat.in}"
+
+# Read from .env (gitignored), same as the client IDs below. Shell env wins, so
+# staging is a one-liner:
+#   FRONTEND_ORIGINS="https://staging.example.com" ./deploy/deploy.sh
+FRONTEND_ORIGINS="${FRONTEND_ORIGINS:-$(grep '^FRONTEND_ORIGINS=' .env | cut -d= -f2- | tr -d '\r')}"
 
 # Public OAuth client IDs -- not secrets, they ship in frontend bundles anyway
 GOOGLE_CLIENT_ID=$(grep '^GOOGLE_CLIENT_ID=' .env | cut -d= -f2-)
