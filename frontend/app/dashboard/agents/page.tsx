@@ -12,7 +12,6 @@ import { AgentCard } from "./components/AgentCard";
 import { Button } from "@/components/ui/button";
 import { PageHeader, ChatbotCardSkeleton, Input } from "@/app/components/ui";
 import type { Chatbot } from "@/lib/types";
-import { STATUS } from "@/lib/constants";
 
 export default function AgentsPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);

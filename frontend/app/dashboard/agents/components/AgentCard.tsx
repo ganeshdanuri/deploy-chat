@@ -1,5 +1,12 @@
+"use client";
+
 import Link from "next/link";
-import { ArrowRight, Bot } from "lucide-react";
+import { useState } from "react";
+import { ArrowRight, Bot, RefreshCw } from "lucide-react";
+
+import { useAppDispatch } from "@/lib/store/hooks";
+import { resumeChatbot } from "@/lib/store/slices/chatbotsSlice";
+import showToast from "@/lib/toast";
 import { STATUS } from "@/lib/constants";
 import type { Chatbot } from "@/lib/types";
 
@@ -8,22 +15,46 @@ interface AgentCardProps {
 }
 
 export function AgentCard({ bot }: AgentCardProps) {
+  const dispatch = useAppDispatch();
+  const [isRetrying, setIsRetrying] = useState(false);
+
   const status = ((bot.status as string) || STATUS.ACTIVE).toLowerCase();
+  const hasFailed = status === STATUS.FAILED;
 
   const statusColor =
     status === STATUS.CREATING
       ? "var(--accent-gold)"
-      : status === STATUS.FAILED
+      : hasFailed
       ? "var(--destructive)"
       : "var(--accent-green)";
 
   const statusLabel =
-    status === STATUS.CREATING ? "Training" : status === STATUS.FAILED ? "Failed" : "Live";
+    status === STATUS.CREATING ? "Training" : hasFailed ? "Failed" : "Live";
+
+  // The card is one big <Link>, so the inline action has to opt out of it.
+  const handleRetry = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsRetrying(true);
+    try {
+      await dispatch(resumeChatbot(bot.id)).unwrap();
+      showToast.success(`Retraining "${bot.name}"`);
+    } catch (err) {
+      showToast.error(
+        err instanceof Error ? err.message : "Couldn't restart training"
+      );
+    } finally {
+      setIsRetrying(false);
+    }
+  };
 
   return (
     <Link
       href={`/dashboard/agents/${bot.id}`}
-      className="bg-background border border-border rounded-2xl p-5 flex flex-col gap-3 hover:border-border-medium transition-colors min-h-[220px]"
+      className="group bg-background border border-border rounded-2xl p-5 flex flex-col gap-3 min-h-[220px]
+                 transition-all duration-200 hover:border-border-medium hover:shadow-md
+                 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2
+                 focus-visible:ring-foreground/20"
     >
       <div className="flex items-center justify-between gap-2">
         <div
@@ -32,7 +63,10 @@ export function AgentCard({ bot }: AgentCardProps) {
         >
           <Bot className="w-4 h-4" />
         </div>
-        <span className="text-[11px] font-medium flex items-center gap-1.5" style={{ color: statusColor }}>
+        <span
+          className="text-[11px] font-medium flex items-center gap-1.5"
+          style={{ color: statusColor }}
+        >
           <span className="w-1.5 h-1.5 rounded-full" style={{ background: statusColor }} />
           {statusLabel}
         </span>
@@ -49,10 +83,25 @@ export function AgentCard({ bot }: AgentCardProps) {
         <span className="text-muted-foreground tabular-nums">
           {(bot.chunk_count as number) ?? 0} chunks
         </span>
-        <span className="flex items-center gap-1 text-foreground font-medium">
-          Open
-          <ArrowRight className="w-3 h-3" />
-        </span>
+
+        {hasFailed ? (
+          // A dead "Failed" label leaves the user nowhere. Offer the fix here.
+          <button
+            onClick={handleRetry}
+            disabled={isRetrying}
+            className="flex items-center gap-1.5 font-medium rounded-md px-2 py-1 -mr-1
+                       text-destructive hover:bg-destructive/10 transition-colors
+                       disabled:opacity-60 disabled:cursor-not-allowed"
+          >
+            <RefreshCw className={`w-3 h-3 ${isRetrying ? "animate-spin" : ""}`} />
+            {isRetrying ? "Retrying…" : "Retry training"}
+          </button>
+        ) : (
+          <span className="flex items-center gap-1 text-muted-foreground group-hover:text-foreground font-medium transition-colors">
+            Open
+            <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+          </span>
+        )}
       </div>
     </Link>
   );
