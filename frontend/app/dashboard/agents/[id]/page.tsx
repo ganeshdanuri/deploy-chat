@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowLeft, Check, Code, Copy, ExternalLink, MessagesSquare, Pencil, RefreshCw, Sparkles, Trash2 } from "lucide-react";
+import { AlertCircle, ArrowLeft, Check, Code, Copy, ExternalLink, MessagesSquare, Pencil, RefreshCw, Sparkles, Trash2 } from "lucide-react";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { useEffect, useState, use } from "react";
@@ -8,7 +8,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
-import { fetchChatbots, deleteChatbot } from "@/lib/store/slices/chatbotsSlice";
+import { fetchChatbots, deleteChatbot, resumeChatbot } from "@/lib/store/slices/chatbotsSlice";
 import api from "@/lib/api";
 import { ENDPOINTS } from "@/lib/endpoints";
 import showToast from "@/lib/toast";
@@ -21,12 +21,11 @@ import AgentFormDrawer from "@/app/components/AgentFormDrawer";
 import { STATUS } from "@/lib/constants";
 import type { Chatbot } from "@/lib/types";
 
-type Tab ="overview" |"knowledge" |"configure" |"deploy" |"monitor";
+type Tab ="overview" |"knowledge" |"deploy" |"monitor";
 
 const TABS: { id: Tab; label: string }[] = [
   { id: "overview", label: "Overview" },
   { id: "knowledge", label: "Knowledge" },
-  { id: "configure", label: "Configure" },
   { id: "deploy", label: "Deploy" },
   { id: "monitor", label: "Monitor" },
 ];
@@ -46,6 +45,19 @@ export default function AgentDetailPage({
   const [editOpen, setEditOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isRetrying, setIsRetrying] = useState(false);
+
+  const handleRetry = async () => {
+    setIsRetrying(true);
+    try {
+      await dispatch(resumeChatbot(id)).unwrap();
+      showToast.success("Retraining started");
+    } catch (err: any) {
+      showToast.error(err?.message || "Couldn't restart training");
+    } finally {
+      setIsRetrying(false);
+    }
+  };
 
   useEffect(() => {
     if (chatbots.length === 0) dispatch(fetchChatbots());
@@ -79,6 +91,8 @@ export default function AgentDetailPage({
     status === STATUS.CREATING ? "Training" :
     status === STATUS.FAILED ? "Failed" :
 "Live";
+  /** Only a fully indexed agent can actually answer anything. */
+  const isReady = status === STATUS.ACTIVE;
 
   const handleDelete = async () => {
     setIsDeleting(true);
@@ -139,18 +153,56 @@ export default function AgentDetailPage({
             </div>
           </div>
           <div className="flex gap-2">
-            <Button variant="outline" size="sm" asChild>
-              <Link href={`/dashboard/playground?chatbotId=${bot.id}`}>
+            {isReady ? (
+              <Button variant="outline" size="sm" asChild>
+                <Link href={`/dashboard/playground?chatbotId=${bot.id}`}>
+                  <Sparkles className="w-4 h-4 mr-1.5" />
+                  Test
+                </Link>
+              </Button>
+            ) : (
+              <Button
+                variant="outline"
+                size="sm"
+                disabled
+                title={
+                  status === STATUS.CREATING
+                    ? "Still training — you can test once it's live"
+                    : "Training failed, so this agent has no knowledge to answer from"
+                }
+              >
                 <Sparkles className="w-4 h-4 mr-1.5" />
                 Test
-              </Link>
-            </Button>
+              </Button>
+            )}
             <Button size="sm" onClick={() => setActiveTab("deploy")}>
               <Code className="w-4 h-4 mr-1.5" />
               Deploy
             </Button>
           </div>
         </div>
+
+        {/* Training failed — give them a way out that isn't "delete and start over" */}
+        {status === STATUS.FAILED && (
+          <div
+            className="rounded-xl border border-destructive/30 bg-destructive/5 p-4 flex flex-col sm:flex-row sm:items-center gap-3"
+          >
+            <AlertCircle className="w-5 h-5 shrink-0" style={{ color: "var(--destructive)" }} />
+            <div className="flex-1 min-w-0">
+              <p className="text-[13px] font-semibold text-foreground">
+                This agent couldn&apos;t finish training
+              </p>
+              <p className="text-[12px] text-muted-foreground mt-0.5 leading-relaxed">
+                Its knowledge wasn&apos;t indexed, so it can&apos;t answer questions yet. Retrying
+                is safe — nothing was lost.
+              </p>
+            </div>
+            <Button size="sm" onClick={handleRetry} disabled={isRetrying} className="shrink-0">
+              <RefreshCw className={`w-3.5 h-3.5 mr-1.5 ${isRetrying ? "animate-spin" : ""}`} />
+              {isRetrying ? "Retrying…" : "Retry training"}
+            </Button>
+          </div>
+        )}
 
         {/* Tabs */}
         <div className="border-b border-border">
@@ -173,10 +225,9 @@ export default function AgentDetailPage({
 
         {/* Tab content */}
         <div className="animate-fade-in">
-          {activeTab === "overview" && <OverviewTab bot={bot as any} onEdit={() => setEditOpen(true)} onDelete={() => setDeleteOpen(true)} />}
+          {activeTab === "overview" && <OverviewTab bot={bot as any} onEdit={() => setEditOpen(true)} onDelete={() => setDeleteOpen(true)} statusLabel={statusLabel} statusColor={statusColor} />}
           {activeTab === "knowledge" && <KnowledgeTab bot={bot as any} />}
-          {activeTab === "configure" && <ConfigureTab bot={bot as any} onEdit={() => setEditOpen(true)} />}
-          {activeTab === "deploy" && <DeployTab bot={bot as any} />}
+          {activeTab === "deploy" && <DeployTab bot={bot as any} status={status} onRetry={handleRetry} isRetrying={isRetrying} />}
           {activeTab === "monitor" && <MonitorTab bot={bot as any} />}
         </div>
       </div>
@@ -206,34 +257,73 @@ function OverviewTab({
   bot,
   onEdit,
   onDelete,
+  statusLabel,
+  statusColor,
 }: {
   bot: Chatbot;
   onEdit: () => void;
   onDelete: () => void;
+  statusLabel: string;
+  statusColor: string;
 }) {
+  const domains = bot.allowed_domains?.split(",").filter(Boolean) ?? [];
+  const isTestOnly = domains.length === 1 && domains[0].trim() === "localhost";
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-[1.5fr_1fr] gap-4">
       <div className="space-y-4">
-        <InfoCard title="Welcome message" action={<Button size="xs" variant="ghost" onClick={onEdit}><Pencil className="w-3 h-3" /></Button>}>
-          <p className="text-sm text-foreground leading-relaxed">
-            &quot;{(bot as any).welcome_message ||"Hi! How can I help you today? "}&quot;
-          </p>
+        <InfoCard
+          title="Configuration"
+          action={
+            <Button size="sm" variant="outline" onClick={onEdit}>
+              <Pencil className="w-3.5 h-3.5 mr-1.5" />
+              Edit
+            </Button>
+          }
+        >
+          <div className="space-y-3">
+            <Row label="Name" value={bot.name} />
+            <Row label="Welcome message" value={bot.welcome_message || "—"} />
+            <Row label="Temperature" value={String(bot.temperature ?? 0.7)} />
+            <Row label="Model" value={bot.model} />
+          </div>
         </InfoCard>
 
-        <InfoCard title="Persona / system prompt">
-          <p className="text-sm text-foreground leading-relaxed whitespace-pre-wrap">
-            {(bot as any).system_prompt ||"No custom persona set. Using default."}
-          </p>
+        <InfoCard title="Where it runs">
+          {isTestOnly ? (
+            <div className="text-sm">
+              <p className="text-foreground font-medium">Testing only</p>
+              <p className="text-muted-foreground text-[13px] mt-1 leading-relaxed">
+                Runs on localhost and in the playground. Add your domain in Edit
+                to embed it on a live site.
+              </p>
+            </div>
+          ) : domains.length === 0 ? (
+            <p className="text-sm text-muted-foreground">No domains set.</p>
+          ) : (
+            <div className="flex flex-wrap gap-1.5">
+              {domains.map((d) => (
+                <span
+                  key={d}
+                  className="text-[12px] font-mono px-2 py-1 rounded-md bg-muted border border-border text-foreground"
+                >
+                  {d.trim()}
+                </span>
+              ))}
+            </div>
+          )}
         </InfoCard>
       </div>
 
       <div className="space-y-4">
-        <InfoCard title="Health">
+        <InfoCard title="Status">
           <div className="space-y-2.5 text-sm">
-            <Row label="Status" value="Operational" valueColor="var(--accent-green)" />
-            <Row label="Model" value={(bot as any).model ||"gpt-4o-mini"} />
-            <Row label="Temperature" value={String((bot as any).temperature ?? 0.7)} />
-            <Row label="Chunks" value={String((bot as any).chunk_count ?? 0)} />
+            <Row label="State" value={statusLabel} valueColor={statusColor} />
+            <Row label="Indexed chunks" value={String(bot.chunk_count ?? 0)} />
+            <Row
+              label="Created"
+              value={new Date(bot.created_at).toLocaleDateString()}
+            />
           </div>
         </InfoCard>
 
@@ -263,7 +353,7 @@ function KnowledgeTab({ bot }: { bot: Chatbot }) {
   return (
     <div className="space-y-4">
       <InfoCard
-        title={`Connected knowledge bases (${attachedDatasets.length})`}
+        title={`Collections (${attachedDatasets.length})`}
         action={
           <Button size="sm" variant="outline" asChild>
             <Link href="/dashboard/knowledge">Manage knowledge</Link>
@@ -303,30 +393,6 @@ function KnowledgeTab({ bot }: { bot: Chatbot }) {
   );
 }
 
-// ─── CONFIGURE TAB ───────────────────────────────────────────────────────────
-
-function ConfigureTab({ bot, onEdit }: { bot: Chatbot; onEdit: () => void }) {
-  return (
-    <div className="space-y-4">
-      <InfoCard title="Configuration">
-        <div className="space-y-3">
-          <Row label="Name" value={bot.name} />
-          <Row label="Welcome message" value={(bot as any).welcome_message ||"—"} />
-          <Row label="Model" value={(bot as any).model ||"gpt-4o-mini"} />
-          <Row label="Temperature" value={String((bot as any).temperature ?? 0.7)} />
-          <Row label="Max tokens" value={String((bot as any).max_tokens ?? 1024)} />
-        </div>
-        <div className="mt-5 pt-4 border-t border-border">
-          <Button onClick={onEdit}>
-            <Pencil className="w-3.5 h-3.5 mr-1.5" />
-            Edit configuration
-          </Button>
-        </div>
-      </InfoCard>
-    </div>
-  );
-}
-
 // ─── DEPLOY TAB ──────────────────────────────────────────────────────────────
 
 const DEPLOY_COLORS = [
@@ -344,7 +410,17 @@ const RADIUS_OPTIONS = [
   { label: "Pill",   value: "26px" },
 ];
 
-function DeployTab({ bot }: { bot: Chatbot }) {
+function DeployTab({
+  bot,
+  status,
+  onRetry,
+  isRetrying,
+}: {
+  bot: Chatbot;
+  status: string;
+  onRetry: () => void;
+  isRetrying: boolean;
+}) {
   const [copied, setCopied] = useState<string | null>(null);
   const [widgetColor, setWidgetColor] = useState(DEPLOY_COLORS[0].value);
   const [widgetPosition, setWidgetPosition] = useState<"bottom-right" | "bottom-left">("bottom-right");
@@ -366,7 +442,11 @@ function DeployTab({ bot }: { bot: Chatbot }) {
   ].join("\n");
   const apiUrl = `${baseUrl}/api/v1/chatbots/${bot.id}/chat`;
 
+  const hasFailed = status === STATUS.FAILED;
+  const isTraining = status === STATUS.CREATING;
+
   const copy = (text: string, key: string) => {
+    if (hasFailed) return; // don't hand out a snippet that greets users and can't answer
     navigator.clipboard.writeText(text);
     setCopied(key);
     setTimeout(() => setCopied(null), 2000);
@@ -374,6 +454,41 @@ function DeployTab({ bot }: { bot: Chatbot }) {
 
   return (
     <div className="space-y-4">
+      {/* Shipping a snippet for an agent with no knowledge puts the failure in
+          front of the customer's own visitors, so this warns before the copy. */}
+      {hasFailed && (
+        <div className="rounded-xl border border-destructive/30 bg-destructive/5 p-4 flex flex-col sm:flex-row sm:items-center gap-3">
+          <AlertCircle className="w-5 h-5 shrink-0" style={{ color: "var(--destructive)" }} />
+          <div className="flex-1 min-w-0">
+            <p className="text-[13px] font-semibold text-foreground">
+              Not safe to embed yet
+            </p>
+            <p className="text-[12px] text-muted-foreground mt-0.5 leading-relaxed">
+              Training failed, so this agent has no knowledge. Embedding it now
+              would greet your visitors and then fail to answer them.
+            </p>
+          </div>
+          <Button size="sm" onClick={onRetry} disabled={isRetrying} className="shrink-0">
+            <RefreshCw className={`w-3.5 h-3.5 mr-1.5 ${isRetrying ? "animate-spin" : ""}`} />
+            {isRetrying ? "Retrying…" : "Retry training"}
+          </Button>
+        </div>
+      )}
+
+      {isTraining && (
+        <div className="rounded-xl border border-border bg-muted/50 p-4 flex items-center gap-3">
+          <RefreshCw
+            className="w-4 h-4 shrink-0 animate-spin"
+            style={{ color: "var(--accent-gold)" }}
+          />
+          <p className="text-[12px] text-muted-foreground leading-relaxed">
+            <span className="font-semibold text-foreground">Still training.</span>{" "}
+            Copy the snippet now if you like — the widget starts answering the
+            moment indexing finishes.
+          </p>
+        </div>
+      )}
+
       <InfoCard title="Embed on your website">
         <p className="text-sm text-muted-foreground mb-5">
           Customise the widget, then paste the snippet into your site&apos;s <code className="text-xs bg-muted px-1.5 py-0.5 rounded">&lt;head&gt;</code>.
@@ -540,7 +655,9 @@ function DeployTab({ bot }: { bot: Chatbot }) {
           {embedCode}
           <button
             onClick={() => copy(embedCode, "embed")}
-            className="absolute top-2 right-2 p-1.5 rounded text-xs text-white/50 hover:bg-white/10 hover:text-white transition-colors flex items-center gap-1"
+            disabled={hasFailed}
+            title={hasFailed ? "Fix training before embedding this agent" : undefined}
+            className="absolute top-2 right-2 p-1.5 rounded text-xs text-white/50 hover:bg-white/10 hover:text-white transition-colors flex items-center gap-1 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent"
           >
             {copied === "embed" ? (
               <><Check className="w-3 h-3" /> Copied</>
@@ -562,7 +679,9 @@ function DeployTab({ bot }: { bot: Chatbot }) {
           <code className="text-xs font-mono text-foreground flex-1 truncate">{apiUrl}</code>
           <button
             onClick={() => copy(apiUrl,"api")}
-            className="p-1.5 rounded hover:bg-background transition-colors text-muted-foreground hover:text-foreground"
+            disabled={hasFailed}
+            title={hasFailed ? "Fix training before using this agent" : undefined}
+            className="p-1.5 rounded hover:bg-background transition-colors text-muted-foreground hover:text-foreground disabled:opacity-40 disabled:cursor-not-allowed"
 >
             {copied === "api" ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
           </button>
@@ -573,12 +692,28 @@ function DeployTab({ bot }: { bot: Chatbot }) {
         <p className="text-sm text-muted-foreground mb-4">
           Open a standalone test link — share with teammates before going live.
         </p>
-        <Button variant="outline" size="sm" asChild>
-          <Link href={`/dashboard/playground?chatbotId=${bot.id}`}>
+        {hasFailed || isTraining ? (
+          <Button
+            variant="outline"
+            size="sm"
+            disabled
+            title={
+              isTraining
+                ? "Available once training finishes"
+                : "Training failed — retry before testing"
+            }
+          >
             <ExternalLink className="w-3.5 h-3.5 mr-1.5" />
             Open in playground
-          </Link>
-        </Button>
+          </Button>
+        ) : (
+          <Button variant="outline" size="sm" asChild>
+            <Link href={`/dashboard/playground?chatbotId=${bot.id}`}>
+              <ExternalLink className="w-3.5 h-3.5 mr-1.5" />
+              Open in playground
+            </Link>
+          </Button>
+        )}
       </InfoCard>
     </div>
   );
@@ -723,30 +858,6 @@ function Row({
 >
         {value}
       </span>
-    </div>
-  );
-}
-
-function MiniStat({
-  label,
-  value,
-  valueColor,
-}: {
-  label: string;
-  value: string;
-  valueColor?: string;
-}) {
-  return (
-    <div className="bg-background border border-border rounded-xl p-4">
-      <div className="text-[11px] font-medium text-muted-foreground tracking-normal mb-2">
-        {label}
-      </div>
-      <div
-        className="text-2xl font-medium tracking-tight tabular-nums"
-        style={{ color: valueColor ||"var(--foreground)" }}
->
-        {value}
-      </div>
     </div>
   );
 }

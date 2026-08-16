@@ -14,6 +14,7 @@ import {
 
 import { useEffect, useRef, useState } from "react";
 
+import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 import { fetchChatbots } from "@/lib/store/slices/chatbotsSlice";
@@ -47,8 +48,15 @@ export default function PlaygroundPage() {
     const chatbotId = searchParams.get("chatbotId");
     const dispatch = useAppDispatch();
 
-    const { items: chatbots, status } = useAppSelector((state) => state.chatbots);
+    const { items: allChatbots, status } = useAppSelector((state) => state.chatbots);
+    // Only trained agents can answer — offering the others just produces
+    // confusing empty replies and burns the user's message quota.
+    const chatbots = allChatbots.filter(
+        (b) => (b.status || "").toLowerCase() === STATUS.ACTIVE
+    );
     const chatbot = chatbots.find((b) => b.id === chatbotId);
+    const selectedButNotReady = !chatbot && !!chatbotId
+        && allChatbots.some((b) => b.id === chatbotId);
 
     const [messages, setMessages] = useState<ChatMessage[]>(INITIAL_MESSAGES);
     const [input, setInput] = useState("");
@@ -165,13 +173,15 @@ export default function PlaygroundPage() {
                     onToggleConfig={() => setShowConfig((v) => !v)}
                 />
 
-                {chatbotId ? (
+                {chatbot ? (
                     <ChatMessages messages={messages} chatbot={chatbot} />
+                ) : selectedButNotReady ? (
+                    <NotReadyNotice />
                 ) : (
                     <NoChatbotSelected chatbots={chatbots} onSelect={handleChatbotChange} />
                 )}
 
-                {chatbotId && (
+                {chatbot && (
                     <ChatInput
                         input={input}
                         chatbotName={chatbot?.name ?? "AI"}
@@ -239,7 +249,7 @@ function ConfigPanel({ chatbots, chatbotId, chatbot, temperature, onChatbotChang
                         ))}
                         {chatbots.length === 0 && (
                             <div className="px-3 py-4 text-center text-xs text-muted-foreground">
-                                No agents found
+                                No trained agents yet
                             </div>
                         )}
                     </SelectContent>
@@ -473,6 +483,31 @@ function MessageBubble({ message: msg, agentName }: { message: ChatMessage; agen
                     </span>
                 )}
             </div>
+        </div>
+    );
+}
+
+// ─── Selected agent isn't trained ─────────────────────────────────────────────
+
+function NotReadyNotice() {
+    return (
+        <div className="flex-1 flex flex-col items-center justify-center px-8" style={{ background: "var(--muted)" }}>
+            <div className="w-14 h-14 rounded-2xl flex items-center justify-center mb-5 border border-border bg-background">
+                <Bot className="w-6 h-6 text-muted-foreground" />
+            </div>
+            <h3 className="text-[17px] font-semibold text-foreground mb-2 tracking-tight">
+                This agent isn&apos;t ready yet
+            </h3>
+            <p className="text-sm text-muted-foreground text-center max-w-xs leading-relaxed mb-6">
+                It&apos;s still training, or training didn&apos;t finish. Once it&apos;s live
+                you can chat with it here.
+            </p>
+            <Link
+                href="/dashboard/agents"
+                className="text-[13px] font-medium text-foreground underline underline-offset-2 hover:opacity-70 transition-opacity"
+            >
+                Check its status
+            </Link>
         </div>
     );
 }
