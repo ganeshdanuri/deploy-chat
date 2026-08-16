@@ -11,6 +11,7 @@ class Endpoints:
     AUTH_GOOGLE = "/google"
     AUTH_GITHUB = "/github"
     AUTH_REFRESH = "/refresh"
+    AUTH_LOGOUT = "/logout"
 
     # User Endpoints
     USERS_PREFIX = "/users"
@@ -20,6 +21,10 @@ class Endpoints:
     # Usage Endpoints
     USAGE_PREFIX = "/usage"
     USAGE_STATS = "/stats"
+
+    ANALYTICS_PREFIX = "/analytics"
+    ANALYTICS_BASE = "/"
+    ANALYTICS_BY_CHATBOT = "/chatbot/{chatbot_id}"
 
     # Widget Endpoints
     WIDGET_PREFIX = "/widget"
@@ -44,7 +49,3 @@ class Endpoints:
     DOCUMENTS_BASE = "/"
     DOCUMENTS_BY_ID = "/{document_id}"
 
-    # API Keys Endpoints
-    API_KEYS_PREFIX = "/api-keys"
-    API_KEYS_BASE = "/"
-    API_KEYS_BY_ID = "/{key_id}"

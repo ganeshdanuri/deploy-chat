@@ -4,9 +4,9 @@ from app.datasets.routes import router as datasets_router
 from app.chatbots.routes import router as chatbots_router
 from app.api.endpoints.auth import router as auth_router
 from app.api.endpoints.usage import router as usage_router
+from app.api.endpoints.analytics import router as analytics_router
 from app.api.endpoints.widget import router as widget_router
 from app.api.endpoints.users import router as users_router
-from app.api.endpoints.api_keys import router as api_keys_router
 from app.api.connectors.routes import router as connectors_router
 
 api_router = APIRouter(prefix="/api")
@@ -16,7 +16,7 @@ api_router.include_router(datasets_router, tags=["datasets"])
 api_router.include_router(chatbots_router, tags=["chatbots"])
 api_router.include_router(auth_router, tags=["auth"])
 api_router.include_router(usage_router, tags=["usage"])
+api_router.include_router(analytics_router, tags=["analytics"])
 api_router.include_router(widget_router, tags=["widget"])
 api_router.include_router(users_router, tags=["users"])
-api_router.include_router(api_keys_router, tags=["api-keys"])
 api_router.include_router(connectors_router, prefix="/connectors", tags=["connectors"])

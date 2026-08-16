@@ -1,34 +1,22 @@
 "use client";
-import { Bell, CreditCard, KeyRound, Pencil, Plus, ShieldCheck, Trash2, User, Users } from "lucide-react";
+import { Bell, CreditCard, Pencil, ShieldCheck, User, Users } from "lucide-react";
 
 
 import { useState, useEffect } from "react";
 
-import { SiOpenai, SiAnthropic, SiGooglecloud } from "react-icons/si";
 import { useAppSelector } from "@/lib/store/hooks";
 import { useAuth } from "@/app/context/AuthContext";
 import { useSearchParams } from "next/navigation";
 import { PricingCard } from "@/app/components/ui/PricingCard";
-import { SettingsSkeleton, TableSkeleton } from "@/app/components/ui/Skeleton";
-import api from "@/lib/api";
-import { ENDPOINTS } from "@/lib/endpoints";
-import showToast from "@/lib/toast";
-import AddAPIKeyDrawer from "@/app/components/AddAPIKeyDrawer";
+import { SettingsSkeleton } from "@/app/components/ui/Skeleton";
 import EditProfileDrawer from "@/app/components/EditProfileDrawer";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { EmptyState, DateCell, DeleteConfirmationModal, Input, PageHeader } from "@/app/components/ui";
+import { Input, PageHeader } from "@/app/components/ui";
 
 export default function SettingsPage() {
     const searchParams = useSearchParams();
     const [activeTab, setActiveTab] = useState(searchParams.get("tab") ||"general");
-    const [apiKeys, setApiKeys] = useState<{ id: string; provider: string; created_at: string }[]>([]);
-    const [isApiKeysLoading, setIsApiKeysLoading] = useState(false);
-    const [isAddKeyModalOpen, setIsAddKeyModalOpen] = useState(false);
     const [isEditProfileModalOpen, setIsEditProfileModalOpen] = useState(false);
-    const [deleteModalOpen, setDeleteModalOpen] = useState(false);
-    const [itemToDelete, setItemToDelete] = useState<{ id: string; name: string } | null>(null);
-    const [isDeleting, setIsDeleting] = useState(false);
 
     useEffect(() => {
         const tab = searchParams.get("tab");
@@ -37,44 +25,9 @@ export default function SettingsPage() {
         }
     }, [searchParams, activeTab]);
 
-    useEffect(() => {
-        if (activeTab === "api-keys") {
-            fetchApiKeys();
-        }
-    }, [activeTab]);
 
-    const fetchApiKeys = async () => {
-        setIsApiKeysLoading(true);
-        try {
-            const res = await api.get(ENDPOINTS.API_KEYS.BASE);
-            setApiKeys(res.data);
-        } catch {
-            showToast.error("Failed to load API keys");
-        } finally {
-            setIsApiKeysLoading(false);
-        }
-    };
 
-    const handleDeleteClick = (id: string, provider: string) => {
-        setItemToDelete({ id, name: provider });
-        setDeleteModalOpen(true);
-    };
 
-    const handleConfirmDelete = async () => {
-        if (!itemToDelete) return;
-        setIsDeleting(true);
-        try {
-            await api.delete(ENDPOINTS.API_KEYS.BY_ID(itemToDelete.id));
-            showToast.success("API key deleted");
-            setDeleteModalOpen(false);
-            fetchApiKeys();
-        } catch {
-            showToast.error("Failed to delete API key");
-        } finally {
-            setIsDeleting(false);
-            setItemToDelete(null);
-        }
-    };
 
     const { data: userData, status: userStatus } = useAppSelector((state) => state.user);
     const { user: authUser } = useAuth();
@@ -84,20 +37,11 @@ export default function SettingsPage() {
         { id: "general", label: "General", icon: User },
         { id: "team", label: "Team Members", icon: Users },
         { id: "billing", label: "Billing & Plans", icon: CreditCard },
-        { id: "api-keys", label: "API Keys", icon: KeyRound },
         { id: "notifications", label: "Notifications", icon: Bell },
     ];
 
     const currentTabLabel = tabs.find(t => t.id === activeTab)?.label ||"Settings";
 
-    const getProviderIcon = (provider: string) => {
-        switch (provider.toLowerCase()) {
-            case 'openai': return SiOpenai;
-            case 'anthropic': return SiAnthropic;
-            case 'google': return SiGooglecloud;
-            default: return KeyRound;
-        }
-    };
 
     return (
         <div className="animate-fade-in-up max-w-5xl mx-auto space-y-6">
@@ -249,69 +193,9 @@ export default function SettingsPage() {
                                 </div>
                             )}
 
-                            {activeTab === "api-keys" && (
-                                <div className="space-y-6 animate-fade-in">
-                                    <div className="flex items-center justify-between">
-                                        <div>
-                                            <h2 className="text-lg font-medium text-foreground">API Keys</h2>
-                                            <p className="text-sm text-foreground mt-1">Manage platform keys for model providers.</p>
-                                        </div>
-                                        <Button
-                                            onClick={() => setIsAddKeyModalOpen(true)}
-                                            
->
-                                            <Plus className="w-4 h-4 mr-2" />
-                                            Add Key
-                                        </Button>
-                                    </div>
-
-                                    {isApiKeysLoading ? (
-                                        <TableSkeleton rows={3} columns={3} />
-                                    ) : apiKeys.length === 0 ? (
-                                        <EmptyState
-                                            icon={Plus}
-                                            title="No API keys yet"
-                                            description="Add your OpenAI or Anthropic key to use your own model quotas."
-                                            actionLabel="Add your first key"
-                                            onAction={() => setIsAddKeyModalOpen(true)}
-                                        />
-                                    ) : (
-                                        <div className="grid grid-cols-1 gap-4">
-                                            {apiKeys.map((key) => {
-                                                const Icon = getProviderIcon(key.provider);
-                                                return (
-                                                    <Card key={key.id} className="border-border rounded-xl">
-                                                        <CardContent className="flex flex-row items-center justify-between p-6">
-                                                            <div className="flex items-center gap-6">
-                                                                <div className="w-10 h-10 bg-muted rounded-xl flex items-center justify-center border border-border">
-                                                                    <Icon className="w-5 h-5 text-foreground" />
-                                                                </div>
-                                                                <div>
-                                                                    <h4 className="text-sm font-medium text-foreground">{key.provider}</h4>
-                                                                    <p className="text-xs text-muted-foreground font-mono">••••••••••••••••</p>
-                                                                </div>
-                                                            </div>
-                                                            <div className="flex items-center gap-2">
-                                                                <DateCell isoString={key.created_at} />
-                                                                <Button
-                                                                    variant="ghost"
-                                                                    onClick={() => handleDeleteClick(key.id, key.provider)}
-                                                                    className="text-muted-foreground hover:text-red-500 h-8 w-8 p-0"
->
-                                                                    <Trash2 className="w-4 h-4" />
-                                                                </Button>
-                                                            </div>
-                                                        </CardContent>
-                                                    </Card>
-                                                );
-                                            })}
-                                        </div>
-                                    )}
-                                </div>
-                            )}
 
                             {/* Other tabs placeholder */}
-                            {(activeTab !== "general" && activeTab !== "billing" && activeTab !== "api-keys") && (
+                            {(activeTab !== "general" && activeTab !== "billing") && (
                                 <div className="flex flex-col items-center justify-center p-12 bg-background border border-border border-dashed rounded-xl animate-fade-in">
                                     <div className="w-16 h-16 bg-muted rounded-xl flex items-center justify-center mb-4">
                                         <ShieldCheck className="w-8 h-8 text-muted-foreground/40" />
@@ -325,11 +209,6 @@ export default function SettingsPage() {
                 </div>
             </div>
 
-            <AddAPIKeyDrawer
-                isOpen={isAddKeyModalOpen}
-                onClose={() => setIsAddKeyModalOpen(false)}
-                onSuccess={fetchApiKeys}
-            />
 
             <EditProfileDrawer
                 isOpen={isEditProfileModalOpen}
@@ -341,15 +220,6 @@ export default function SettingsPage() {
                 }}
             />
 
-            <DeleteConfirmationModal
-                isOpen={deleteModalOpen}
-                onClose={() => setDeleteModalOpen(false)}
-                onConfirm={handleConfirmDelete}
-                isLoading={isDeleting}
-                title="Remove API Key"
-                description={`Are you sure you want to remove your ${itemToDelete?.name} API key?`}
-                itemName={itemToDelete?.name}
-            />
         </div>
     );
 }
