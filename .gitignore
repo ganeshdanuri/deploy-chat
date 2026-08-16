@@ -4,6 +4,9 @@ __pycache__/
 *$py.class
 .venv/
 .env
+# Any env variant — none of these belong in the repo
+.env.*
+!.env.example
 .pytest_cache/
 .coverage
 htmlcov/
