@@ -16,7 +16,7 @@ const onest = Onest({
 });
 
 export const metadata: Metadata = {
-  title: "Deploy Chat — Open source chatbot platform",
+  title: "Deploy Chat — AI agents trained on your data",
   description: "Ship an AI agent trained on your data in minutes.",
 };
 

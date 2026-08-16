@@ -2,13 +2,13 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { Menu, X } from "lucide-react";
+import { ArrowRight, Menu, X } from "lucide-react";
 import Logo from "./Logo";
 import { Button } from "@/components/ui/button";
 
 const LINKS = [
   { href: "#features", label: "Features" },
-  { href: "#pricing", label: "Pricing" },
+  { href: "#integrations", label: "Integrations" },
   { href: "#faq", label: "FAQ" },
   { href: "#", label: "Docs" },
 ];
@@ -20,21 +20,47 @@ export default function Navbar() {
 
   useEffect(() => {
     let lastY = window.scrollY;
-    const onScroll = () => {
+    let queued = false;
+    // Direction only flips after this much travel — without it, sub-pixel
+    // scroll jitter (trackpads, momentum) makes the header flicker.
+    const THRESHOLD = 6;
+
+    const update = () => {
+      queued = false;
       const y = window.scrollY;
       setScrolled(y > 8);
-      // Hide when scrolling down past 80px, reveal when scrolling up
       if (y > 80) {
-        setHidden(y > lastY);
+        if (Math.abs(y - lastY) > THRESHOLD) {
+          setHidden(y > lastY);
+          lastY = y;
+        }
       } else {
         setHidden(false);
+        lastY = y;
       }
-      lastY = y;
     };
-    onScroll();
+
+    const onScroll = () => {
+      if (queued) return;
+      queued = true;
+      requestAnimationFrame(update);
+    };
+
+    // Via rAF so the initial sync (e.g. reload mid-page) isn't a setState
+    // during mount.
+    requestAnimationFrame(update);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  useEffect(() => {
+    if (!mobileOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMobileOpen(false);
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [mobileOpen]);
 
   return (
     <header
@@ -42,11 +68,11 @@ export default function Navbar() {
         scrolled ? "bg-background/80 backdrop-blur-md" : "bg-background"
       } ${hidden ? "-translate-y-full" : "translate-y-0"}`}
 >
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:max-w-full lg:px-6 h-16 flex items-center justify-between">
+      <div className="container-page h-16 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2.5">
           <Logo className="h-7 w-auto" />
           <span className="text-[15px] font-medium tracking-tight">
-            Deploy <span className="hl-marker hl-marker--tight">Chat</span>
+            Deploy Chat
           </span>
         </Link>
 
@@ -66,9 +92,10 @@ export default function Navbar() {
           <Button variant="ghost" size="sm" asChild>
             <Link href="/login">Sign in</Link>
           </Button>
-          <Button size="sm" className="btn-pill" asChild>
+          <Button size="sm" variant="brand" className="btn-pill group" asChild>
             <a href="/login?register=true" target="_blank" rel="noopener noreferrer">
-              Start free →
+              Start free
+              <ArrowRight className="transition-transform group-hover:translate-x-0.5" strokeWidth={2} />
             </a>
           </Button>
         </div>
@@ -99,7 +126,7 @@ export default function Navbar() {
             <Button variant="outline" size="sm" className="flex-1" asChild>
               <Link href="/login" onClick={() => setMobileOpen(false)}>Sign in</Link>
             </Button>
-            <Button size="sm" className="flex-1" asChild>
+            <Button size="sm" variant="brand" className="flex-1" asChild>
               <a
                 href="/login?register=true"
                 target="_blank"

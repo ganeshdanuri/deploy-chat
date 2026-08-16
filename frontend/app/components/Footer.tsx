@@ -1,14 +1,19 @@
 "use client";
 
 import Link from "next/link";
+import { SiX } from "react-icons/si";
 import Logo from "./Logo";
+
+const SOCIALS = [
+  { label: "X", href: "https://x.com/deploychat", Icon: SiX },
+];
 
 const COLUMNS = [
   {
     title: "Product",
     links: [
       { label: "Features", href: "#features" },
-      { label: "Pricing", href: "#pricing" },
+      { label: "Integrations", href: "#integrations" },
       { label: "Changelog", href: "#" },
       { label: "Docs", href: "#" },
     ],
@@ -18,7 +23,6 @@ const COLUMNS = [
     links: [
       { label: "Help Center", href: "#" },
       { label: "API Reference", href: "#" },
-      { label: "Community", href: "https://x.com/deploychat" },
       { label: "Status", href: "#" },
     ],
   },
@@ -36,7 +40,7 @@ const COLUMNS = [
 export default function Footer() {
   return (
     <footer className="border-t border-border bg-background">
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:max-w-full lg:px-12 py-14">
+      <div className="container-page py-14">
         <div className="grid grid-cols-2 md:grid-cols-[1.5fr_1fr_1fr_1fr] gap-10">
           <div className="col-span-2 md:col-span-1">
             <Link href="/" className="inline-flex items-center gap-2.5 mb-4">
@@ -49,6 +53,20 @@ export default function Footer() {
               Enterprise-grade AI agents for modern teams. Automate support
               and delight customers in minutes.
             </p>
+            <div className="flex items-center gap-2 mt-5">
+              {SOCIALS.map(({ label, href, Icon }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={label}
+                  className="w-9 h-9 rounded-full border border-border flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-[var(--border-medium)] transition-colors"
+                >
+                  <Icon size={15} />
+                </a>
+              ))}
+            </div>
           </div>
 
           {COLUMNS.map((col) => (
@@ -61,7 +79,7 @@ export default function Footer() {
                   <li key={link.label}>
                     <Link
                       href={link.href}
-                      className="text-sm text-foreground hover:text-muted-foreground transition-colors"
+                      className="text-sm text-muted-foreground hover:text-foreground transition-colors"
 >
                       {link.label}
                     </Link>
@@ -74,7 +92,7 @@ export default function Footer() {
 
         <div className="mt-14 pt-6 border-t border-border flex flex-wrap justify-between items-center gap-3">
           <span className="text-xs text-muted-foreground">
-            © 2026 Deploy Chat Inc. All rights reserved.
+            © {new Date().getFullYear()} Deploy Chat Inc. All rights reserved.
           </span>
           <div className="flex gap-5 text-xs text-muted-foreground">
             <Link href="#" className="hover:text-foreground transition-colors">
@@ -82,9 +100,6 @@ export default function Footer() {
             </Link>
             <Link href="#" className="hover:text-foreground transition-colors">
               GDPR
-            </Link>
-            <Link href="#" className="hover:text-foreground transition-colors">
-              Status
             </Link>
           </div>
         </div>

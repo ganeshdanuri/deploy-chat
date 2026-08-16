@@ -56,18 +56,6 @@ input:disabled {
 }
 .animate-pulse-dot { animation: pulse-dot 2s ease-in-out infinite; }
 
-@keyframes slide-in-right {
-  from { transform: translateX(100%); }
-  to { transform: translateX(0); }
-}
-.animate-slide-in-right { animation: slide-in-right 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-
-@keyframes slide-in-bottom {
-  from { transform: translateY(100%); }
-  to { transform: translateY(0); }
-}
-.animate-slide-in-bottom { animation: slide-in-bottom 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-
 @keyframes scale-in {
   from { opacity: 0; transform: scale(0.97); }
   to { opacity: 1; transform: scale(1); }
@@ -130,6 +118,10 @@ input:disabled {
   --muted: #F5F5F4;
   --muted-foreground: #6B6E6E;
 
+  /* Alternating section band — kept a shade lighter than --muted so chips and
+     inner wells still read as distinct layers on top of it. */
+  --section-alt: #F7F7F6;
+
   --accent: #F5F5F4;
   --accent-foreground: #1D2020;
 
@@ -143,12 +135,16 @@ input:disabled {
   --ring: #1D2020;
   --link: #1D2020;
 
-  /* ── Brand accent: LIME (Remote-by-Modula signature) ── */
+  /* ── Brand accent: BLUE (matches the mark in app/icon.svg) ── */
 
-  --lime:        #D4FB5F;   /* primary accent — highlighter, badges, dots */
-  --lime-soft:   #EEFCC1;   /* soft tint for pill backgrounds */
-  --lime-strong: #A8DC3A;   /* hover / darker accent */
-  --lime-ink:    #1D2020;   /* text on lime bg (always ink, never white) */
+  --blue:         #0052FF;   /* primary accent — highlighter, badges, dots */
+  --blue-soft:    #E6EDFF;   /* soft tint for pill backgrounds */
+  --blue-strong:  #003DCC;   /* hover / pressed */
+  --blue-ink:     #FFFFFF;   /* text on --blue (5.75:1) */
+  --blue-swipe:   #A8C7FF;   /* highlighter band — ink text on it is 9.6:1 */
+  --blue-on-dark: #4D8BFF;   /* accent on the #1D2020 panels (5.07:1) */
+  --blue-on-dark-ink: #1D2020;   /* text on --blue-on-dark */
+  --blue-on-dark-hover: #7AAAFF; /* hover for accent on dark */
 
   /* ── Semantic zone accents (retained for dashboard use) ── */
 
@@ -310,19 +306,9 @@ input:disabled {
   transform: translateY(0);
 }
 
-.reveal-right {
-  opacity: 0;
-  transform: translateX(28px);
-  transition:
-    opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
-}
-.reveal-right.is-visible {
-  opacity: 1;
-  transform: translateX(0);
-}
-
-/* Stagger helpers — add to children via inline animationDelay */
+/* Stagger: children rise in sequence rather than as one slab. The delay is a
+   transition-delay, not an animation-delay — these are transitions, and the
+   original comment here claimed otherwise, which is why nothing ever staggered. */
 .reveal-group > * {
   opacity: 0;
   transform: translateY(18px);
@@ -334,6 +320,12 @@ input:disabled {
   opacity: 1;
   transform: translateY(0);
 }
+.reveal-group > *:nth-child(2) { transition-delay: 60ms; }
+.reveal-group > *:nth-child(3) { transition-delay: 120ms; }
+.reveal-group > *:nth-child(4) { transition-delay: 180ms; }
+.reveal-group > *:nth-child(5) { transition-delay: 240ms; }
+.reveal-group > *:nth-child(6) { transition-delay: 300ms; }
+.reveal-group > *:nth-child(n + 7) { transition-delay: 360ms; }
 
 /* ── Typing-dots animation (ChatWidget thinking state) ── */
 
@@ -352,8 +344,6 @@ input:disabled {
   .animate-fade-in,
   .animate-fade-in-up,
   .animate-scale-in,
-  .animate-slide-in-right,
-  .animate-slide-in-bottom,
   .animate-shimmer,
   .animate-typing-dot,
   .animate-float {
@@ -361,11 +351,11 @@ input:disabled {
   }
 
   .reveal,
-  .reveal-right,
   .reveal-group > * {
     opacity: 1 !important;
     transform: none !important;
     transition: none !important;
+    transition-delay: 0ms !important;
   }
 }
 
@@ -373,6 +363,61 @@ input:disabled {
    REMOTE-BY-MODULA SIGNATURE UTILITIES  (landing-page aesthetic)
    These are scoped to marketing surfaces; dashboard is untouched.
    ============================================================================ */
+
+/* ---- Anchor scrolling ----
+   The header is sticky at 64px, so a bare anchor jump parks the section heading
+   underneath it. scroll-margin-top reserves that space plus a little air. */
+html {
+  scroll-behavior: smooth;
+}
+section[id] {
+  scroll-margin-top: 88px;
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
+
+/* ---- Section heading ----
+   One size for every section heading. 48px and 56px were previously mixed with
+   no rule behind it; the hero h1 stays 64px so the step down is deliberate. */
+.h-section {
+  font-size: 1.875rem;
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+  font-weight: 600;
+}
+@media (min-width: 640px) {
+  .h-section { font-size: 2.25rem; }
+}
+@media (min-width: 1024px) {
+  .h-section { font-size: 3rem; }
+}
+
+/* ---- Alternating section surface ----
+   Bands the page into chapters so it stops reading as one continuous sheet.
+   The fill is deliberately near-white; the hairline border is what makes the
+   boundary legible. Full-bleed, so it wraps .container-page rather than
+   sitting on it. */
+.section-alt {
+  background: var(--section-alt);
+  border-block: 1px solid var(--border);
+}
+
+/* ---- Page container ----
+   ONE source of truth for horizontal rhythm. Navbar and every section use this,
+   so the logo, the headline, and the footer all sit on the same left edge. */
+.container-page {
+  width: 100%;
+  max-width: 1440px;
+  margin-inline: auto;
+  padding-inline: 20px;
+}
+@media (min-width: 640px) {
+  .container-page { padding-inline: 32px; }
+}
+@media (min-width: 1024px) {
+  .container-page { padding-inline: 48px; }
+}
 
 /* ---- Highlighter marker behind key words ----
    Usage:  <h1>Ship a <span class="hl-marker">smarter</span> agent</h1>
@@ -387,16 +432,112 @@ input:disabled {
 .hl-marker::before {
   content: "";
   position: absolute;
-  inset: 20% -6% 8% -6%;
-  background: var(--lime);
+  inset: 18% -6% 8% -6%;
+  background: var(--blue-swipe);
   transform: skew(-4deg) rotate(-1.2deg);
   border-radius: 6px 12px 8px 14px;
   z-index: -1;
 }
-/* Slightly more concentrated stroke for smaller headings */
-.hl-marker--tight::before {
-  inset: 35% -4% 10% -4%;
-  border-radius: 4px 8px 6px 10px;
+
+/* ---- Buttons sitting on the dark (#1D2020) panels ----
+   The default focus ring is --ring (#1D2020) and vanishes against the panel. */
+.btn-on-dark:focus-visible {
+  outline: 2px solid #FFFFFF;
+  outline-offset: 2px;
+}
+
+/* ---- FAQ accordion panel ----
+   grid-template-rows 0fr → 1fr is the only way to transition to an automatic
+   height without measuring in JS. visibility is delayed to the end of the
+   collapse so a closed panel leaves the accessibility tree entirely — a
+   zero-height panel is still read aloud otherwise. */
+.faq-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  visibility: hidden;
+  transition:
+    grid-template-rows 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+    visibility 0s linear 0.3s;
+}
+.faq-panel[data-open] {
+  grid-template-rows: 1fr;
+  visibility: visible;
+  transition:
+    grid-template-rows 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+    visibility 0s;
+}
+.faq-panel > * {
+  overflow: hidden;
+}
+@media (prefers-reduced-motion: reduce) {
+  .faq-panel,
+  .faq-panel[data-open] {
+    transition: none;
+  }
+}
+
+/* ---- Mechanism stagger ----
+   Interior contents of a bento card arriving in sequence. Driven by a data
+   attribute rather than a class, so the same in-view boolean that starts the
+   JS counters also drives the CSS. */
+.mech-group > * {
+  opacity: 0;
+  transform: translateY(6px);
+  transition:
+    opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.mech-group[data-in] > * {
+  opacity: 1;
+  transform: none;
+}
+/* Circular swatches read better popping than sliding — slight overshoot. */
+.mech-group.is-pop > * {
+  transform: scale(0.7);
+  transition-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.mech-group.is-pop[data-in] > * {
+  transform: scale(1);
+}
+.mech-group > *:nth-child(2) { transition-delay: 110ms; }
+.mech-group > *:nth-child(3) { transition-delay: 220ms; }
+.mech-group > *:nth-child(4) { transition-delay: 330ms; }
+.mech-group > *:nth-child(5) { transition-delay: 440ms; }
+.mech-group > *:nth-child(n + 6) { transition-delay: 550ms; }
+@media (prefers-reduced-motion: reduce) {
+  .mech-group > *,
+  .mech-group.is-pop > * {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+    transition-delay: 0ms !important;
+  }
+}
+
+/* ---- Sparkline draw ----
+   stroke-dasharray is in user-space units, so it scales with the viewBox and
+   works at any rendered width. 210 clears the polyline's ~204-unit length. */
+.spark-line {
+  stroke-dasharray: 210;
+  stroke-dashoffset: 210;
+  transition: stroke-dashoffset 1.2s cubic-bezier(0.33, 1, 0.68, 1);
+}
+.spark-line[data-drawn] {
+  stroke-dashoffset: 0;
+}
+/* Fill trails the line so the shape reads as drawn, then filled. */
+.spark-fill {
+  opacity: 0;
+  transition: opacity 0.6s ease 0.55s;
+}
+.spark-fill[data-drawn] {
+  opacity: 1;
+}
+@media (prefers-reduced-motion: reduce) {
+  .spark-line,
+  .spark-fill {
+    transition: none;
+  }
 }
 
 /* ---- Dot-grid bg (hero atmosphere) ---- */
@@ -428,8 +569,8 @@ input:disabled {
 .announce-pill .tag {
   display: inline-flex;
   align-items: center;
-  background: var(--lime);
-  color: var(--lime-ink);
+  background: var(--blue);
+  color: var(--blue-ink);
   padding: 3px 10px;
   border-radius: 9999px;
   font-weight: 600;
@@ -456,8 +597,8 @@ input:disabled {
   width: 6px;
   height: 6px;
   border-radius: 9999px;
-  background: var(--lime-strong);
-  box-shadow: 0 0 0 3px var(--lime-soft);
+  background: var(--blue);
+  box-shadow: 0 0 0 3px var(--blue-soft);
 }
 
 /* ---- Pill button override (for landing CTAs only) ---- */
@@ -498,11 +639,27 @@ input:disabled {
   box-shadow: 0 4px 12px rgba(29,32,32,0.06), 0 16px 36px rgba(29,32,32,0.08);
 }
 
+/* Vendor logos rest at muted weight so ten third-party brands don't out-shout
+   our own accent; true colour is the reward for hovering. Touch devices get
+   colour immediately — there is no hover there to discover it with. */
+.integration-tile svg {
+  color: var(--muted-foreground);
+  transition: color 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.integration-tile:hover svg {
+  color: var(--logo);
+}
+@media (hover: none) {
+  .integration-tile svg { color: var(--logo); }
+}
+
 /* Subtle float animation for logo constellation */
 @keyframes float-y {
   0%, 100% { transform: translateY(0); }
-  50%      { transform: translateY(-6px); }
+  50%      { transform: translateY(-4px); }
 }
+/* Slow and shallow — ten tiles drifting in the middle of the page competes
+   with reading if it moves any faster. */
 .animate-float {
-  animation: float-y 5s ease-in-out infinite;
+  animation: float-y 9s ease-in-out infinite;
 }

@@ -81,7 +81,7 @@ export default function PricingSection() {
   return (
     <section
       id="pricing"
-      className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:max-w-full lg:px-12 py-20 sm:py-28"
+      className="container-page py-20 sm:py-28"
 >
       <div ref={headerRef} className="text-center mb-14 reveal">
         <span className="eyebrow-pill">Pricing</span>
@@ -111,7 +111,7 @@ export default function PricingSection() {
             {tier.highlight && (
               <div
                 className="absolute -top-3 left-6 text-[11px] font-semibold px-2.5 py-1 rounded-full"
-                style={{ background: "var(--lime)", color: "var(--lime-ink)" }}
+                style={{ background: "var(--blue)", color: "var(--blue-ink)" }}
 >
                 Most popular
               </div>

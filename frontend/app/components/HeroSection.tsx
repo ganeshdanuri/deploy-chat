@@ -1,35 +1,104 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { FolderOpen, Paintbrush, Code2 } from "lucide-react";
+import { ArrowRight, Check } from "lucide-react";
+import { usePrefersReducedMotion } from "@/lib/hooks/usePrefersReducedMotion";
+import { openRegister } from "@/lib/openRegister";
 
-const CONVERSATIONS = [
+type Msg = { role: "user" | "agent"; text: string; code?: string | null };
+
+const GREETING = "Hi! I'm trained on your docs. Ask me anything.";
+
+/* A scripted demo, not a live agent. Keyword-matched so typed questions land
+   somewhere sensible, with a fallback that admits what it is rather than
+   bluffing. */
+const DEMO_QA = [
   {
+    chip: "How do I embed it?",
     q: "How do I embed the widget on a Next.js site? ",
     a: "Add this to your root layout — that's it.",
     code: '<Script src="https://cdn.deploychat.in/w.js" />',
+    keywords: ["embed", "next", "install", "script", "add", "site", "code"],
   },
   {
+    chip: "What can it read?",
     q: "What data sources can I connect? ",
-    a: "PDFs, websites, Notion, Google Drive, CSV, and your API.",
+    a: "PDFs, websites, Notion, Google Drive, CSV, and your own API.",
     code: null,
+    keywords: ["source", "data", "connect", "pdf", "notion", "drive", "csv", "crawl", "read"],
   },
   {
+    chip: "Do you train on my data?",
     q: "Will it use my data to train base models? ",
-    a: "Never. Your content stays private and encrypted at rest.",
+    a: "Never. Your content stays private and encrypted at rest and in transit.",
     code: null,
+    keywords: ["train", "privacy", "private", "secure", "encrypt", "gdpr", "model", "safe"],
+  },
+  {
+    chip: "How long is setup?",
+    q: "How long does setup take? ",
+    a: "Connect a source, wait for indexing, paste one line. Usually under an hour.",
+    code: null,
+    keywords: ["long", "setup", "time", "quick", "fast", "start", "take"],
   },
 ];
 
+const FALLBACK =
+  "I'm a scripted demo, so I only know a handful of answers — try one of the suggestions below. An agent trained on your own content would handle anything in it.";
+
+function answerFor(text: string): Msg {
+  const q = text.toLowerCase();
+  let best: (typeof DEMO_QA)[number] | null = null;
+  let bestScore = 0;
+  for (const item of DEMO_QA) {
+    const score = item.keywords.filter((k) => q.includes(k)).length;
+    if (score > bestScore) {
+      bestScore = score;
+      best = item;
+    }
+  }
+  return best
+    ? { role: "agent", text: best.a, code: best.code }
+    : { role: "agent", text: FALLBACK, code: null };
+}
+
 function ChatWidget() {
+  const rootRef = useRef<HTMLDivElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const reduced = usePrefersReducedMotion();
+
+  const [onScreen, setOnScreen] = useState(false);
+  const [live, setLive] = useState(false);
+
+  // Idle autoplay
   const [convoIdx, setConvoIdx] = useState(0);
   const [qText, setQText] = useState("");
   const [aText, setAText] = useState("");
-  const [phase, setPhase] = useState<"q" |"pause" |"a" |"hold" |"reset">("q");
+  const [phase, setPhase] = useState<"q" | "pause" | "a" | "hold">("q");
+  const autoplay = onScreen && !reduced && !live;
+
+  // Live conversation
+  const [messages, setMessages] = useState<Msg[]>([]);
+  const [pending, setPending] = useState(false);
+  const [input, setInput] = useState("");
+
+  /* The typewriter re-renders every 20-40ms. Left ungated it keeps doing that
+     for the whole session, including while scrolled far past the hero. */
+  useEffect(() => {
+    const el = rootRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([entry]) => setOnScreen(entry.isIntersecting),
+      { threshold: 0.2 },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
 
   useEffect(() => {
-    const convo = CONVERSATIONS[convoIdx];
+    if (!autoplay) return;
+    const convo = DEMO_QA[convoIdx];
     let t: ReturnType<typeof setTimeout>;
     switch (phase) {
       case "q":
@@ -50,29 +119,62 @@ function ChatWidget() {
         }
         break;
       case "hold":
-        t = setTimeout(() => setPhase("reset"), 200);
-        break;
-      case "reset":
-        setQText("");
-        setAText("");
-        setConvoIdx((i) => (i + 1) % CONVERSATIONS.length);
-        setPhase("q");
+        // Reset lives inside the timeout, not the effect body — advancing the
+        // conversation synchronously on render is what tripped the lint rule.
+        t = setTimeout(() => {
+          setQText("");
+          setAText("");
+          setConvoIdx((i) => (i + 1) % DEMO_QA.length);
+          setPhase("q");
+        }, 200);
         break;
     }
     return () => clearTimeout(t);
-  }, [phase, qText, aText, convoIdx]);
+  }, [autoplay, phase, qText, aText, convoIdx]);
 
-  const convo = CONVERSATIONS[convoIdx];
+  // Keep the newest message in view.
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (el) el.scrollTop = el.scrollHeight;
+  }, [messages, pending]);
+
+  // Answer on a delay so the typing indicator reads as thought, not lag.
+  useEffect(() => {
+    if (!pending) return;
+    const last = messages[messages.length - 1];
+    if (last?.role !== "user") return;
+    const t = setTimeout(() => {
+      setMessages((m) => [...m, answerFor(last.text)]);
+      setPending(false);
+    }, 650);
+    return () => clearTimeout(t);
+  }, [pending, messages]);
+
+  const ask = (text: string) => {
+    const trimmed = text.trim();
+    if (!trimmed || pending) return;
+    setLive(true);
+    setMessages((m) => [...m, { role: "user", text: trimmed }]);
+    setInput("");
+    setPending(true);
+  };
+
+  const convo = DEMO_QA[convoIdx];
+  const shownQ = reduced ? convo.q : qText;
+  const shownA = reduced ? convo.a : aText;
+  const showCode = reduced
+    ? Boolean(convo.code)
+    : phase !== "a" && Boolean(convo.code) && aText === convo.a;
 
   return (
-    <div className="w-full bg-muted rounded-xl p-4">
+    <div ref={rootRef} className="w-full bg-muted rounded-xl p-4">
       <div className="bg-background rounded-xl border border-border overflow-hidden">
         <div className="flex items-center justify-between px-4 py-3 border-b border-border">
           <div className="flex items-center gap-2.5">
             <div
               className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold"
-              style={{ background: "#1D2020", color: "#D4FB5F" }}
->
+              style={{ background: "var(--blue)", color: "var(--blue-ink)" }}
+            >
               AI
             </div>
             <div>
@@ -83,76 +185,125 @@ function ChatWidget() {
               </div>
             </div>
           </div>
-          <span className="text-lg text-muted-foreground">×</span>
+          <span aria-hidden="true" className="text-lg text-muted-foreground/60">
+            ×
+          </span>
         </div>
 
-        <div className="px-4 py-5 flex flex-col gap-2.5 h-[420px] overflow-hidden">
-          <div className="self-start max-w-[85%] bg-muted text-foreground px-3 py-2 rounded-xl rounded-tl-sm text-[13px] leading-relaxed">
-            Hi! I&apos;m trained on your docs. Ask me anything.
-          </div>
-
-          {qText && (
-            <div className="self-end max-w-[85%] bg-foreground text-background px-3 py-2 rounded-xl rounded-tr-sm text-[13px] leading-relaxed">
-              {qText}
-              {phase === "q" && (
-                <span className="inline-block w-[2px] h-[12px] bg-background/60 ml-0.5 align-middle animate-pulse" />
-              )}
+        <div ref={scrollRef} className="h-[320px] overflow-y-auto px-4 py-5">
+          <div
+            className="flex flex-col gap-2.5 min-h-full justify-end"
+            aria-live="polite"
+          >
+            <div className="self-start max-w-[85%] bg-muted text-foreground px-3 py-2 rounded-xl rounded-tl-sm text-[13px] leading-relaxed">
+              {GREETING}
             </div>
-          )}
 
-          {aText && (
-            <div className="self-start max-w-[90%] bg-muted text-foreground px-3 py-2 rounded-xl rounded-tl-sm text-[13px] leading-relaxed">
-              {aText}
-              {phase === "a" && (
-                <span className="inline-block w-[2px] h-[12px] bg-foreground/60 ml-0.5 align-middle animate-pulse" />
-              )}
-              {phase !== "a" && convo.code && aText === convo.a && (
-                <div className="mt-2 bg-foreground text-background rounded-md px-2.5 py-2 font-mono text-[11px] leading-relaxed overflow-x-auto">
-                  {convo.code}
+            {live ? (
+              messages.map((m, i) => (
+                <div
+                  key={i}
+                  className={
+                    m.role === "user"
+                      ? "self-end max-w-[85%] bg-foreground text-background px-3 py-2 rounded-xl rounded-tr-sm text-[13px] leading-relaxed"
+                      : "self-start max-w-[90%] bg-muted text-foreground px-3 py-2 rounded-xl rounded-tl-sm text-[13px] leading-relaxed"
+                  }
+                >
+                  {m.text}
+                  {m.code && (
+                    <div className="mt-2 bg-foreground text-background rounded-md px-2.5 py-2 font-mono text-[11px] leading-relaxed overflow-x-auto">
+                      {m.code}
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
-          )}
+              ))
+            ) : (
+              <>
+                {shownQ && (
+                  <div className="self-end max-w-[85%] bg-foreground text-background px-3 py-2 rounded-xl rounded-tr-sm text-[13px] leading-relaxed">
+                    {shownQ}
+                    {autoplay && phase === "q" && (
+                      <span className="inline-block w-[2px] h-[12px] bg-background/60 ml-0.5 align-middle animate-pulse" />
+                    )}
+                  </div>
+                )}
+                {shownA && (
+                  <div className="self-start max-w-[90%] bg-muted text-foreground px-3 py-2 rounded-xl rounded-tl-sm text-[13px] leading-relaxed">
+                    {shownA}
+                    {autoplay && phase === "a" && (
+                      <span className="inline-block w-[2px] h-[12px] bg-foreground/60 ml-0.5 align-middle animate-pulse" />
+                    )}
+                    {showCode && (
+                      <div className="mt-2 bg-foreground text-background rounded-md px-2.5 py-2 font-mono text-[11px] leading-relaxed overflow-x-auto">
+                        {convo.code}
+                      </div>
+                    )}
+                  </div>
+                )}
+              </>
+            )}
 
-          {phase === "pause" && (
-            <div className="self-start flex gap-1 px-3 py-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground animate-typing-dot" style={{ animationDelay: "0ms" }} />
-              <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground animate-typing-dot" style={{ animationDelay: "150ms" }} />
-              <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground animate-typing-dot" style={{ animationDelay: "300ms" }} />
-            </div>
-          )}
+            {(pending || (autoplay && phase === "pause")) && (
+              <div className="self-start flex gap-1 px-3 py-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground animate-typing-dot" style={{ animationDelay: "0ms" }} />
+                <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground animate-typing-dot" style={{ animationDelay: "150ms" }} />
+                <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground animate-typing-dot" style={{ animationDelay: "300ms" }} />
+              </div>
+            )}
+          </div>
         </div>
 
-        <div className="px-3 py-2.5 border-t border-border flex items-center gap-2">
-          <div className="flex-1 text-[12px] text-muted-foreground px-3 py-1.5 bg-muted rounded-full">
-            Ask a question…
-          </div>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            ask(input);
+          }}
+          className="px-3 py-2.5 border-t border-border flex items-center gap-2"
+        >
+          <label htmlFor="demo-ask" className="sr-only">
+            Ask the demo agent a question
+          </label>
+          <input
+            id="demo-ask"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder="Ask a question…"
+            autoComplete="off"
+            className="flex-1 min-w-0 text-[12px] px-3 py-1.5 bg-muted rounded-full outline-none focus-visible:ring-2 focus-visible:ring-[var(--blue)]"
+          />
           <button
+            type="submit"
             aria-label="Send message"
-            className="w-7 h-7 rounded-full bg-foreground text-background flex items-center justify-center text-sm focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+            disabled={!input.trim() || pending}
+            className="w-7 h-7 shrink-0 rounded-full bg-foreground text-background flex items-center justify-center text-sm disabled:opacity-40 focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
           >
             ↑
           </button>
-        </div>
+        </form>
       </div>
 
       <div className="flex gap-1.5 mt-4 flex-wrap">
-        {["PDF","Notion","Website crawl","API","CSV"].map((s) => (
-          <span
-            key={s}
-            className="text-[11px] px-2.5 py-1 bg-background border border-border rounded-full text-muted-foreground"
->
-            {s}
-          </span>
+        {DEMO_QA.map((s) => (
+          <button
+            key={s.chip}
+            type="button"
+            onClick={() => ask(s.q)}
+            className="text-[11px] px-2.5 py-1 bg-background border border-border rounded-full text-muted-foreground hover:text-foreground hover:border-[var(--border-medium)] transition-colors"
+          >
+            {s.chip}
+          </button>
         ))}
       </div>
     </div>
   );
 }
 
-export default function HeroSection({ onGetStarted }: { onGetStarted: () => void }) {
+export default function HeroSection() {
   return (
-    <section className="relative overflow-hidden" style={{ minHeight: "calc(100vh - 64px)" }}>
+    <section
+      className="relative overflow-hidden flex flex-col"
+      style={{ minHeight: "calc(100svh - 64px)" }}
+    >
       {/* Dot-grid atmosphere */}
       <div
         aria-hidden
@@ -165,7 +316,7 @@ export default function HeroSection({ onGetStarted }: { onGetStarted: () => void
         }}
       />
 
-      <div className="relative h-full max-w-[1200px] mx-auto px-4 sm:px-6 lg:max-w-full lg:px-12 flex flex-col" style={{ minHeight: "calc(100vh - 64px)" }}>
+      <div className="relative flex-1 container-page flex flex-col">
         <div className="flex-1 grid lg:grid-cols-[1.1fr_1fr] gap-10 lg:gap-14 items-center py-16 sm:py-20">
           <div className="flex flex-col gap-0">
             {/* announce pill */}
@@ -174,7 +325,7 @@ export default function HeroSection({ onGetStarted }: { onGetStarted: () => void
               style={{ opacity: 0, animationDelay: "60ms" }}
             >
               <span className="tag">New</span>
-              Open source · v2.0 released
+              v2.0 · Notion and Drive sync
             </div>
 
             <h1
@@ -195,50 +346,21 @@ export default function HeroSection({ onGetStarted }: { onGetStarted: () => void
               production-grade chatbot on your site with a single line of code.
             </p>
 
-            {/* Feature highlights */}
-            <div className="flex flex-col gap-4 mb-10">
-              {[
-                {
-                  icon: <FolderOpen size={16} />,
-                  title: "Train on your knowledge",
-                  desc: "Feed it your docs, PDFs, Notion pages, websites, and APIs — your agent learns your business inside out.",
-                  delay: "340ms",
-                },
-                {
-                  icon: <Paintbrush size={16} />,
-                  title: "Customize the look",
-                  desc: "Match your brand — colors, avatar, name, and welcome message. No design skills needed.",
-                  delay: "420ms",
-                },
-                {
-                  icon: <Code2 size={16} />,
-                  title: "Embed with one line",
-                  desc: "Drop a single script tag and your AI chatbot is live on any website or app.",
-                  delay: "500ms",
-                },
-              ].map((f) => (
-                <div
-                  key={f.title}
-                  className="flex items-start gap-3 animate-fade-in-up"
-                  style={{ opacity: 0, animationDelay: f.delay }}
-                >
-                  <span className="mt-0.5 w-8 h-8 rounded-lg bg-muted flex items-center justify-center text-muted-foreground shrink-0" aria-hidden="true">
-                    {f.icon}
-                  </span>
-                  <div>
-                    <p className="text-[14px] font-semibold text-foreground leading-snug">{f.title}</p>
-                    <p className="text-[13px] text-muted-foreground leading-relaxed">{f.desc}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-
             <div
               className="flex flex-wrap gap-2.5 mb-8 animate-fade-in-up"
-              style={{ opacity: 0, animationDelay: "580ms" }}
+              style={{ opacity: 0, animationDelay: "340ms" }}
             >
-              <Button size="lg" onClick={onGetStarted} className="btn-pill">
-                Start building →
+              <Button
+                size="lg"
+                variant="brand"
+                onClick={openRegister}
+                className="btn-pill group"
+              >
+                Start building
+                <ArrowRight
+                  className="transition-transform group-hover:translate-x-0.5"
+                  strokeWidth={2}
+                />
               </Button>
               <Button size="lg" variant="outline" asChild className="btn-pill">
                 <a href="mailto:sales@deploymind.com">Talk to sales</a>
@@ -246,12 +368,20 @@ export default function HeroSection({ onGetStarted }: { onGetStarted: () => void
             </div>
 
             <div
-              className="flex flex-wrap gap-x-7 gap-y-2 text-[13px] text-muted-foreground animate-fade-in-up"
-              style={{ opacity: 0, animationDelay: "660ms" }}
+              className="flex flex-wrap gap-x-6 gap-y-2 text-[13px] text-muted-foreground animate-fade-in-up"
+              style={{ opacity: 0, animationDelay: "420ms" }}
             >
-              <span>✓  No credit card</span>
-              <span>✓  GDPR compliant</span>
-              <span>✓  SOC 2 ready</span>
+              {["No credit card","GDPR compliant","SOC 2 ready"].map((t) => (
+                <span key={t} className="inline-flex items-center gap-1.5">
+                  <Check
+                    className="w-3.5 h-3.5 shrink-0"
+                    style={{ color: "var(--blue)" }}
+                    strokeWidth={2.5}
+                    aria-hidden="true"
+                  />
+                  {t}
+                </span>
+              ))}
             </div>
           </div>
 
